@@ -1,5 +1,6 @@
 ﻿// MainForm.Designer.cs
 // This code is typically auto-generated and managed by the Visual Studio WinForms Designer.
+// This version includes TableLayoutPanels for improved alignment in tabPageDocumentIssuance.
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -43,47 +44,9 @@ namespace DocumentIssuanceApp
             this.cmbRole = new System.Windows.Forms.ComboBox();
             this.lblRole = new System.Windows.Forms.Label();
             this.tabPageDocumentIssuance = new System.Windows.Forms.TabPage();
-            this.pnlStatusDI = new System.Windows.Forms.Panel();
-            this.lblStatusValueDI = new System.Windows.Forms.Label();
-            this.lblStatusLabelDI = new System.Windows.Forms.Label();
-            this.pnlActionBottomDI = new System.Windows.Forms.Panel();
-            this.btnClearFormDI = new System.Windows.Forms.Button();
-            this.btnSubmitRequestDI = new System.Windows.Forms.Button();
-            this.grpRemarksDI = new System.Windows.Forms.GroupBox();
-            this.txtRemarksDI = new System.Windows.Forms.TextBox();
-            this.grpItemDetailsDI = new System.Windows.Forms.GroupBox();
-            this.txtExportOrderNoDI = new System.Windows.Forms.TextBox();
-            this.lblExportOrderNoDI = new System.Windows.Forms.Label();
-            this.txtPackSizeDI = new System.Windows.Forms.TextBox();
-            this.lblPackSizeDI = new System.Windows.Forms.Label();
-            this.txtMarketDI = new System.Windows.Forms.TextBox();
-            this.lblMarketDI = new System.Windows.Forms.Label();
-            this.dtpItemExpDateDI = new System.Windows.Forms.DateTimePicker();
-            this.lblItemExpDateDI = new System.Windows.Forms.Label();
-            this.dtpItemMfgDateDI = new System.Windows.Forms.DateTimePicker();
-            this.lblItemMfgDateDI = new System.Windows.Forms.Label();
-            this.txtBatchSizeDI = new System.Windows.Forms.TextBox();
-            this.lblBatchSizeDI = new System.Windows.Forms.Label();
-            this.txtBatchNoDI = new System.Windows.Forms.TextBox();
-            this.lblBatchNoDI = new System.Windows.Forms.Label();
-            this.txtDocumentNoDI = new System.Windows.Forms.TextBox();
-            this.lblDocumentNoDI = new System.Windows.Forms.Label();
-            this.txtProductDI = new System.Windows.Forms.TextBox();
-            this.lblProductDI = new System.Windows.Forms.Label();
-            this.grpParentBatchInfoDI = new System.Windows.Forms.GroupBox();
-            this.dtpParentExpDateDI = new System.Windows.Forms.DateTimePicker();
-            this.lblParentExpDateDI = new System.Windows.Forms.Label();
-            this.dtpParentMfgDateDI = new System.Windows.Forms.DateTimePicker();
-            this.lblParentMfgDateDI = new System.Windows.Forms.Label();
-            this.numParentBatchSizeDI = new System.Windows.Forms.NumericUpDown();
-            this.lblParentBatchSizeDI = new System.Windows.Forms.Label();
-            this.txtParentBatchNoDI = new System.Windows.Forms.TextBox();
-            this.lblParentBatchNoDI = new System.Windows.Forms.Label();
-            this.pnlRequestDetailsDI = new System.Windows.Forms.Panel();
-            this.cmbFromDepartmentDI = new System.Windows.Forms.ComboBox();
-            this.lblFromDepartmentDI = new System.Windows.Forms.Label();
-            this.dtpRequestDateDI = new System.Windows.Forms.DateTimePicker();
-            this.lblRequestDateDI = new System.Windows.Forms.Label();
+            this.tlpDocumentIssuanceMain = new System.Windows.Forms.TableLayoutPanel();
+            this.lblHeaderDI = new System.Windows.Forms.Label();
+            this.tlpTopSectionDI = new System.Windows.Forms.TableLayoutPanel();
             this.grpDocTypeDI = new System.Windows.Forms.GroupBox();
             this.chkDocTypeAddendumDI = new System.Windows.Forms.CheckBox();
             this.chkDocTypeAppendixDI = new System.Windows.Forms.CheckBox();
@@ -94,7 +57,50 @@ namespace DocumentIssuanceApp
             this.lblRequestNoLabelDI = new System.Windows.Forms.Label();
             this.lblTrackerNoValueDI = new System.Windows.Forms.Label();
             this.lblTrackerNoLabelDI = new System.Windows.Forms.Label();
-            this.lblHeaderDI = new System.Windows.Forms.Label();
+            this.pnlRequestDetailsDI = new System.Windows.Forms.Panel();
+            this.tlpRequestDetails = new System.Windows.Forms.TableLayoutPanel();
+            this.lblRequestDateDI = new System.Windows.Forms.Label();
+            this.dtpRequestDateDI = new System.Windows.Forms.DateTimePicker();
+            this.lblFromDepartmentDI = new System.Windows.Forms.Label();
+            this.cmbFromDepartmentDI = new System.Windows.Forms.ComboBox();
+            this.grpParentBatchInfoDI = new System.Windows.Forms.GroupBox();
+            this.tlpParentBatchInfo = new System.Windows.Forms.TableLayoutPanel();
+            this.lblParentBatchNoDI = new System.Windows.Forms.Label();
+            this.txtParentBatchNoDI = new System.Windows.Forms.TextBox();
+            this.lblParentBatchSizeDI = new System.Windows.Forms.Label();
+            this.numParentBatchSizeDI = new System.Windows.Forms.NumericUpDown();
+            this.lblParentMfgDateDI = new System.Windows.Forms.Label();
+            this.dtpParentMfgDateDI = new System.Windows.Forms.DateTimePicker();
+            this.lblParentExpDateDI = new System.Windows.Forms.Label();
+            this.dtpParentExpDateDI = new System.Windows.Forms.DateTimePicker();
+            this.grpItemDetailsDI = new System.Windows.Forms.GroupBox();
+            this.tlpItemDetails = new System.Windows.Forms.TableLayoutPanel();
+            this.lblProductDI = new System.Windows.Forms.Label();
+            this.txtProductDI = new System.Windows.Forms.TextBox();
+            this.lblDocumentNoDI = new System.Windows.Forms.Label();
+            this.txtDocumentNoDI = new System.Windows.Forms.TextBox();
+            this.lblBatchNoDI = new System.Windows.Forms.Label();
+            this.txtBatchNoDI = new System.Windows.Forms.TextBox();
+            this.lblBatchSizeDI = new System.Windows.Forms.Label();
+            this.txtBatchSizeDI = new System.Windows.Forms.TextBox();
+            this.lblItemMfgDateDI = new System.Windows.Forms.Label();
+            this.dtpItemMfgDateDI = new System.Windows.Forms.DateTimePicker();
+            this.lblItemExpDateDI = new System.Windows.Forms.Label();
+            this.dtpItemExpDateDI = new System.Windows.Forms.DateTimePicker();
+            this.lblMarketDI = new System.Windows.Forms.Label();
+            this.txtMarketDI = new System.Windows.Forms.TextBox();
+            this.lblPackSizeDI = new System.Windows.Forms.Label();
+            this.txtPackSizeDI = new System.Windows.Forms.TextBox();
+            this.lblExportOrderNoDI = new System.Windows.Forms.Label();
+            this.txtExportOrderNoDI = new System.Windows.Forms.TextBox();
+            this.grpRemarksDI = new System.Windows.Forms.GroupBox();
+            this.txtRemarksDI = new System.Windows.Forms.TextBox();
+            this.pnlActionBottomDI = new System.Windows.Forms.Panel();
+            this.btnClearFormDI = new System.Windows.Forms.Button();
+            this.btnSubmitRequestDI = new System.Windows.Forms.Button();
+            this.pnlStatusDI = new System.Windows.Forms.Panel();
+            this.lblStatusValueDI = new System.Windows.Forms.Label();
+            this.lblStatusLabelDI = new System.Windows.Forms.Label();
             this.tabPageGmOperations = new System.Windows.Forms.TabPage();
             this.tabPageQa = new System.Windows.Forms.TabPage();
             this.tabPageAuditTrail = new System.Windows.Forms.TabPage();
@@ -107,15 +113,20 @@ namespace DocumentIssuanceApp
             this.tabPageLogin.SuspendLayout();
             this.panelLoginContainer.SuspendLayout();
             this.tabPageDocumentIssuance.SuspendLayout();
-            this.pnlStatusDI.SuspendLayout();
-            this.pnlActionBottomDI.SuspendLayout();
-            this.grpRemarksDI.SuspendLayout();
-            this.grpItemDetailsDI.SuspendLayout();
-            this.grpParentBatchInfoDI.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numParentBatchSizeDI)).BeginInit();
-            this.pnlRequestDetailsDI.SuspendLayout();
+            this.tlpDocumentIssuanceMain.SuspendLayout();
+            this.tlpTopSectionDI.SuspendLayout();
             this.grpDocTypeDI.SuspendLayout();
             this.pnlTopRightDI.SuspendLayout();
+            this.pnlRequestDetailsDI.SuspendLayout();
+            this.tlpRequestDetails.SuspendLayout();
+            this.grpParentBatchInfoDI.SuspendLayout();
+            this.tlpParentBatchInfo.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numParentBatchSizeDI)).BeginInit();
+            this.grpItemDetailsDI.SuspendLayout();
+            this.tlpItemDetails.SuspendLayout();
+            this.grpRemarksDI.SuspendLayout();
+            this.pnlActionBottomDI.SuspendLayout();
+            this.pnlStatusDI.SuspendLayout();
             this.statusStripMain.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -128,20 +139,20 @@ namespace DocumentIssuanceApp
             this.tabControlMain.Controls.Add(this.tabPageAuditTrail);
             this.tabControlMain.Controls.Add(this.tabPageUsers);
             this.tabControlMain.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControlMain.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tabControlMain.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold);
             this.tabControlMain.Location = new System.Drawing.Point(0, 0);
             this.tabControlMain.Name = "tabControlMain";
             this.tabControlMain.SelectedIndex = 0;
-            this.tabControlMain.Size = new System.Drawing.Size(1204, 597);
+            this.tabControlMain.Size = new System.Drawing.Size(1404, 686);
             this.tabControlMain.TabIndex = 0;
             // 
             // tabPageLogin
             // 
             this.tabPageLogin.Controls.Add(this.panelLoginContainer);
-            this.tabPageLogin.Location = new System.Drawing.Point(4, 26);
+            this.tabPageLogin.Location = new System.Drawing.Point(4, 30);
             this.tabPageLogin.Name = "tabPageLogin";
             this.tabPageLogin.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageLogin.Size = new System.Drawing.Size(1196, 567);
+            this.tabPageLogin.Size = new System.Drawing.Size(1396, 652);
             this.tabPageLogin.TabIndex = 0;
             this.tabPageLogin.Text = "Login";
             this.tabPageLogin.UseVisualStyleBackColor = true;
@@ -155,20 +166,20 @@ namespace DocumentIssuanceApp
             this.panelLoginContainer.Controls.Add(this.lblPassword);
             this.panelLoginContainer.Controls.Add(this.cmbRole);
             this.panelLoginContainer.Controls.Add(this.lblRole);
-            this.panelLoginContainer.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.panelLoginContainer.Location = new System.Drawing.Point(377, 169);
+            this.panelLoginContainer.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            this.panelLoginContainer.Location = new System.Drawing.Point(383, 212);
             this.panelLoginContainer.Name = "panelLoginContainer";
-            this.panelLoginContainer.Size = new System.Drawing.Size(444, 228);
+            this.panelLoginContainer.Size = new System.Drawing.Size(629, 228);
             this.panelLoginContainer.TabIndex = 0;
             // 
             // lblLoginStatus
             // 
             this.lblLoginStatus.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.lblLoginStatus.AutoSize = true;
-            this.lblLoginStatus.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblLoginStatus.Location = new System.Drawing.Point(138, 179);
+            this.lblLoginStatus.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))));
+            this.lblLoginStatus.Location = new System.Drawing.Point(227, 179);
             this.lblLoginStatus.Name = "lblLoginStatus";
-            this.lblLoginStatus.Size = new System.Drawing.Size(162, 17);
+            this.lblLoginStatus.Size = new System.Drawing.Size(207, 23);
             this.lblLoginStatus.TabIndex = 5;
             this.lblLoginStatus.Text = "*Please login to continue.";
             // 
@@ -176,7 +187,7 @@ namespace DocumentIssuanceApp
             // 
             this.btnLogin.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.btnLogin.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
-            this.btnLogin.Location = new System.Drawing.Point(141, 131);
+            this.btnLogin.Location = new System.Drawing.Point(230, 131);
             this.btnLogin.Name = "btnLogin";
             this.btnLogin.Size = new System.Drawing.Size(120, 35);
             this.btnLogin.TabIndex = 4;
@@ -186,19 +197,19 @@ namespace DocumentIssuanceApp
             // txtPassword
             // 
             this.txtPassword.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.txtPassword.Location = new System.Drawing.Point(141, 86);
+            this.txtPassword.Location = new System.Drawing.Point(230, 86);
             this.txtPassword.Name = "txtPassword";
-            this.txtPassword.Size = new System.Drawing.Size(230, 29);
+            this.txtPassword.Size = new System.Drawing.Size(230, 34);
             this.txtPassword.TabIndex = 3;
             // 
             // lblPassword
             // 
             this.lblPassword.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.lblPassword.AutoSize = true;
-            this.lblPassword.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblPassword.Location = new System.Drawing.Point(46, 90);
+            this.lblPassword.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold);
+            this.lblPassword.Location = new System.Drawing.Point(122, 92);
             this.lblPassword.Name = "lblPassword";
-            this.lblPassword.Size = new System.Drawing.Size(80, 20);
+            this.lblPassword.Size = new System.Drawing.Size(102, 25);
             this.lblPassword.TabIndex = 2;
             this.lblPassword.Text = "Password:";
             // 
@@ -207,84 +218,684 @@ namespace DocumentIssuanceApp
             this.cmbRole.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.cmbRole.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbRole.FormattingEnabled = true;
-            this.cmbRole.Location = new System.Drawing.Point(141, 46);
+            this.cmbRole.Location = new System.Drawing.Point(230, 46);
             this.cmbRole.Name = "cmbRole";
-            this.cmbRole.Size = new System.Drawing.Size(230, 29);
+            this.cmbRole.Size = new System.Drawing.Size(230, 36);
             this.cmbRole.TabIndex = 1;
             // 
             // lblRole
             // 
             this.lblRole.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.lblRole.AutoSize = true;
-            this.lblRole.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblRole.Location = new System.Drawing.Point(46, 50);
+            this.lblRole.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold);
+            this.lblRole.Location = new System.Drawing.Point(111, 52);
             this.lblRole.Name = "lblRole";
-            this.lblRole.Size = new System.Drawing.Size(89, 20);
+            this.lblRole.Size = new System.Drawing.Size(113, 25);
             this.lblRole.TabIndex = 0;
             this.lblRole.Text = "Select Role:";
             // 
             // tabPageDocumentIssuance
             // 
-            this.tabPageDocumentIssuance.AutoScroll = true;
-            this.tabPageDocumentIssuance.Controls.Add(this.pnlStatusDI);
-            this.tabPageDocumentIssuance.Controls.Add(this.pnlActionBottomDI);
-            this.tabPageDocumentIssuance.Controls.Add(this.grpRemarksDI);
-            this.tabPageDocumentIssuance.Controls.Add(this.grpItemDetailsDI);
-            this.tabPageDocumentIssuance.Controls.Add(this.grpParentBatchInfoDI);
-            this.tabPageDocumentIssuance.Controls.Add(this.pnlRequestDetailsDI);
-            this.tabPageDocumentIssuance.Controls.Add(this.grpDocTypeDI);
-            this.tabPageDocumentIssuance.Controls.Add(this.pnlTopRightDI);
-            this.tabPageDocumentIssuance.Controls.Add(this.lblHeaderDI);
-            this.tabPageDocumentIssuance.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tabPageDocumentIssuance.Location = new System.Drawing.Point(4, 26);
+            this.tabPageDocumentIssuance.Controls.Add(this.tlpDocumentIssuanceMain);
+            this.tabPageDocumentIssuance.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.tabPageDocumentIssuance.Location = new System.Drawing.Point(4, 30);
             this.tabPageDocumentIssuance.Name = "tabPageDocumentIssuance";
-            this.tabPageDocumentIssuance.Padding = new System.Windows.Forms.Padding(15);
-            this.tabPageDocumentIssuance.Size = new System.Drawing.Size(1196, 567);
+            this.tabPageDocumentIssuance.Padding = new System.Windows.Forms.Padding(10);
+            this.tabPageDocumentIssuance.Size = new System.Drawing.Size(1396, 652);
             this.tabPageDocumentIssuance.TabIndex = 1;
             this.tabPageDocumentIssuance.Text = "Document Issuance";
             this.tabPageDocumentIssuance.UseVisualStyleBackColor = true;
             // 
-            // pnlStatusDI
+            // tlpDocumentIssuanceMain
             // 
-            this.pnlStatusDI.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.pnlStatusDI.Controls.Add(this.lblStatusValueDI);
-            this.pnlStatusDI.Controls.Add(this.lblStatusLabelDI);
-            this.pnlStatusDI.Location = new System.Drawing.Point(18, 509);
-            this.pnlStatusDI.Name = "pnlStatusDI";
-            this.pnlStatusDI.Size = new System.Drawing.Size(1160, 30);
-            this.pnlStatusDI.TabIndex = 8;
+            this.tlpDocumentIssuanceMain.ColumnCount = 1;
+            this.tlpDocumentIssuanceMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tlpDocumentIssuanceMain.Controls.Add(this.lblHeaderDI, 0, 0);
+            this.tlpDocumentIssuanceMain.Controls.Add(this.tlpTopSectionDI, 0, 1);
+            this.tlpDocumentIssuanceMain.Controls.Add(this.pnlRequestDetailsDI, 0, 2);
+            this.tlpDocumentIssuanceMain.Controls.Add(this.grpParentBatchInfoDI, 0, 3);
+            this.tlpDocumentIssuanceMain.Controls.Add(this.grpItemDetailsDI, 0, 4);
+            this.tlpDocumentIssuanceMain.Controls.Add(this.grpRemarksDI, 0, 5);
+            this.tlpDocumentIssuanceMain.Controls.Add(this.pnlActionBottomDI, 0, 6);
+            this.tlpDocumentIssuanceMain.Controls.Add(this.pnlStatusDI, 0, 7);
+            this.tlpDocumentIssuanceMain.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tlpDocumentIssuanceMain.Location = new System.Drawing.Point(10, 10);
+            this.tlpDocumentIssuanceMain.Name = "tlpDocumentIssuanceMain";
+            this.tlpDocumentIssuanceMain.RowCount = 8;
+            this.tlpDocumentIssuanceMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
+            this.tlpDocumentIssuanceMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tlpDocumentIssuanceMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tlpDocumentIssuanceMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tlpDocumentIssuanceMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tlpDocumentIssuanceMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tlpDocumentIssuanceMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 55F));
+            this.tlpDocumentIssuanceMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
+            this.tlpDocumentIssuanceMain.Size = new System.Drawing.Size(1376, 632);
+            this.tlpDocumentIssuanceMain.TabIndex = 0;
             // 
-            // lblStatusValueDI
+            // lblHeaderDI
             // 
-            this.lblStatusValueDI.AutoSize = true;
-            this.lblStatusValueDI.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Italic);
-            this.lblStatusValueDI.Location = new System.Drawing.Point(70, 7);
-            this.lblStatusValueDI.Name = "lblStatusValueDI";
-            this.lblStatusValueDI.Size = new System.Drawing.Size(129, 17);
-            this.lblStatusValueDI.TabIndex = 1;
-            this.lblStatusValueDI.Text = "Awaiting submission...";
+            this.lblHeaderDI.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.lblHeaderDI.AutoSize = true;
+            this.lblHeaderDI.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Bold);
+            this.lblHeaderDI.Location = new System.Drawing.Point(534, 1);
+            this.lblHeaderDI.Name = "lblHeaderDI";
+            this.lblHeaderDI.Size = new System.Drawing.Size(307, 37);
+            this.lblHeaderDI.TabIndex = 0;
+            this.lblHeaderDI.Text = "DOCUMENT ISSUANCE";
             // 
-            // lblStatusLabelDI
+            // tlpTopSectionDI
             // 
-            this.lblStatusLabelDI.AutoSize = true;
-            this.lblStatusLabelDI.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
-            this.lblStatusLabelDI.Location = new System.Drawing.Point(10, 7);
-            this.lblStatusLabelDI.Name = "lblStatusLabelDI";
-            this.lblStatusLabelDI.Size = new System.Drawing.Size(49, 17);
-            this.lblStatusLabelDI.TabIndex = 0;
-            this.lblStatusLabelDI.Text = "Status:";
+            this.tlpTopSectionDI.AutoSize = true;
+            this.tlpTopSectionDI.ColumnCount = 2;
+            this.tlpTopSectionDI.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 70F));
+            this.tlpTopSectionDI.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 30F));
+            this.tlpTopSectionDI.Controls.Add(this.grpDocTypeDI, 0, 0);
+            this.tlpTopSectionDI.Controls.Add(this.pnlTopRightDI, 1, 0);
+            this.tlpTopSectionDI.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tlpTopSectionDI.Location = new System.Drawing.Point(3, 43);
+            this.tlpTopSectionDI.Name = "tlpTopSectionDI";
+            this.tlpTopSectionDI.RowCount = 1;
+            this.tlpTopSectionDI.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tlpTopSectionDI.Size = new System.Drawing.Size(1370, 66);
+            this.tlpTopSectionDI.TabIndex = 1;
+            // 
+            // grpDocTypeDI
+            // 
+            this.grpDocTypeDI.Controls.Add(this.chkDocTypeAddendumDI);
+            this.grpDocTypeDI.Controls.Add(this.chkDocTypeAppendixDI);
+            this.grpDocTypeDI.Controls.Add(this.chkDocTypeBPRDI);
+            this.grpDocTypeDI.Controls.Add(this.chkDocTypeBMRDI);
+            this.grpDocTypeDI.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.grpDocTypeDI.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
+            this.grpDocTypeDI.Location = new System.Drawing.Point(3, 3);
+            this.grpDocTypeDI.Name = "grpDocTypeDI";
+            this.grpDocTypeDI.Size = new System.Drawing.Size(953, 60);
+            this.grpDocTypeDI.TabIndex = 0;
+            this.grpDocTypeDI.TabStop = false;
+            this.grpDocTypeDI.Text = "Document Type";
+            // 
+            // chkDocTypeAddendumDI
+            // 
+            this.chkDocTypeAddendumDI.AutoSize = true;
+            this.chkDocTypeAddendumDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.chkDocTypeAddendumDI.Location = new System.Drawing.Point(300, 25);
+            this.chkDocTypeAddendumDI.Name = "chkDocTypeAddendumDI";
+            this.chkDocTypeAddendumDI.Size = new System.Drawing.Size(117, 27);
+            this.chkDocTypeAddendumDI.TabIndex = 3;
+            this.chkDocTypeAddendumDI.Text = "Addendum";
+            this.chkDocTypeAddendumDI.UseVisualStyleBackColor = true;
+            // 
+            // chkDocTypeAppendixDI
+            // 
+            this.chkDocTypeAppendixDI.AutoSize = true;
+            this.chkDocTypeAppendixDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.chkDocTypeAppendixDI.Location = new System.Drawing.Point(200, 25);
+            this.chkDocTypeAppendixDI.Name = "chkDocTypeAppendixDI";
+            this.chkDocTypeAppendixDI.Size = new System.Drawing.Size(104, 27);
+            this.chkDocTypeAppendixDI.TabIndex = 2;
+            this.chkDocTypeAppendixDI.Text = "Appendix";
+            this.chkDocTypeAppendixDI.UseVisualStyleBackColor = true;
+            // 
+            // chkDocTypeBPRDI
+            // 
+            this.chkDocTypeBPRDI.AutoSize = true;
+            this.chkDocTypeBPRDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.chkDocTypeBPRDI.Location = new System.Drawing.Point(110, 25);
+            this.chkDocTypeBPRDI.Name = "chkDocTypeBPRDI";
+            this.chkDocTypeBPRDI.Size = new System.Drawing.Size(62, 27);
+            this.chkDocTypeBPRDI.TabIndex = 1;
+            this.chkDocTypeBPRDI.Text = "BPR";
+            this.chkDocTypeBPRDI.UseVisualStyleBackColor = true;
+            // 
+            // chkDocTypeBMRDI
+            // 
+            this.chkDocTypeBMRDI.AutoSize = true;
+            this.chkDocTypeBMRDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.chkDocTypeBMRDI.Location = new System.Drawing.Point(15, 25);
+            this.chkDocTypeBMRDI.Name = "chkDocTypeBMRDI";
+            this.chkDocTypeBMRDI.Size = new System.Drawing.Size(67, 27);
+            this.chkDocTypeBMRDI.TabIndex = 0;
+            this.chkDocTypeBMRDI.Text = "BMR";
+            this.chkDocTypeBMRDI.UseVisualStyleBackColor = true;
+            // 
+            // pnlTopRightDI
+            // 
+            this.pnlTopRightDI.Controls.Add(this.txtRequestNoValueDI);
+            this.pnlTopRightDI.Controls.Add(this.lblRequestNoLabelDI);
+            this.pnlTopRightDI.Controls.Add(this.lblTrackerNoValueDI);
+            this.pnlTopRightDI.Controls.Add(this.lblTrackerNoLabelDI);
+            this.pnlTopRightDI.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlTopRightDI.Location = new System.Drawing.Point(962, 3);
+            this.pnlTopRightDI.Name = "pnlTopRightDI";
+            this.pnlTopRightDI.Padding = new System.Windows.Forms.Padding(5, 0, 0, 0);
+            this.pnlTopRightDI.Size = new System.Drawing.Size(405, 60);
+            this.pnlTopRightDI.TabIndex = 1;
+            // 
+            // txtRequestNoValueDI
+            // 
+            this.txtRequestNoValueDI.Location = new System.Drawing.Point(132, 29);
+            this.txtRequestNoValueDI.Name = "txtRequestNoValueDI";
+            this.txtRequestNoValueDI.ReadOnly = true;
+            this.txtRequestNoValueDI.Size = new System.Drawing.Size(220, 29);
+            this.txtRequestNoValueDI.TabIndex = 3;
+            this.txtRequestNoValueDI.Text = "(placeholder)";
+            // 
+            // lblRequestNoLabelDI
+            // 
+            this.lblRequestNoLabelDI.AutoSize = true;
+            this.lblRequestNoLabelDI.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblRequestNoLabelDI.Location = new System.Drawing.Point(18, 32);
+            this.lblRequestNoLabelDI.Name = "lblRequestNoLabelDI";
+            this.lblRequestNoLabelDI.Size = new System.Drawing.Size(108, 23);
+            this.lblRequestNoLabelDI.TabIndex = 2;
+            this.lblRequestNoLabelDI.Text = "Request No.:";
+            // 
+            // lblTrackerNoValueDI
+            // 
+            this.lblTrackerNoValueDI.AutoSize = true;
+            this.lblTrackerNoValueDI.Location = new System.Drawing.Point(128, 5);
+            this.lblTrackerNoValueDI.Name = "lblTrackerNoValueDI";
+            this.lblTrackerNoValueDI.Size = new System.Drawing.Size(68, 23);
+            this.lblTrackerNoValueDI.TabIndex = 1;
+            this.lblTrackerNoValueDI.Text = "(empty)";
+            // 
+            // lblTrackerNoLabelDI
+            // 
+            this.lblTrackerNoLabelDI.AutoSize = true;
+            this.lblTrackerNoLabelDI.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTrackerNoLabelDI.Location = new System.Drawing.Point(25, 5);
+            this.lblTrackerNoLabelDI.Name = "lblTrackerNoLabelDI";
+            this.lblTrackerNoLabelDI.Size = new System.Drawing.Size(101, 23);
+            this.lblTrackerNoLabelDI.TabIndex = 0;
+            this.lblTrackerNoLabelDI.Text = "Tracker No.:";
+            // 
+            // pnlRequestDetailsDI
+            // 
+            this.pnlRequestDetailsDI.AutoSize = true;
+            this.pnlRequestDetailsDI.Controls.Add(this.tlpRequestDetails);
+            this.pnlRequestDetailsDI.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlRequestDetailsDI.Location = new System.Drawing.Point(3, 115);
+            this.pnlRequestDetailsDI.Name = "pnlRequestDetailsDI";
+            this.pnlRequestDetailsDI.Size = new System.Drawing.Size(1370, 41);
+            this.pnlRequestDetailsDI.TabIndex = 2;
+            // 
+            // tlpRequestDetails
+            // 
+            this.tlpRequestDetails.AutoSize = true;
+            this.tlpRequestDetails.ColumnCount = 5;
+            this.tlpRequestDetails.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tlpRequestDetails.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 300F));
+            this.tlpRequestDetails.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tlpRequestDetails.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tlpRequestDetails.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 260F));
+            this.tlpRequestDetails.Controls.Add(this.lblRequestDateDI, 0, 0);
+            this.tlpRequestDetails.Controls.Add(this.dtpRequestDateDI, 1, 0);
+            this.tlpRequestDetails.Controls.Add(this.lblFromDepartmentDI, 3, 0);
+            this.tlpRequestDetails.Controls.Add(this.cmbFromDepartmentDI, 4, 0);
+            this.tlpRequestDetails.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tlpRequestDetails.Location = new System.Drawing.Point(0, 0);
+            this.tlpRequestDetails.Name = "tlpRequestDetails";
+            this.tlpRequestDetails.Padding = new System.Windows.Forms.Padding(3);
+            this.tlpRequestDetails.RowCount = 1;
+            this.tlpRequestDetails.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tlpRequestDetails.Size = new System.Drawing.Size(1370, 41);
+            this.tlpRequestDetails.TabIndex = 0;
+            // 
+            // lblRequestDateDI
+            // 
+            this.lblRequestDateDI.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.lblRequestDateDI.AutoSize = true;
+            this.lblRequestDateDI.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
+            this.lblRequestDateDI.Location = new System.Drawing.Point(13, 9);
+            this.lblRequestDateDI.Margin = new System.Windows.Forms.Padding(10, 0, 3, 0);
+            this.lblRequestDateDI.Name = "lblRequestDateDI";
+            this.lblRequestDateDI.Size = new System.Drawing.Size(117, 23);
+            this.lblRequestDateDI.TabIndex = 0;
+            this.lblRequestDateDI.Text = "Request Date:";
+            // 
+            // dtpRequestDateDI
+            // 
+            this.dtpRequestDateDI.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.dtpRequestDateDI.Location = new System.Drawing.Point(136, 6);
+            this.dtpRequestDateDI.Name = "dtpRequestDateDI";
+            this.dtpRequestDateDI.Size = new System.Drawing.Size(294, 29);
+            this.dtpRequestDateDI.TabIndex = 1;
+            // 
+            // lblFromDepartmentDI
+            // 
+            this.lblFromDepartmentDI.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblFromDepartmentDI.AutoSize = true;
+            this.lblFromDepartmentDI.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
+            this.lblFromDepartmentDI.Location = new System.Drawing.Point(946, 9);
+            this.lblFromDepartmentDI.Margin = new System.Windows.Forms.Padding(3, 0, 10, 0);
+            this.lblFromDepartmentDI.Name = "lblFromDepartmentDI";
+            this.lblFromDepartmentDI.Size = new System.Drawing.Size(151, 23);
+            this.lblFromDepartmentDI.TabIndex = 2;
+            this.lblFromDepartmentDI.Text = "From Department:";
+            // 
+            // cmbFromDepartmentDI
+            // 
+            this.cmbFromDepartmentDI.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.cmbFromDepartmentDI.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbFromDepartmentDI.FormattingEnabled = true;
+            this.cmbFromDepartmentDI.Items.AddRange(new object[] {
+            "PRD - Production Department",
+            "PKG - Packaging Department"});
+            this.cmbFromDepartmentDI.Location = new System.Drawing.Point(1110, 8);
+            this.cmbFromDepartmentDI.Name = "cmbFromDepartmentDI";
+            this.cmbFromDepartmentDI.Size = new System.Drawing.Size(254, 29);
+            this.cmbFromDepartmentDI.TabIndex = 3;
+            // 
+            // grpParentBatchInfoDI
+            // 
+            this.grpParentBatchInfoDI.AutoSize = true;
+            this.grpParentBatchInfoDI.Controls.Add(this.tlpParentBatchInfo);
+            this.grpParentBatchInfoDI.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.grpParentBatchInfoDI.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
+            this.grpParentBatchInfoDI.Location = new System.Drawing.Point(3, 162);
+            this.grpParentBatchInfoDI.Name = "grpParentBatchInfoDI";
+            this.grpParentBatchInfoDI.Size = new System.Drawing.Size(1370, 108);
+            this.grpParentBatchInfoDI.TabIndex = 3;
+            this.grpParentBatchInfoDI.TabStop = false;
+            this.grpParentBatchInfoDI.Text = "Parent Batch Information (If Applicable)";
+            // 
+            // tlpParentBatchInfo
+            // 
+            this.tlpParentBatchInfo.AutoSize = true;
+            this.tlpParentBatchInfo.ColumnCount = 4;
+            this.tlpParentBatchInfo.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tlpParentBatchInfo.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tlpParentBatchInfo.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tlpParentBatchInfo.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tlpParentBatchInfo.Controls.Add(this.lblParentBatchNoDI, 0, 0);
+            this.tlpParentBatchInfo.Controls.Add(this.txtParentBatchNoDI, 1, 0);
+            this.tlpParentBatchInfo.Controls.Add(this.lblParentBatchSizeDI, 2, 0);
+            this.tlpParentBatchInfo.Controls.Add(this.numParentBatchSizeDI, 3, 0);
+            this.tlpParentBatchInfo.Controls.Add(this.lblParentMfgDateDI, 0, 1);
+            this.tlpParentBatchInfo.Controls.Add(this.dtpParentMfgDateDI, 1, 1);
+            this.tlpParentBatchInfo.Controls.Add(this.lblParentExpDateDI, 2, 1);
+            this.tlpParentBatchInfo.Controls.Add(this.dtpParentExpDateDI, 3, 1);
+            this.tlpParentBatchInfo.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tlpParentBatchInfo.Location = new System.Drawing.Point(3, 25);
+            this.tlpParentBatchInfo.Name = "tlpParentBatchInfo";
+            this.tlpParentBatchInfo.Padding = new System.Windows.Forms.Padding(5);
+            this.tlpParentBatchInfo.RowCount = 2;
+            this.tlpParentBatchInfo.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tlpParentBatchInfo.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tlpParentBatchInfo.Size = new System.Drawing.Size(1364, 80);
+            this.tlpParentBatchInfo.TabIndex = 0;
+            // 
+            // lblParentBatchNoDI
+            // 
+            this.lblParentBatchNoDI.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblParentBatchNoDI.AutoSize = true;
+            this.lblParentBatchNoDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.lblParentBatchNoDI.Location = new System.Drawing.Point(8, 11);
+            this.lblParentBatchNoDI.Name = "lblParentBatchNoDI";
+            this.lblParentBatchNoDI.Size = new System.Drawing.Size(179, 23);
+            this.lblParentBatchNoDI.TabIndex = 0;
+            this.lblParentBatchNoDI.Text = "Parent Batch Number:";
+            // 
+            // txtParentBatchNoDI
+            // 
+            this.txtParentBatchNoDI.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtParentBatchNoDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.txtParentBatchNoDI.Location = new System.Drawing.Point(193, 8);
+            this.txtParentBatchNoDI.Name = "txtParentBatchNoDI";
+            this.txtParentBatchNoDI.Size = new System.Drawing.Size(502, 29);
+            this.txtParentBatchNoDI.TabIndex = 1;
+            this.txtParentBatchNoDI.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // lblParentBatchSizeDI
+            // 
+            this.lblParentBatchSizeDI.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblParentBatchSizeDI.AutoSize = true;
+            this.lblParentBatchSizeDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.lblParentBatchSizeDI.Location = new System.Drawing.Point(701, 11);
+            this.lblParentBatchSizeDI.Name = "lblParentBatchSizeDI";
+            this.lblParentBatchSizeDI.Size = new System.Drawing.Size(146, 23);
+            this.lblParentBatchSizeDI.TabIndex = 2;
+            this.lblParentBatchSizeDI.Text = "Parent Batch Size:";
+            // 
+            // numParentBatchSizeDI
+            // 
+            this.numParentBatchSizeDI.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.numParentBatchSizeDI.DecimalPlaces = 2;
+            this.numParentBatchSizeDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.numParentBatchSizeDI.Location = new System.Drawing.Point(853, 8);
+            this.numParentBatchSizeDI.Maximum = new decimal(new int[] {
+            1000000,
+            0,
+            0,
+            0});
+            this.numParentBatchSizeDI.Name = "numParentBatchSizeDI";
+            this.numParentBatchSizeDI.Size = new System.Drawing.Size(503, 29);
+            this.numParentBatchSizeDI.TabIndex = 3;
+            this.numParentBatchSizeDI.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // lblParentMfgDateDI
+            // 
+            this.lblParentMfgDateDI.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblParentMfgDateDI.AutoSize = true;
+            this.lblParentMfgDateDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.lblParentMfgDateDI.Location = new System.Drawing.Point(44, 46);
+            this.lblParentMfgDateDI.Name = "lblParentMfgDateDI";
+            this.lblParentMfgDateDI.Size = new System.Drawing.Size(143, 23);
+            this.lblParentMfgDateDI.TabIndex = 4;
+            this.lblParentMfgDateDI.Text = "Parent Mfg. Date:";
+            // 
+            // dtpParentMfgDateDI
+            // 
+            this.dtpParentMfgDateDI.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.dtpParentMfgDateDI.Checked = false;
+            this.dtpParentMfgDateDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.dtpParentMfgDateDI.Location = new System.Drawing.Point(193, 43);
+            this.dtpParentMfgDateDI.Name = "dtpParentMfgDateDI";
+            this.dtpParentMfgDateDI.ShowCheckBox = true;
+            this.dtpParentMfgDateDI.Size = new System.Drawing.Size(502, 29);
+            this.dtpParentMfgDateDI.TabIndex = 5;
+            // 
+            // lblParentExpDateDI
+            // 
+            this.lblParentExpDateDI.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblParentExpDateDI.AutoSize = true;
+            this.lblParentExpDateDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.lblParentExpDateDI.Location = new System.Drawing.Point(707, 46);
+            this.lblParentExpDateDI.Name = "lblParentExpDateDI";
+            this.lblParentExpDateDI.Size = new System.Drawing.Size(140, 23);
+            this.lblParentExpDateDI.TabIndex = 6;
+            this.lblParentExpDateDI.Text = "Parent Exp. Date:";
+            this.lblParentExpDateDI.Click += new System.EventHandler(this.lblParentExpDateDI_Click);
+            // 
+            // dtpParentExpDateDI
+            // 
+            this.dtpParentExpDateDI.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.dtpParentExpDateDI.Checked = false;
+            this.dtpParentExpDateDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.dtpParentExpDateDI.Location = new System.Drawing.Point(853, 43);
+            this.dtpParentExpDateDI.Name = "dtpParentExpDateDI";
+            this.dtpParentExpDateDI.ShowCheckBox = true;
+            this.dtpParentExpDateDI.Size = new System.Drawing.Size(503, 29);
+            this.dtpParentExpDateDI.TabIndex = 7;
+            this.dtpParentExpDateDI.ValueChanged += new System.EventHandler(this.dtpParentExpDateDI_ValueChanged);
+            // 
+            // grpItemDetailsDI
+            // 
+            this.grpItemDetailsDI.AutoSize = true;
+            this.grpItemDetailsDI.Controls.Add(this.tlpItemDetails);
+            this.grpItemDetailsDI.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.grpItemDetailsDI.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
+            this.grpItemDetailsDI.Location = new System.Drawing.Point(3, 276);
+            this.grpItemDetailsDI.Name = "grpItemDetailsDI";
+            this.grpItemDetailsDI.Size = new System.Drawing.Size(1370, 143);
+            this.grpItemDetailsDI.TabIndex = 4;
+            this.grpItemDetailsDI.TabStop = false;
+            this.grpItemDetailsDI.Text = "Item/Product Details";
+            // 
+            // tlpItemDetails
+            // 
+            this.tlpItemDetails.AutoSize = true;
+            this.tlpItemDetails.ColumnCount = 6;
+            this.tlpItemDetails.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tlpItemDetails.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33F));
+            this.tlpItemDetails.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tlpItemDetails.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33F));
+            this.tlpItemDetails.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tlpItemDetails.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.34F));
+            this.tlpItemDetails.Controls.Add(this.lblProductDI, 0, 0);
+            this.tlpItemDetails.Controls.Add(this.txtProductDI, 1, 0);
+            this.tlpItemDetails.Controls.Add(this.lblDocumentNoDI, 2, 0);
+            this.tlpItemDetails.Controls.Add(this.txtDocumentNoDI, 3, 0);
+            this.tlpItemDetails.Controls.Add(this.lblBatchNoDI, 4, 0);
+            this.tlpItemDetails.Controls.Add(this.txtBatchNoDI, 5, 0);
+            this.tlpItemDetails.Controls.Add(this.lblBatchSizeDI, 0, 1);
+            this.tlpItemDetails.Controls.Add(this.txtBatchSizeDI, 1, 1);
+            this.tlpItemDetails.Controls.Add(this.lblItemMfgDateDI, 2, 1);
+            this.tlpItemDetails.Controls.Add(this.dtpItemMfgDateDI, 3, 1);
+            this.tlpItemDetails.Controls.Add(this.lblItemExpDateDI, 4, 1);
+            this.tlpItemDetails.Controls.Add(this.dtpItemExpDateDI, 5, 1);
+            this.tlpItemDetails.Controls.Add(this.lblMarketDI, 0, 2);
+            this.tlpItemDetails.Controls.Add(this.txtMarketDI, 1, 2);
+            this.tlpItemDetails.Controls.Add(this.lblPackSizeDI, 2, 2);
+            this.tlpItemDetails.Controls.Add(this.txtPackSizeDI, 3, 2);
+            this.tlpItemDetails.Controls.Add(this.lblExportOrderNoDI, 4, 2);
+            this.tlpItemDetails.Controls.Add(this.txtExportOrderNoDI, 5, 2);
+            this.tlpItemDetails.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tlpItemDetails.Location = new System.Drawing.Point(3, 25);
+            this.tlpItemDetails.Name = "tlpItemDetails";
+            this.tlpItemDetails.Padding = new System.Windows.Forms.Padding(5);
+            this.tlpItemDetails.RowCount = 3;
+            this.tlpItemDetails.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33F));
+            this.tlpItemDetails.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33F));
+            this.tlpItemDetails.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.34F));
+            this.tlpItemDetails.Size = new System.Drawing.Size(1364, 115);
+            this.tlpItemDetails.TabIndex = 0;
+            // 
+            // lblProductDI
+            // 
+            this.lblProductDI.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblProductDI.AutoSize = true;
+            this.lblProductDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.lblProductDI.Location = new System.Drawing.Point(26, 10);
+            this.lblProductDI.Name = "lblProductDI";
+            this.lblProductDI.Size = new System.Drawing.Size(74, 23);
+            this.lblProductDI.TabIndex = 0;
+            this.lblProductDI.Text = "Product:";
+            // 
+            // txtProductDI
+            // 
+            this.txtProductDI.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtProductDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.txtProductDI.Location = new System.Drawing.Point(106, 8);
+            this.txtProductDI.Name = "txtProductDI";
+            this.txtProductDI.Size = new System.Drawing.Size(332, 29);
+            this.txtProductDI.TabIndex = 1;
+            this.txtProductDI.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // lblDocumentNoDI
+            // 
+            this.lblDocumentNoDI.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblDocumentNoDI.AutoSize = true;
+            this.lblDocumentNoDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.lblDocumentNoDI.Location = new System.Drawing.Point(444, 10);
+            this.lblDocumentNoDI.Name = "lblDocumentNoDI";
+            this.lblDocumentNoDI.Size = new System.Drawing.Size(126, 23);
+            this.lblDocumentNoDI.TabIndex = 2;
+            this.lblDocumentNoDI.Text = "Document No.:";
+            // 
+            // txtDocumentNoDI
+            // 
+            this.txtDocumentNoDI.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtDocumentNoDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.txtDocumentNoDI.Location = new System.Drawing.Point(576, 8);
+            this.txtDocumentNoDI.Name = "txtDocumentNoDI";
+            this.txtDocumentNoDI.Size = new System.Drawing.Size(332, 29);
+            this.txtDocumentNoDI.TabIndex = 3;
+            this.txtDocumentNoDI.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // lblBatchNoDI
+            // 
+            this.lblBatchNoDI.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblBatchNoDI.AutoSize = true;
+            this.lblBatchNoDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.lblBatchNoDI.Location = new System.Drawing.Point(926, 10);
+            this.lblBatchNoDI.Name = "lblBatchNoDI";
+            this.lblBatchNoDI.Size = new System.Drawing.Size(89, 23);
+            this.lblBatchNoDI.TabIndex = 4;
+            this.lblBatchNoDI.Text = "Batch No.:";
+            // 
+            // txtBatchNoDI
+            // 
+            this.txtBatchNoDI.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtBatchNoDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.txtBatchNoDI.Location = new System.Drawing.Point(1021, 8);
+            this.txtBatchNoDI.Name = "txtBatchNoDI";
+            this.txtBatchNoDI.Size = new System.Drawing.Size(335, 29);
+            this.txtBatchNoDI.TabIndex = 5;
+            this.txtBatchNoDI.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // lblBatchSizeDI
+            // 
+            this.lblBatchSizeDI.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblBatchSizeDI.AutoSize = true;
+            this.lblBatchSizeDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.lblBatchSizeDI.Location = new System.Drawing.Point(8, 44);
+            this.lblBatchSizeDI.Name = "lblBatchSizeDI";
+            this.lblBatchSizeDI.Size = new System.Drawing.Size(92, 23);
+            this.lblBatchSizeDI.TabIndex = 6;
+            this.lblBatchSizeDI.Text = "Batch Size:";
+            // 
+            // txtBatchSizeDI
+            // 
+            this.txtBatchSizeDI.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtBatchSizeDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.txtBatchSizeDI.Location = new System.Drawing.Point(106, 42);
+            this.txtBatchSizeDI.Name = "txtBatchSizeDI";
+            this.txtBatchSizeDI.Size = new System.Drawing.Size(332, 29);
+            this.txtBatchSizeDI.TabIndex = 7;
+            this.txtBatchSizeDI.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // lblItemMfgDateDI
+            // 
+            this.lblItemMfgDateDI.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblItemMfgDateDI.AutoSize = true;
+            this.lblItemMfgDateDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.lblItemMfgDateDI.Location = new System.Drawing.Point(481, 44);
+            this.lblItemMfgDateDI.Name = "lblItemMfgDateDI";
+            this.lblItemMfgDateDI.Size = new System.Drawing.Size(89, 23);
+            this.lblItemMfgDateDI.TabIndex = 8;
+            this.lblItemMfgDateDI.Text = "Mfg. Date:";
+            // 
+            // dtpItemMfgDateDI
+            // 
+            this.dtpItemMfgDateDI.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.dtpItemMfgDateDI.Checked = false;
+            this.dtpItemMfgDateDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.dtpItemMfgDateDI.Location = new System.Drawing.Point(576, 42);
+            this.dtpItemMfgDateDI.Name = "dtpItemMfgDateDI";
+            this.dtpItemMfgDateDI.ShowCheckBox = true;
+            this.dtpItemMfgDateDI.Size = new System.Drawing.Size(332, 29);
+            this.dtpItemMfgDateDI.TabIndex = 9;
+            // 
+            // lblItemExpDateDI
+            // 
+            this.lblItemExpDateDI.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblItemExpDateDI.AutoSize = true;
+            this.lblItemExpDateDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.lblItemExpDateDI.Location = new System.Drawing.Point(929, 44);
+            this.lblItemExpDateDI.Name = "lblItemExpDateDI";
+            this.lblItemExpDateDI.Size = new System.Drawing.Size(86, 23);
+            this.lblItemExpDateDI.TabIndex = 10;
+            this.lblItemExpDateDI.Text = "Exp. Date:";
+            // 
+            // dtpItemExpDateDI
+            // 
+            this.dtpItemExpDateDI.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.dtpItemExpDateDI.Checked = false;
+            this.dtpItemExpDateDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.dtpItemExpDateDI.Location = new System.Drawing.Point(1021, 42);
+            this.dtpItemExpDateDI.Name = "dtpItemExpDateDI";
+            this.dtpItemExpDateDI.ShowCheckBox = true;
+            this.dtpItemExpDateDI.Size = new System.Drawing.Size(335, 29);
+            this.dtpItemExpDateDI.TabIndex = 11;
+            // 
+            // lblMarketDI
+            // 
+            this.lblMarketDI.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblMarketDI.AutoSize = true;
+            this.lblMarketDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.lblMarketDI.Location = new System.Drawing.Point(33, 80);
+            this.lblMarketDI.Name = "lblMarketDI";
+            this.lblMarketDI.Size = new System.Drawing.Size(67, 23);
+            this.lblMarketDI.TabIndex = 12;
+            this.lblMarketDI.Text = "Market:";
+            // 
+            // txtMarketDI
+            // 
+            this.txtMarketDI.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtMarketDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.txtMarketDI.Location = new System.Drawing.Point(106, 77);
+            this.txtMarketDI.Name = "txtMarketDI";
+            this.txtMarketDI.Size = new System.Drawing.Size(332, 29);
+            this.txtMarketDI.TabIndex = 13;
+            this.txtMarketDI.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // lblPackSizeDI
+            // 
+            this.lblPackSizeDI.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblPackSizeDI.AutoSize = true;
+            this.lblPackSizeDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.lblPackSizeDI.Location = new System.Drawing.Point(487, 80);
+            this.lblPackSizeDI.Name = "lblPackSizeDI";
+            this.lblPackSizeDI.Size = new System.Drawing.Size(83, 23);
+            this.lblPackSizeDI.TabIndex = 14;
+            this.lblPackSizeDI.Text = "Pack Size:";
+            // 
+            // txtPackSizeDI
+            // 
+            this.txtPackSizeDI.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtPackSizeDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.txtPackSizeDI.Location = new System.Drawing.Point(576, 77);
+            this.txtPackSizeDI.Name = "txtPackSizeDI";
+            this.txtPackSizeDI.Size = new System.Drawing.Size(332, 29);
+            this.txtPackSizeDI.TabIndex = 15;
+            this.txtPackSizeDI.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // lblExportOrderNoDI
+            // 
+            this.lblExportOrderNoDI.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblExportOrderNoDI.AutoSize = true;
+            this.lblExportOrderNoDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.lblExportOrderNoDI.Location = new System.Drawing.Point(914, 80);
+            this.lblExportOrderNoDI.Name = "lblExportOrderNoDI";
+            this.lblExportOrderNoDI.Size = new System.Drawing.Size(101, 23);
+            this.lblExportOrderNoDI.TabIndex = 16;
+            this.lblExportOrderNoDI.Text = "Export Ord.:";
+            // 
+            // txtExportOrderNoDI
+            // 
+            this.txtExportOrderNoDI.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtExportOrderNoDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.txtExportOrderNoDI.Location = new System.Drawing.Point(1021, 77);
+            this.txtExportOrderNoDI.Name = "txtExportOrderNoDI";
+            this.txtExportOrderNoDI.Size = new System.Drawing.Size(335, 29);
+            this.txtExportOrderNoDI.TabIndex = 17;
+            this.txtExportOrderNoDI.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // grpRemarksDI
+            // 
+            this.grpRemarksDI.Controls.Add(this.txtRemarksDI);
+            this.grpRemarksDI.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.grpRemarksDI.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
+            this.grpRemarksDI.Location = new System.Drawing.Point(3, 425);
+            this.grpRemarksDI.Name = "grpRemarksDI";
+            this.grpRemarksDI.Padding = new System.Windows.Forms.Padding(10);
+            this.grpRemarksDI.Size = new System.Drawing.Size(1370, 109);
+            this.grpRemarksDI.TabIndex = 5;
+            this.grpRemarksDI.TabStop = false;
+            this.grpRemarksDI.Text = "Remarks";
+            // 
+            // txtRemarksDI
+            // 
+            this.txtRemarksDI.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtRemarksDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.txtRemarksDI.Location = new System.Drawing.Point(10, 32);
+            this.txtRemarksDI.Multiline = true;
+            this.txtRemarksDI.Name = "txtRemarksDI";
+            this.txtRemarksDI.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txtRemarksDI.Size = new System.Drawing.Size(1350, 67);
+            this.txtRemarksDI.TabIndex = 0;
             // 
             // pnlActionBottomDI
             // 
-            this.pnlActionBottomDI.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.pnlActionBottomDI.Controls.Add(this.btnClearFormDI);
             this.pnlActionBottomDI.Controls.Add(this.btnSubmitRequestDI);
-            this.pnlActionBottomDI.Location = new System.Drawing.Point(18, 459);
+            this.pnlActionBottomDI.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlActionBottomDI.Location = new System.Drawing.Point(3, 540);
             this.pnlActionBottomDI.Name = "pnlActionBottomDI";
-            this.pnlActionBottomDI.Size = new System.Drawing.Size(1160, 45);
-            this.pnlActionBottomDI.TabIndex = 7;
+            this.pnlActionBottomDI.Size = new System.Drawing.Size(1370, 49);
+            this.pnlActionBottomDI.TabIndex = 6;
             // 
             // btnClearFormDI
             // 
@@ -306,540 +917,72 @@ namespace DocumentIssuanceApp
             this.btnSubmitRequestDI.Text = "Submit Request";
             this.btnSubmitRequestDI.UseVisualStyleBackColor = true;
             // 
-            // grpRemarksDI
-            // 
-            this.grpRemarksDI.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.grpRemarksDI.Controls.Add(this.txtRemarksDI);
-            this.grpRemarksDI.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
-            this.grpRemarksDI.Location = new System.Drawing.Point(18, 390);
-            this.grpRemarksDI.Name = "grpRemarksDI";
-            this.grpRemarksDI.Padding = new System.Windows.Forms.Padding(10);
-            this.grpRemarksDI.Size = new System.Drawing.Size(1160, 64);
-            this.grpRemarksDI.TabIndex = 6;
-            this.grpRemarksDI.TabStop = false;
-            this.grpRemarksDI.Text = "Remarks";
-            // 
-            // txtRemarksDI
-            // 
-            this.txtRemarksDI.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtRemarksDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
-            this.txtRemarksDI.Location = new System.Drawing.Point(10, 28);
-            this.txtRemarksDI.Multiline = true;
-            this.txtRemarksDI.Name = "txtRemarksDI";
-            this.txtRemarksDI.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtRemarksDI.Size = new System.Drawing.Size(1140, 26);
-            this.txtRemarksDI.TabIndex = 0;
-            // 
-            // grpItemDetailsDI
-            // 
-            this.grpItemDetailsDI.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.grpItemDetailsDI.Controls.Add(this.txtExportOrderNoDI);
-            this.grpItemDetailsDI.Controls.Add(this.lblExportOrderNoDI);
-            this.grpItemDetailsDI.Controls.Add(this.txtPackSizeDI);
-            this.grpItemDetailsDI.Controls.Add(this.lblPackSizeDI);
-            this.grpItemDetailsDI.Controls.Add(this.txtMarketDI);
-            this.grpItemDetailsDI.Controls.Add(this.lblMarketDI);
-            this.grpItemDetailsDI.Controls.Add(this.dtpItemExpDateDI);
-            this.grpItemDetailsDI.Controls.Add(this.lblItemExpDateDI);
-            this.grpItemDetailsDI.Controls.Add(this.dtpItemMfgDateDI);
-            this.grpItemDetailsDI.Controls.Add(this.lblItemMfgDateDI);
-            this.grpItemDetailsDI.Controls.Add(this.txtBatchSizeDI);
-            this.grpItemDetailsDI.Controls.Add(this.lblBatchSizeDI);
-            this.grpItemDetailsDI.Controls.Add(this.txtBatchNoDI);
-            this.grpItemDetailsDI.Controls.Add(this.lblBatchNoDI);
-            this.grpItemDetailsDI.Controls.Add(this.txtDocumentNoDI);
-            this.grpItemDetailsDI.Controls.Add(this.lblDocumentNoDI);
-            this.grpItemDetailsDI.Controls.Add(this.txtProductDI);
-            this.grpItemDetailsDI.Controls.Add(this.lblProductDI);
-            this.grpItemDetailsDI.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
-            this.grpItemDetailsDI.Location = new System.Drawing.Point(18, 260);
-            this.grpItemDetailsDI.Name = "grpItemDetailsDI";
-            this.grpItemDetailsDI.Size = new System.Drawing.Size(1160, 125);
-            this.grpItemDetailsDI.TabIndex = 5;
-            this.grpItemDetailsDI.TabStop = false;
-            this.grpItemDetailsDI.Text = "Item/Product Details";
-            // 
-            // txtExportOrderNoDI
-            // 
-            this.txtExportOrderNoDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
-            this.txtExportOrderNoDI.Location = new System.Drawing.Point(780, 93);
-            this.txtExportOrderNoDI.Name = "txtExportOrderNoDI";
-            this.txtExportOrderNoDI.Size = new System.Drawing.Size(220, 25);
-            this.txtExportOrderNoDI.TabIndex = 17;
-            // 
-            // lblExportOrderNoDI
-            // 
-            this.lblExportOrderNoDI.AutoSize = true;
-            this.lblExportOrderNoDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
-            this.lblExportOrderNoDI.Location = new System.Drawing.Point(690, 96);
-            this.lblExportOrderNoDI.Name = "lblExportOrderNoDI";
-            this.lblExportOrderNoDI.Size = new System.Drawing.Size(79, 17);
-            this.lblExportOrderNoDI.TabIndex = 16;
-            this.lblExportOrderNoDI.Text = "Export Ord.:";
-            // 
-            // txtPackSizeDI
-            // 
-            this.txtPackSizeDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
-            this.txtPackSizeDI.Location = new System.Drawing.Point(450, 93);
-            this.txtPackSizeDI.Name = "txtPackSizeDI";
-            this.txtPackSizeDI.Size = new System.Drawing.Size(220, 25);
-            this.txtPackSizeDI.TabIndex = 15;
-            // 
-            // lblPackSizeDI
-            // 
-            this.lblPackSizeDI.AutoSize = true;
-            this.lblPackSizeDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
-            this.lblPackSizeDI.Location = new System.Drawing.Point(350, 96);
-            this.lblPackSizeDI.Name = "lblPackSizeDI";
-            this.lblPackSizeDI.Size = new System.Drawing.Size(64, 17);
-            this.lblPackSizeDI.TabIndex = 14;
-            this.lblPackSizeDI.Text = "Pack Size:";
-            // 
-            // txtMarketDI
-            // 
-            this.txtMarketDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
-            this.txtMarketDI.Location = new System.Drawing.Point(100, 93);
-            this.txtMarketDI.Name = "txtMarketDI";
-            this.txtMarketDI.Size = new System.Drawing.Size(220, 25);
-            this.txtMarketDI.TabIndex = 13;
-            // 
-            // lblMarketDI
-            // 
-            this.lblMarketDI.AutoSize = true;
-            this.lblMarketDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
-            this.lblMarketDI.Location = new System.Drawing.Point(12, 96);
-            this.lblMarketDI.Name = "lblMarketDI";
-            this.lblMarketDI.Size = new System.Drawing.Size(52, 17);
-            this.lblMarketDI.TabIndex = 12;
-            this.lblMarketDI.Text = "Market:";
-            // 
-            // dtpItemExpDateDI
-            // 
-            this.dtpItemExpDateDI.Checked = false;
-            this.dtpItemExpDateDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
-            this.dtpItemExpDateDI.Location = new System.Drawing.Point(780, 60);
-            this.dtpItemExpDateDI.Name = "dtpItemExpDateDI";
-            this.dtpItemExpDateDI.ShowCheckBox = true;
-            this.dtpItemExpDateDI.Size = new System.Drawing.Size(220, 25);
-            this.dtpItemExpDateDI.TabIndex = 11;
-            // 
-            // lblItemExpDateDI
-            // 
-            this.lblItemExpDateDI.AutoSize = true;
-            this.lblItemExpDateDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
-            this.lblItemExpDateDI.Location = new System.Drawing.Point(690, 63);
-            this.lblItemExpDateDI.Name = "lblItemExpDateDI";
-            this.lblItemExpDateDI.Size = new System.Drawing.Size(66, 17);
-            this.lblItemExpDateDI.TabIndex = 10;
-            this.lblItemExpDateDI.Text = "Exp. Date:";
-            // 
-            // dtpItemMfgDateDI
-            // 
-            this.dtpItemMfgDateDI.Checked = false;
-            this.dtpItemMfgDateDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
-            this.dtpItemMfgDateDI.Location = new System.Drawing.Point(450, 60);
-            this.dtpItemMfgDateDI.Name = "dtpItemMfgDateDI";
-            this.dtpItemMfgDateDI.ShowCheckBox = true;
-            this.dtpItemMfgDateDI.Size = new System.Drawing.Size(220, 25);
-            this.dtpItemMfgDateDI.TabIndex = 9;
-            // 
-            // lblItemMfgDateDI
-            // 
-            this.lblItemMfgDateDI.AutoSize = true;
-            this.lblItemMfgDateDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
-            this.lblItemMfgDateDI.Location = new System.Drawing.Point(350, 63);
-            this.lblItemMfgDateDI.Name = "lblItemMfgDateDI";
-            this.lblItemMfgDateDI.Size = new System.Drawing.Size(69, 17);
-            this.lblItemMfgDateDI.TabIndex = 8;
-            this.lblItemMfgDateDI.Text = "Mfg. Date:";
-            // 
-            // txtBatchSizeDI
-            // 
-            this.txtBatchSizeDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
-            this.txtBatchSizeDI.Location = new System.Drawing.Point(100, 60);
-            this.txtBatchSizeDI.Name = "txtBatchSizeDI";
-            this.txtBatchSizeDI.Size = new System.Drawing.Size(220, 25);
-            this.txtBatchSizeDI.TabIndex = 7;
-            // 
-            // lblBatchSizeDI
-            // 
-            this.lblBatchSizeDI.AutoSize = true;
-            this.lblBatchSizeDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
-            this.lblBatchSizeDI.Location = new System.Drawing.Point(12, 63);
-            this.lblBatchSizeDI.Name = "lblBatchSizeDI";
-            this.lblBatchSizeDI.Size = new System.Drawing.Size(69, 17);
-            this.lblBatchSizeDI.TabIndex = 6;
-            this.lblBatchSizeDI.Text = "Batch Size:";
-            // 
-            // txtBatchNoDI
-            // 
-            this.txtBatchNoDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
-            this.txtBatchNoDI.Location = new System.Drawing.Point(780, 27);
-            this.txtBatchNoDI.Name = "txtBatchNoDI";
-            this.txtBatchNoDI.Size = new System.Drawing.Size(220, 25);
-            this.txtBatchNoDI.TabIndex = 5;
-            // 
-            // lblBatchNoDI
-            // 
-            this.lblBatchNoDI.AutoSize = true;
-            this.lblBatchNoDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
-            this.lblBatchNoDI.Location = new System.Drawing.Point(690, 30);
-            this.lblBatchNoDI.Name = "lblBatchNoDI";
-            this.lblBatchNoDI.Size = new System.Drawing.Size(67, 17);
-            this.lblBatchNoDI.TabIndex = 4;
-            this.lblBatchNoDI.Text = "Batch No.:";
-            // 
-            // txtDocumentNoDI
-            // 
-            this.txtDocumentNoDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
-            this.txtDocumentNoDI.Location = new System.Drawing.Point(450, 27);
-            this.txtDocumentNoDI.Name = "txtDocumentNoDI";
-            this.txtDocumentNoDI.Size = new System.Drawing.Size(220, 25);
-            this.txtDocumentNoDI.TabIndex = 3;
-            // 
-            // lblDocumentNoDI
-            // 
-            this.lblDocumentNoDI.AutoSize = true;
-            this.lblDocumentNoDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
-            this.lblDocumentNoDI.Location = new System.Drawing.Point(350, 30);
-            this.lblDocumentNoDI.Name = "lblDocumentNoDI";
-            this.lblDocumentNoDI.Size = new System.Drawing.Size(95, 17);
-            this.lblDocumentNoDI.TabIndex = 2;
-            this.lblDocumentNoDI.Text = "Document No.:";
-            // 
-            // txtProductDI
-            // 
-            this.txtProductDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
-            this.txtProductDI.Location = new System.Drawing.Point(100, 27);
-            this.txtProductDI.Name = "txtProductDI";
-            this.txtProductDI.Size = new System.Drawing.Size(220, 25);
-            this.txtProductDI.TabIndex = 1;
-            // 
-            // lblProductDI
-            // 
-            this.lblProductDI.AutoSize = true;
-            this.lblProductDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
-            this.lblProductDI.Location = new System.Drawing.Point(12, 30);
-            this.lblProductDI.Name = "lblProductDI";
-            this.lblProductDI.Size = new System.Drawing.Size(56, 17);
-            this.lblProductDI.TabIndex = 0;
-            this.lblProductDI.Text = "Product:";
-            // 
-            // grpParentBatchInfoDI
-            // 
-            this.grpParentBatchInfoDI.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.grpParentBatchInfoDI.Controls.Add(this.dtpParentExpDateDI);
-            this.grpParentBatchInfoDI.Controls.Add(this.lblParentExpDateDI);
-            this.grpParentBatchInfoDI.Controls.Add(this.dtpParentMfgDateDI);
-            this.grpParentBatchInfoDI.Controls.Add(this.lblParentMfgDateDI);
-            this.grpParentBatchInfoDI.Controls.Add(this.numParentBatchSizeDI);
-            this.grpParentBatchInfoDI.Controls.Add(this.lblParentBatchSizeDI);
-            this.grpParentBatchInfoDI.Controls.Add(this.txtParentBatchNoDI);
-            this.grpParentBatchInfoDI.Controls.Add(this.lblParentBatchNoDI);
-            this.grpParentBatchInfoDI.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
-            this.grpParentBatchInfoDI.Location = new System.Drawing.Point(18, 160);
-            this.grpParentBatchInfoDI.Name = "grpParentBatchInfoDI";
-            this.grpParentBatchInfoDI.Size = new System.Drawing.Size(1160, 95);
-            this.grpParentBatchInfoDI.TabIndex = 4;
-            this.grpParentBatchInfoDI.TabStop = false;
-            this.grpParentBatchInfoDI.Text = "Parent Batch Information (If Applicable)";
-            // 
-            // dtpParentExpDateDI
-            // 
-            this.dtpParentExpDateDI.Checked = false;
-            this.dtpParentExpDateDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
-            this.dtpParentExpDateDI.Location = new System.Drawing.Point(510, 60);
-            this.dtpParentExpDateDI.Name = "dtpParentExpDateDI";
-            this.dtpParentExpDateDI.ShowCheckBox = true;
-            this.dtpParentExpDateDI.Size = new System.Drawing.Size(200, 25);
-            this.dtpParentExpDateDI.TabIndex = 7;
-            // 
-            // lblParentExpDateDI
-            // 
-            this.lblParentExpDateDI.AutoSize = true;
-            this.lblParentExpDateDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
-            this.lblParentExpDateDI.Location = new System.Drawing.Point(380, 63);
-            this.lblParentExpDateDI.Name = "lblParentExpDateDI";
-            this.lblParentExpDateDI.Size = new System.Drawing.Size(107, 17);
-            this.lblParentExpDateDI.TabIndex = 6;
-            this.lblParentExpDateDI.Text = "Parent Exp. Date:";
-            // 
-            // dtpParentMfgDateDI
-            // 
-            this.dtpParentMfgDateDI.Checked = false;
-            this.dtpParentMfgDateDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
-            this.dtpParentMfgDateDI.Location = new System.Drawing.Point(150, 60);
-            this.dtpParentMfgDateDI.Name = "dtpParentMfgDateDI";
-            this.dtpParentMfgDateDI.ShowCheckBox = true;
-            this.dtpParentMfgDateDI.Size = new System.Drawing.Size(200, 25);
-            this.dtpParentMfgDateDI.TabIndex = 5;
-            // 
-            // lblParentMfgDateDI
-            // 
-            this.lblParentMfgDateDI.AutoSize = true;
-            this.lblParentMfgDateDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
-            this.lblParentMfgDateDI.Location = new System.Drawing.Point(12, 63);
-            this.lblParentMfgDateDI.Name = "lblParentMfgDateDI";
-            this.lblParentMfgDateDI.Size = new System.Drawing.Size(110, 17);
-            this.lblParentMfgDateDI.TabIndex = 4;
-            this.lblParentMfgDateDI.Text = "Parent Mfg. Date:";
-            // 
-            // numParentBatchSizeDI
-            // 
-            this.numParentBatchSizeDI.DecimalPlaces = 2;
-            this.numParentBatchSizeDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
-            this.numParentBatchSizeDI.Location = new System.Drawing.Point(510, 28);
-            this.numParentBatchSizeDI.Maximum = new decimal(new int[] {
-            1000000,
-            0,
-            0,
-            0});
-            this.numParentBatchSizeDI.Name = "numParentBatchSizeDI";
-            this.numParentBatchSizeDI.Size = new System.Drawing.Size(150, 25);
-            this.numParentBatchSizeDI.TabIndex = 3;
-            // 
-            // lblParentBatchSizeDI
-            // 
-            this.lblParentBatchSizeDI.AutoSize = true;
-            this.lblParentBatchSizeDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
-            this.lblParentBatchSizeDI.Location = new System.Drawing.Point(380, 30);
-            this.lblParentBatchSizeDI.Name = "lblParentBatchSizeDI";
-            this.lblParentBatchSizeDI.Size = new System.Drawing.Size(110, 17);
-            this.lblParentBatchSizeDI.TabIndex = 2;
-            this.lblParentBatchSizeDI.Text = "Parent Batch Size:";
-            // 
-            // txtParentBatchNoDI
-            // 
-            this.txtParentBatchNoDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
-            this.txtParentBatchNoDI.Location = new System.Drawing.Point(150, 27);
-            this.txtParentBatchNoDI.Name = "txtParentBatchNoDI";
-            this.txtParentBatchNoDI.Size = new System.Drawing.Size(200, 25);
-            this.txtParentBatchNoDI.TabIndex = 1;
-            // 
-            // lblParentBatchNoDI
-            // 
-            this.lblParentBatchNoDI.AutoSize = true;
-            this.lblParentBatchNoDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
-            this.lblParentBatchNoDI.Location = new System.Drawing.Point(12, 30);
-            this.lblParentBatchNoDI.Name = "lblParentBatchNoDI";
-            this.lblParentBatchNoDI.Size = new System.Drawing.Size(135, 17);
-            this.lblParentBatchNoDI.TabIndex = 0;
-            this.lblParentBatchNoDI.Text = "Parent Batch Number:";
-            // 
-            // pnlRequestDetailsDI
-            // 
-            this.pnlRequestDetailsDI.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.pnlRequestDetailsDI.Controls.Add(this.cmbFromDepartmentDI);
-            this.pnlRequestDetailsDI.Controls.Add(this.lblFromDepartmentDI);
-            this.pnlRequestDetailsDI.Controls.Add(this.dtpRequestDateDI);
-            this.pnlRequestDetailsDI.Controls.Add(this.lblRequestDateDI);
-            this.pnlRequestDetailsDI.Location = new System.Drawing.Point(18, 115);
-            this.pnlRequestDetailsDI.Name = "pnlRequestDetailsDI";
-            this.pnlRequestDetailsDI.Size = new System.Drawing.Size(1160, 40);
-            this.pnlRequestDetailsDI.TabIndex = 3;
-            // 
-            // cmbFromDepartmentDI
-            // 
-            this.cmbFromDepartmentDI.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbFromDepartmentDI.FormattingEnabled = true;
-            this.cmbFromDepartmentDI.Items.AddRange(new object[] {
-            "PRD - Production Department",
-            "PKG - Packaging Department"});
-            this.cmbFromDepartmentDI.Location = new System.Drawing.Point(510, 7);
-            this.cmbFromDepartmentDI.Name = "cmbFromDepartmentDI";
-            this.cmbFromDepartmentDI.Size = new System.Drawing.Size(250, 25);
-            this.cmbFromDepartmentDI.TabIndex = 3;
-            // 
-            // lblFromDepartmentDI
-            // 
-            this.lblFromDepartmentDI.AutoSize = true;
-            this.lblFromDepartmentDI.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
-            this.lblFromDepartmentDI.Location = new System.Drawing.Point(380, 10);
-            this.lblFromDepartmentDI.Name = "lblFromDepartmentDI";
-            this.lblFromDepartmentDI.Size = new System.Drawing.Size(120, 17);
-            this.lblFromDepartmentDI.TabIndex = 2;
-            this.lblFromDepartmentDI.Text = "From Department:";
-            // 
-            // dtpRequestDateDI
-            // 
-            this.dtpRequestDateDI.Location = new System.Drawing.Point(120, 7);
-            this.dtpRequestDateDI.Name = "dtpRequestDateDI";
-            this.dtpRequestDateDI.Size = new System.Drawing.Size(230, 25);
-            this.dtpRequestDateDI.TabIndex = 1;
-            // 
-            // lblRequestDateDI
-            // 
-            this.lblRequestDateDI.AutoSize = true;
-            this.lblRequestDateDI.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
-            this.lblRequestDateDI.Location = new System.Drawing.Point(12, 10);
-            this.lblRequestDateDI.Name = "lblRequestDateDI";
-            this.lblRequestDateDI.Size = new System.Drawing.Size(92, 17);
-            this.lblRequestDateDI.TabIndex = 0;
-            this.lblRequestDateDI.Text = "Request Date:";
-            // 
-            // grpDocTypeDI
-            // 
-            this.grpDocTypeDI.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.grpDocTypeDI.Controls.Add(this.chkDocTypeAddendumDI);
-            this.grpDocTypeDI.Controls.Add(this.chkDocTypeAppendixDI);
-            this.grpDocTypeDI.Controls.Add(this.chkDocTypeBPRDI);
-            this.grpDocTypeDI.Controls.Add(this.chkDocTypeBMRDI);
-            this.grpDocTypeDI.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.grpDocTypeDI.Location = new System.Drawing.Point(18, 50);
-            this.grpDocTypeDI.Name = "grpDocTypeDI";
-            this.grpDocTypeDI.Size = new System.Drawing.Size(815, 60);
-            this.grpDocTypeDI.TabIndex = 2;
-            this.grpDocTypeDI.TabStop = false;
-            this.grpDocTypeDI.Text = "Document Type";
-            // 
-            // chkDocTypeAddendumDI
-            // 
-            this.chkDocTypeAddendumDI.AutoSize = true;
-            this.chkDocTypeAddendumDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
-            this.chkDocTypeAddendumDI.Location = new System.Drawing.Point(300, 25);
-            this.chkDocTypeAddendumDI.Name = "chkDocTypeAddendumDI";
-            this.chkDocTypeAddendumDI.Size = new System.Drawing.Size(91, 21);
-            this.chkDocTypeAddendumDI.TabIndex = 3;
-            this.chkDocTypeAddendumDI.Text = "Addendum";
-            this.chkDocTypeAddendumDI.UseVisualStyleBackColor = true;
-            // 
-            // chkDocTypeAppendixDI
-            // 
-            this.chkDocTypeAppendixDI.AutoSize = true;
-            this.chkDocTypeAppendixDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
-            this.chkDocTypeAppendixDI.Location = new System.Drawing.Point(200, 25);
-            this.chkDocTypeAppendixDI.Name = "chkDocTypeAppendixDI";
-            this.chkDocTypeAppendixDI.Size = new System.Drawing.Size(82, 21);
-            this.chkDocTypeAppendixDI.TabIndex = 2;
-            this.chkDocTypeAppendixDI.Text = "Appendix";
-            this.chkDocTypeAppendixDI.UseVisualStyleBackColor = true;
-            // 
-            // chkDocTypeBPRDI
-            // 
-            this.chkDocTypeBPRDI.AutoSize = true;
-            this.chkDocTypeBPRDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
-            this.chkDocTypeBPRDI.Location = new System.Drawing.Point(110, 25);
-            this.chkDocTypeBPRDI.Name = "chkDocTypeBPRDI";
-            this.chkDocTypeBPRDI.Size = new System.Drawing.Size(49, 21);
-            this.chkDocTypeBPRDI.TabIndex = 1;
-            this.chkDocTypeBPRDI.Text = "BPR";
-            this.chkDocTypeBPRDI.UseVisualStyleBackColor = true;
-            // 
-            // chkDocTypeBMRDI
-            // 
-            this.chkDocTypeBMRDI.AutoSize = true;
-            this.chkDocTypeBMRDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
-            this.chkDocTypeBMRDI.Location = new System.Drawing.Point(15, 25);
-            this.chkDocTypeBMRDI.Name = "chkDocTypeBMRDI";
-            this.chkDocTypeBMRDI.Size = new System.Drawing.Size(54, 21);
-            this.chkDocTypeBMRDI.TabIndex = 0;
-            this.chkDocTypeBMRDI.Text = "BMR";
-            this.chkDocTypeBMRDI.UseVisualStyleBackColor = true;
-            // 
-            // pnlTopRightDI
-            // 
-            this.pnlTopRightDI.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.pnlTopRightDI.Controls.Add(this.txtRequestNoValueDI);
-            this.pnlTopRightDI.Controls.Add(this.lblRequestNoLabelDI);
-            this.pnlTopRightDI.Controls.Add(this.lblTrackerNoValueDI);
-            this.pnlTopRightDI.Controls.Add(this.lblTrackerNoLabelDI);
-            this.pnlTopRightDI.Location = new System.Drawing.Point(845, 50);
-            this.pnlTopRightDI.Name = "pnlTopRightDI";
-            this.pnlTopRightDI.Size = new System.Drawing.Size(330, 60);
-            this.pnlTopRightDI.TabIndex = 1;
-            // 
-            // txtRequestNoValueDI
-            // 
-            this.txtRequestNoValueDI.Location = new System.Drawing.Point(100, 29);
-            this.txtRequestNoValueDI.Name = "txtRequestNoValueDI";
-            this.txtRequestNoValueDI.ReadOnly = true;
-            this.txtRequestNoValueDI.Size = new System.Drawing.Size(220, 25);
-            this.txtRequestNoValueDI.TabIndex = 3;
-            this.txtRequestNoValueDI.Text = "(placeholder)";
-            // 
-            // lblRequestNoLabelDI
-            // 
-            this.lblRequestNoLabelDI.AutoSize = true;
-            this.lblRequestNoLabelDI.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblRequestNoLabelDI.Location = new System.Drawing.Point(3, 32);
-            this.lblRequestNoLabelDI.Name = "lblRequestNoLabelDI";
-            this.lblRequestNoLabelDI.Size = new System.Drawing.Size(85, 17);
-            this.lblRequestNoLabelDI.TabIndex = 2;
-            this.lblRequestNoLabelDI.Text = "Request No.:";
-            // 
-            // lblTrackerNoValueDI
-            // 
-            this.lblTrackerNoValueDI.AutoSize = true;
-            this.lblTrackerNoValueDI.Location = new System.Drawing.Point(100, 5);
-            this.lblTrackerNoValueDI.Name = "lblTrackerNoValueDI";
-            this.lblTrackerNoValueDI.Size = new System.Drawing.Size(52, 17);
-            this.lblTrackerNoValueDI.TabIndex = 1;
-            this.lblTrackerNoValueDI.Text = "(empty)";
-            // 
-            // lblTrackerNoLabelDI
-            // 
-            this.lblTrackerNoLabelDI.AutoSize = true;
-            this.lblTrackerNoLabelDI.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTrackerNoLabelDI.Location = new System.Drawing.Point(3, 5);
-            this.lblTrackerNoLabelDI.Name = "lblTrackerNoLabelDI";
-            this.lblTrackerNoLabelDI.Size = new System.Drawing.Size(79, 17);
-            this.lblTrackerNoLabelDI.TabIndex = 0;
-            this.lblTrackerNoLabelDI.Text = "Tracker No.:";
-            // 
-            // lblHeaderDI
-            // 
-            this.lblHeaderDI.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblHeaderDI.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblHeaderDI.Location = new System.Drawing.Point(18, 15);
-            this.lblHeaderDI.Name = "lblHeaderDI";
-            this.lblHeaderDI.Size = new System.Drawing.Size(1160, 30);
-            this.lblHeaderDI.TabIndex = 0;
-            this.lblHeaderDI.Text = "DOCUMENT ISSUANCE";
-            this.lblHeaderDI.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // pnlStatusDI
+            // 
+            this.pnlStatusDI.Controls.Add(this.lblStatusValueDI);
+            this.pnlStatusDI.Controls.Add(this.lblStatusLabelDI);
+            this.pnlStatusDI.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlStatusDI.Location = new System.Drawing.Point(3, 595);
+            this.pnlStatusDI.Name = "pnlStatusDI";
+            this.pnlStatusDI.Size = new System.Drawing.Size(1370, 34);
+            this.pnlStatusDI.TabIndex = 7;
+            // 
+            // lblStatusValueDI
+            // 
+            this.lblStatusValueDI.AutoSize = true;
+            this.lblStatusValueDI.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Italic);
+            this.lblStatusValueDI.Location = new System.Drawing.Point(70, 7);
+            this.lblStatusValueDI.Name = "lblStatusValueDI";
+            this.lblStatusValueDI.Size = new System.Drawing.Size(173, 23);
+            this.lblStatusValueDI.TabIndex = 1;
+            this.lblStatusValueDI.Text = "Awaiting submission...";
+            // 
+            // lblStatusLabelDI
+            // 
+            this.lblStatusLabelDI.AutoSize = true;
+            this.lblStatusLabelDI.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
+            this.lblStatusLabelDI.Location = new System.Drawing.Point(10, 7);
+            this.lblStatusLabelDI.Name = "lblStatusLabelDI";
+            this.lblStatusLabelDI.Size = new System.Drawing.Size(61, 23);
+            this.lblStatusLabelDI.TabIndex = 0;
+            this.lblStatusLabelDI.Text = "Status:";
             // 
             // tabPageGmOperations
             // 
-            this.tabPageGmOperations.Location = new System.Drawing.Point(4, 26);
+            this.tabPageGmOperations.Location = new System.Drawing.Point(4, 30);
             this.tabPageGmOperations.Name = "tabPageGmOperations";
             this.tabPageGmOperations.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageGmOperations.Size = new System.Drawing.Size(1051, 633);
+            this.tabPageGmOperations.Size = new System.Drawing.Size(1396, 656);
             this.tabPageGmOperations.TabIndex = 2;
             this.tabPageGmOperations.Text = "GM Operations";
             this.tabPageGmOperations.UseVisualStyleBackColor = true;
             // 
             // tabPageQa
             // 
-            this.tabPageQa.Location = new System.Drawing.Point(4, 26);
+            this.tabPageQa.Location = new System.Drawing.Point(4, 30);
             this.tabPageQa.Name = "tabPageQa";
             this.tabPageQa.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageQa.Size = new System.Drawing.Size(1051, 633);
+            this.tabPageQa.Size = new System.Drawing.Size(1396, 656);
             this.tabPageQa.TabIndex = 3;
             this.tabPageQa.Text = "QA";
             this.tabPageQa.UseVisualStyleBackColor = true;
             // 
             // tabPageAuditTrail
             // 
-            this.tabPageAuditTrail.Location = new System.Drawing.Point(4, 26);
+            this.tabPageAuditTrail.Location = new System.Drawing.Point(4, 30);
             this.tabPageAuditTrail.Name = "tabPageAuditTrail";
             this.tabPageAuditTrail.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageAuditTrail.Size = new System.Drawing.Size(1051, 633);
+            this.tabPageAuditTrail.Size = new System.Drawing.Size(1396, 656);
             this.tabPageAuditTrail.TabIndex = 4;
             this.tabPageAuditTrail.Text = "Audit Trail";
             this.tabPageAuditTrail.UseVisualStyleBackColor = true;
             // 
             // tabPageUsers
             // 
-            this.tabPageUsers.Location = new System.Drawing.Point(4, 26);
+            this.tabPageUsers.Location = new System.Drawing.Point(4, 30);
             this.tabPageUsers.Name = "tabPageUsers";
             this.tabPageUsers.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageUsers.Size = new System.Drawing.Size(1051, 633);
+            this.tabPageUsers.Size = new System.Drawing.Size(1396, 656);
             this.tabPageUsers.TabIndex = 5;
             this.tabPageUsers.Text = "Users";
             this.tabPageUsers.UseVisualStyleBackColor = true;
@@ -851,9 +994,9 @@ namespace DocumentIssuanceApp
             this.toolStripStatusLabelUser,
             this.toolStripStatusLabelSpring,
             this.toolStripStatusLabelDateTime});
-            this.statusStripMain.Location = new System.Drawing.Point(0, 597);
+            this.statusStripMain.Location = new System.Drawing.Point(0, 686);
             this.statusStripMain.Name = "statusStripMain";
-            this.statusStripMain.Size = new System.Drawing.Size(1204, 26);
+            this.statusStripMain.Size = new System.Drawing.Size(1404, 34);
             this.statusStripMain.TabIndex = 1;
             this.statusStripMain.Text = "statusStrip1";
             // 
@@ -861,28 +1004,28 @@ namespace DocumentIssuanceApp
             // 
             this.toolStripStatusLabelUser.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.toolStripStatusLabelUser.Name = "toolStripStatusLabelUser";
-            this.toolStripStatusLabelUser.Size = new System.Drawing.Size(127, 21);
+            this.toolStripStatusLabelUser.Size = new System.Drawing.Size(156, 28);
             this.toolStripStatusLabelUser.Text = "User: Loading...";
             // 
             // toolStripStatusLabelSpring
             // 
             this.toolStripStatusLabelSpring.Name = "toolStripStatusLabelSpring";
-            this.toolStripStatusLabelSpring.Size = new System.Drawing.Size(848, 21);
+            this.toolStripStatusLabelSpring.Size = new System.Drawing.Size(1022, 28);
             this.toolStripStatusLabelSpring.Spring = true;
             // 
             // toolStripStatusLabelDateTime
             // 
             this.toolStripStatusLabelDateTime.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.toolStripStatusLabelDateTime.Name = "toolStripStatusLabelDateTime";
-            this.toolStripStatusLabelDateTime.Size = new System.Drawing.Size(170, 21);
+            this.toolStripStatusLabelDateTime.Size = new System.Drawing.Size(211, 28);
             this.toolStripStatusLabelDateTime.Text = "Date Time: Loading...";
             this.toolStripStatusLabelDateTime.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 21F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1204, 623);
+            this.ClientSize = new System.Drawing.Size(1404, 720);
             this.Controls.Add(this.tabControlMain);
             this.Controls.Add(this.statusStripMain);
             this.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -894,22 +1037,31 @@ namespace DocumentIssuanceApp
             this.panelLoginContainer.ResumeLayout(false);
             this.panelLoginContainer.PerformLayout();
             this.tabPageDocumentIssuance.ResumeLayout(false);
-            this.pnlStatusDI.ResumeLayout(false);
-            this.pnlStatusDI.PerformLayout();
-            this.pnlActionBottomDI.ResumeLayout(false);
-            this.grpRemarksDI.ResumeLayout(false);
-            this.grpRemarksDI.PerformLayout();
-            this.grpItemDetailsDI.ResumeLayout(false);
-            this.grpItemDetailsDI.PerformLayout();
-            this.grpParentBatchInfoDI.ResumeLayout(false);
-            this.grpParentBatchInfoDI.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numParentBatchSizeDI)).EndInit();
-            this.pnlRequestDetailsDI.ResumeLayout(false);
-            this.pnlRequestDetailsDI.PerformLayout();
+            this.tlpDocumentIssuanceMain.ResumeLayout(false);
+            this.tlpDocumentIssuanceMain.PerformLayout();
+            this.tlpTopSectionDI.ResumeLayout(false);
             this.grpDocTypeDI.ResumeLayout(false);
             this.grpDocTypeDI.PerformLayout();
             this.pnlTopRightDI.ResumeLayout(false);
             this.pnlTopRightDI.PerformLayout();
+            this.pnlRequestDetailsDI.ResumeLayout(false);
+            this.pnlRequestDetailsDI.PerformLayout();
+            this.tlpRequestDetails.ResumeLayout(false);
+            this.tlpRequestDetails.PerformLayout();
+            this.grpParentBatchInfoDI.ResumeLayout(false);
+            this.grpParentBatchInfoDI.PerformLayout();
+            this.tlpParentBatchInfo.ResumeLayout(false);
+            this.tlpParentBatchInfo.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numParentBatchSizeDI)).EndInit();
+            this.grpItemDetailsDI.ResumeLayout(false);
+            this.grpItemDetailsDI.PerformLayout();
+            this.tlpItemDetails.ResumeLayout(false);
+            this.tlpItemDetails.PerformLayout();
+            this.grpRemarksDI.ResumeLayout(false);
+            this.grpRemarksDI.PerformLayout();
+            this.pnlActionBottomDI.ResumeLayout(false);
+            this.pnlStatusDI.ResumeLayout(false);
+            this.pnlStatusDI.PerformLayout();
             this.statusStripMain.ResumeLayout(false);
             this.statusStripMain.PerformLayout();
             this.ResumeLayout(false);
@@ -938,18 +1090,20 @@ namespace DocumentIssuanceApp
         private System.Windows.Forms.Button btnLogin;
         private System.Windows.Forms.Label lblLoginStatus;
 
-        // Controls for Document Issuance Tab
+        // --- Document Issuance Tab Controls ---
+        private System.Windows.Forms.TableLayoutPanel tlpDocumentIssuanceMain;
         private System.Windows.Forms.Label lblHeaderDI;
-        private System.Windows.Forms.Panel pnlTopRightDI;
-        private System.Windows.Forms.Label lblTrackerNoLabelDI;
-        private System.Windows.Forms.Label lblTrackerNoValueDI;
-        private System.Windows.Forms.Label lblRequestNoLabelDI;
-        private System.Windows.Forms.TextBox txtRequestNoValueDI;
+        private System.Windows.Forms.TableLayoutPanel tlpTopSectionDI;
         private System.Windows.Forms.GroupBox grpDocTypeDI;
         private System.Windows.Forms.CheckBox chkDocTypeBMRDI;
         private System.Windows.Forms.CheckBox chkDocTypeBPRDI;
         private System.Windows.Forms.CheckBox chkDocTypeAppendixDI;
         private System.Windows.Forms.CheckBox chkDocTypeAddendumDI;
+        private System.Windows.Forms.Panel pnlTopRightDI;
+        private System.Windows.Forms.Label lblTrackerNoLabelDI;
+        private System.Windows.Forms.Label lblTrackerNoValueDI;
+        private System.Windows.Forms.Label lblRequestNoLabelDI;
+        private System.Windows.Forms.TextBox txtRequestNoValueDI;
         private System.Windows.Forms.Panel pnlRequestDetailsDI;
         private System.Windows.Forms.Label lblRequestDateDI;
         private System.Windows.Forms.DateTimePicker dtpRequestDateDI;
@@ -991,5 +1145,10 @@ namespace DocumentIssuanceApp
         private System.Windows.Forms.Panel pnlStatusDI;
         private System.Windows.Forms.Label lblStatusLabelDI;
         private System.Windows.Forms.Label lblStatusValueDI;
+
+        // New TableLayoutPanels
+        private TableLayoutPanel tlpRequestDetails;
+        private TableLayoutPanel tlpParentBatchInfo;
+        private TableLayoutPanel tlpItemDetails;
     }
 }
