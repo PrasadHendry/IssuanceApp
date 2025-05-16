@@ -1,6 +1,5 @@
 ﻿// MainForm.Designer.cs
 // This code is typically auto-generated and managed by the Visual Studio WinForms Designer.
-// This version includes TableLayoutPanels for improved alignment in tabPageDocumentIssuance.
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -102,7 +101,114 @@ namespace DocumentIssuanceApp
             this.lblStatusValueDI = new System.Windows.Forms.Label();
             this.lblStatusLabelDI = new System.Windows.Forms.Label();
             this.tabPageGmOperations = new System.Windows.Forms.TabPage();
+            this.tlpGmOperationsMain = new System.Windows.Forms.TableLayoutPanel();
+            this.pnlGmTopSection = new System.Windows.Forms.Panel();
+            this.tlpGmTopControls = new System.Windows.Forms.TableLayoutPanel();
+            this.pnlGmQueueHeader = new System.Windows.Forms.Panel();
+            this.lblGmQueueTitle = new System.Windows.Forms.Label();
+            this.btnGmRefreshList = new System.Windows.Forms.Button();
+            this.dgvGmQueue = new System.Windows.Forms.DataGridView();
+            this.colGmRequestNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colGmRequestDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colGmProduct = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colGmDocTypes = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colGmPreparedBy = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colGmRequestedAt = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.tlpGmBottomSection = new System.Windows.Forms.TableLayoutPanel();
+            this.grpGmSelectedRequest = new System.Windows.Forms.GroupBox();
+            this.tlpGmRequestDetails = new System.Windows.Forms.TableLayoutPanel();
+            this.lblGmDetailRequestNoLabel = new System.Windows.Forms.Label();
+            this.txtGmDetailRequestNo = new System.Windows.Forms.TextBox();
+            this.lblGmDetailRequestDateLabel = new System.Windows.Forms.Label();
+            this.txtGmDetailRequestDate = new System.Windows.Forms.TextBox();
+            this.lblGmDetailFromDeptLabel = new System.Windows.Forms.Label();
+            this.txtGmDetailFromDept = new System.Windows.Forms.TextBox();
+            this.lblGmDetailDocTypesLabel = new System.Windows.Forms.Label();
+            this.txtGmDetailDocTypes = new System.Windows.Forms.TextBox();
+            this.lblGmDetailProductLabel = new System.Windows.Forms.Label();
+            this.txtGmDetailProduct = new System.Windows.Forms.TextBox();
+            this.lblGmDetailBatchNoLabel = new System.Windows.Forms.Label();
+            this.txtGmDetailBatchNo = new System.Windows.Forms.TextBox();
+            this.lblGmDetailMfgDateLabel = new System.Windows.Forms.Label();
+            this.txtGmDetailMfgDate = new System.Windows.Forms.TextBox();
+            this.lblGmDetailExpDateLabel = new System.Windows.Forms.Label();
+            this.txtGmDetailExpDate = new System.Windows.Forms.TextBox();
+            this.lblGmDetailMarketLabel = new System.Windows.Forms.Label();
+            this.txtGmDetailMarket = new System.Windows.Forms.TextBox();
+            this.lblGmDetailPackSizeLabel = new System.Windows.Forms.Label();
+            this.txtGmDetailPackSize = new System.Windows.Forms.TextBox();
+            this.lblGmDetailPreparedByLabel = new System.Windows.Forms.Label();
+            this.txtGmDetailPreparedBy = new System.Windows.Forms.TextBox();
+            this.lblGmDetailRequestedAtLabel = new System.Windows.Forms.Label();
+            this.txtGmDetailRequestedAt = new System.Windows.Forms.TextBox();
+            this.lblGmDetailRequesterCommentsLabel = new System.Windows.Forms.Label();
+            this.txtGmDetailRequesterComments = new System.Windows.Forms.TextBox();
+            this.grpGmAction = new System.Windows.Forms.GroupBox();
+            this.tlpGmActionControls = new System.Windows.Forms.TableLayoutPanel();
+            this.lblGmComment = new System.Windows.Forms.Label();
+            this.txtGmComment = new System.Windows.Forms.TextBox();
+            this.flpGmActionButtons = new System.Windows.Forms.FlowLayoutPanel();
+            this.btnGmAuthorize = new System.Windows.Forms.Button();
+            this.btnGmReject = new System.Windows.Forms.Button();
             this.tabPageQa = new System.Windows.Forms.TabPage();
+            this.tlpQaOperationsMain = new System.Windows.Forms.TableLayoutPanel();
+            this.pnlQaTopSection = new System.Windows.Forms.Panel();
+            this.tlpQaTopControls = new System.Windows.Forms.TableLayoutPanel();
+            this.pnlQaQueueHeader = new System.Windows.Forms.Panel();
+            this.lblQaQueueTitle = new System.Windows.Forms.Label();
+            this.btnQaRefreshList = new System.Windows.Forms.Button();
+            this.dgvQaQueue = new System.Windows.Forms.DataGridView();
+            this.colQaRequestNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colQaRequestDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colQaProduct = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colQaDocTypes = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colQaPreparedBy = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colQaAuthorizedBy = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colQaGmActionAt = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.tlpQaBottomSection = new System.Windows.Forms.TableLayoutPanel();
+            this.grpQaSelectedRequest = new System.Windows.Forms.GroupBox();
+            this.tlpQaRequestDetails = new System.Windows.Forms.TableLayoutPanel();
+            this.lblQaDetailRequestNoLabel = new System.Windows.Forms.Label();
+            this.txtQaDetailRequestNo = new System.Windows.Forms.TextBox();
+            this.lblQaDetailRequestDateLabel = new System.Windows.Forms.Label();
+            this.txtQaDetailRequestDate = new System.Windows.Forms.TextBox();
+            this.lblQaDetailFromDeptLabel = new System.Windows.Forms.Label();
+            this.txtQaDetailFromDept = new System.Windows.Forms.TextBox();
+            this.lblQaDetailDocTypesLabel = new System.Windows.Forms.Label();
+            this.txtQaDetailDocTypes = new System.Windows.Forms.TextBox();
+            this.lblQaDetailProductLabel = new System.Windows.Forms.Label();
+            this.txtQaDetailProduct = new System.Windows.Forms.TextBox();
+            this.lblQaDetailBatchNoLabel = new System.Windows.Forms.Label();
+            this.txtQaDetailBatchNo = new System.Windows.Forms.TextBox();
+            this.lblQaDetailMfgDateLabel = new System.Windows.Forms.Label();
+            this.txtQaDetailMfgDate = new System.Windows.Forms.TextBox();
+            this.lblQaDetailExpDateLabel = new System.Windows.Forms.Label();
+            this.txtQaDetailExpDate = new System.Windows.Forms.TextBox();
+            this.lblQaDetailMarketLabel = new System.Windows.Forms.Label();
+            this.txtQaDetailMarket = new System.Windows.Forms.TextBox();
+            this.lblQaDetailPackSizeLabel = new System.Windows.Forms.Label();
+            this.txtQaDetailPackSize = new System.Windows.Forms.TextBox();
+            this.lblQaDetailPreparedByLabel = new System.Windows.Forms.Label();
+            this.txtQaDetailPreparedBy = new System.Windows.Forms.TextBox();
+            this.lblQaDetailRequestedAtLabel = new System.Windows.Forms.Label();
+            this.txtQaDetailRequestedAt = new System.Windows.Forms.TextBox();
+            this.lblQaDetailRequesterCommentsLabel = new System.Windows.Forms.Label();
+            this.txtQaDetailRequesterComments = new System.Windows.Forms.TextBox();
+            this.lblQaDetailGmCommentLabel = new System.Windows.Forms.Label();
+            this.txtQaDetailGmComment = new System.Windows.Forms.TextBox();
+            this.lblQaDetailGmActionTimeLabel = new System.Windows.Forms.Label();
+            this.txtQaDetailGmActionTime = new System.Windows.Forms.TextBox();
+            this.grpQaAction = new System.Windows.Forms.GroupBox();
+            this.tlpQaActionControls = new System.Windows.Forms.TableLayoutPanel();
+            this.flpQaOptionalControls = new System.Windows.Forms.FlowLayoutPanel();
+            this.lblQaPrintCount = new System.Windows.Forms.Label();
+            this.numQaPrintCount = new System.Windows.Forms.NumericUpDown();
+            this.btnQaBrowseSelectDocument = new System.Windows.Forms.Button();
+            this.lblQaComment = new System.Windows.Forms.Label();
+            this.txtQaComment = new System.Windows.Forms.TextBox();
+            this.flpQaActionButtons = new System.Windows.Forms.FlowLayoutPanel();
+            this.btnQaApprove = new System.Windows.Forms.Button();
+            this.btnQaReject = new System.Windows.Forms.Button();
             this.tabPageAuditTrail = new System.Windows.Forms.TabPage();
             this.tabPageUsers = new System.Windows.Forms.TabPage();
             this.statusStripMain = new System.Windows.Forms.StatusStrip();
@@ -127,6 +233,32 @@ namespace DocumentIssuanceApp
             this.grpRemarksDI.SuspendLayout();
             this.pnlActionBottomDI.SuspendLayout();
             this.pnlStatusDI.SuspendLayout();
+            this.tabPageGmOperations.SuspendLayout();
+            this.tlpGmOperationsMain.SuspendLayout();
+            this.pnlGmTopSection.SuspendLayout();
+            this.tlpGmTopControls.SuspendLayout();
+            this.pnlGmQueueHeader.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvGmQueue)).BeginInit();
+            this.tlpGmBottomSection.SuspendLayout();
+            this.grpGmSelectedRequest.SuspendLayout();
+            this.tlpGmRequestDetails.SuspendLayout();
+            this.grpGmAction.SuspendLayout();
+            this.tlpGmActionControls.SuspendLayout();
+            this.flpGmActionButtons.SuspendLayout();
+            this.tabPageQa.SuspendLayout();
+            this.tlpQaOperationsMain.SuspendLayout();
+            this.pnlQaTopSection.SuspendLayout();
+            this.tlpQaTopControls.SuspendLayout();
+            this.pnlQaQueueHeader.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvQaQueue)).BeginInit();
+            this.tlpQaBottomSection.SuspendLayout();
+            this.grpQaSelectedRequest.SuspendLayout();
+            this.tlpQaRequestDetails.SuspendLayout();
+            this.grpQaAction.SuspendLayout();
+            this.tlpQaActionControls.SuspendLayout();
+            this.flpQaOptionalControls.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numQaPrintCount)).BeginInit();
+            this.flpQaActionButtons.SuspendLayout();
             this.statusStripMain.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -199,6 +331,7 @@ namespace DocumentIssuanceApp
             this.txtPassword.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.txtPassword.Location = new System.Drawing.Point(230, 86);
             this.txtPassword.Name = "txtPassword";
+            this.txtPassword.PasswordChar = '*';
             this.txtPassword.Size = new System.Drawing.Size(230, 34);
             this.txtPassword.TabIndex = 3;
             // 
@@ -374,6 +507,7 @@ namespace DocumentIssuanceApp
             // 
             // txtRequestNoValueDI
             // 
+            this.txtRequestNoValueDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
             this.txtRequestNoValueDI.Location = new System.Drawing.Point(132, 29);
             this.txtRequestNoValueDI.Name = "txtRequestNoValueDI";
             this.txtRequestNoValueDI.ReadOnly = true;
@@ -384,7 +518,7 @@ namespace DocumentIssuanceApp
             // lblRequestNoLabelDI
             // 
             this.lblRequestNoLabelDI.AutoSize = true;
-            this.lblRequestNoLabelDI.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblRequestNoLabelDI.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
             this.lblRequestNoLabelDI.Location = new System.Drawing.Point(18, 32);
             this.lblRequestNoLabelDI.Name = "lblRequestNoLabelDI";
             this.lblRequestNoLabelDI.Size = new System.Drawing.Size(108, 23);
@@ -394,6 +528,7 @@ namespace DocumentIssuanceApp
             // lblTrackerNoValueDI
             // 
             this.lblTrackerNoValueDI.AutoSize = true;
+            this.lblTrackerNoValueDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
             this.lblTrackerNoValueDI.Location = new System.Drawing.Point(128, 5);
             this.lblTrackerNoValueDI.Name = "lblTrackerNoValueDI";
             this.lblTrackerNoValueDI.Size = new System.Drawing.Size(68, 23);
@@ -403,7 +538,7 @@ namespace DocumentIssuanceApp
             // lblTrackerNoLabelDI
             // 
             this.lblTrackerNoLabelDI.AutoSize = true;
-            this.lblTrackerNoLabelDI.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTrackerNoLabelDI.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
             this.lblTrackerNoLabelDI.Location = new System.Drawing.Point(25, 5);
             this.lblTrackerNoLabelDI.Name = "lblTrackerNoLabelDI";
             this.lblTrackerNoLabelDI.Size = new System.Drawing.Size(101, 23);
@@ -457,6 +592,7 @@ namespace DocumentIssuanceApp
             // dtpRequestDateDI
             // 
             this.dtpRequestDateDI.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.dtpRequestDateDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
             this.dtpRequestDateDI.Location = new System.Drawing.Point(136, 6);
             this.dtpRequestDateDI.Name = "dtpRequestDateDI";
             this.dtpRequestDateDI.Size = new System.Drawing.Size(294, 29);
@@ -478,11 +614,12 @@ namespace DocumentIssuanceApp
             // 
             this.cmbFromDepartmentDI.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.cmbFromDepartmentDI.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbFromDepartmentDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
             this.cmbFromDepartmentDI.FormattingEnabled = true;
             this.cmbFromDepartmentDI.Items.AddRange(new object[] {
             "PRD - Production Department",
             "PKG - Packaging Department"});
-            this.cmbFromDepartmentDI.Location = new System.Drawing.Point(1110, 8);
+            this.cmbFromDepartmentDI.Location = new System.Drawing.Point(1110, 6);
             this.cmbFromDepartmentDI.Name = "cmbFromDepartmentDI";
             this.cmbFromDepartmentDI.Size = new System.Drawing.Size(254, 29);
             this.cmbFromDepartmentDI.TabIndex = 3;
@@ -606,7 +743,6 @@ namespace DocumentIssuanceApp
             this.lblParentExpDateDI.Size = new System.Drawing.Size(140, 23);
             this.lblParentExpDateDI.TabIndex = 6;
             this.lblParentExpDateDI.Text = "Parent Exp. Date:";
-            this.lblParentExpDateDI.Click += new System.EventHandler(this.lblParentExpDateDI_Click);
             // 
             // dtpParentExpDateDI
             // 
@@ -618,7 +754,6 @@ namespace DocumentIssuanceApp
             this.dtpParentExpDateDI.ShowCheckBox = true;
             this.dtpParentExpDateDI.Size = new System.Drawing.Size(503, 29);
             this.dtpParentExpDateDI.TabIndex = 7;
-            this.dtpParentExpDateDI.ValueChanged += new System.EventHandler(this.dtpParentExpDateDI_ValueChanged);
             // 
             // grpItemDetailsDI
             // 
@@ -949,30 +1084,1235 @@ namespace DocumentIssuanceApp
             // 
             // tabPageGmOperations
             // 
+            this.tabPageGmOperations.Controls.Add(this.tlpGmOperationsMain);
+            this.tabPageGmOperations.Font = new System.Drawing.Font("Segoe UI", 9.75F);
             this.tabPageGmOperations.Location = new System.Drawing.Point(4, 30);
             this.tabPageGmOperations.Name = "tabPageGmOperations";
-            this.tabPageGmOperations.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageGmOperations.Size = new System.Drawing.Size(1396, 656);
+            this.tabPageGmOperations.Padding = new System.Windows.Forms.Padding(10);
+            this.tabPageGmOperations.Size = new System.Drawing.Size(1396, 652);
             this.tabPageGmOperations.TabIndex = 2;
             this.tabPageGmOperations.Text = "GM Operations";
             this.tabPageGmOperations.UseVisualStyleBackColor = true;
             // 
+            // tlpGmOperationsMain
+            // 
+            this.tlpGmOperationsMain.ColumnCount = 1;
+            this.tlpGmOperationsMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tlpGmOperationsMain.Controls.Add(this.pnlGmTopSection, 0, 0);
+            this.tlpGmOperationsMain.Controls.Add(this.tlpGmBottomSection, 0, 1);
+            this.tlpGmOperationsMain.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tlpGmOperationsMain.Location = new System.Drawing.Point(10, 10);
+            this.tlpGmOperationsMain.Name = "tlpGmOperationsMain";
+            this.tlpGmOperationsMain.RowCount = 2;
+            this.tlpGmOperationsMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 30F));
+            this.tlpGmOperationsMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 70F));
+            this.tlpGmOperationsMain.Size = new System.Drawing.Size(1376, 632);
+            this.tlpGmOperationsMain.TabIndex = 0;
+            // 
+            // pnlGmTopSection
+            // 
+            this.pnlGmTopSection.Controls.Add(this.tlpGmTopControls);
+            this.pnlGmTopSection.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlGmTopSection.Location = new System.Drawing.Point(3, 3);
+            this.pnlGmTopSection.Name = "pnlGmTopSection";
+            this.pnlGmTopSection.Size = new System.Drawing.Size(1370, 183);
+            this.pnlGmTopSection.TabIndex = 0;
+            // 
+            // tlpGmTopControls
+            // 
+            this.tlpGmTopControls.ColumnCount = 1;
+            this.tlpGmTopControls.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tlpGmTopControls.Controls.Add(this.pnlGmQueueHeader, 0, 0);
+            this.tlpGmTopControls.Controls.Add(this.dgvGmQueue, 0, 1);
+            this.tlpGmTopControls.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tlpGmTopControls.Location = new System.Drawing.Point(0, 0);
+            this.tlpGmTopControls.Name = "tlpGmTopControls";
+            this.tlpGmTopControls.RowCount = 2;
+            this.tlpGmTopControls.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
+            this.tlpGmTopControls.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tlpGmTopControls.Size = new System.Drawing.Size(1370, 183);
+            this.tlpGmTopControls.TabIndex = 0;
+            // 
+            // pnlGmQueueHeader
+            // 
+            this.pnlGmQueueHeader.Controls.Add(this.lblGmQueueTitle);
+            this.pnlGmQueueHeader.Controls.Add(this.btnGmRefreshList);
+            this.pnlGmQueueHeader.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlGmQueueHeader.Location = new System.Drawing.Point(3, 3);
+            this.pnlGmQueueHeader.Name = "pnlGmQueueHeader";
+            this.pnlGmQueueHeader.Size = new System.Drawing.Size(1364, 34);
+            this.pnlGmQueueHeader.TabIndex = 0;
+            // 
+            // lblGmQueueTitle
+            // 
+            this.lblGmQueueTitle.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.lblGmQueueTitle.AutoSize = true;
+            this.lblGmQueueTitle.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            this.lblGmQueueTitle.Location = new System.Drawing.Point(5, 3);
+            this.lblGmQueueTitle.Name = "lblGmQueueTitle";
+            this.lblGmQueueTitle.Size = new System.Drawing.Size(286, 28);
+            this.lblGmQueueTitle.TabIndex = 0;
+            this.lblGmQueueTitle.Text = "Pending GM Approval Queue";
+            // 
+            // btnGmRefreshList
+            // 
+            this.btnGmRefreshList.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.btnGmRefreshList.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.btnGmRefreshList.Location = new System.Drawing.Point(1239, 1);
+            this.btnGmRefreshList.Name = "btnGmRefreshList";
+            this.btnGmRefreshList.Size = new System.Drawing.Size(120, 30);
+            this.btnGmRefreshList.TabIndex = 1;
+            this.btnGmRefreshList.Text = "Refresh List";
+            this.btnGmRefreshList.UseVisualStyleBackColor = true;
+            // 
+            // dgvGmQueue
+            // 
+            this.dgvGmQueue.AllowUserToAddRows = false;
+            this.dgvGmQueue.AllowUserToDeleteRows = false;
+            this.dgvGmQueue.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dgvGmQueue.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvGmQueue.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.colGmRequestNo,
+            this.colGmRequestDate,
+            this.colGmProduct,
+            this.colGmDocTypes,
+            this.colGmPreparedBy,
+            this.colGmRequestedAt});
+            this.dgvGmQueue.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgvGmQueue.Location = new System.Drawing.Point(3, 43);
+            this.dgvGmQueue.MultiSelect = false;
+            this.dgvGmQueue.Name = "dgvGmQueue";
+            this.dgvGmQueue.ReadOnly = true;
+            this.dgvGmQueue.RowHeadersWidth = 51;
+            this.dgvGmQueue.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgvGmQueue.Size = new System.Drawing.Size(1364, 137);
+            this.dgvGmQueue.TabIndex = 1;
+            // 
+            // colGmRequestNo
+            // 
+            this.colGmRequestNo.HeaderText = "Request No.";
+            this.colGmRequestNo.MinimumWidth = 6;
+            this.colGmRequestNo.Name = "colGmRequestNo";
+            this.colGmRequestNo.ReadOnly = true;
+            // 
+            // colGmRequestDate
+            // 
+            this.colGmRequestDate.HeaderText = "Request Date";
+            this.colGmRequestDate.MinimumWidth = 6;
+            this.colGmRequestDate.Name = "colGmRequestDate";
+            this.colGmRequestDate.ReadOnly = true;
+            // 
+            // colGmProduct
+            // 
+            this.colGmProduct.HeaderText = "Product";
+            this.colGmProduct.MinimumWidth = 6;
+            this.colGmProduct.Name = "colGmProduct";
+            this.colGmProduct.ReadOnly = true;
+            // 
+            // colGmDocTypes
+            // 
+            this.colGmDocTypes.HeaderText = "Document Types";
+            this.colGmDocTypes.MinimumWidth = 6;
+            this.colGmDocTypes.Name = "colGmDocTypes";
+            this.colGmDocTypes.ReadOnly = true;
+            // 
+            // colGmPreparedBy
+            // 
+            this.colGmPreparedBy.HeaderText = "Prepared By";
+            this.colGmPreparedBy.MinimumWidth = 6;
+            this.colGmPreparedBy.Name = "colGmPreparedBy";
+            this.colGmPreparedBy.ReadOnly = true;
+            // 
+            // colGmRequestedAt
+            // 
+            this.colGmRequestedAt.HeaderText = "Requested At";
+            this.colGmRequestedAt.MinimumWidth = 6;
+            this.colGmRequestedAt.Name = "colGmRequestedAt";
+            this.colGmRequestedAt.ReadOnly = true;
+            // 
+            // tlpGmBottomSection
+            // 
+            this.tlpGmBottomSection.ColumnCount = 1;
+            this.tlpGmBottomSection.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tlpGmBottomSection.Controls.Add(this.grpGmSelectedRequest, 0, 0);
+            this.tlpGmBottomSection.Controls.Add(this.grpGmAction, 0, 1);
+            this.tlpGmBottomSection.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tlpGmBottomSection.Location = new System.Drawing.Point(3, 192);
+            this.tlpGmBottomSection.Name = "tlpGmBottomSection";
+            this.tlpGmBottomSection.RowCount = 2;
+            this.tlpGmBottomSection.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tlpGmBottomSection.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 180F));
+            this.tlpGmBottomSection.Size = new System.Drawing.Size(1370, 437);
+            this.tlpGmBottomSection.TabIndex = 1;
+            // 
+            // grpGmSelectedRequest
+            // 
+            this.grpGmSelectedRequest.Controls.Add(this.tlpGmRequestDetails);
+            this.grpGmSelectedRequest.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.grpGmSelectedRequest.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
+            this.grpGmSelectedRequest.Location = new System.Drawing.Point(3, 3);
+            this.grpGmSelectedRequest.Name = "grpGmSelectedRequest";
+            this.grpGmSelectedRequest.Padding = new System.Windows.Forms.Padding(10);
+            this.grpGmSelectedRequest.Size = new System.Drawing.Size(1364, 251);
+            this.grpGmSelectedRequest.TabIndex = 0;
+            this.grpGmSelectedRequest.TabStop = false;
+            this.grpGmSelectedRequest.Text = "Selected Request Details";
+            // 
+            // tlpGmRequestDetails
+            // 
+            this.tlpGmRequestDetails.AutoScroll = true;
+            this.tlpGmRequestDetails.ColumnCount = 4;
+            this.tlpGmRequestDetails.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 150F));
+            this.tlpGmRequestDetails.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tlpGmRequestDetails.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 150F));
+            this.tlpGmRequestDetails.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tlpGmRequestDetails.Controls.Add(this.lblGmDetailRequestNoLabel, 0, 0);
+            this.tlpGmRequestDetails.Controls.Add(this.txtGmDetailRequestNo, 1, 0);
+            this.tlpGmRequestDetails.Controls.Add(this.lblGmDetailRequestDateLabel, 2, 0);
+            this.tlpGmRequestDetails.Controls.Add(this.txtGmDetailRequestDate, 3, 0);
+            this.tlpGmRequestDetails.Controls.Add(this.lblGmDetailFromDeptLabel, 0, 1);
+            this.tlpGmRequestDetails.Controls.Add(this.txtGmDetailFromDept, 1, 1);
+            this.tlpGmRequestDetails.Controls.Add(this.lblGmDetailDocTypesLabel, 2, 1);
+            this.tlpGmRequestDetails.Controls.Add(this.txtGmDetailDocTypes, 3, 1);
+            this.tlpGmRequestDetails.Controls.Add(this.lblGmDetailProductLabel, 0, 2);
+            this.tlpGmRequestDetails.Controls.Add(this.txtGmDetailProduct, 1, 2);
+            this.tlpGmRequestDetails.Controls.Add(this.lblGmDetailBatchNoLabel, 2, 2);
+            this.tlpGmRequestDetails.Controls.Add(this.txtGmDetailBatchNo, 3, 2);
+            this.tlpGmRequestDetails.Controls.Add(this.lblGmDetailMfgDateLabel, 0, 3);
+            this.tlpGmRequestDetails.Controls.Add(this.txtGmDetailMfgDate, 1, 3);
+            this.tlpGmRequestDetails.Controls.Add(this.lblGmDetailExpDateLabel, 2, 3);
+            this.tlpGmRequestDetails.Controls.Add(this.txtGmDetailExpDate, 3, 3);
+            this.tlpGmRequestDetails.Controls.Add(this.lblGmDetailMarketLabel, 0, 4);
+            this.tlpGmRequestDetails.Controls.Add(this.txtGmDetailMarket, 1, 4);
+            this.tlpGmRequestDetails.Controls.Add(this.lblGmDetailPackSizeLabel, 2, 4);
+            this.tlpGmRequestDetails.Controls.Add(this.txtGmDetailPackSize, 3, 4);
+            this.tlpGmRequestDetails.Controls.Add(this.lblGmDetailPreparedByLabel, 0, 5);
+            this.tlpGmRequestDetails.Controls.Add(this.txtGmDetailPreparedBy, 1, 5);
+            this.tlpGmRequestDetails.Controls.Add(this.lblGmDetailRequestedAtLabel, 2, 5);
+            this.tlpGmRequestDetails.Controls.Add(this.txtGmDetailRequestedAt, 3, 5);
+            this.tlpGmRequestDetails.Controls.Add(this.lblGmDetailRequesterCommentsLabel, 0, 6);
+            this.tlpGmRequestDetails.Controls.Add(this.txtGmDetailRequesterComments, 1, 6);
+            this.tlpGmRequestDetails.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tlpGmRequestDetails.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.tlpGmRequestDetails.Location = new System.Drawing.Point(10, 32);
+            this.tlpGmRequestDetails.Name = "tlpGmRequestDetails";
+            this.tlpGmRequestDetails.RowCount = 7;
+            this.tlpGmRequestDetails.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tlpGmRequestDetails.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tlpGmRequestDetails.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tlpGmRequestDetails.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tlpGmRequestDetails.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tlpGmRequestDetails.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tlpGmRequestDetails.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 60F));
+            this.tlpGmRequestDetails.Size = new System.Drawing.Size(1344, 209);
+            this.tlpGmRequestDetails.TabIndex = 0;
+            // 
+            // lblGmDetailRequestNoLabel
+            // 
+            this.lblGmDetailRequestNoLabel.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblGmDetailRequestNoLabel.AutoSize = true;
+            this.lblGmDetailRequestNoLabel.Location = new System.Drawing.Point(55, 5);
+            this.lblGmDetailRequestNoLabel.Name = "lblGmDetailRequestNoLabel";
+            this.lblGmDetailRequestNoLabel.Size = new System.Drawing.Size(92, 20);
+            this.lblGmDetailRequestNoLabel.TabIndex = 0;
+            this.lblGmDetailRequestNoLabel.Text = "Request No.:";
+            // 
+            // txtGmDetailRequestNo
+            // 
+            this.txtGmDetailRequestNo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtGmDetailRequestNo.Location = new System.Drawing.Point(153, 3);
+            this.txtGmDetailRequestNo.Name = "txtGmDetailRequestNo";
+            this.txtGmDetailRequestNo.ReadOnly = true;
+            this.txtGmDetailRequestNo.Size = new System.Drawing.Size(516, 27);
+            this.txtGmDetailRequestNo.TabIndex = 1;
+            // 
+            // lblGmDetailRequestDateLabel
+            // 
+            this.lblGmDetailRequestDateLabel.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblGmDetailRequestDateLabel.AutoSize = true;
+            this.lblGmDetailRequestDateLabel.Location = new System.Drawing.Point(718, 5);
+            this.lblGmDetailRequestDateLabel.Name = "lblGmDetailRequestDateLabel";
+            this.lblGmDetailRequestDateLabel.Size = new System.Drawing.Size(101, 20);
+            this.lblGmDetailRequestDateLabel.TabIndex = 2;
+            this.lblGmDetailRequestDateLabel.Text = "Request Date:";
+            // 
+            // txtGmDetailRequestDate
+            // 
+            this.txtGmDetailRequestDate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtGmDetailRequestDate.Location = new System.Drawing.Point(825, 3);
+            this.txtGmDetailRequestDate.Name = "txtGmDetailRequestDate";
+            this.txtGmDetailRequestDate.ReadOnly = true;
+            this.txtGmDetailRequestDate.Size = new System.Drawing.Size(516, 27);
+            this.txtGmDetailRequestDate.TabIndex = 3;
+            // 
+            // lblGmDetailFromDeptLabel
+            // 
+            this.lblGmDetailFromDeptLabel.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblGmDetailFromDeptLabel.AutoSize = true;
+            this.lblGmDetailFromDeptLabel.Location = new System.Drawing.Point(17, 35);
+            this.lblGmDetailFromDeptLabel.Name = "lblGmDetailFromDeptLabel";
+            this.lblGmDetailFromDeptLabel.Size = new System.Drawing.Size(130, 20);
+            this.lblGmDetailFromDeptLabel.TabIndex = 4;
+            this.lblGmDetailFromDeptLabel.Text = "From Department:";
+            // 
+            // txtGmDetailFromDept
+            // 
+            this.txtGmDetailFromDept.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtGmDetailFromDept.Location = new System.Drawing.Point(153, 33);
+            this.txtGmDetailFromDept.Name = "txtGmDetailFromDept";
+            this.txtGmDetailFromDept.ReadOnly = true;
+            this.txtGmDetailFromDept.Size = new System.Drawing.Size(516, 27);
+            this.txtGmDetailFromDept.TabIndex = 5;
+            // 
+            // lblGmDetailDocTypesLabel
+            // 
+            this.lblGmDetailDocTypesLabel.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblGmDetailDocTypesLabel.AutoSize = true;
+            this.lblGmDetailDocTypesLabel.Location = new System.Drawing.Point(697, 35);
+            this.lblGmDetailDocTypesLabel.Name = "lblGmDetailDocTypesLabel";
+            this.lblGmDetailDocTypesLabel.Size = new System.Drawing.Size(122, 20);
+            this.lblGmDetailDocTypesLabel.TabIndex = 6;
+            this.lblGmDetailDocTypesLabel.Text = "Document Types:";
+            // 
+            // txtGmDetailDocTypes
+            // 
+            this.txtGmDetailDocTypes.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtGmDetailDocTypes.Location = new System.Drawing.Point(825, 33);
+            this.txtGmDetailDocTypes.Name = "txtGmDetailDocTypes";
+            this.txtGmDetailDocTypes.ReadOnly = true;
+            this.txtGmDetailDocTypes.Size = new System.Drawing.Size(516, 27);
+            this.txtGmDetailDocTypes.TabIndex = 7;
+            // 
+            // lblGmDetailProductLabel
+            // 
+            this.lblGmDetailProductLabel.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblGmDetailProductLabel.AutoSize = true;
+            this.lblGmDetailProductLabel.Location = new System.Drawing.Point(84, 65);
+            this.lblGmDetailProductLabel.Name = "lblGmDetailProductLabel";
+            this.lblGmDetailProductLabel.Size = new System.Drawing.Size(63, 20);
+            this.lblGmDetailProductLabel.TabIndex = 8;
+            this.lblGmDetailProductLabel.Text = "Product:";
+            // 
+            // txtGmDetailProduct
+            // 
+            this.txtGmDetailProduct.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtGmDetailProduct.Location = new System.Drawing.Point(153, 63);
+            this.txtGmDetailProduct.Name = "txtGmDetailProduct";
+            this.txtGmDetailProduct.ReadOnly = true;
+            this.txtGmDetailProduct.Size = new System.Drawing.Size(516, 27);
+            this.txtGmDetailProduct.TabIndex = 9;
+            // 
+            // lblGmDetailBatchNoLabel
+            // 
+            this.lblGmDetailBatchNoLabel.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblGmDetailBatchNoLabel.AutoSize = true;
+            this.lblGmDetailBatchNoLabel.Location = new System.Drawing.Point(743, 65);
+            this.lblGmDetailBatchNoLabel.Name = "lblGmDetailBatchNoLabel";
+            this.lblGmDetailBatchNoLabel.Size = new System.Drawing.Size(76, 20);
+            this.lblGmDetailBatchNoLabel.TabIndex = 10;
+            this.lblGmDetailBatchNoLabel.Text = "Batch No.:";
+            // 
+            // txtGmDetailBatchNo
+            // 
+            this.txtGmDetailBatchNo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtGmDetailBatchNo.Location = new System.Drawing.Point(825, 63);
+            this.txtGmDetailBatchNo.Name = "txtGmDetailBatchNo";
+            this.txtGmDetailBatchNo.ReadOnly = true;
+            this.txtGmDetailBatchNo.Size = new System.Drawing.Size(516, 27);
+            this.txtGmDetailBatchNo.TabIndex = 11;
+            // 
+            // lblGmDetailMfgDateLabel
+            // 
+            this.lblGmDetailMfgDateLabel.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblGmDetailMfgDateLabel.AutoSize = true;
+            this.lblGmDetailMfgDateLabel.Location = new System.Drawing.Point(72, 95);
+            this.lblGmDetailMfgDateLabel.Name = "lblGmDetailMfgDateLabel";
+            this.lblGmDetailMfgDateLabel.Size = new System.Drawing.Size(75, 20);
+            this.lblGmDetailMfgDateLabel.TabIndex = 12;
+            this.lblGmDetailMfgDateLabel.Text = "Mfg Date:";
+            // 
+            // txtGmDetailMfgDate
+            // 
+            this.txtGmDetailMfgDate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtGmDetailMfgDate.Location = new System.Drawing.Point(153, 93);
+            this.txtGmDetailMfgDate.Name = "txtGmDetailMfgDate";
+            this.txtGmDetailMfgDate.ReadOnly = true;
+            this.txtGmDetailMfgDate.Size = new System.Drawing.Size(516, 27);
+            this.txtGmDetailMfgDate.TabIndex = 13;
+            // 
+            // lblGmDetailExpDateLabel
+            // 
+            this.lblGmDetailExpDateLabel.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblGmDetailExpDateLabel.AutoSize = true;
+            this.lblGmDetailExpDateLabel.Location = new System.Drawing.Point(744, 95);
+            this.lblGmDetailExpDateLabel.Name = "lblGmDetailExpDateLabel";
+            this.lblGmDetailExpDateLabel.Size = new System.Drawing.Size(75, 20);
+            this.lblGmDetailExpDateLabel.TabIndex = 14;
+            this.lblGmDetailExpDateLabel.Text = "Exp. Date:";
+            // 
+            // txtGmDetailExpDate
+            // 
+            this.txtGmDetailExpDate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtGmDetailExpDate.Location = new System.Drawing.Point(825, 93);
+            this.txtGmDetailExpDate.Name = "txtGmDetailExpDate";
+            this.txtGmDetailExpDate.ReadOnly = true;
+            this.txtGmDetailExpDate.Size = new System.Drawing.Size(516, 27);
+            this.txtGmDetailExpDate.TabIndex = 15;
+            // 
+            // lblGmDetailMarketLabel
+            // 
+            this.lblGmDetailMarketLabel.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblGmDetailMarketLabel.AutoSize = true;
+            this.lblGmDetailMarketLabel.Location = new System.Drawing.Point(89, 125);
+            this.lblGmDetailMarketLabel.Name = "lblGmDetailMarketLabel";
+            this.lblGmDetailMarketLabel.Size = new System.Drawing.Size(58, 20);
+            this.lblGmDetailMarketLabel.TabIndex = 16;
+            this.lblGmDetailMarketLabel.Text = "Market:";
+            // 
+            // txtGmDetailMarket
+            // 
+            this.txtGmDetailMarket.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtGmDetailMarket.Location = new System.Drawing.Point(153, 123);
+            this.txtGmDetailMarket.Name = "txtGmDetailMarket";
+            this.txtGmDetailMarket.ReadOnly = true;
+            this.txtGmDetailMarket.Size = new System.Drawing.Size(516, 27);
+            this.txtGmDetailMarket.TabIndex = 17;
+            // 
+            // lblGmDetailPackSizeLabel
+            // 
+            this.lblGmDetailPackSizeLabel.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblGmDetailPackSizeLabel.AutoSize = true;
+            this.lblGmDetailPackSizeLabel.Location = new System.Drawing.Point(747, 125);
+            this.lblGmDetailPackSizeLabel.Name = "lblGmDetailPackSizeLabel";
+            this.lblGmDetailPackSizeLabel.Size = new System.Drawing.Size(72, 20);
+            this.lblGmDetailPackSizeLabel.TabIndex = 18;
+            this.lblGmDetailPackSizeLabel.Text = "Pack Size:";
+            // 
+            // txtGmDetailPackSize
+            // 
+            this.txtGmDetailPackSize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtGmDetailPackSize.Location = new System.Drawing.Point(825, 123);
+            this.txtGmDetailPackSize.Name = "txtGmDetailPackSize";
+            this.txtGmDetailPackSize.ReadOnly = true;
+            this.txtGmDetailPackSize.Size = new System.Drawing.Size(516, 27);
+            this.txtGmDetailPackSize.TabIndex = 19;
+            // 
+            // lblGmDetailPreparedByLabel
+            // 
+            this.lblGmDetailPreparedByLabel.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblGmDetailPreparedByLabel.AutoSize = true;
+            this.lblGmDetailPreparedByLabel.Location = new System.Drawing.Point(55, 155);
+            this.lblGmDetailPreparedByLabel.Name = "lblGmDetailPreparedByLabel";
+            this.lblGmDetailPreparedByLabel.Size = new System.Drawing.Size(92, 20);
+            this.lblGmDetailPreparedByLabel.TabIndex = 20;
+            this.lblGmDetailPreparedByLabel.Text = "Prepared By:";
+            // 
+            // txtGmDetailPreparedBy
+            // 
+            this.txtGmDetailPreparedBy.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtGmDetailPreparedBy.Location = new System.Drawing.Point(153, 153);
+            this.txtGmDetailPreparedBy.Name = "txtGmDetailPreparedBy";
+            this.txtGmDetailPreparedBy.ReadOnly = true;
+            this.txtGmDetailPreparedBy.Size = new System.Drawing.Size(516, 27);
+            this.txtGmDetailPreparedBy.TabIndex = 21;
+            // 
+            // lblGmDetailRequestedAtLabel
+            // 
+            this.lblGmDetailRequestedAtLabel.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblGmDetailRequestedAtLabel.AutoSize = true;
+            this.lblGmDetailRequestedAtLabel.Location = new System.Drawing.Point(718, 155);
+            this.lblGmDetailRequestedAtLabel.Name = "lblGmDetailRequestedAtLabel";
+            this.lblGmDetailRequestedAtLabel.Size = new System.Drawing.Size(101, 20);
+            this.lblGmDetailRequestedAtLabel.TabIndex = 22;
+            this.lblGmDetailRequestedAtLabel.Text = "Requested At:";
+            // 
+            // txtGmDetailRequestedAt
+            // 
+            this.txtGmDetailRequestedAt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtGmDetailRequestedAt.Location = new System.Drawing.Point(825, 153);
+            this.txtGmDetailRequestedAt.Name = "txtGmDetailRequestedAt";
+            this.txtGmDetailRequestedAt.ReadOnly = true;
+            this.txtGmDetailRequestedAt.Size = new System.Drawing.Size(516, 27);
+            this.txtGmDetailRequestedAt.TabIndex = 23;
+            // 
+            // lblGmDetailRequesterCommentsLabel
+            // 
+            this.lblGmDetailRequesterCommentsLabel.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblGmDetailRequesterCommentsLabel.AutoSize = true;
+            this.lblGmDetailRequesterCommentsLabel.Location = new System.Drawing.Point(64, 190);
+            this.lblGmDetailRequesterCommentsLabel.Name = "lblGmDetailRequesterCommentsLabel";
+            this.lblGmDetailRequesterCommentsLabel.Size = new System.Drawing.Size(83, 40);
+            this.lblGmDetailRequesterCommentsLabel.TabIndex = 24;
+            this.lblGmDetailRequesterCommentsLabel.Text = "Requester Comments:";
+            // 
+            // txtGmDetailRequesterComments
+            // 
+            this.tlpGmRequestDetails.SetColumnSpan(this.txtGmDetailRequesterComments, 3);
+            this.txtGmDetailRequesterComments.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtGmDetailRequesterComments.Location = new System.Drawing.Point(153, 183);
+            this.txtGmDetailRequesterComments.Multiline = true;
+            this.txtGmDetailRequesterComments.Name = "txtGmDetailRequesterComments";
+            this.txtGmDetailRequesterComments.ReadOnly = true;
+            this.txtGmDetailRequesterComments.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txtGmDetailRequesterComments.Size = new System.Drawing.Size(1188, 54);
+            this.txtGmDetailRequesterComments.TabIndex = 25;
+            // 
+            // grpGmAction
+            // 
+            this.grpGmAction.Controls.Add(this.tlpGmActionControls);
+            this.grpGmAction.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.grpGmAction.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
+            this.grpGmAction.Location = new System.Drawing.Point(3, 260);
+            this.grpGmAction.Name = "grpGmAction";
+            this.grpGmAction.Padding = new System.Windows.Forms.Padding(10);
+            this.grpGmAction.Size = new System.Drawing.Size(1364, 174);
+            this.grpGmAction.TabIndex = 1;
+            this.grpGmAction.TabStop = false;
+            this.grpGmAction.Text = "GM Action";
+            // 
+            // tlpGmActionControls
+            // 
+            this.tlpGmActionControls.ColumnCount = 1;
+            this.tlpGmActionControls.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tlpGmActionControls.Controls.Add(this.lblGmComment, 0, 0);
+            this.tlpGmActionControls.Controls.Add(this.txtGmComment, 0, 1);
+            this.tlpGmActionControls.Controls.Add(this.flpGmActionButtons, 0, 2);
+            this.tlpGmActionControls.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tlpGmActionControls.Location = new System.Drawing.Point(10, 32);
+            this.tlpGmActionControls.Name = "tlpGmActionControls";
+            this.tlpGmActionControls.RowCount = 3;
+            this.tlpGmActionControls.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tlpGmActionControls.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tlpGmActionControls.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 45F));
+            this.tlpGmActionControls.Size = new System.Drawing.Size(1344, 132);
+            this.tlpGmActionControls.TabIndex = 0;
+            // 
+            // lblGmComment
+            // 
+            this.lblGmComment.AutoSize = true;
+            this.lblGmComment.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.lblGmComment.Location = new System.Drawing.Point(3, 0);
+            this.lblGmComment.Name = "lblGmComment";
+            this.lblGmComment.Size = new System.Drawing.Size(110, 20);
+            this.lblGmComment.TabIndex = 0;
+            this.lblGmComment.Text = "GM Comments:";
+            // 
+            // txtGmComment
+            // 
+            this.txtGmComment.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtGmComment.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.txtGmComment.Location = new System.Drawing.Point(3, 23);
+            this.txtGmComment.Multiline = true;
+            this.txtGmComment.Name = "txtGmComment";
+            this.txtGmComment.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txtGmComment.Size = new System.Drawing.Size(1338, 61);
+            this.txtGmComment.TabIndex = 1;
+            // 
+            // flpGmActionButtons
+            // 
+            this.flpGmActionButtons.Controls.Add(this.btnGmAuthorize);
+            this.flpGmActionButtons.Controls.Add(this.btnGmReject);
+            this.flpGmActionButtons.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flpGmActionButtons.Location = new System.Drawing.Point(3, 90);
+            this.flpGmActionButtons.Name = "flpGmActionButtons";
+            this.flpGmActionButtons.Padding = new System.Windows.Forms.Padding(0, 5, 0, 0);
+            this.flpGmActionButtons.Size = new System.Drawing.Size(1338, 39);
+            this.flpGmActionButtons.TabIndex = 2;
+            // 
+            // btnGmAuthorize
+            // 
+            this.btnGmAuthorize.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold);
+            this.btnGmAuthorize.Location = new System.Drawing.Point(3, 8);
+            this.btnGmAuthorize.Name = "btnGmAuthorize";
+            this.btnGmAuthorize.Size = new System.Drawing.Size(120, 30);
+            this.btnGmAuthorize.TabIndex = 0;
+            this.btnGmAuthorize.Text = "Authorize";
+            this.btnGmAuthorize.UseVisualStyleBackColor = true;
+            // 
+            // btnGmReject
+            // 
+            this.btnGmReject.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.btnGmReject.Location = new System.Drawing.Point(129, 8);
+            this.btnGmReject.Name = "btnGmReject";
+            this.btnGmReject.Size = new System.Drawing.Size(120, 30);
+            this.btnGmReject.TabIndex = 1;
+            this.btnGmReject.Text = "Reject";
+            this.btnGmReject.UseVisualStyleBackColor = true;
+            // 
             // tabPageQa
             // 
+            this.tabPageQa.Controls.Add(this.tlpQaOperationsMain);
+            this.tabPageQa.Font = new System.Drawing.Font("Segoe UI", 9.75F);
             this.tabPageQa.Location = new System.Drawing.Point(4, 30);
             this.tabPageQa.Name = "tabPageQa";
-            this.tabPageQa.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageQa.Size = new System.Drawing.Size(1396, 656);
+            this.tabPageQa.Padding = new System.Windows.Forms.Padding(10);
+            this.tabPageQa.Size = new System.Drawing.Size(1396, 652);
             this.tabPageQa.TabIndex = 3;
             this.tabPageQa.Text = "QA";
             this.tabPageQa.UseVisualStyleBackColor = true;
+            // 
+            // tlpQaOperationsMain
+            // 
+            this.tlpQaOperationsMain.ColumnCount = 1;
+            this.tlpQaOperationsMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tlpQaOperationsMain.Controls.Add(this.pnlQaTopSection, 0, 0);
+            this.tlpQaOperationsMain.Controls.Add(this.tlpQaBottomSection, 0, 1);
+            this.tlpQaOperationsMain.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tlpQaOperationsMain.Location = new System.Drawing.Point(10, 10);
+            this.tlpQaOperationsMain.Name = "tlpQaOperationsMain";
+            this.tlpQaOperationsMain.RowCount = 2;
+            this.tlpQaOperationsMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 40F));
+            this.tlpQaOperationsMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 60F));
+            this.tlpQaOperationsMain.Size = new System.Drawing.Size(1376, 632);
+            this.tlpQaOperationsMain.TabIndex = 0;
+            // 
+            // pnlQaTopSection
+            // 
+            this.pnlQaTopSection.Controls.Add(this.tlpQaTopControls);
+            this.pnlQaTopSection.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlQaTopSection.Location = new System.Drawing.Point(3, 3);
+            this.pnlQaTopSection.Name = "pnlQaTopSection";
+            this.pnlQaTopSection.Size = new System.Drawing.Size(1370, 246);
+            this.pnlQaTopSection.TabIndex = 0;
+            // 
+            // tlpQaTopControls
+            // 
+            this.tlpQaTopControls.ColumnCount = 1;
+            this.tlpQaTopControls.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tlpQaTopControls.Controls.Add(this.pnlQaQueueHeader, 0, 0);
+            this.tlpQaTopControls.Controls.Add(this.dgvQaQueue, 0, 1);
+            this.tlpQaTopControls.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tlpQaTopControls.Location = new System.Drawing.Point(0, 0);
+            this.tlpQaTopControls.Name = "tlpQaTopControls";
+            this.tlpQaTopControls.RowCount = 2;
+            this.tlpQaTopControls.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
+            this.tlpQaTopControls.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tlpQaTopControls.Size = new System.Drawing.Size(1370, 246);
+            this.tlpQaTopControls.TabIndex = 0;
+            // 
+            // pnlQaQueueHeader
+            // 
+            this.pnlQaQueueHeader.Controls.Add(this.lblQaQueueTitle);
+            this.pnlQaQueueHeader.Controls.Add(this.btnQaRefreshList);
+            this.pnlQaQueueHeader.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlQaQueueHeader.Location = new System.Drawing.Point(3, 3);
+            this.pnlQaQueueHeader.Name = "pnlQaQueueHeader";
+            this.pnlQaQueueHeader.Size = new System.Drawing.Size(1364, 34);
+            this.pnlQaQueueHeader.TabIndex = 0;
+            // 
+            // lblQaQueueTitle
+            // 
+            this.lblQaQueueTitle.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.lblQaQueueTitle.AutoSize = true;
+            this.lblQaQueueTitle.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            this.lblQaQueueTitle.Location = new System.Drawing.Point(5, 3);
+            this.lblQaQueueTitle.Name = "lblQaQueueTitle";
+            this.lblQaQueueTitle.Size = new System.Drawing.Size(282, 28);
+            this.lblQaQueueTitle.TabIndex = 0;
+            this.lblQaQueueTitle.Text = "Pending QA Approval Queue";
+            // 
+            // btnQaRefreshList
+            // 
+            this.btnQaRefreshList.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.btnQaRefreshList.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.btnQaRefreshList.Location = new System.Drawing.Point(1239, 1);
+            this.btnQaRefreshList.Name = "btnQaRefreshList";
+            this.btnQaRefreshList.Size = new System.Drawing.Size(120, 30);
+            this.btnQaRefreshList.TabIndex = 1;
+            this.btnQaRefreshList.Text = "Refresh List";
+            this.btnQaRefreshList.UseVisualStyleBackColor = true;
+            // 
+            // dgvQaQueue
+            // 
+            this.dgvQaQueue.AllowUserToAddRows = false;
+            this.dgvQaQueue.AllowUserToDeleteRows = false;
+            this.dgvQaQueue.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dgvQaQueue.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvQaQueue.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.colQaRequestNo,
+            this.colQaRequestDate,
+            this.colQaProduct,
+            this.colQaDocTypes,
+            this.colQaPreparedBy,
+            this.colQaAuthorizedBy,
+            this.colQaGmActionAt});
+            this.dgvQaQueue.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgvQaQueue.Location = new System.Drawing.Point(3, 43);
+            this.dgvQaQueue.MultiSelect = false;
+            this.dgvQaQueue.Name = "dgvQaQueue";
+            this.dgvQaQueue.ReadOnly = true;
+            this.dgvQaQueue.RowHeadersWidth = 51;
+            this.dgvQaQueue.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgvQaQueue.Size = new System.Drawing.Size(1364, 200);
+            this.dgvQaQueue.TabIndex = 1;
+            // 
+            // colQaRequestNo
+            // 
+            this.colQaRequestNo.HeaderText = "Request No.";
+            this.colQaRequestNo.MinimumWidth = 6;
+            this.colQaRequestNo.Name = "colQaRequestNo";
+            this.colQaRequestNo.ReadOnly = true;
+            // 
+            // colQaRequestDate
+            // 
+            this.colQaRequestDate.HeaderText = "Request Date";
+            this.colQaRequestDate.MinimumWidth = 6;
+            this.colQaRequestDate.Name = "colQaRequestDate";
+            this.colQaRequestDate.ReadOnly = true;
+            // 
+            // colQaProduct
+            // 
+            this.colQaProduct.HeaderText = "Product";
+            this.colQaProduct.MinimumWidth = 6;
+            this.colQaProduct.Name = "colQaProduct";
+            this.colQaProduct.ReadOnly = true;
+            // 
+            // colQaDocTypes
+            // 
+            this.colQaDocTypes.HeaderText = "Document Types";
+            this.colQaDocTypes.MinimumWidth = 6;
+            this.colQaDocTypes.Name = "colQaDocTypes";
+            this.colQaDocTypes.ReadOnly = true;
+            // 
+            // colQaPreparedBy
+            // 
+            this.colQaPreparedBy.HeaderText = "Prepared By";
+            this.colQaPreparedBy.MinimumWidth = 6;
+            this.colQaPreparedBy.Name = "colQaPreparedBy";
+            this.colQaPreparedBy.ReadOnly = true;
+            // 
+            // colQaAuthorizedBy
+            // 
+            this.colQaAuthorizedBy.HeaderText = "Authorized By (GM)";
+            this.colQaAuthorizedBy.MinimumWidth = 6;
+            this.colQaAuthorizedBy.Name = "colQaAuthorizedBy";
+            this.colQaAuthorizedBy.ReadOnly = true;
+            // 
+            // colQaGmActionAt
+            // 
+            this.colQaGmActionAt.HeaderText = "GM Action At";
+            this.colQaGmActionAt.MinimumWidth = 6;
+            this.colQaGmActionAt.Name = "colQaGmActionAt";
+            this.colQaGmActionAt.ReadOnly = true;
+            // 
+            // tlpQaBottomSection
+            // 
+            this.tlpQaBottomSection.ColumnCount = 1;
+            this.tlpQaBottomSection.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tlpQaBottomSection.Controls.Add(this.grpQaSelectedRequest, 0, 0);
+            this.tlpQaBottomSection.Controls.Add(this.grpQaAction, 0, 1);
+            this.tlpQaBottomSection.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tlpQaBottomSection.Location = new System.Drawing.Point(3, 255);
+            this.tlpQaBottomSection.Name = "tlpQaBottomSection";
+            this.tlpQaBottomSection.RowCount = 2;
+            this.tlpQaBottomSection.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tlpQaBottomSection.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 220F));
+            this.tlpQaBottomSection.Size = new System.Drawing.Size(1370, 374);
+            this.tlpQaBottomSection.TabIndex = 1;
+            // 
+            // grpQaSelectedRequest
+            // 
+            this.grpQaSelectedRequest.Controls.Add(this.tlpQaRequestDetails);
+            this.grpQaSelectedRequest.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.grpQaSelectedRequest.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
+            this.grpQaSelectedRequest.Location = new System.Drawing.Point(3, 3);
+            this.grpQaSelectedRequest.Name = "grpQaSelectedRequest";
+            this.grpQaSelectedRequest.Padding = new System.Windows.Forms.Padding(10);
+            this.grpQaSelectedRequest.Size = new System.Drawing.Size(1364, 148);
+            this.grpQaSelectedRequest.TabIndex = 0;
+            this.grpQaSelectedRequest.TabStop = false;
+            this.grpQaSelectedRequest.Text = "Selected Request Details";
+            // 
+            // tlpQaRequestDetails
+            // 
+            this.tlpQaRequestDetails.AutoScroll = true;
+            this.tlpQaRequestDetails.ColumnCount = 4;
+            this.tlpQaRequestDetails.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 160F));
+            this.tlpQaRequestDetails.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tlpQaRequestDetails.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 160F));
+            this.tlpQaRequestDetails.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tlpQaRequestDetails.Controls.Add(this.lblQaDetailRequestNoLabel, 0, 0);
+            this.tlpQaRequestDetails.Controls.Add(this.txtQaDetailRequestNo, 1, 0);
+            this.tlpQaRequestDetails.Controls.Add(this.lblQaDetailRequestDateLabel, 2, 0);
+            this.tlpQaRequestDetails.Controls.Add(this.txtQaDetailRequestDate, 3, 0);
+            this.tlpQaRequestDetails.Controls.Add(this.lblQaDetailFromDeptLabel, 0, 1);
+            this.tlpQaRequestDetails.Controls.Add(this.txtQaDetailFromDept, 1, 1);
+            this.tlpQaRequestDetails.Controls.Add(this.lblQaDetailDocTypesLabel, 2, 1);
+            this.tlpQaRequestDetails.Controls.Add(this.txtQaDetailDocTypes, 3, 1);
+            this.tlpQaRequestDetails.Controls.Add(this.lblQaDetailProductLabel, 0, 2);
+            this.tlpQaRequestDetails.Controls.Add(this.txtQaDetailProduct, 1, 2);
+            this.tlpQaRequestDetails.Controls.Add(this.lblQaDetailBatchNoLabel, 2, 2);
+            this.tlpQaRequestDetails.Controls.Add(this.txtQaDetailBatchNo, 3, 2);
+            this.tlpQaRequestDetails.Controls.Add(this.lblQaDetailMfgDateLabel, 0, 3);
+            this.tlpQaRequestDetails.Controls.Add(this.txtQaDetailMfgDate, 1, 3);
+            this.tlpQaRequestDetails.Controls.Add(this.lblQaDetailExpDateLabel, 2, 3);
+            this.tlpQaRequestDetails.Controls.Add(this.txtQaDetailExpDate, 3, 3);
+            this.tlpQaRequestDetails.Controls.Add(this.lblQaDetailMarketLabel, 0, 4);
+            this.tlpQaRequestDetails.Controls.Add(this.txtQaDetailMarket, 1, 4);
+            this.tlpQaRequestDetails.Controls.Add(this.lblQaDetailPackSizeLabel, 2, 4);
+            this.tlpQaRequestDetails.Controls.Add(this.txtQaDetailPackSize, 3, 4);
+            this.tlpQaRequestDetails.Controls.Add(this.lblQaDetailPreparedByLabel, 0, 5);
+            this.tlpQaRequestDetails.Controls.Add(this.txtQaDetailPreparedBy, 1, 5);
+            this.tlpQaRequestDetails.Controls.Add(this.lblQaDetailRequestedAtLabel, 2, 5);
+            this.tlpQaRequestDetails.Controls.Add(this.txtQaDetailRequestedAt, 3, 5);
+            this.tlpQaRequestDetails.Controls.Add(this.lblQaDetailRequesterCommentsLabel, 0, 6);
+            this.tlpQaRequestDetails.Controls.Add(this.txtQaDetailRequesterComments, 1, 6);
+            this.tlpQaRequestDetails.Controls.Add(this.lblQaDetailGmCommentLabel, 0, 7);
+            this.tlpQaRequestDetails.Controls.Add(this.txtQaDetailGmComment, 1, 7);
+            this.tlpQaRequestDetails.Controls.Add(this.lblQaDetailGmActionTimeLabel, 0, 8);
+            this.tlpQaRequestDetails.Controls.Add(this.txtQaDetailGmActionTime, 1, 8);
+            this.tlpQaRequestDetails.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tlpQaRequestDetails.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.tlpQaRequestDetails.Location = new System.Drawing.Point(10, 32);
+            this.tlpQaRequestDetails.Name = "tlpQaRequestDetails";
+            this.tlpQaRequestDetails.RowCount = 9;
+            this.tlpQaRequestDetails.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tlpQaRequestDetails.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tlpQaRequestDetails.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tlpQaRequestDetails.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tlpQaRequestDetails.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tlpQaRequestDetails.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tlpQaRequestDetails.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tlpQaRequestDetails.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tlpQaRequestDetails.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tlpQaRequestDetails.Size = new System.Drawing.Size(1344, 106);
+            this.tlpQaRequestDetails.TabIndex = 0;
+            // 
+            // lblQaDetailRequestNoLabel
+            // 
+            this.lblQaDetailRequestNoLabel.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblQaDetailRequestNoLabel.AutoSize = true;
+            this.lblQaDetailRequestNoLabel.Location = new System.Drawing.Point(65, 0);
+            this.lblQaDetailRequestNoLabel.Name = "lblQaDetailRequestNoLabel";
+            this.lblQaDetailRequestNoLabel.Size = new System.Drawing.Size(92, 20);
+            this.lblQaDetailRequestNoLabel.TabIndex = 0;
+            this.lblQaDetailRequestNoLabel.Text = "Request No.:";
+            // 
+            // txtQaDetailRequestNo
+            // 
+            this.txtQaDetailRequestNo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtQaDetailRequestNo.Location = new System.Drawing.Point(163, 3);
+            this.txtQaDetailRequestNo.Name = "txtQaDetailRequestNo";
+            this.txtQaDetailRequestNo.ReadOnly = true;
+            this.txtQaDetailRequestNo.Size = new System.Drawing.Size(506, 27);
+            this.txtQaDetailRequestNo.TabIndex = 1;
+            // 
+            // lblQaDetailRequestDateLabel
+            // 
+            this.lblQaDetailRequestDateLabel.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblQaDetailRequestDateLabel.AutoSize = true;
+            this.lblQaDetailRequestDateLabel.Location = new System.Drawing.Point(728, 0);
+            this.lblQaDetailRequestDateLabel.Name = "lblQaDetailRequestDateLabel";
+            this.lblQaDetailRequestDateLabel.Size = new System.Drawing.Size(101, 20);
+            this.lblQaDetailRequestDateLabel.TabIndex = 2;
+            this.lblQaDetailRequestDateLabel.Text = "Request Date:";
+            // 
+            // txtQaDetailRequestDate
+            // 
+            this.txtQaDetailRequestDate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtQaDetailRequestDate.Location = new System.Drawing.Point(835, 3);
+            this.txtQaDetailRequestDate.Name = "txtQaDetailRequestDate";
+            this.txtQaDetailRequestDate.ReadOnly = true;
+            this.txtQaDetailRequestDate.Size = new System.Drawing.Size(506, 27);
+            this.txtQaDetailRequestDate.TabIndex = 3;
+            // 
+            // lblQaDetailFromDeptLabel
+            // 
+            this.lblQaDetailFromDeptLabel.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblQaDetailFromDeptLabel.AutoSize = true;
+            this.lblQaDetailFromDeptLabel.Location = new System.Drawing.Point(27, 20);
+            this.lblQaDetailFromDeptLabel.Name = "lblQaDetailFromDeptLabel";
+            this.lblQaDetailFromDeptLabel.Size = new System.Drawing.Size(130, 20);
+            this.lblQaDetailFromDeptLabel.TabIndex = 4;
+            this.lblQaDetailFromDeptLabel.Text = "From Department:";
+            // 
+            // txtQaDetailFromDept
+            // 
+            this.txtQaDetailFromDept.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtQaDetailFromDept.Location = new System.Drawing.Point(163, 23);
+            this.txtQaDetailFromDept.Name = "txtQaDetailFromDept";
+            this.txtQaDetailFromDept.ReadOnly = true;
+            this.txtQaDetailFromDept.Size = new System.Drawing.Size(506, 27);
+            this.txtQaDetailFromDept.TabIndex = 5;
+            // 
+            // lblQaDetailDocTypesLabel
+            // 
+            this.lblQaDetailDocTypesLabel.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblQaDetailDocTypesLabel.AutoSize = true;
+            this.lblQaDetailDocTypesLabel.Location = new System.Drawing.Point(707, 20);
+            this.lblQaDetailDocTypesLabel.Name = "lblQaDetailDocTypesLabel";
+            this.lblQaDetailDocTypesLabel.Size = new System.Drawing.Size(122, 20);
+            this.lblQaDetailDocTypesLabel.TabIndex = 6;
+            this.lblQaDetailDocTypesLabel.Text = "Document Types:";
+            // 
+            // txtQaDetailDocTypes
+            // 
+            this.txtQaDetailDocTypes.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtQaDetailDocTypes.Location = new System.Drawing.Point(835, 23);
+            this.txtQaDetailDocTypes.Name = "txtQaDetailDocTypes";
+            this.txtQaDetailDocTypes.ReadOnly = true;
+            this.txtQaDetailDocTypes.Size = new System.Drawing.Size(506, 27);
+            this.txtQaDetailDocTypes.TabIndex = 7;
+            // 
+            // lblQaDetailProductLabel
+            // 
+            this.lblQaDetailProductLabel.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblQaDetailProductLabel.AutoSize = true;
+            this.lblQaDetailProductLabel.Location = new System.Drawing.Point(94, 40);
+            this.lblQaDetailProductLabel.Name = "lblQaDetailProductLabel";
+            this.lblQaDetailProductLabel.Size = new System.Drawing.Size(63, 20);
+            this.lblQaDetailProductLabel.TabIndex = 8;
+            this.lblQaDetailProductLabel.Text = "Product:";
+            // 
+            // txtQaDetailProduct
+            // 
+            this.txtQaDetailProduct.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtQaDetailProduct.Location = new System.Drawing.Point(163, 43);
+            this.txtQaDetailProduct.Name = "txtQaDetailProduct";
+            this.txtQaDetailProduct.ReadOnly = true;
+            this.txtQaDetailProduct.Size = new System.Drawing.Size(506, 27);
+            this.txtQaDetailProduct.TabIndex = 9;
+            // 
+            // lblQaDetailBatchNoLabel
+            // 
+            this.lblQaDetailBatchNoLabel.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblQaDetailBatchNoLabel.AutoSize = true;
+            this.lblQaDetailBatchNoLabel.Location = new System.Drawing.Point(753, 40);
+            this.lblQaDetailBatchNoLabel.Name = "lblQaDetailBatchNoLabel";
+            this.lblQaDetailBatchNoLabel.Size = new System.Drawing.Size(76, 20);
+            this.lblQaDetailBatchNoLabel.TabIndex = 10;
+            this.lblQaDetailBatchNoLabel.Text = "Batch No.:";
+            // 
+            // txtQaDetailBatchNo
+            // 
+            this.txtQaDetailBatchNo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtQaDetailBatchNo.Location = new System.Drawing.Point(835, 43);
+            this.txtQaDetailBatchNo.Name = "txtQaDetailBatchNo";
+            this.txtQaDetailBatchNo.ReadOnly = true;
+            this.txtQaDetailBatchNo.Size = new System.Drawing.Size(506, 27);
+            this.txtQaDetailBatchNo.TabIndex = 11;
+            // 
+            // lblQaDetailMfgDateLabel
+            // 
+            this.lblQaDetailMfgDateLabel.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblQaDetailMfgDateLabel.AutoSize = true;
+            this.lblQaDetailMfgDateLabel.Location = new System.Drawing.Point(79, 60);
+            this.lblQaDetailMfgDateLabel.Name = "lblQaDetailMfgDateLabel";
+            this.lblQaDetailMfgDateLabel.Size = new System.Drawing.Size(78, 20);
+            this.lblQaDetailMfgDateLabel.TabIndex = 12;
+            this.lblQaDetailMfgDateLabel.Text = "Mfg. Date:";
+            // 
+            // txtQaDetailMfgDate
+            // 
+            this.txtQaDetailMfgDate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtQaDetailMfgDate.Location = new System.Drawing.Point(163, 63);
+            this.txtQaDetailMfgDate.Name = "txtQaDetailMfgDate";
+            this.txtQaDetailMfgDate.ReadOnly = true;
+            this.txtQaDetailMfgDate.Size = new System.Drawing.Size(506, 27);
+            this.txtQaDetailMfgDate.TabIndex = 13;
+            // 
+            // lblQaDetailExpDateLabel
+            // 
+            this.lblQaDetailExpDateLabel.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblQaDetailExpDateLabel.AutoSize = true;
+            this.lblQaDetailExpDateLabel.Location = new System.Drawing.Point(754, 60);
+            this.lblQaDetailExpDateLabel.Name = "lblQaDetailExpDateLabel";
+            this.lblQaDetailExpDateLabel.Size = new System.Drawing.Size(75, 20);
+            this.lblQaDetailExpDateLabel.TabIndex = 14;
+            this.lblQaDetailExpDateLabel.Text = "Exp. Date:";
+            // 
+            // txtQaDetailExpDate
+            // 
+            this.txtQaDetailExpDate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtQaDetailExpDate.Location = new System.Drawing.Point(835, 63);
+            this.txtQaDetailExpDate.Name = "txtQaDetailExpDate";
+            this.txtQaDetailExpDate.ReadOnly = true;
+            this.txtQaDetailExpDate.Size = new System.Drawing.Size(506, 27);
+            this.txtQaDetailExpDate.TabIndex = 15;
+            // 
+            // lblQaDetailMarketLabel
+            // 
+            this.lblQaDetailMarketLabel.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblQaDetailMarketLabel.AutoSize = true;
+            this.lblQaDetailMarketLabel.Location = new System.Drawing.Point(99, 80);
+            this.lblQaDetailMarketLabel.Name = "lblQaDetailMarketLabel";
+            this.lblQaDetailMarketLabel.Size = new System.Drawing.Size(58, 20);
+            this.lblQaDetailMarketLabel.TabIndex = 16;
+            this.lblQaDetailMarketLabel.Text = "Market:";
+            // 
+            // txtQaDetailMarket
+            // 
+            this.txtQaDetailMarket.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtQaDetailMarket.Location = new System.Drawing.Point(163, 83);
+            this.txtQaDetailMarket.Name = "txtQaDetailMarket";
+            this.txtQaDetailMarket.ReadOnly = true;
+            this.txtQaDetailMarket.Size = new System.Drawing.Size(506, 27);
+            this.txtQaDetailMarket.TabIndex = 17;
+            // 
+            // lblQaDetailPackSizeLabel
+            // 
+            this.lblQaDetailPackSizeLabel.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblQaDetailPackSizeLabel.AutoSize = true;
+            this.lblQaDetailPackSizeLabel.Location = new System.Drawing.Point(757, 80);
+            this.lblQaDetailPackSizeLabel.Name = "lblQaDetailPackSizeLabel";
+            this.lblQaDetailPackSizeLabel.Size = new System.Drawing.Size(72, 20);
+            this.lblQaDetailPackSizeLabel.TabIndex = 18;
+            this.lblQaDetailPackSizeLabel.Text = "Pack Size:";
+            // 
+            // txtQaDetailPackSize
+            // 
+            this.txtQaDetailPackSize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtQaDetailPackSize.Location = new System.Drawing.Point(835, 83);
+            this.txtQaDetailPackSize.Name = "txtQaDetailPackSize";
+            this.txtQaDetailPackSize.ReadOnly = true;
+            this.txtQaDetailPackSize.Size = new System.Drawing.Size(506, 27);
+            this.txtQaDetailPackSize.TabIndex = 19;
+            // 
+            // lblQaDetailPreparedByLabel
+            // 
+            this.lblQaDetailPreparedByLabel.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblQaDetailPreparedByLabel.AutoSize = true;
+            this.lblQaDetailPreparedByLabel.Location = new System.Drawing.Point(65, 100);
+            this.lblQaDetailPreparedByLabel.Name = "lblQaDetailPreparedByLabel";
+            this.lblQaDetailPreparedByLabel.Size = new System.Drawing.Size(92, 20);
+            this.lblQaDetailPreparedByLabel.TabIndex = 20;
+            this.lblQaDetailPreparedByLabel.Text = "Prepared By:";
+            // 
+            // txtQaDetailPreparedBy
+            // 
+            this.txtQaDetailPreparedBy.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtQaDetailPreparedBy.Location = new System.Drawing.Point(163, 103);
+            this.txtQaDetailPreparedBy.Name = "txtQaDetailPreparedBy";
+            this.txtQaDetailPreparedBy.ReadOnly = true;
+            this.txtQaDetailPreparedBy.Size = new System.Drawing.Size(506, 27);
+            this.txtQaDetailPreparedBy.TabIndex = 21;
+            // 
+            // lblQaDetailRequestedAtLabel
+            // 
+            this.lblQaDetailRequestedAtLabel.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblQaDetailRequestedAtLabel.AutoSize = true;
+            this.lblQaDetailRequestedAtLabel.Location = new System.Drawing.Point(728, 100);
+            this.lblQaDetailRequestedAtLabel.Name = "lblQaDetailRequestedAtLabel";
+            this.lblQaDetailRequestedAtLabel.Size = new System.Drawing.Size(101, 20);
+            this.lblQaDetailRequestedAtLabel.TabIndex = 22;
+            this.lblQaDetailRequestedAtLabel.Text = "Requested At:";
+            // 
+            // txtQaDetailRequestedAt
+            // 
+            this.txtQaDetailRequestedAt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtQaDetailRequestedAt.Location = new System.Drawing.Point(835, 103);
+            this.txtQaDetailRequestedAt.Name = "txtQaDetailRequestedAt";
+            this.txtQaDetailRequestedAt.ReadOnly = true;
+            this.txtQaDetailRequestedAt.Size = new System.Drawing.Size(506, 27);
+            this.txtQaDetailRequestedAt.TabIndex = 23;
+            // 
+            // lblQaDetailRequesterCommentsLabel
+            // 
+            this.lblQaDetailRequesterCommentsLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblQaDetailRequesterCommentsLabel.AutoSize = true;
+            this.lblQaDetailRequesterCommentsLabel.Location = new System.Drawing.Point(4, 120);
+            this.lblQaDetailRequesterCommentsLabel.Name = "lblQaDetailRequesterCommentsLabel";
+            this.lblQaDetailRequesterCommentsLabel.Size = new System.Drawing.Size(153, 20);
+            this.lblQaDetailRequesterCommentsLabel.TabIndex = 24;
+            this.lblQaDetailRequesterCommentsLabel.Text = "Requester Comments:";
+            // 
+            // txtQaDetailRequesterComments
+            // 
+            this.tlpQaRequestDetails.SetColumnSpan(this.txtQaDetailRequesterComments, 3);
+            this.txtQaDetailRequesterComments.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtQaDetailRequesterComments.Location = new System.Drawing.Point(163, 123);
+            this.txtQaDetailRequesterComments.Multiline = true;
+            this.txtQaDetailRequesterComments.Name = "txtQaDetailRequesterComments";
+            this.txtQaDetailRequesterComments.ReadOnly = true;
+            this.txtQaDetailRequesterComments.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txtQaDetailRequesterComments.Size = new System.Drawing.Size(1178, 14);
+            this.txtQaDetailRequesterComments.TabIndex = 25;
+            // 
+            // lblQaDetailGmCommentLabel
+            // 
+            this.lblQaDetailGmCommentLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblQaDetailGmCommentLabel.AutoSize = true;
+            this.lblQaDetailGmCommentLabel.Location = new System.Drawing.Point(47, 140);
+            this.lblQaDetailGmCommentLabel.Name = "lblQaDetailGmCommentLabel";
+            this.lblQaDetailGmCommentLabel.Size = new System.Drawing.Size(110, 20);
+            this.lblQaDetailGmCommentLabel.TabIndex = 26;
+            this.lblQaDetailGmCommentLabel.Text = "GM Comments:";
+            // 
+            // txtQaDetailGmComment
+            // 
+            this.tlpQaRequestDetails.SetColumnSpan(this.txtQaDetailGmComment, 3);
+            this.txtQaDetailGmComment.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtQaDetailGmComment.Location = new System.Drawing.Point(163, 143);
+            this.txtQaDetailGmComment.Multiline = true;
+            this.txtQaDetailGmComment.Name = "txtQaDetailGmComment";
+            this.txtQaDetailGmComment.ReadOnly = true;
+            this.txtQaDetailGmComment.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txtQaDetailGmComment.Size = new System.Drawing.Size(1178, 14);
+            this.txtQaDetailGmComment.TabIndex = 27;
+            // 
+            // lblQaDetailGmActionTimeLabel
+            // 
+            this.lblQaDetailGmActionTimeLabel.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblQaDetailGmActionTimeLabel.AutoSize = true;
+            this.lblQaDetailGmActionTimeLabel.Location = new System.Drawing.Point(38, 160);
+            this.lblQaDetailGmActionTimeLabel.Name = "lblQaDetailGmActionTimeLabel";
+            this.lblQaDetailGmActionTimeLabel.Size = new System.Drawing.Size(119, 20);
+            this.lblQaDetailGmActionTimeLabel.TabIndex = 28;
+            this.lblQaDetailGmActionTimeLabel.Text = "GM Action Time:";
+            // 
+            // txtQaDetailGmActionTime
+            // 
+            this.txtQaDetailGmActionTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtQaDetailGmActionTime.Location = new System.Drawing.Point(163, 163);
+            this.txtQaDetailGmActionTime.Name = "txtQaDetailGmActionTime";
+            this.txtQaDetailGmActionTime.ReadOnly = true;
+            this.txtQaDetailGmActionTime.Size = new System.Drawing.Size(506, 27);
+            this.txtQaDetailGmActionTime.TabIndex = 29;
+            // 
+            // grpQaAction
+            // 
+            this.grpQaAction.Controls.Add(this.tlpQaActionControls);
+            this.grpQaAction.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.grpQaAction.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
+            this.grpQaAction.Location = new System.Drawing.Point(3, 157);
+            this.grpQaAction.Name = "grpQaAction";
+            this.grpQaAction.Padding = new System.Windows.Forms.Padding(10);
+            this.grpQaAction.Size = new System.Drawing.Size(1364, 214);
+            this.grpQaAction.TabIndex = 1;
+            this.grpQaAction.TabStop = false;
+            this.grpQaAction.Text = "QA Action & Verification";
+            // 
+            // tlpQaActionControls
+            // 
+            this.tlpQaActionControls.ColumnCount = 1;
+            this.tlpQaActionControls.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tlpQaActionControls.Controls.Add(this.flpQaOptionalControls, 0, 0);
+            this.tlpQaActionControls.Controls.Add(this.lblQaComment, 0, 1);
+            this.tlpQaActionControls.Controls.Add(this.txtQaComment, 0, 2);
+            this.tlpQaActionControls.Controls.Add(this.flpQaActionButtons, 0, 3);
+            this.tlpQaActionControls.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tlpQaActionControls.Location = new System.Drawing.Point(10, 32);
+            this.tlpQaActionControls.Name = "tlpQaActionControls";
+            this.tlpQaActionControls.RowCount = 4;
+            this.tlpQaActionControls.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
+            this.tlpQaActionControls.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tlpQaActionControls.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tlpQaActionControls.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 45F));
+            this.tlpQaActionControls.Size = new System.Drawing.Size(1344, 172);
+            this.tlpQaActionControls.TabIndex = 0;
+            // 
+            // flpQaOptionalControls
+            // 
+            this.flpQaOptionalControls.Controls.Add(this.lblQaPrintCount);
+            this.flpQaOptionalControls.Controls.Add(this.numQaPrintCount);
+            this.flpQaOptionalControls.Controls.Add(this.btnQaBrowseSelectDocument);
+            this.flpQaOptionalControls.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flpQaOptionalControls.Location = new System.Drawing.Point(3, 3);
+            this.flpQaOptionalControls.Name = "flpQaOptionalControls";
+            this.flpQaOptionalControls.Size = new System.Drawing.Size(1338, 34);
+            this.flpQaOptionalControls.TabIndex = 0;
+            this.flpQaOptionalControls.WrapContents = false;
+            // 
+            // lblQaPrintCount
+            // 
+            this.lblQaPrintCount.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.lblQaPrintCount.AutoSize = true;
+            this.lblQaPrintCount.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.lblQaPrintCount.Location = new System.Drawing.Point(3, 10);
+            this.lblQaPrintCount.Margin = new System.Windows.Forms.Padding(3, 8, 3, 3);
+            this.lblQaPrintCount.Name = "lblQaPrintCount";
+            this.lblQaPrintCount.Size = new System.Drawing.Size(85, 20);
+            this.lblQaPrintCount.TabIndex = 0;
+            this.lblQaPrintCount.Text = "Print Count:";
+            // 
+            // numQaPrintCount
+            // 
+            this.numQaPrintCount.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.numQaPrintCount.Location = new System.Drawing.Point(94, 5);
+            this.numQaPrintCount.Margin = new System.Windows.Forms.Padding(3, 5, 3, 3);
+            this.numQaPrintCount.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numQaPrintCount.Name = "numQaPrintCount";
+            this.numQaPrintCount.Size = new System.Drawing.Size(70, 27);
+            this.numQaPrintCount.TabIndex = 1;
+            this.numQaPrintCount.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.numQaPrintCount.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // btnQaBrowseSelectDocument
+            // 
+            this.btnQaBrowseSelectDocument.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.btnQaBrowseSelectDocument.Location = new System.Drawing.Point(170, 3);
+            this.btnQaBrowseSelectDocument.Name = "btnQaBrowseSelectDocument";
+            this.btnQaBrowseSelectDocument.Size = new System.Drawing.Size(180, 30);
+            this.btnQaBrowseSelectDocument.TabIndex = 2;
+            this.btnQaBrowseSelectDocument.Text = "Open Document Location";
+            this.btnQaBrowseSelectDocument.UseVisualStyleBackColor = true;
+            // 
+            // lblQaComment
+            // 
+            this.lblQaComment.AutoSize = true;
+            this.lblQaComment.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.lblQaComment.Location = new System.Drawing.Point(3, 40);
+            this.lblQaComment.Name = "lblQaComment";
+            this.lblQaComment.Size = new System.Drawing.Size(108, 20);
+            this.lblQaComment.TabIndex = 1;
+            this.lblQaComment.Text = "QA Comments:";
+            // 
+            // txtQaComment
+            // 
+            this.txtQaComment.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtQaComment.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.txtQaComment.Location = new System.Drawing.Point(3, 63);
+            this.txtQaComment.Multiline = true;
+            this.txtQaComment.Name = "txtQaComment";
+            this.txtQaComment.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txtQaComment.Size = new System.Drawing.Size(1338, 61);
+            this.txtQaComment.TabIndex = 2;
+            // 
+            // flpQaActionButtons
+            // 
+            this.flpQaActionButtons.Controls.Add(this.btnQaApprove);
+            this.flpQaActionButtons.Controls.Add(this.btnQaReject);
+            this.flpQaActionButtons.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flpQaActionButtons.Location = new System.Drawing.Point(3, 130);
+            this.flpQaActionButtons.Name = "flpQaActionButtons";
+            this.flpQaActionButtons.Padding = new System.Windows.Forms.Padding(0, 5, 0, 0);
+            this.flpQaActionButtons.Size = new System.Drawing.Size(1338, 39);
+            this.flpQaActionButtons.TabIndex = 3;
+            // 
+            // btnQaApprove
+            // 
+            this.btnQaApprove.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold);
+            this.btnQaApprove.Location = new System.Drawing.Point(3, 8);
+            this.btnQaApprove.Name = "btnQaApprove";
+            this.btnQaApprove.Size = new System.Drawing.Size(120, 30);
+            this.btnQaApprove.TabIndex = 0;
+            this.btnQaApprove.Text = "Approve";
+            this.btnQaApprove.UseVisualStyleBackColor = true;
+            // 
+            // btnQaReject
+            // 
+            this.btnQaReject.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.btnQaReject.Location = new System.Drawing.Point(129, 8);
+            this.btnQaReject.Name = "btnQaReject";
+            this.btnQaReject.Size = new System.Drawing.Size(120, 30);
+            this.btnQaReject.TabIndex = 1;
+            this.btnQaReject.Text = "Reject";
+            this.btnQaReject.UseVisualStyleBackColor = true;
             // 
             // tabPageAuditTrail
             // 
             this.tabPageAuditTrail.Location = new System.Drawing.Point(4, 30);
             this.tabPageAuditTrail.Name = "tabPageAuditTrail";
             this.tabPageAuditTrail.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageAuditTrail.Size = new System.Drawing.Size(1396, 656);
+            this.tabPageAuditTrail.Size = new System.Drawing.Size(1396, 652);
             this.tabPageAuditTrail.TabIndex = 4;
             this.tabPageAuditTrail.Text = "Audit Trail";
             this.tabPageAuditTrail.UseVisualStyleBackColor = true;
@@ -982,7 +2322,7 @@ namespace DocumentIssuanceApp
             this.tabPageUsers.Location = new System.Drawing.Point(4, 30);
             this.tabPageUsers.Name = "tabPageUsers";
             this.tabPageUsers.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageUsers.Size = new System.Drawing.Size(1396, 656);
+            this.tabPageUsers.Size = new System.Drawing.Size(1396, 652);
             this.tabPageUsers.TabIndex = 5;
             this.tabPageUsers.Text = "Users";
             this.tabPageUsers.UseVisualStyleBackColor = true;
@@ -1002,7 +2342,7 @@ namespace DocumentIssuanceApp
             // 
             // toolStripStatusLabelUser
             // 
-            this.toolStripStatusLabelUser.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.toolStripStatusLabelUser.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
             this.toolStripStatusLabelUser.Name = "toolStripStatusLabelUser";
             this.toolStripStatusLabelUser.Size = new System.Drawing.Size(156, 28);
             this.toolStripStatusLabelUser.Text = "User: Loading...";
@@ -1015,7 +2355,7 @@ namespace DocumentIssuanceApp
             // 
             // toolStripStatusLabelDateTime
             // 
-            this.toolStripStatusLabelDateTime.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.toolStripStatusLabelDateTime.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
             this.toolStripStatusLabelDateTime.Name = "toolStripStatusLabelDateTime";
             this.toolStripStatusLabelDateTime.Size = new System.Drawing.Size(211, 28);
             this.toolStripStatusLabelDateTime.Text = "Date Time: Loading...";
@@ -1062,6 +2402,39 @@ namespace DocumentIssuanceApp
             this.pnlActionBottomDI.ResumeLayout(false);
             this.pnlStatusDI.ResumeLayout(false);
             this.pnlStatusDI.PerformLayout();
+            this.tabPageGmOperations.ResumeLayout(false);
+            this.tlpGmOperationsMain.ResumeLayout(false);
+            this.pnlGmTopSection.ResumeLayout(false);
+            this.tlpGmTopControls.ResumeLayout(false);
+            this.pnlGmQueueHeader.ResumeLayout(false);
+            this.pnlGmQueueHeader.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvGmQueue)).EndInit();
+            this.tlpGmBottomSection.ResumeLayout(false);
+            this.grpGmSelectedRequest.ResumeLayout(false);
+            this.tlpGmRequestDetails.ResumeLayout(false);
+            this.tlpGmRequestDetails.PerformLayout();
+            this.grpGmAction.ResumeLayout(false);
+            this.tlpGmActionControls.ResumeLayout(false);
+            this.tlpGmActionControls.PerformLayout();
+            this.flpGmActionButtons.ResumeLayout(false);
+            this.tabPageQa.ResumeLayout(false);
+            this.tlpQaOperationsMain.ResumeLayout(false);
+            this.pnlQaTopSection.ResumeLayout(false);
+            this.tlpQaTopControls.ResumeLayout(false);
+            this.pnlQaQueueHeader.ResumeLayout(false);
+            this.pnlQaQueueHeader.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvQaQueue)).EndInit();
+            this.tlpQaBottomSection.ResumeLayout(false);
+            this.grpQaSelectedRequest.ResumeLayout(false);
+            this.tlpQaRequestDetails.ResumeLayout(false);
+            this.tlpQaRequestDetails.PerformLayout();
+            this.grpQaAction.ResumeLayout(false);
+            this.tlpQaActionControls.ResumeLayout(false);
+            this.tlpQaActionControls.PerformLayout();
+            this.flpQaOptionalControls.ResumeLayout(false);
+            this.flpQaOptionalControls.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numQaPrintCount)).EndInit();
+            this.flpQaActionButtons.ResumeLayout(false);
             this.statusStripMain.ResumeLayout(false);
             this.statusStripMain.PerformLayout();
             this.ResumeLayout(false);
@@ -1071,45 +2444,38 @@ namespace DocumentIssuanceApp
 
         #endregion
 
+        // Original control declarations (Login, DocIssuance, StatusStrip etc.) should be here
         private System.Windows.Forms.TabControl tabControlMain;
         private System.Windows.Forms.TabPage tabPageLogin;
-        private System.Windows.Forms.TabPage tabPageDocumentIssuance;
-        private System.Windows.Forms.TabPage tabPageGmOperations;
-        private System.Windows.Forms.TabPage tabPageQa;
-        private System.Windows.Forms.TabPage tabPageAuditTrail;
-        private System.Windows.Forms.TabPage tabPageUsers;
-        private System.Windows.Forms.StatusStrip statusStripMain;
-        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelUser;
-        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelDateTime;
-        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelSpring;
         private System.Windows.Forms.Panel panelLoginContainer;
-        private System.Windows.Forms.Label lblRole;
-        private System.Windows.Forms.ComboBox cmbRole;
-        private System.Windows.Forms.Label lblPassword;
-        private System.Windows.Forms.TextBox txtPassword;
-        private System.Windows.Forms.Button btnLogin;
         private System.Windows.Forms.Label lblLoginStatus;
-
-        // --- Document Issuance Tab Controls ---
+        private System.Windows.Forms.Button btnLogin;
+        private System.Windows.Forms.TextBox txtPassword;
+        private System.Windows.Forms.Label lblPassword;
+        private System.Windows.Forms.ComboBox cmbRole;
+        private System.Windows.Forms.Label lblRole;
+        private System.Windows.Forms.TabPage tabPageDocumentIssuance;
         private System.Windows.Forms.TableLayoutPanel tlpDocumentIssuanceMain;
         private System.Windows.Forms.Label lblHeaderDI;
         private System.Windows.Forms.TableLayoutPanel tlpTopSectionDI;
         private System.Windows.Forms.GroupBox grpDocTypeDI;
-        private System.Windows.Forms.CheckBox chkDocTypeBMRDI;
-        private System.Windows.Forms.CheckBox chkDocTypeBPRDI;
-        private System.Windows.Forms.CheckBox chkDocTypeAppendixDI;
         private System.Windows.Forms.CheckBox chkDocTypeAddendumDI;
+        private System.Windows.Forms.CheckBox chkDocTypeAppendixDI;
+        private System.Windows.Forms.CheckBox chkDocTypeBPRDI;
+        private System.Windows.Forms.CheckBox chkDocTypeBMRDI;
         private System.Windows.Forms.Panel pnlTopRightDI;
-        private System.Windows.Forms.Label lblTrackerNoLabelDI;
-        private System.Windows.Forms.Label lblTrackerNoValueDI;
-        private System.Windows.Forms.Label lblRequestNoLabelDI;
         private System.Windows.Forms.TextBox txtRequestNoValueDI;
+        private System.Windows.Forms.Label lblRequestNoLabelDI;
+        private System.Windows.Forms.Label lblTrackerNoValueDI;
+        private System.Windows.Forms.Label lblTrackerNoLabelDI;
         private System.Windows.Forms.Panel pnlRequestDetailsDI;
+        private System.Windows.Forms.TableLayoutPanel tlpRequestDetails;
         private System.Windows.Forms.Label lblRequestDateDI;
         private System.Windows.Forms.DateTimePicker dtpRequestDateDI;
         private System.Windows.Forms.Label lblFromDepartmentDI;
         private System.Windows.Forms.ComboBox cmbFromDepartmentDI;
         private System.Windows.Forms.GroupBox grpParentBatchInfoDI;
+        private System.Windows.Forms.TableLayoutPanel tlpParentBatchInfo;
         private System.Windows.Forms.Label lblParentBatchNoDI;
         private System.Windows.Forms.TextBox txtParentBatchNoDI;
         private System.Windows.Forms.Label lblParentBatchSizeDI;
@@ -1119,6 +2485,7 @@ namespace DocumentIssuanceApp
         private System.Windows.Forms.Label lblParentExpDateDI;
         private System.Windows.Forms.DateTimePicker dtpParentExpDateDI;
         private System.Windows.Forms.GroupBox grpItemDetailsDI;
+        private System.Windows.Forms.TableLayoutPanel tlpItemDetails;
         private System.Windows.Forms.Label lblProductDI;
         private System.Windows.Forms.TextBox txtProductDI;
         private System.Windows.Forms.Label lblDocumentNoDI;
@@ -1140,15 +2507,128 @@ namespace DocumentIssuanceApp
         private System.Windows.Forms.GroupBox grpRemarksDI;
         private System.Windows.Forms.TextBox txtRemarksDI;
         private System.Windows.Forms.Panel pnlActionBottomDI;
-        private System.Windows.Forms.Button btnSubmitRequestDI;
         private System.Windows.Forms.Button btnClearFormDI;
+        private System.Windows.Forms.Button btnSubmitRequestDI;
         private System.Windows.Forms.Panel pnlStatusDI;
-        private System.Windows.Forms.Label lblStatusLabelDI;
         private System.Windows.Forms.Label lblStatusValueDI;
-
-        // New TableLayoutPanels
-        private TableLayoutPanel tlpRequestDetails;
-        private TableLayoutPanel tlpParentBatchInfo;
-        private TableLayoutPanel tlpItemDetails;
+        private System.Windows.Forms.Label lblStatusLabelDI;
+        private System.Windows.Forms.TabPage tabPageQa;
+        private System.Windows.Forms.TabPage tabPageAuditTrail;
+        private System.Windows.Forms.TabPage tabPageUsers;
+        private System.Windows.Forms.StatusStrip statusStripMain;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelUser;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelSpring;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelDateTime;
+        // GM Operations Tab Controls - Declarations should be consolidated here
+        private System.Windows.Forms.TabPage tabPageGmOperations; // Ensure this is declared
+        private System.Windows.Forms.TableLayoutPanel tlpGmOperationsMain;
+        private System.Windows.Forms.Panel pnlGmTopSection;
+        private System.Windows.Forms.TableLayoutPanel tlpGmTopControls;
+        private System.Windows.Forms.Panel pnlGmQueueHeader;
+        private System.Windows.Forms.Label lblGmQueueTitle;
+        private System.Windows.Forms.Button btnGmRefreshList;
+        private System.Windows.Forms.DataGridView dgvGmQueue;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colGmRequestNo;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colGmRequestDate;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colGmProduct;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colGmDocTypes;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colGmPreparedBy;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colGmRequestedAt;
+        private System.Windows.Forms.TableLayoutPanel tlpGmBottomSection;
+        private System.Windows.Forms.GroupBox grpGmSelectedRequest;
+        private System.Windows.Forms.TableLayoutPanel tlpGmRequestDetails;
+        private System.Windows.Forms.Label lblGmDetailRequestNoLabel;
+        private System.Windows.Forms.TextBox txtGmDetailRequestNo;
+        private System.Windows.Forms.Label lblGmDetailRequestDateLabel;
+        private System.Windows.Forms.TextBox txtGmDetailRequestDate;
+        private System.Windows.Forms.Label lblGmDetailFromDeptLabel;
+        private System.Windows.Forms.TextBox txtGmDetailFromDept;
+        private System.Windows.Forms.Label lblGmDetailDocTypesLabel;
+        private System.Windows.Forms.TextBox txtGmDetailDocTypes;
+        private System.Windows.Forms.Label lblGmDetailProductLabel;
+        private System.Windows.Forms.TextBox txtGmDetailProduct;
+        private System.Windows.Forms.Label lblGmDetailBatchNoLabel;
+        private System.Windows.Forms.TextBox txtGmDetailBatchNo;
+        private System.Windows.Forms.Label lblGmDetailMfgDateLabel;
+        private System.Windows.Forms.TextBox txtGmDetailMfgDate;
+        private System.Windows.Forms.Label lblGmDetailExpDateLabel;
+        private System.Windows.Forms.TextBox txtGmDetailExpDate;
+        private System.Windows.Forms.Label lblGmDetailMarketLabel;
+        private System.Windows.Forms.TextBox txtGmDetailMarket;
+        private System.Windows.Forms.Label lblGmDetailPackSizeLabel;
+        private System.Windows.Forms.TextBox txtGmDetailPackSize;
+        private System.Windows.Forms.Label lblGmDetailPreparedByLabel;
+        private System.Windows.Forms.TextBox txtGmDetailPreparedBy;
+        private System.Windows.Forms.Label lblGmDetailRequestedAtLabel;
+        private System.Windows.Forms.TextBox txtGmDetailRequestedAt;
+        private System.Windows.Forms.Label lblGmDetailRequesterCommentsLabel;
+        private System.Windows.Forms.TextBox txtGmDetailRequesterComments;
+        private System.Windows.Forms.GroupBox grpGmAction;
+        private System.Windows.Forms.TableLayoutPanel tlpGmActionControls;
+        private System.Windows.Forms.Label lblGmComment;
+        private System.Windows.Forms.TextBox txtGmComment;
+        private System.Windows.Forms.FlowLayoutPanel flpGmActionButtons;
+        private System.Windows.Forms.Button btnGmAuthorize;
+        private System.Windows.Forms.Button btnGmReject;
+        // QA Tab Controls
+        private System.Windows.Forms.TableLayoutPanel tlpQaOperationsMain;
+        private System.Windows.Forms.Panel pnlQaTopSection;
+        private System.Windows.Forms.TableLayoutPanel tlpQaTopControls;
+        private System.Windows.Forms.Panel pnlQaQueueHeader;
+        private System.Windows.Forms.Label lblQaQueueTitle;
+        private System.Windows.Forms.Button btnQaRefreshList;
+        private System.Windows.Forms.DataGridView dgvQaQueue;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colQaRequestNo;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colQaRequestDate;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colQaProduct;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colQaDocTypes;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colQaPreparedBy;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colQaAuthorizedBy; // GM
+        private System.Windows.Forms.DataGridViewTextBoxColumn colQaGmActionAt;
+        private System.Windows.Forms.TableLayoutPanel tlpQaBottomSection;
+        private System.Windows.Forms.GroupBox grpQaSelectedRequest;
+        private System.Windows.Forms.TableLayoutPanel tlpQaRequestDetails;
+        // Labels and TextBoxes for QA Selected Request Details (mirroring GM tab + GM info)
+        private System.Windows.Forms.Label lblQaDetailRequestNoLabel;
+        private System.Windows.Forms.TextBox txtQaDetailRequestNo;
+        private System.Windows.Forms.Label lblQaDetailRequestDateLabel;
+        private System.Windows.Forms.TextBox txtQaDetailRequestDate;
+        private System.Windows.Forms.Label lblQaDetailFromDeptLabel;
+        private System.Windows.Forms.TextBox txtQaDetailFromDept;
+        private System.Windows.Forms.Label lblQaDetailDocTypesLabel;
+        private System.Windows.Forms.TextBox txtQaDetailDocTypes;
+        private System.Windows.Forms.Label lblQaDetailProductLabel;
+        private System.Windows.Forms.TextBox txtQaDetailProduct;
+        private System.Windows.Forms.Label lblQaDetailBatchNoLabel;
+        private System.Windows.Forms.TextBox txtQaDetailBatchNo;
+        private System.Windows.Forms.Label lblQaDetailMfgDateLabel;
+        private System.Windows.Forms.TextBox txtQaDetailMfgDate;
+        private System.Windows.Forms.Label lblQaDetailExpDateLabel;
+        private System.Windows.Forms.TextBox txtQaDetailExpDate;
+        private System.Windows.Forms.Label lblQaDetailMarketLabel;
+        private System.Windows.Forms.TextBox txtQaDetailMarket;
+        private System.Windows.Forms.Label lblQaDetailPackSizeLabel;
+        private System.Windows.Forms.TextBox txtQaDetailPackSize;
+        private System.Windows.Forms.Label lblQaDetailPreparedByLabel;
+        private System.Windows.Forms.TextBox txtQaDetailPreparedBy;
+        private System.Windows.Forms.Label lblQaDetailRequestedAtLabel;
+        private System.Windows.Forms.TextBox txtQaDetailRequestedAt;
+        private System.Windows.Forms.Label lblQaDetailRequesterCommentsLabel;
+        private System.Windows.Forms.TextBox txtQaDetailRequesterComments;
+        private System.Windows.Forms.Label lblQaDetailGmCommentLabel; // New for QA: GM's Comments
+        private System.Windows.Forms.TextBox txtQaDetailGmComment;   // New for QA
+        private System.Windows.Forms.Label lblQaDetailGmActionTimeLabel; // New for QA: GM's Action Time
+        private System.Windows.Forms.TextBox txtQaDetailGmActionTime;  // New for QA
+        private System.Windows.Forms.GroupBox grpQaAction;
+        private System.Windows.Forms.TableLayoutPanel tlpQaActionControls;
+        private System.Windows.Forms.FlowLayoutPanel flpQaOptionalControls; // For Print Count and Browse
+        private System.Windows.Forms.Label lblQaPrintCount;
+        private System.Windows.Forms.NumericUpDown numQaPrintCount;
+        private System.Windows.Forms.Button btnQaBrowseSelectDocument;
+        private System.Windows.Forms.Label lblQaComment;
+        private System.Windows.Forms.TextBox txtQaComment;
+        private System.Windows.Forms.FlowLayoutPanel flpQaActionButtons;
+        private System.Windows.Forms.Button btnQaApprove;
+        private System.Windows.Forms.Button btnQaReject;
     }
 }
