@@ -106,5 +106,11 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\IssuanceApp.Data\IssuanceApp.Data.csproj">
+      <Project>{5ff86e5b-eccd-4615-a980-8ad4a1e21e8e}</Project>
+      <Name>IssuanceApp.Data</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

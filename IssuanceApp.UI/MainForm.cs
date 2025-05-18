@@ -4,9 +4,14 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Security.Principal; // Required for WindowsIdentity
 using System.Collections.Generic; // Required for List<string>
+using System.IO; // New: For file operations (CSV export)
+using System.Text;
+using IssuanceApp.Data; // Assuming AuditTrailEntry is here
+using System.Xml.Serialization; // This was likely for StringBuilder, but StringBuilder is in System.Text
 
 namespace DocumentIssuanceApp
 {
+
     public partial class MainForm : Form
     {
         private Timer statusTimer;
@@ -40,6 +45,10 @@ namespace DocumentIssuanceApp
             LoadInitialDocumentIssuanceData(); // Load initial data like tracker/request no.
 
             InitializeGmOperationsTab(); // <-- Added call for GM Operations Tab
+
+            InitializeQaTab(); // <-- Added call for QA Operations Tab
+
+            InitializeAuditTrailTab(); // <-- Added call for Audit Trail Operations Tab
 
             SetupTabs();                  // General tab setup (permissions etc.)
 
@@ -559,7 +568,7 @@ namespace DocumentIssuanceApp
             {
                 dgvGmQueue.AutoGenerateColumns = false; // Important if columns are defined in designer
                 // Example: Map to data source property (ensure your data source object has these properties)
-                // dgvGmQueue.Columns["colGmRequestNo"].DataPropertyName = "RequestNo"; 
+                // dgvGmQueue.Columns["colGmRequestNo"].DataPropertyName = "RequestNo";
                 // dgvGmQueue.Columns["colGmRequestDate"].DataPropertyName = "RequestDate";
                 // dgvGmQueue.Columns["colGmProduct"].DataPropertyName = "Product";
                 // dgvGmQueue.Columns["colGmDocTypes"].DataPropertyName = "DocumentTypes";
@@ -778,40 +787,771 @@ namespace DocumentIssuanceApp
         private void SetupTlpQaRequestDetailsRowStyles()
         {
             // Clear any existing row styles that the designer might have added by default
+            if (this.tlpQaRequestDetails == null) return; // Guard clause
             this.tlpQaRequestDetails.RowStyles.Clear();
 
             // Define the height for the first (RowCount - 2) rows
-            float standardRowHeight = 30F;
-            // Define the height for the last two special rows
+            float standardRowHeight = 30F; // Adjusted for potentially more rows
+            // Define the height for the last two special rows (comments)
             float specialRowHeight = 60F;
 
-            if (this.tlpQaRequestDetails.RowCount >= 2) // Ensure RowCount is at least 2
+            // Ensure RowCount is valid and sufficient for the logic
+            if (this.tlpQaRequestDetails.RowCount >= 2)
             {
-                // Add styles for the standard rows
+                // Add styles for the standard rows up to the last two
                 for (int i = 0; i < this.tlpQaRequestDetails.RowCount - 2; i++)
                 {
                     this.tlpQaRequestDetails.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, standardRowHeight));
                 }
 
-                // Add styles for the last two special rows
-                // Assuming RowCount is 9, this will be for row index 7 and 8
-                this.tlpQaRequestDetails.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, specialRowHeight)); // For Requester Comments
-                this.tlpQaRequestDetails.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, specialRowHeight)); // For GM Comments
+                // Add styles for the last two special rows (Requester Comments and GM Comments)
+                this.tlpQaRequestDetails.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, specialRowHeight));
+                this.tlpQaRequestDetails.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, specialRowHeight));
             }
-            else
+            else // Fallback for smaller RowCount (e.g., if RowCount is 0 or 1)
             {
-                // Handle cases where RowCount is less than 2, if necessary,
-                // or ensure RowCount is always appropriately set before this method is called.
-                // For simplicity, if RowCount is small, you might just add all rows with a default height.
                 for (int i = 0; i < this.tlpQaRequestDetails.RowCount; i++)
                 {
                     this.tlpQaRequestDetails.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, standardRowHeight));
                 }
             }
-            // Ensure the number of RowStyles added matches tlpQaRequestDetails.RowCount
-            // If RowCount is 9, you should have 9 RowStyles.Add calls in total from the logic above.
         }
 
+        #region QA Tab Logic
+
+        private void InitializeQaTab()
+        {
+            // Configure DataGridView for QA Queue
+            if (dgvQaQueue != null)
+            {
+                dgvQaQueue.AutoGenerateColumns = false; // Assuming columns are defined in the designer
+                                                        // If you need to set DataPropertyName for columns (if not already done in designer):
+                                                        // dgvQaQueue.Columns["colQaRequestNo"].DataPropertyName = "RequestNo";
+                                                        // dgvQaQueue.Columns["colQaRequestDate"].DataPropertyName = "RequestDate";
+                                                        // ... and so on for other columns ...
+                dgvQaQueue.SelectionChanged += DgvQaQueue_SelectionChanged;
+            }
+
+            // Attach event handlers for buttons
+            if (btnQaRefreshList != null)
+            {
+                btnQaRefreshList.Click += BtnQaRefreshList_Click;
+            }
+            if (btnQaApprove != null)
+            {
+                btnQaApprove.Click += BtnQaApprove_Click;
+            }
+            if (btnQaReject != null)
+            {
+                btnQaReject.Click += BtnQaReject_Click;
+            }
+            if (btnQaBrowseSelectDocument != null)
+            {
+                // TODO: Implement document browsing logic if needed
+                // btnQaBrowseSelectDocument.Click += BtnQaBrowseSelectDocument_Click;
+            }
+
+
+            // Clear details fields and comments initially
+            ClearQaSelectedRequestDetails();
+            if (txtQaComment != null) txtQaComment.Clear();
+            if (numQaPrintCount != null) numQaPrintCount.Value = 1; // Default print count
+
+            // Load the initial queue if the user role is appropriate
+            if ((loggedInRole == "QA" || loggedInRole == "Admin") && tabPageQa != null && tabPageQa.Enabled)
+            {
+                LoadQaPendingQueue();
+            }
+            else if (lblQaQueueTitle != null)
+            {
+                lblQaQueueTitle.Text = "Pending QA Approval Queue (0)"; // Default title
+            }
+        }
+
+        private void LoadQaPendingQueue()
+        {
+            // TODO: Implement logic to fetch requests approved by GM and pending QA action from the database.
+            // Query should look for records where:
+            // Issuance_Tracker.GmOperationsAction = "Authorized" AND Issuance_Tracker.QAAction IS NULL.
+            // Example:
+            // var pendingQaRequests = YourDataAccessLayer.GetPendingQaRequests();
+            // dgvQaQueue.DataSource = pendingQaRequests;
+
+            if (dgvQaQueue != null)
+            {
+                // Placeholder data for demonstration - REMOVE FOR PRODUCTION
+                var placeholderQaData = new List<object>();
+                placeholderQaData.Add(new
+                {
+                    RequestNo = "REQ-20240101-001",
+                    RequestDate = DateTime.Now.AddDays(-5),
+                    Product = "Product A (Pharma)",
+                    DocumentTypes = "BMR,APPENDIX",
+                    PreparedBy = "user.requester",
+                    AuthorizedBy = "gm.user",
+                    GmActionAt = DateTime.Now.AddDays(-2) // GM's authorization details
+                });
+                placeholderQaData.Add(new
+                {
+                    RequestNo = "REQ-20240104-004",
+                    RequestDate = DateTime.Now.AddDays(-2),
+                    Product = "Product D (Syrup)",
+                    DocumentTypes = "BPR,ADDENDUM",
+                    PreparedBy = "another.user",
+                    AuthorizedBy = "gm.user",
+                    GmActionAt = DateTime.Now.AddDays(-1)
+                });
+                dgvQaQueue.DataSource = placeholderQaData;
+            }
+
+            if (lblQaQueueTitle != null)
+            {
+                lblQaQueueTitle.Text = $"Pending QA Approval Queue ({dgvQaQueue?.Rows.Count ?? 0})";
+            }
+            ClearQaSelectedRequestDetails(); // Clear details when queue is reloaded
+            if (txtQaComment != null) txtQaComment.Clear();
+        }
+
+        private void ClearQaSelectedRequestDetails()
+        {
+            // Clear all textboxes in the "Selected Request Details" group for QA tab
+            if (txtQaDetailRequestNo != null) txtQaDetailRequestNo.Clear();
+            if (txtQaDetailRequestDate != null) txtQaDetailRequestDate.Clear();
+            if (txtQaDetailFromDept != null) txtQaDetailFromDept.Clear();
+            if (txtQaDetailDocTypes != null) txtQaDetailDocTypes.Clear();
+            if (txtQaDetailProduct != null) txtQaDetailProduct.Clear();
+            if (txtQaDetailBatchNo != null) txtQaDetailBatchNo.Clear();
+            if (txtQaDetailMfgDate != null) txtQaDetailMfgDate.Clear();
+            if (txtQaDetailExpDate != null) txtQaDetailExpDate.Clear();
+            if (txtQaDetailMarket != null) txtQaDetailMarket.Clear();
+            if (txtQaDetailPackSize != null) txtQaDetailPackSize.Clear();
+            if (txtQaDetailPreparedBy != null) txtQaDetailPreparedBy.Clear();
+            if (txtQaDetailRequestedAt != null) txtQaDetailRequestedAt.Clear();
+            if (txtQaDetailRequesterComments != null) txtQaDetailRequesterComments.Clear();
+            if (txtQaDetailGmComment != null) txtQaDetailGmComment.Clear(); // GM's comments
+            if (txtQaDetailGmActionTime != null) txtQaDetailGmActionTime.Clear(); // GM's action time
+        }
+
+        private void DisplayQaSelectedRequestDetails(DataGridViewRow selectedRow)
+        {
+            if (selectedRow == null || selectedRow.IsNewRow)
+            {
+                ClearQaSelectedRequestDetails();
+                return;
+            }
+
+            // TODO: Fetch full details for the selected request from your data source (Doc_Issuance and Issuance_Tracker tables).
+            // The IssuanceID or RequestNo from the selectedRow should be used.
+            // This should include all details from the original request, plus GM's action details.
+
+            // Example using DataGridView cell values (ensure your DataGridView columns are correctly named or use DataPropertyName)
+            // You'll need to adapt this to your actual data source object or how you populate the DataGridView.
+            if (txtQaDetailRequestNo != null) txtQaDetailRequestNo.Text = selectedRow.Cells["colQaRequestNo"]?.Value?.ToString() ?? "";
+            if (txtQaDetailRequestDate != null) txtQaDetailRequestDate.Text = selectedRow.Cells["colQaRequestDate"]?.Value != null ? Convert.ToDateTime(selectedRow.Cells["colQaRequestDate"].Value).ToString("dd-MMM-yyyy") : "";
+            if (txtQaDetailProduct != null) txtQaDetailProduct.Text = selectedRow.Cells["colQaProduct"]?.Value?.ToString() ?? "";
+            if (txtQaDetailDocTypes != null) txtQaDetailDocTypes.Text = selectedRow.Cells["colQaDocTypes"]?.Value?.ToString() ?? "";
+            if (txtQaDetailPreparedBy != null) txtQaDetailPreparedBy.Text = selectedRow.Cells["colQaPreparedBy"]?.Value?.ToString() ?? "";
+
+            // Fields related to GM's action (assuming these columns exist in dgvQaQueue or are fetched)
+            // if (txtQaDetailGmAuthorizedBy != null) txtQaDetailGmAuthorizedBy.Text = selectedRow.Cells["colQaAuthorizedBy"]?.Value?.ToString() ?? ""; // You might need a textbox for this
+            if (txtQaDetailGmActionTime != null) txtQaDetailGmActionTime.Text = selectedRow.Cells["colQaGmActionAt"]?.Value != null ? Convert.ToDateTime(selectedRow.Cells["colQaGmActionAt"].Value).ToString("dd-MMM-yyyy HH:mm") : "";
+
+            // --- TODO: Populate these fields from your actual detailed data source (Doc_Issuance and Issuance_Tracker) ---
+            // Example:
+            // var requestDetails = YourDataAccessLayer.GetFullRequestDetailsForQa(selectedRow.Cells["colQaRequestNo"].Value.ToString());
+            // if (requestDetails != null) {
+            //    if (txtQaDetailFromDept != null) txtQaDetailFromDept.Text = requestDetails.FromDepartment;
+            //    if (txtQaDetailBatchNo != null) txtQaDetailBatchNo.Text = requestDetails.BatchNo;
+            //    if (txtQaDetailMfgDate != null) txtQaDetailMfgDate.Text = requestDetails.ItemMfgDate?.ToString("dd-MMM-yyyy") ?? "";
+            //    if (txtQaDetailExpDate != null) txtQaDetailExpDate.Text = requestDetails.ItemExpDate?.ToString("dd-MMM-yyyy") ?? "";
+            //    if (txtQaDetailMarket != null) txtQaDetailMarket.Text = requestDetails.Market;
+            //    if (txtQaDetailPackSize != null) txtQaDetailPackSize.Text = requestDetails.PackSize;
+            //    if (txtQaDetailRequesterComments != null) txtQaDetailRequesterComments.Text = requestDetails.RequestComment;
+            //    if (txtQaDetailGmComment != null) txtQaDetailGmComment.Text = requestDetails.GmOperationsComment;
+            //    // txtQaDetailGmActionTime is already populated above if data is in dgv
+            // }
+
+            // For demonstration with placeholder, simulating some additional details:
+            if (txtQaDetailFromDept != null) txtQaDetailFromDept.Text = "Production (Simulated for QA)";
+            if (txtQaDetailBatchNo != null) txtQaDetailBatchNo.Text = $"B{DateTime.Now.Second}";
+            if (txtQaDetailMfgDate != null) txtQaDetailMfgDate.Text = DateTime.Now.AddDays(-30).ToString("dd-MMM-yyyy");
+            if (txtQaDetailExpDate != null) txtQaDetailExpDate.Text = DateTime.Now.AddYears(2).ToString("dd-MMM-yyyy");
+            if (txtQaDetailMarket != null) txtQaDetailMarket.Text = "Export (Simulated for QA)";
+            if (txtQaDetailPackSize != null) txtQaDetailPackSize.Text = "20x5 (Simulated for QA)";
+            if (txtQaDetailRequesterComments != null) txtQaDetailRequesterComments.Text = "Urgent request, please process. (Simulated Req Comment)";
+            if (txtQaDetailGmComment != null) txtQaDetailGmComment.Text = "Looks good from operations side. (Simulated GM Comment)";
+        }
+
+        // --- Event Handlers for QA Operations Tab ---
+        private void BtnQaRefreshList_Click(object sender, EventArgs e)
+        {
+            LoadQaPendingQueue();
+            if (txtQaComment != null) txtQaComment.Clear();
+            if (numQaPrintCount != null) numQaPrintCount.Value = 1;
+        }
+
+        private void DgvQaQueue_SelectionChanged(object sender, EventArgs e)
+        {
+            if (dgvQaQueue != null && dgvQaQueue.SelectedRows.Count > 0)
+            {
+                DisplayQaSelectedRequestDetails(dgvQaQueue.SelectedRows[0]);
+                if (txtQaComment != null) txtQaComment.Clear(); // Clear previous QA comments
+                if (numQaPrintCount != null) numQaPrintCount.Value = 1; // Reset print count
+            }
+            else
+            {
+                ClearQaSelectedRequestDetails();
+                if (txtQaComment != null) txtQaComment.Clear();
+                if (numQaPrintCount != null) numQaPrintCount.Value = 1;
+            }
+        }
+
+        private void BtnQaApprove_Click(object sender, EventArgs e)
+        {
+            if (dgvQaQueue == null || dgvQaQueue.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Please select a request to approve.", "No Request Selected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // TODO: Get IssuanceID or the actual RequestNo from the selected row's data-bound item for DB operations.
+            string requestNoForDisplay = txtQaDetailRequestNo?.Text ?? "N/A"; // For display in messages
+            string qaComments = txtQaComment?.Text ?? "";
+            int printCount = (int)(numQaPrintCount?.Value ?? 1);
+            string qaUser = toolStripStatusLabelUser?.Text.Replace("User: ", "") ?? "QA_User_Unknown";
+
+            // Confirmation
+            DialogResult result = MessageBox.Show($"Are you sure you want to APPROVE and ISSUE request '{requestNoForDisplay}'?\nPrint Count: {printCount}", "Confirm Approval", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (result == DialogResult.Yes)
+            {
+                // TODO: Implement database update logic:
+                // 1. Find the Issuance_Tracker record associated with the IssuanceID.
+                // 2. Update QAAction = "Approved", ApprovedBy = qaUser, QAAt = DateTime.Now, QAComment = qaComments.
+                // 3. Optionally, log the printCount if you have a field for it.
+                // Example: YourDataAccessLayer.ApproveRequestByQa(issuanceId, qaUser, qaComments, printCount);
+
+                // TODO: Implement actual printing logic here if required by QA role.
+                // For example: PrintDocument(requestDetails, printCount);
+
+                MessageBox.Show($"Request '{requestNoForDisplay}' approved and issued (Simulated).\nPrinted {printCount} copies.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                LoadQaPendingQueue(); // Refresh the list
+                ClearQaSelectedRequestDetails();
+                if (txtQaComment != null) txtQaComment.Clear();
+                if (numQaPrintCount != null) numQaPrintCount.Value = 1;
+            }
+        }
+
+        private void BtnQaReject_Click(object sender, EventArgs e)
+        {
+            if (dgvQaQueue == null || dgvQaQueue.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Please select a request to reject.", "No Request Selected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            if (txtQaComment != null && string.IsNullOrWhiteSpace(txtQaComment.Text))
+            {
+                MessageBox.Show("QA comments are required for rejection.", "Comments Required", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtQaComment.Focus();
+                return;
+            }
+
+            // TODO: Get IssuanceID or the actual RequestNo for DB operations.
+            string requestNoForDisplay = txtQaDetailRequestNo?.Text ?? "N/A";
+            string qaComments = txtQaComment?.Text ?? ""; // Already checked for null/whitespace
+            string qaUser = toolStripStatusLabelUser?.Text.Replace("User: ", "") ?? "QA_User_Unknown";
+
+            // Confirmation
+            DialogResult result = MessageBox.Show($"Are you sure you want to REJECT request '{requestNoForDisplay}'?", "Confirm Rejection", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            if (result == DialogResult.Yes)
+            {
+                // TODO: Implement database update logic:
+                // 1. Find the Issuance_Tracker record.
+                // 2. Update QAAction = "Rejected", ApprovedBy = qaUser (or RejectedBy), QAAt = DateTime.Now, QAComment = qaComments.
+                // Example: YourDataAccessLayer.RejectRequestByQa(issuanceId, qaUser, qaComments);
+
+                MessageBox.Show($"Request '{requestNoForDisplay}' rejected (Simulated).", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                LoadQaPendingQueue(); // Refresh the list
+                ClearQaSelectedRequestDetails();
+                if (txtQaComment != null) txtQaComment.Clear();
+                if (numQaPrintCount != null) numQaPrintCount.Value = 1;
+            }
+        }
+
+        #endregion QA Tab Logic
+
+        #region Audit Trail Tab Logic
+
+        private void InitializeAuditTrailTab()
+        {
+            // Populate Status ComboBox
+            if (cmbAuditStatus != null)
+            {
+                cmbAuditStatus.Items.Clear(); // Clear existing items first
+                cmbAuditStatus.Items.Add("All");
+                cmbAuditStatus.Items.Add("Pending GM Approval");
+                cmbAuditStatus.Items.Add("Pending QA Approval");
+                cmbAuditStatus.Items.Add("Approved (Issued)");
+                cmbAuditStatus.Items.Add("Rejected by GM");
+                cmbAuditStatus.Items.Add("Rejected by QA");
+                if (cmbAuditStatus.Items.Count > 0) cmbAuditStatus.SelectedIndex = 0;
+            }
+
+            // Set default dates
+            if (dtpAuditFrom != null) dtpAuditFrom.Value = DateTime.Now.AddDays(-7);
+            if (dtpAuditTo != null) dtpAuditTo.Value = DateTime.Now;
+
+            // Configure DataGridView
+            if (dgvAuditTrail != null)
+            {
+                dgvAuditTrail.AutoGenerateColumns = false;
+                dgvAuditTrail.ReadOnly = true;
+                dgvAuditTrail.AllowUserToAddRows = false;
+                dgvAuditTrail.AllowUserToDeleteRows = false;
+                dgvAuditTrail.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None; // This is important
+                dgvAuditTrail.ScrollBars = ScrollBars.Both; // Explicitly ensure scrollbars
+                // Crucial for text wrapping to work with varying row heights:
+                dgvAuditTrail.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
+
+                SetupAuditTrailColumns(); // Call this to define columns
+            }
+
+            // Attach event handlers
+            if (btnApplyAuditFilter != null)
+            {
+                btnApplyAuditFilter.Click += BtnApplyAuditFilter_Click;
+            }
+            if (btnClearAuditFilters != null)
+            {
+                btnClearAuditFilters.Click += BtnClearAuditFilters_Click;
+            }
+            if (btnRefreshAuditList != null)
+            {
+                btnRefreshAuditList.Click += BtnRefreshAuditList_Click;
+            }
+            if (btnExportToCsv != null)
+            {
+                btnExportToCsv.Click += BtnExportToCsv_Click;
+            }
+            if (btnExportToExcel != null)
+            {
+                btnExportToExcel.Click += BtnExportToExcel_Click;
+            }
+
+            if (dgvAuditTrail != null)
+            {
+                dgvAuditTrail.DataError += DgvAuditTrail_DataError;
+            }
+
+            LoadAuditTrailData();
+        }
+
+        private void DgvAuditTrail_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        {
+            // Log the error or display a less intrusive message
+            Console.WriteLine($"DataGridView DataError: Row {e.RowIndex}, Column {e.ColumnIndex} ({dgvAuditTrail.Columns[e.ColumnIndex].Name}). Exception: {e.Exception.Message}");
+            // Optionally, to prevent the default error dialog:
+            // e.ThrowException = false;
+            // e.Cancel = true; // Or e.Cancel = true if you want to revert the change
+            MessageBox.Show($"Error displaying data in the grid at row {e.RowIndex + 1}, column '{dgvAuditTrail.Columns[e.ColumnIndex].HeaderText}'.\nDetails: {e.Exception.Message}",
+                            "Data Display Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+        }
+
+
+        private void SetupAuditTrailColumns()
+        {
+            if (dgvAuditTrail == null) return;
+
+            dgvAuditTrail.Columns.Clear();
+
+            // Define columns for dgvAuditTrail.
+            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditRequestNo", HeaderText = "Request No.", DataPropertyName = "RequestNo", Width = 120 });
+            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditRequestDate", HeaderText = "Request Date", DataPropertyName = "RequestDate", DefaultCellStyle = new DataGridViewCellStyle { Format = "dd-MMM-yyyy" }, Width = 100 });
+            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditProduct", HeaderText = "Product", DataPropertyName = "Product", Width = 150 });
+            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditDocTypes", HeaderText = "Doc Types", DataPropertyName = "DocumentTypes", Width = 120 });
+            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditStatusDerived", HeaderText = "Status", DataPropertyName = "DerivedStatus", Width = 150 });
+            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditPreparedBy", HeaderText = "Prepared By", DataPropertyName = "PreparedBy", Width = 120 });
+            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditRequestedAt", HeaderText = "Requested At", DataPropertyName = "RequestedAt", DefaultCellStyle = new DataGridViewCellStyle { Format = "dd-MMM-yyyy HH:mm" }, Width = 130 });
+            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditGmAction", HeaderText = "GM Action", DataPropertyName = "GmOperationsAction", Width = 100 });
+            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditAuthorizedBy", HeaderText = "GM User", DataPropertyName = "AuthorizedBy", Width = 120 });
+            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditGmActionAt", HeaderText = "GM Action At", DataPropertyName = "GmOperationsAt", DefaultCellStyle = new DataGridViewCellStyle { Format = "dd-MMM-yyyy HH:mm" }, Width = 130 });
+
+            // GM Comment Column with Text Wrapping
+            DataGridViewTextBoxColumn colGmComment = new DataGridViewTextBoxColumn
+            {
+                Name = "colAuditGmComment",
+                HeaderText = "GM Comment",
+                DataPropertyName = "GmOperationsComment",
+                Width = 200,
+                DefaultCellStyle = new DataGridViewCellStyle { WrapMode = DataGridViewTriState.True } // Enable text wrapping
+            };
+            dgvAuditTrail.Columns.Add(colGmComment);
+
+            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditQaAction", HeaderText = "QA Action", DataPropertyName = "QAAction", Width = 100 });
+            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditApprovedBy", HeaderText = "QA User", DataPropertyName = "ApprovedBy", Width = 120 });
+            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditQaActionAt", HeaderText = "QA Action At", DataPropertyName = "QAAt", DefaultCellStyle = new DataGridViewCellStyle { Format = "dd-MMM-yyyy HH:mm" }, Width = 130 });
+
+            // QA Comment Column with Text Wrapping
+            DataGridViewTextBoxColumn colQaComment = new DataGridViewTextBoxColumn
+            {
+                Name = "colAuditQaComment",
+                HeaderText = "QA Comment",
+                DataPropertyName = "QAComment",
+                Width = 200,
+                DefaultCellStyle = new DataGridViewCellStyle { WrapMode = DataGridViewTriState.True } // Enable text wrapping
+            };
+            dgvAuditTrail.Columns.Add(colQaComment);
+        }
+
+
+        private void LoadAuditTrailData()
+        {
+            DateTime fromDate = dtpAuditFrom?.Value.Date ?? DateTime.MinValue;
+            DateTime toDate = dtpAuditTo?.Value.Date.AddDays(1).AddSeconds(-1) ?? DateTime.MaxValue;
+            string statusFilter = cmbAuditStatus?.SelectedItem?.ToString() ?? "All";
+            string requestNoFilter = txtAuditRequestNo?.Text.Trim() ?? "";
+            string productFilter = txtAuditProduct?.Text.Trim() ?? "";
+
+            // TODO: Replace placeholder data with actual database query
+            // var auditDataFromDb = YourDataAccessLayer.GetAuditTrail(fromDate, toDate, statusFilter, requestNoFilter, productFilter);
+            // dgvAuditTrail.DataSource = auditDataFromDb;
+
+            // Using concrete class for placeholder data
+            var placeholderAuditData = new List<AuditTrailEntry>();
+
+            // Example Entry 1: Approved
+            if (statusFilter == "All" || statusFilter == "Approved (Issued)")
+            {
+                placeholderAuditData.Add(new AuditTrailEntry
+                {
+                    RequestNo = "REQ-20240101-001",
+                    RequestDate = DateTime.Now.AddDays(-10),
+                    Product = "Product A (Pharma)",
+                    DocumentTypes = "BMR,APPENDIX",
+                    DerivedStatus = "Approved (Issued)",
+                    PreparedBy = "user.requester",
+                    RequestedAt = DateTime.Now.AddDays(-10).AddHours(1),
+                    GmOperationsAction = "Authorized",
+                    AuthorizedBy = "gm.user",
+                    GmOperationsAt = DateTime.Now.AddDays(-9),
+                    GmOperationsComment = "Looks good. This is a slightly longer comment for GM to test the wrapping behavior and ensure that it correctly displays across multiple lines if needed.",
+                    QAAction = "Approved",
+                    ApprovedBy = "qa.user",
+                    QAAt = DateTime.Now.AddDays(-8),
+                    QAComment = "Verified and issued. This is an even longer comment specifically for the QA column to thoroughly test the text wrapping functionality. It should span several lines within the cell to confirm that the AutoSizeRowsMode and WrapMode settings are working as expected."
+                });
+            }
+
+            // Example Entry 2: Rejected by GM
+            if (statusFilter == "All" || statusFilter == "Rejected by GM")
+            {
+                placeholderAuditData.Add(new AuditTrailEntry
+                {
+                    RequestNo = "REQ-20240102-002",
+                    RequestDate = DateTime.Now.AddDays(-5),
+                    Product = "Product B (Vaccine)",
+                    DocumentTypes = "BPR",
+                    DerivedStatus = "Rejected by GM",
+                    PreparedBy = "another.requester",
+                    RequestedAt = DateTime.Now.AddDays(-5).AddHours(2),
+                    GmOperationsAction = "Rejected",
+                    AuthorizedBy = "gm.user", // Or could be RejectedBy
+                    GmOperationsAt = DateTime.Now.AddDays(-4),
+                    GmOperationsComment = "Business case not valid. The provided documentation lacks sufficient detail for approval at this stage. Please revise and resubmit with more comprehensive information.",
+                    QAAction = null, // Explicitly null
+                    ApprovedBy = null,
+                    QAAt = null,     // Explicitly null
+                    QAComment = null
+                });
+            }
+
+            // Example Entry 3: Pending QA Approval
+            if (statusFilter == "All" || statusFilter == "Pending QA Approval")
+            {
+                placeholderAuditData.Add(new AuditTrailEntry
+                {
+                    RequestNo = "REQ-20240104-004",
+                    RequestDate = DateTime.Now.AddDays(-2),
+                    Product = "Product D (Syrup)",
+                    DocumentTypes = "BPR,ADDENDUM",
+                    DerivedStatus = "Pending QA Approval",
+                    PreparedBy = "another.user",
+                    RequestedAt = DateTime.Now.AddDays(-2).AddHours(1),
+                    GmOperationsAction = "Authorized",
+                    AuthorizedBy = "gm.user",
+                    GmOperationsAt = DateTime.Now.AddDays(-1),
+                    GmOperationsComment = "Approved by GM. All operational checks are complete.",
+                    QAAction = null,
+                    ApprovedBy = null,
+                    QAAt = null,
+                    QAComment = null
+                });
+            }
+            // Example Entry 4: Short GM Comment, Long QA Comment
+            if (statusFilter == "All" || statusFilter == "Approved (Issued)")
+            {
+                placeholderAuditData.Add(new AuditTrailEntry
+                {
+                    RequestNo = "REQ-20240105-005",
+                    RequestDate = DateTime.Now.AddDays(-3),
+                    Product = "Product E (Capsule)",
+                    DocumentTypes = "BMR",
+                    DerivedStatus = "Approved (Issued)",
+                    PreparedBy = "user.requester",
+                    RequestedAt = DateTime.Now.AddDays(-3).AddHours(2),
+                    GmOperationsAction = "Authorized",
+                    AuthorizedBy = "gm.user",
+                    GmOperationsAt = DateTime.Now.AddDays(-2),
+                    GmOperationsComment = "OK.",
+                    QAAction = "Approved",
+                    ApprovedBy = "qa.user",
+                    QAAt = DateTime.Now.AddDays(-1),
+                    QAComment = "All quality checks passed. The documentation is complete and accurate. The batch meets all specified release criteria. Ready for final issuance and distribution according to the plan."
+                });
+            }
+
+            // ADDING MORE DATA FOR SCROLLING
+            for (int i = 0; i < 20; i++) // Add 20 more entries
+            {
+                string status;
+                string gmAction = null;
+                string qaAction = null;
+                string gmComment = null;
+                string qaComment = null;
+                DateTime? gmActionAt = null;
+                DateTime? qaActionAt = null;
+                string authorizedBy = null;
+                string approvedBy = null;
+
+                int statusType = i % 5;
+                switch (statusType)
+                {
+                    case 0:
+                        status = "Approved (Issued)";
+                        gmAction = "Authorized";
+                        qaAction = "Approved";
+                        gmComment = $"GM Auto Comment {i}: Standard approval.";
+                        qaComment = $"QA Auto Comment {i}: All checks green. This is a longer comment to ensure wrapping: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
+                        gmActionAt = DateTime.Now.AddDays(-i - 2);
+                        qaActionAt = DateTime.Now.AddDays(-i - 1);
+                        authorizedBy = "gm.bot";
+                        approvedBy = "qa.bot";
+                        break;
+                    case 1:
+                        status = "Rejected by GM";
+                        gmAction = "Rejected";
+                        gmComment = $"GM Auto Reject {i}: Insufficient data. This is a longer comment to ensure wrapping: Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.";
+                        gmActionAt = DateTime.Now.AddDays(-i - 2);
+                        authorizedBy = "gm.bot";
+                        break;
+                    case 2:
+                        status = "Rejected by QA";
+                        gmAction = "Authorized";
+                        qaAction = "Rejected";
+                        gmComment = $"GM Auto Comment {i}: Seems fine from my end.";
+                        qaComment = $"QA Auto Reject {i}: Discrepancy found in section 3. This is a longer comment to ensure wrapping: Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.";
+                        gmActionAt = DateTime.Now.AddDays(-i - 2);
+                        qaActionAt = DateTime.Now.AddDays(-i - 1);
+                        authorizedBy = "gm.bot";
+                        approvedBy = "qa.bot";
+                        break;
+                    case 3:
+                        status = "Pending QA Approval";
+                        gmAction = "Authorized";
+                        gmComment = $"GM Auto Comment {i}: Forwarded for QA review.";
+                        gmActionAt = DateTime.Now.AddDays(-i - 1);
+                        authorizedBy = "gm.bot";
+                        break;
+                    default: // case 4
+                        status = "Pending GM Approval";
+                        break;
+                }
+
+                if (statusFilter == "All" || statusFilter == status)
+                {
+                    placeholderAuditData.Add(new AuditTrailEntry
+                    {
+                        RequestNo = $"REQ-AUTO-{DateTime.Now.Year}{(i + 6):D3}", // To make it somewhat unique
+                        RequestDate = DateTime.Now.AddDays(-i - 15),
+                        Product = $"Product {(char)('F' + (i % 20))} (Auto)", // Cycle through some product names
+                        DocumentTypes = (i % 3 == 0) ? "BMR" : (i % 3 == 1) ? "BPR,APPENDIX" : "ADDENDUM",
+                        DerivedStatus = status,
+                        PreparedBy = "auto.requester",
+                        RequestedAt = DateTime.Now.AddDays(-i - 15).AddHours(i % 5),
+                        GmOperationsAction = gmAction,
+                        AuthorizedBy = authorizedBy,
+                        GmOperationsAt = gmActionAt,
+                        GmOperationsComment = gmComment,
+                        QAAction = qaAction,
+                        ApprovedBy = approvedBy,
+                        QAAt = qaActionAt,
+                        QAComment = qaComment
+                    });
+                }
+            }
+
+
+            if (dgvAuditTrail != null)
+            {
+                // It's good practice to set DataSource to null before assigning a new list,
+                // especially if the schema or type of items might change (though less critical with a concrete type).
+                dgvAuditTrail.DataSource = null;
+                dgvAuditTrail.DataSource = placeholderAuditData;
+            }
+        }
+
+        private void BtnApplyAuditFilter_Click(object sender, EventArgs e)
+        {
+            LoadAuditTrailData();
+        }
+
+        private void BtnClearAuditFilters_Click(object sender, EventArgs e)
+        {
+            if (dtpAuditFrom != null) dtpAuditFrom.Value = DateTime.Now.AddDays(-7);
+            if (dtpAuditTo != null) dtpAuditTo.Value = DateTime.Now;
+            if (cmbAuditStatus != null && cmbAuditStatus.Items.Count > 0) cmbAuditStatus.SelectedIndex = 0;
+            if (txtAuditRequestNo != null) txtAuditRequestNo.Clear();
+            if (txtAuditProduct != null) txtAuditProduct.Clear();
+            LoadAuditTrailData();
+        }
+
+        private void BtnExportToCsv_Click(object sender, EventArgs e)
+        {
+            if (dgvAuditTrail == null || dgvAuditTrail.Rows.Count == 0)
+            {
+                MessageBox.Show("No data available to export.", "Export Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            SaveFileDialog saveFileDialog = new SaveFileDialog
+            {
+                Filter = "CSV file (*.csv)|*.csv",
+                Title = "Save Audit Trail Data as CSV",
+                FileName = $"AuditTrail_{DateTime.Now:yyyyMMdd_HHmmss}.csv"
+            };
+
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    StringBuilder csvContent = new StringBuilder();
+                    List<string> headers = new List<string>();
+                    foreach (DataGridViewColumn column in dgvAuditTrail.Columns)
+                    {
+                        if (column.Visible)
+                        {
+                            headers.Add($"\"{EscapeCsvField(column.HeaderText)}\"");
+                        }
+                    }
+                    csvContent.AppendLine(string.Join(",", headers));
+
+                    foreach (DataGridViewRow row in dgvAuditTrail.Rows)
+                    {
+                        if (!row.IsNewRow)
+                        {
+                            List<string> cells = new List<string>();
+                            foreach (DataGridViewCell cell in row.Cells)
+                            {
+                                if (dgvAuditTrail.Columns[cell.ColumnIndex].Visible)
+                                {
+                                    string cellValue = cell.FormattedValue?.ToString() ?? "";
+                                    cells.Add($"\"{EscapeCsvField(cellValue)}\"");
+                                }
+                            }
+                            csvContent.AppendLine(string.Join(",", cells));
+                        }
+                    }
+
+                    File.WriteAllText(saveFileDialog.FileName, csvContent.ToString(), Encoding.UTF8);
+                    MessageBox.Show("Data exported successfully to CSV!", "Export Successful", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error exporting data to CSV: {ex.Message}", "Export Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        private string EscapeCsvField(string field)
+        {
+            if (field == null) return "";
+            // If the field contains a quote, escape it by doubling it.
+            // Also, always enclose fields in quotes if they contain commas, newlines, or quotes.
+            // For simplicity here, we'll always enclose and escape quotes.
+            field = field.Replace("\"", "\"\"");
+            return field;
+        }
+
+        private void BtnExportToExcel_Click(object sender, EventArgs e)
+        {
+            if (dgvAuditTrail == null || dgvAuditTrail.Rows.Count == 0)
+            {
+                MessageBox.Show("No data available to export.", "Export Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            SaveFileDialog saveFileDialog = new SaveFileDialog
+            {
+                Filter = "Excel Workbook (*.xlsx)|*.xlsx",
+                Title = "Save Audit Trail Data as Excel",
+                FileName = $"AuditTrail_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx"
+            };
+
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    // Placeholder for actual Excel library implementation
+                    // using OfficeOpenXml; // Example: EPPlus
+                    // ExcelPackage.LicenseContext = LicenseContext.NonCommercial; // For EPPlus
+                    // using (var package = new ExcelPackage())
+                    // {
+                    //    var worksheet = package.Workbook.Worksheets.Add("AuditTrail");
+                    //    // Populate worksheet from dgvAuditTrail (headers and data)
+                    //    // Similar logic to CSV but using worksheet.Cells[row, col].Value
+                    //    // Remember to handle data types for Excel cells.
+                    //    package.SaveAs(new FileInfo(saveFileDialog.FileName));
+                    // }
+                    // MessageBox.Show("Data exported successfully to Excel!", "Export Successful", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    MessageBox.Show(
+                        "Excel export functionality requires a dedicated library (e.g., EPPlus, ClosedXML).\n" +
+                        "Please integrate one of these libraries to enable true .xlsx export.\n\n" +
+                        $"(File would be saved to: {saveFileDialog.FileName})",
+                        "Excel Export - TODO",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information
+                    );
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error exporting data to Excel: {ex.Message}", "Export Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        // NEW: Event Handler for the Refresh Audit List button
+        private void BtnRefreshAuditList_Click(object sender, EventArgs e)
+        {
+            // 1. Reset column definitions and widths
+            if (dgvAuditTrail != null)
+            {
+                dgvAuditTrail.DataSource = null;
+                // Temporarily suspend layout to avoid flicker during column setup
+                dgvAuditTrail.SuspendLayout();
+                SetupAuditTrailColumns();
+                dgvAuditTrail.ResumeLayout(true); // Apply column layout changes
+                LoadAuditTrailData();
+                // 4. After data is loaded, explicitly tell the DataGridView to re-evaluate its column sizes
+                //    based on their 'Width' property and update scrollbar information.
+                dgvAuditTrail.PerformLayout(); // Force an additional layout calculation pass
+            }
+
+            // Optionally, provide user feedback
+            // toolStripStatusLabelUser.Text = "Audit Trail refreshed."; // Or use a dedicated status label for the tab
+        }
+
+        #endregion Audit Trail Tab Logic
 
         // --- Event Handlers for unused controls (can be removed if not needed) ---
         private void lblParentExpDateDI_Click(object sender, EventArgs e)
@@ -828,4 +1568,5 @@ namespace DocumentIssuanceApp
             // For example, you might want to validate that if checked, the date is in the future.
         }
     }
+
 }
