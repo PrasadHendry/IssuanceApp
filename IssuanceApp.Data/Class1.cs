@@ -5,9 +5,6 @@ using System.Text;
 
 namespace IssuanceApp.Data
 {
-    public class Class1
-    {
-    }
 
     // Define a concrete class for Audit Trail entries
     public class AuditTrailEntry
@@ -31,5 +28,16 @@ namespace IssuanceApp.Data
         public string FromDepartment { get; set; }
         public string BatchNo { get; set; }
         // ... etc.
+    }
+
+    public class UserRole
+    {
+        // Public property for RoleID, matching DataPropertyName "RoleID" in the DataGridView column
+        public int RoleID { get; set; }
+
+        // Public property for RoleName, matching DataPropertyName "RoleName" in the DataGridView column
+        public string RoleName { get; set; }
+
+        // You can add more properties here if needed in the future
     }
 }

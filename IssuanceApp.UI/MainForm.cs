@@ -32,6 +32,8 @@ namespace DocumentIssuanceApp
         private const int MinPanelLoginWidth = 300;   // Minimum width for the login panel after scaling
         private const int MinPanelLoginHeight = 200;  // Minimum height for the login panel after scaling
 
+        private BindingSource userRolesBindingSource;
+
 
         public MainForm()
         {
@@ -1552,6 +1554,239 @@ namespace DocumentIssuanceApp
         }
 
         #endregion Audit Trail Tab Logic
+
+        #region Users Tab Logic
+
+        private void InitializeUsersTab()
+        {
+            // Initialize the BindingSource
+            this.userRolesBindingSource = new BindingSource();
+
+            // Configure DataGridView for User Roles
+            if (dgvUserRoles != null)
+            {
+                dgvUserRoles.AutoGenerateColumns = false; // Ensure this is false
+                dgvUserRoles.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+                dgvUserRoles.MultiSelect = false;
+                dgvUserRoles.AllowUserToAddRows = false;
+                dgvUserRoles.AllowUserToDeleteRows = false;
+                dgvUserRoles.ReadOnly = true;
+
+                // Bind the DataGridView to the BindingSource
+                dgvUserRoles.DataSource = this.userRolesBindingSource;
+
+                // DataPropertyName for columns should be set in the designer, e.g.:
+                // this.colUserRoleId.DataPropertyName = "RoleID";
+                // this.colUserRoleName.DataPropertyName = "RoleName";
+                // Double-check these in MainForm.Designer.cs to ensure they exactly match
+                // the public property names in your UserRole class (case-sensitive).
+
+                dgvUserRoles.SelectionChanged += DgvUserRoles_SelectionChanged;
+            }
+
+            // Attach event handlers for buttons
+            if (btnAddRole != null) btnAddRole.Click += BtnAddRole_Click;
+            if (btnEditRole != null) btnEditRole.Click += BtnEditRole_Click;
+            if (btnDeleteRole != null) btnDeleteRole.Click += BtnDeleteRole_Click;
+            if (btnRefreshUserRoles != null)
+            {
+                btnRefreshUserRoles.Click += BtnRefreshUserRoles_Click;
+            }
+
+            // Initial state for buttons and textbox
+            if (txtRoleNameManage != null) txtRoleNameManage.Clear();
+            if (btnEditRole != null) btnEditRole.Enabled = false;
+            if (btnDeleteRole != null) btnDeleteRole.Enabled = false;
+
+            // Initial load if Admin
+            if ((loggedInRole == "Admin") && tabPageUsers != null && tabPageUsers.Enabled)
+            {
+                LoadUserRoles();
+            }
+        }
+
+        private void LoadUserRoles()
+        {
+            // --- Start Diagnostic ---
+            // Uncomment the line below to verify this method is called
+            // MessageBox.Show("LoadUserRoles called.", "Diagnostic - LoadUserRoles Start");
+            // --- End Diagnostic ---
+
+            var placeholderRoles = new List<UserRole>();
+            try
+            {
+                // Ensure UserRole class has public properties: public int RoleID { get; set; } and public string RoleName { get; set; }
+                placeholderRoles.Add(new UserRole { RoleID = 1, RoleName = "Requester" });
+                placeholderRoles.Add(new UserRole { RoleID = 2, RoleName = "GM_Operations" });
+                placeholderRoles.Add(new UserRole { RoleID = 3, RoleName = "QA" });
+                placeholderRoles.Add(new UserRole { RoleID = 4, RoleName = "Admin_Test_Updated" }); // Changed for visibility
+                placeholderRoles.Add(new UserRole { RoleID = 500 + DateTime.Now.Millisecond, RoleName = $"DynamicRole_{DateTime.Now.Millisecond}" }); // More dynamic for testing refresh
+
+                // --- Start Diagnostic ---
+                // Uncomment the lines below to check data creation
+                // MessageBox.Show($"Placeholder list created. Count: {placeholderRoles.Count}", "Diagnostic - Data Created");
+                // if (placeholderRoles.Count > 0)
+                // {
+                //     MessageBox.Show($"First role: ID={placeholderRoles[0].RoleID}, Name='{placeholderRoles[0].RoleName}'", "Diagnostic - First Item");
+                // }
+                // --- End Diagnostic ---
+
+                if (this.userRolesBindingSource != null)
+                {
+                    // --- Start Diagnostic ---
+                    // Uncomment to check BindingSource and DGV state before setting data
+                    // MessageBox.Show("BindingSource is not null. Attempting to set its DataSource.", "Diagnostic - BindingSource Check");
+                    // if (dgvUserRoles != null && dgvUserRoles.Columns.Count > 0)
+                    // {
+                    //     MessageBox.Show($"dgvUserRoles Column 0 Name: {dgvUserRoles.Columns[0].Name}, DataPropertyName: {dgvUserRoles.Columns[0].DataPropertyName}\n" +
+                    //                     $"dgvUserRoles Column 1 Name: {dgvUserRoles.Columns[1].Name}, DataPropertyName: {dgvUserRoles.Columns[1].DataPropertyName}", "Diagnostic - Column Properties");
+                    // } else if (dgvUserRoles != null) {
+                    //     MessageBox.Show("dgvUserRoles has NO columns defined or accessible!", "Diagnostic - Column Error");
+                    // } else {
+                    //     MessageBox.Show("dgvUserRoles IS NULL here!", "Diagnostic - DGV Critical Error");
+                    // }
+                    // --- End Diagnostic ---
+
+                    this.userRolesBindingSource.DataSource = null; // Clear previous data from BindingSource
+                    this.userRolesBindingSource.DataSource = placeholderRoles; // Set new data
+
+                    // The DataGridView should update automatically when its BindingSource's DataSource changes.
+                    // dgvUserRoles.Refresh(); // Usually not needed with BindingSource but can be tried if issues persist.
+
+                    // --- Start Diagnostic ---
+                    // Uncomment to check DGV state after setting data
+                    // if(dgvUserRoles != null) {
+                    //    MessageBox.Show($"DataSource assigned to BindingSource. dgvUserRoles RowCount: {dgvUserRoles.Rows.Count}", "Diagnostic - DataSource Set");
+                    //    if (dgvUserRoles.Rows.Count > 0 && dgvUserRoles.Columns.Count > 0 && dgvUserRoles.Rows[0].Cells.Count > 0)
+                    //    {
+                    //        MessageBox.Show($"First cell value after bind: {dgvUserRoles.Rows[0].Cells[0].Value}", "Diagnostic - First Cell Value");
+                    //    }
+                    // }
+                    // --- End Diagnostic ---
+                }
+                else
+                {
+                    // --- Start Diagnostic ---
+                    // MessageBox.Show("userRolesBindingSource IS NULL!", "Diagnostic - BindingSource Error");
+                    // --- End Diagnostic ---
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error in LoadUserRoles: {ex.Message}\n{ex.StackTrace}", "LoadUserRoles Exception", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            DgvUserRoles_SelectionChanged(null, null);
+        }
+
+        private void DgvUserRoles_SelectionChanged(object sender, EventArgs e)
+        {
+            if (dgvUserRoles != null && dgvUserRoles.SelectedRows.Count > 0)
+            {
+                DataGridViewRow selectedRow = dgvUserRoles.SelectedRows[0];
+
+                // Attempt to get the bound UserRole object first
+                UserRole selectedUserRole = selectedRow.DataBoundItem as UserRole;
+
+                if (selectedUserRole != null)
+                {
+                    if (txtRoleNameManage != null)
+                    {
+                        txtRoleNameManage.Text = selectedUserRole.RoleName;
+                    }
+                }
+                else // Fallback to cell value if DataBoundItem is not a UserRole (should not happen with BindingSource<UserRole>)
+                {
+                    if (txtRoleNameManage != null && selectedRow.Cells["colUserRoleName"] != null && selectedRow.Cells["colUserRoleName"].Value != null)
+                    {
+                        txtRoleNameManage.Text = selectedRow.Cells["colUserRoleName"].Value.ToString();
+                    }
+                    else if (txtRoleNameManage != null)
+                    {
+                        txtRoleNameManage.Text = "";
+                    }
+                }
+
+                if (btnEditRole != null) btnEditRole.Enabled = true;
+                if (btnDeleteRole != null) btnDeleteRole.Enabled = true;
+            }
+            else
+            {
+                if (txtRoleNameManage != null) txtRoleNameManage.Clear();
+                if (btnEditRole != null) btnEditRole.Enabled = false;
+                if (btnDeleteRole != null) btnDeleteRole.Enabled = false;
+            }
+        }
+
+        private void BtnRefreshUserRoles_Click(object sender, EventArgs e)
+        {
+            // --- Start Diagnostic ---
+            // MessageBox.Show("Refresh button clicked.", "Diagnostic - Refresh Button");
+            // --- End Diagnostic ---
+            LoadUserRoles();
+        }
+
+        private void BtnAddRole_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Add Role Dialog to be implemented.", "TODO", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void BtnEditRole_Click(object sender, EventArgs e)
+        {
+            if (dgvUserRoles == null || dgvUserRoles.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Please select a role to edit.", "No Role Selected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            DataGridViewRow selectedRow = dgvUserRoles.SelectedRows[0];
+            UserRole selectedUserRole = selectedRow.DataBoundItem as UserRole;
+
+            if (selectedUserRole != null)
+            {
+                MessageBox.Show($"Edit Role Dialog for '{selectedUserRole.RoleName}' (ID: {selectedUserRole.RoleID}) to be implemented.", "TODO", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else if (selectedRow.Cells["colUserRoleId"]?.Value != null && selectedRow.Cells["colUserRoleName"]?.Value != null) // Fallback
+            {
+                object roleIdObj = selectedRow.Cells["colUserRoleId"].Value;
+                object roleNameObj = selectedRow.Cells["colUserRoleName"].Value;
+                MessageBox.Show($"Edit Role Dialog for '{roleNameObj}' (ID: {roleIdObj}) to be implemented (fallback).", "TODO", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                MessageBox.Show("Selected role data is incomplete.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void BtnDeleteRole_Click(object sender, EventArgs e)
+        {
+            if (dgvUserRoles == null || dgvUserRoles.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Please select a role to delete.", "No Role Selected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            DataGridViewRow selectedRow = dgvUserRoles.SelectedRows[0];
+            UserRole selectedUserRole = selectedRow.DataBoundItem as UserRole;
+            string roleNameToDelete = "the selected role";
+
+            if (selectedUserRole != null)
+            {
+                roleNameToDelete = $"'{selectedUserRole.RoleName}' (ID: {selectedUserRole.RoleID})";
+            }
+            else if (selectedRow.Cells["colUserRoleName"]?.Value != null)
+            { // Fallback
+                roleNameToDelete = $"'{selectedRow.Cells["colUserRoleName"].Value}'";
+            }
+
+
+            DialogResult confirmation = MessageBox.Show($"Are you sure you want to delete {roleNameToDelete}?",
+                                                       "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            if (confirmation == DialogResult.Yes)
+            {
+                MessageBox.Show($"{roleNameToDelete} deletion to be implemented.", "TODO", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        #endregion Users Tab Logic
 
         // --- Event Handlers for unused controls (can be removed if not needed) ---
         private void lblParentExpDateDI_Click(object sender, EventArgs e)

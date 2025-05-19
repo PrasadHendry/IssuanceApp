@@ -34,6 +34,7 @@ namespace DocumentIssuanceApp
         private void InitializeComponent()
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.tabControlMain = new System.Windows.Forms.TabControl();
             this.tabPageLogin = new System.Windows.Forms.TabPage();
             this.panelLoginContainer = new System.Windows.Forms.Panel();
@@ -232,6 +233,21 @@ namespace DocumentIssuanceApp
             this.btnExportToCsv = new System.Windows.Forms.Button();
             this.btnExportToExcel = new System.Windows.Forms.Button();
             this.tabPageUsers = new System.Windows.Forms.TabPage();
+            this.scUsersMain = new System.Windows.Forms.SplitContainer();
+            this.tlpUserRolesHeader = new System.Windows.Forms.TableLayoutPanel();
+            this.lblApplicationRoles = new System.Windows.Forms.Label();
+            this.btnRefreshUserRoles = new System.Windows.Forms.Button();
+            this.dgvUserRoles = new System.Windows.Forms.DataGridView();
+            this.colUserRoleId = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colUserRoleName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.grpManageRole = new System.Windows.Forms.GroupBox();
+            this.tlpManageRole = new System.Windows.Forms.TableLayoutPanel();
+            this.lblRoleNameManage = new System.Windows.Forms.Label();
+            this.txtRoleNameManage = new System.Windows.Forms.TextBox();
+            this.flpRoleManagementButtons = new System.Windows.Forms.FlowLayoutPanel();
+            this.btnAddRole = new System.Windows.Forms.Button();
+            this.btnEditRole = new System.Windows.Forms.Button();
+            this.btnDeleteRole = new System.Windows.Forms.Button();
             this.statusStripMain = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabelUser = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabelSpring = new System.Windows.Forms.ToolStripStatusLabel();
@@ -286,6 +302,16 @@ namespace DocumentIssuanceApp
             this.tlpAuditFilters.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvAuditTrail)).BeginInit();
             this.flpAuditExportButtons.SuspendLayout();
+            this.tabPageUsers.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.scUsersMain)).BeginInit();
+            this.scUsersMain.Panel1.SuspendLayout();
+            this.scUsersMain.Panel2.SuspendLayout();
+            this.scUsersMain.SuspendLayout();
+            this.tlpUserRolesHeader.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvUserRoles)).BeginInit();
+            this.grpManageRole.SuspendLayout();
+            this.tlpManageRole.SuspendLayout();
+            this.flpRoleManagementButtons.SuspendLayout();
             this.statusStripMain.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -2610,13 +2636,214 @@ namespace DocumentIssuanceApp
             // 
             // tabPageUsers
             // 
+            this.tabPageUsers.Controls.Add(this.scUsersMain);
+            this.tabPageUsers.Font = new System.Drawing.Font("Segoe UI", 9.75F);
             this.tabPageUsers.Location = new System.Drawing.Point(4, 30);
             this.tabPageUsers.Name = "tabPageUsers";
-            this.tabPageUsers.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageUsers.Size = new System.Drawing.Size(1360, 652);
-            this.tabPageUsers.TabIndex = 5;
+            this.tabPageUsers.Padding = new System.Windows.Forms.Padding(10);
+            this.tabPageUsers.Size = new System.Drawing.Size(1196, 563); 
+            this.tabPageUsers.TabIndex = 5; 
             this.tabPageUsers.Text = "Users";
             this.tabPageUsers.UseVisualStyleBackColor = true;
+            // 
+            // scUsersMain
+            // 
+            this.scUsersMain.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.scUsersMain.FixedPanel = System.Windows.Forms.FixedPanel.Panel1; // Optional: Fix left panel size
+            this.scUsersMain.Location = new System.Drawing.Point(10, 10);
+            this.scUsersMain.Name = "scUsersMain";
+            // 
+            // scUsersMain.Panel1 (Left Panel)
+            // 
+            this.scUsersMain.Panel1.Controls.Add(this.dgvUserRoles); // Add DGV first
+            this.scUsersMain.Panel1.Controls.Add(this.tlpUserRolesHeader); // Then TLP Header
+            this.scUsersMain.Panel1.Padding = new System.Windows.Forms.Padding(5);
+            // 
+            // scUsersMain.Panel2 (Right Panel)
+            // 
+            this.scUsersMain.Panel2.Controls.Add(this.grpManageRole);
+            this.scUsersMain.Panel2.Padding = new System.Windows.Forms.Padding(5);
+            this.scUsersMain.Size = new System.Drawing.Size(1176, 543); 
+            this.scUsersMain.SplitterDistance = 450; 
+            this.scUsersMain.TabIndex = 0;
+            //
+            // tlpUserRolesHeader
+            //
+            this.tlpUserRolesHeader.ColumnCount = 2;
+            this.tlpUserRolesHeader.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 70F));
+            this.tlpUserRolesHeader.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 30F));
+            this.tlpUserRolesHeader.Controls.Add(this.lblApplicationRoles, 0, 0);
+            this.tlpUserRolesHeader.Controls.Add(this.btnRefreshUserRoles, 1, 0);
+            this.tlpUserRolesHeader.Dock = System.Windows.Forms.DockStyle.Top;
+            this.tlpUserRolesHeader.Location = new System.Drawing.Point(5, 5);
+            this.tlpUserRolesHeader.Name = "tlpUserRolesHeader";
+            this.tlpUserRolesHeader.RowCount = 1;
+            this.tlpUserRolesHeader.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
+            this.tlpUserRolesHeader.Size = new System.Drawing.Size(440, 35); // Width matches Panel1 padding
+            this.tlpUserRolesHeader.TabIndex = 2; // After dgvUserRoles
+            // 
+            // lblApplicationRoles
+            // 
+            this.lblApplicationRoles.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.lblApplicationRoles.AutoSize = true;
+            this.lblApplicationRoles.Font = new System.Drawing.Font("Segoe UI Semibold", 10.2F, System.Drawing.FontStyle.Bold);
+            this.lblApplicationRoles.Location = new System.Drawing.Point(3, 6); // Adjusted for TLP cell
+            this.lblApplicationRoles.Name = "lblApplicationRoles";
+            this.lblApplicationRoles.Size = new System.Drawing.Size(145, 23);
+            this.lblApplicationRoles.TabIndex = 0;
+            this.lblApplicationRoles.Text = "Application Roles";
+            // 
+            // btnRefreshUserRoles
+            // 
+            this.btnRefreshUserRoles.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnRefreshUserRoles.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.btnRefreshUserRoles.Location = new System.Drawing.Point(322, 3); // Adjusted for TLP cell
+            this.btnRefreshUserRoles.Name = "btnRefreshUserRoles";
+            this.btnRefreshUserRoles.Size = new System.Drawing.Size(115, 29);
+            this.btnRefreshUserRoles.TabIndex = 1;
+            this.btnRefreshUserRoles.Text = "Refresh List";
+            this.btnRefreshUserRoles.UseVisualStyleBackColor = true;
+            // 
+            // dgvUserRoles
+            // 
+            this.dgvUserRoles.AllowUserToAddRows = false;
+            this.dgvUserRoles.AllowUserToDeleteRows = false;
+            this.dgvUserRoles.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dgvUserRoles.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvUserRoles.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.colUserRoleId,
+            this.colUserRoleName});
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 9.75F); 
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvUserRoles.DefaultCellStyle = dataGridViewCellStyle2; 
+            this.dgvUserRoles.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgvUserRoles.Location = new System.Drawing.Point(5, 40); // Positioned below tlpUserRolesHeader
+            this.dgvUserRoles.MultiSelect = false;
+            this.dgvUserRoles.Name = "dgvUserRoles";
+            this.dgvUserRoles.ReadOnly = true;
+            this.dgvUserRoles.RowHeadersWidth = 51;
+            this.dgvUserRoles.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgvUserRoles.Size = new System.Drawing.Size(440, 498); 
+            this.dgvUserRoles.TabIndex = 0; // Before tlpUserRolesHeader in Tab order if desired
+            // 
+            // colUserRoleId
+            // 
+            this.colUserRoleId.DataPropertyName = "RoleID"; 
+            this.colUserRoleId.FillWeight = 50F;
+            this.colUserRoleId.HeaderText = "Role ID";
+            this.colUserRoleId.MinimumWidth = 6;
+            this.colUserRoleId.Name = "colUserRoleId";
+            this.colUserRoleId.ReadOnly = true;
+            // 
+            // colUserRoleName
+            // 
+            this.colUserRoleName.DataPropertyName = "RoleName"; 
+            this.colUserRoleName.FillWeight = 150F;
+            this.colUserRoleName.HeaderText = "Role Name";
+            this.colUserRoleName.MinimumWidth = 6;
+            this.colUserRoleName.Name = "colUserRoleName";
+            this.colUserRoleName.ReadOnly = true;
+            // 
+            // grpManageRole
+            // 
+            this.grpManageRole.Controls.Add(this.tlpManageRole);
+            this.grpManageRole.Dock = System.Windows.Forms.DockStyle.Top;
+            this.grpManageRole.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
+            this.grpManageRole.Location = new System.Drawing.Point(5, 5);
+            this.grpManageRole.Name = "grpManageRole";
+            this.grpManageRole.Padding = new System.Windows.Forms.Padding(10);
+            this.grpManageRole.Size = new System.Drawing.Size(814, 180);
+            this.grpManageRole.TabIndex = 0;
+            this.grpManageRole.TabStop = false;
+            this.grpManageRole.Text = "Manage Role";
+            // 
+            // tlpManageRole
+            // 
+            this.tlpManageRole.ColumnCount = 2;
+            this.tlpManageRole.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tlpManageRole.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tlpManageRole.Controls.Add(this.lblRoleNameManage, 0, 0);
+            this.tlpManageRole.Controls.Add(this.txtRoleNameManage, 1, 0);
+            this.tlpManageRole.Controls.Add(this.flpRoleManagementButtons, 0, 1);
+            this.tlpManageRole.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tlpManageRole.Location = new System.Drawing.Point(10, 32);
+            this.tlpManageRole.Name = "tlpManageRole";
+            this.tlpManageRole.RowCount = 2;
+            this.tlpManageRole.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
+            this.tlpManageRole.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 50F));
+            this.tlpManageRole.Size = new System.Drawing.Size(794, 138);
+            this.tlpManageRole.TabIndex = 0;
+            // 
+            // lblRoleNameManage
+            // 
+            this.lblRoleNameManage.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblRoleNameManage.AutoSize = true;
+            this.lblRoleNameManage.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.lblRoleNameManage.Location = new System.Drawing.Point(3, 6);
+            this.lblRoleNameManage.Name = "lblRoleNameManage";
+            this.lblRoleNameManage.Size = new System.Drawing.Size(98, 23);
+            this.lblRoleNameManage.TabIndex = 0;
+            this.lblRoleNameManage.Text = "Role Name:";
+            // 
+            // txtRoleNameManage
+            // 
+            this.txtRoleNameManage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtRoleNameManage.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.txtRoleNameManage.Location = new System.Drawing.Point(107, 3);
+            this.txtRoleNameManage.Name = "txtRoleNameManage";
+            this.txtRoleNameManage.ReadOnly = true;
+            this.txtRoleNameManage.Size = new System.Drawing.Size(684, 29);
+            this.txtRoleNameManage.TabIndex = 1;
+            // 
+            // flpRoleManagementButtons
+            // 
+            this.tlpManageRole.SetColumnSpan(this.flpRoleManagementButtons, 2);
+            this.flpRoleManagementButtons.Controls.Add(this.btnAddRole);
+            this.flpRoleManagementButtons.Controls.Add(this.btnEditRole);
+            this.flpRoleManagementButtons.Controls.Add(this.btnDeleteRole);
+            this.flpRoleManagementButtons.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flpRoleManagementButtons.Location = new System.Drawing.Point(3, 38);
+            this.flpRoleManagementButtons.Name = "flpRoleManagementButtons";
+            this.flpRoleManagementButtons.Padding = new System.Windows.Forms.Padding(0, 5, 0, 0);
+            this.flpRoleManagementButtons.Size = new System.Drawing.Size(788, 97);
+            this.flpRoleManagementButtons.TabIndex = 2;
+            // 
+            // btnAddRole
+            // 
+            this.btnAddRole.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.btnAddRole.Location = new System.Drawing.Point(3, 8);
+            this.btnAddRole.Name = "btnAddRole";
+            this.btnAddRole.Size = new System.Drawing.Size(120, 35);
+            this.btnAddRole.TabIndex = 0;
+            this.btnAddRole.Text = "Add Role";
+            this.btnAddRole.UseVisualStyleBackColor = true;
+            // 
+            // btnEditRole
+            // 
+            this.btnEditRole.Enabled = false;
+            this.btnEditRole.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.btnEditRole.Location = new System.Drawing.Point(129, 8);
+            this.btnEditRole.Name = "btnEditRole";
+            this.btnEditRole.Size = new System.Drawing.Size(120, 35);
+            this.btnEditRole.TabIndex = 1;
+            this.btnEditRole.Text = "Edit Role";
+            this.btnEditRole.UseVisualStyleBackColor = true;
+            // 
+            // btnDeleteRole
+            // 
+            this.btnDeleteRole.Enabled = false;
+            this.btnDeleteRole.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.btnDeleteRole.Location = new System.Drawing.Point(255, 8);
+            this.btnDeleteRole.Name = "btnDeleteRole";
+            this.btnDeleteRole.Size = new System.Drawing.Size(120, 35);
+            this.btnDeleteRole.TabIndex = 2;
+            this.btnDeleteRole.Text = "Delete Role";
+            this.btnDeleteRole.UseVisualStyleBackColor = true;
             // 
             // statusStripMain
             // 
@@ -2735,6 +2962,19 @@ namespace DocumentIssuanceApp
             this.tlpAuditFilters.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvAuditTrail)).EndInit();
             this.flpAuditExportButtons.ResumeLayout(false);
+            // ResumeLayout for Users Tab
+            this.scUsersMain.Panel1.ResumeLayout(false);
+            // this.scUsersMain.Panel1.PerformLayout(); // Not needed if tlpUserRolesHeader handles its own layout
+            this.scUsersMain.Panel2.ResumeLayout(false);
+            this.scUsersMain.ResumeLayout(false);
+            this.tlpUserRolesHeader.ResumeLayout(false); // Resume TLP Header
+            this.tlpUserRolesHeader.PerformLayout();    // Perform layout for TLP Header
+            ((System.ComponentModel.ISupportInitialize)(this.dgvUserRoles)).EndInit();
+            this.grpManageRole.ResumeLayout(false);
+            this.tlpManageRole.ResumeLayout(false);
+            this.tlpManageRole.PerformLayout();
+            this.flpRoleManagementButtons.ResumeLayout(false);
+            this.tabPageUsers.ResumeLayout(false);
             this.statusStripMain.ResumeLayout(false);
             this.statusStripMain.PerformLayout();
             this.ResumeLayout(false);
@@ -2951,5 +3191,21 @@ namespace DocumentIssuanceApp
         private System.Windows.Forms.Button btnExportToCsv;
         private System.Windows.Forms.Button btnExportToExcel;
         private System.Windows.Forms.Button btnRefreshAuditList;
+        // --- Users Tab Control Declarations ---
+        private System.Windows.Forms.SplitContainer scUsersMain;
+        private System.Windows.Forms.TableLayoutPanel tlpUserRolesHeader; // New TLP
+        private System.Windows.Forms.Label lblApplicationRoles;
+        private System.Windows.Forms.Button btnRefreshUserRoles; // New Button
+        private System.Windows.Forms.DataGridView dgvUserRoles;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colUserRoleId;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colUserRoleName;
+        private System.Windows.Forms.GroupBox grpManageRole;
+        private System.Windows.Forms.TableLayoutPanel tlpManageRole;
+        private System.Windows.Forms.Label lblRoleNameManage;
+        private System.Windows.Forms.TextBox txtRoleNameManage;
+        private System.Windows.Forms.FlowLayoutPanel flpRoleManagementButtons;
+        private System.Windows.Forms.Button btnAddRole;
+        private System.Windows.Forms.Button btnEditRole;
+        private System.Windows.Forms.Button btnDeleteRole;
     }
 }
