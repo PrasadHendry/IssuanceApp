@@ -2578,8 +2578,8 @@ namespace DocumentIssuanceApp
             this.dgvAuditTrail.AllowUserToAddRows = false;
             this.dgvAuditTrail.AllowUserToDeleteRows = false;
             this.dgvAuditTrail.AllowUserToResizeColumns = false;
-            this.dgvAuditTrail.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.dgvAuditTrail.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dgvAuditTrail.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
@@ -2641,8 +2641,8 @@ namespace DocumentIssuanceApp
             this.tabPageUsers.Location = new System.Drawing.Point(4, 30);
             this.tabPageUsers.Name = "tabPageUsers";
             this.tabPageUsers.Padding = new System.Windows.Forms.Padding(10);
-            this.tabPageUsers.Size = new System.Drawing.Size(1196, 563); 
-            this.tabPageUsers.TabIndex = 5; 
+            this.tabPageUsers.Size = new System.Drawing.Size(1196, 563);
+            this.tabPageUsers.TabIndex = 5;
             this.tabPageUsers.Text = "Users";
             this.tabPageUsers.UseVisualStyleBackColor = true;
             // 
@@ -2663,8 +2663,8 @@ namespace DocumentIssuanceApp
             // 
             this.scUsersMain.Panel2.Controls.Add(this.grpManageRole);
             this.scUsersMain.Panel2.Padding = new System.Windows.Forms.Padding(5);
-            this.scUsersMain.Size = new System.Drawing.Size(1176, 543); 
-            this.scUsersMain.SplitterDistance = 450; 
+            this.scUsersMain.Size = new System.Drawing.Size(1176, 543);
+            this.scUsersMain.SplitterDistance = 450;
             this.scUsersMain.TabIndex = 0;
             //
             // tlpUserRolesHeader
@@ -2715,12 +2715,12 @@ namespace DocumentIssuanceApp
             this.colUserRoleName});
             dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 9.75F); 
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 9.75F);
             dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
             dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvUserRoles.DefaultCellStyle = dataGridViewCellStyle2; 
+            this.dgvUserRoles.DefaultCellStyle = dataGridViewCellStyle2;
             this.dgvUserRoles.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgvUserRoles.Location = new System.Drawing.Point(5, 40); // Positioned below tlpUserRolesHeader
             this.dgvUserRoles.MultiSelect = false;
@@ -2728,12 +2728,12 @@ namespace DocumentIssuanceApp
             this.dgvUserRoles.ReadOnly = true;
             this.dgvUserRoles.RowHeadersWidth = 51;
             this.dgvUserRoles.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvUserRoles.Size = new System.Drawing.Size(440, 498); 
+            this.dgvUserRoles.Size = new System.Drawing.Size(440, 498);
             this.dgvUserRoles.TabIndex = 0; // Before tlpUserRolesHeader in Tab order if desired
             // 
             // colUserRoleId
             // 
-            this.colUserRoleId.DataPropertyName = "RoleID"; 
+            this.colUserRoleId.DataPropertyName = "RoleID";
             this.colUserRoleId.FillWeight = 50F;
             this.colUserRoleId.HeaderText = "Role ID";
             this.colUserRoleId.MinimumWidth = 6;
@@ -2742,7 +2742,7 @@ namespace DocumentIssuanceApp
             // 
             // colUserRoleName
             // 
-            this.colUserRoleName.DataPropertyName = "RoleName"; 
+            this.colUserRoleName.DataPropertyName = "RoleName";
             this.colUserRoleName.FillWeight = 150F;
             this.colUserRoleName.HeaderText = "Role Name";
             this.colUserRoleName.MinimumWidth = 6;

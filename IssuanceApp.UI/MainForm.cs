@@ -52,6 +52,8 @@ namespace DocumentIssuanceApp
 
             InitializeAuditTrailTab(); // <-- Added call for Audit Trail Operations Tab
 
+            InitializeUsersTab(); // <-- Added call for Users Tab
+
             SetupTabs();                  // General tab setup (permissions etc.)
 
             // Subscribe to events for scaling and layout adjustments
