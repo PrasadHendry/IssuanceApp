@@ -59,6 +59,7 @@ namespace DocumentIssuanceApp
             // Subscribe to events for scaling and layout adjustments
             this.Load += MainForm_Load_ForScalingSetup;
             this.Resize += MainForm_Resize_Handler; // Handles general resize events (like re-centering login panel)
+            this.tabControlMain.SelectedIndexChanged += tabControlMain_SelectedIndexChanged;
 
             // AutoScaleMode.Font is set in the designer and is crucial for controls to adapt to font changes.
             // Call a method to set up tlpQaRequestDetails RowStyles
@@ -104,6 +105,26 @@ namespace DocumentIssuanceApp
                 this.tabPageLogin.Resize += TabPageLogin_Resize;
             }
         }
+
+       	private void tabControlMain_SelectedIndexChanged(object sender, EventArgs e) //Loading data grid view data 
+        { 
+			if (tabControlMain.SelectedTab == tabPageUsers)
+			{
+				LoadUserRoles();
+			}
+			else if (tabControlMain.SelectedTab == tabPageGmOperations)
+			{
+				LoadGmPendingQueue();
+			}
+			else if (tabControlMain.SelectedTab == tabPageQa)
+			{
+				LoadQaPendingQueue();
+			}
+			else if (tabControlMain.SelectedTab == tabPageAuditTrail)
+			{
+				LoadAuditTrailData();
+			}
+	    }
 
         private void SetupStatusBar()
         {
