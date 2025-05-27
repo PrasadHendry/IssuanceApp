@@ -1,0 +1,100 @@
+-- 1. Create the database
+IF NOT EXISTS (SELECT 1 FROM sys.databases WHERE name = 'IssuanceAppDB')
+BEGIN
+    CREATE DATABASE IssuanceAppDB;
+END
+GO
+
+USE IssuanceAppDB;
+GO
+
+-- 2. User_Roles table
+CREATE TABLE dbo.User_Roles (
+    RoleID        INT            IDENTITY(1,1) PRIMARY KEY,
+    RoleName      VARCHAR(50)    NOT NULL UNIQUE,  -- 'Requester', 'GM_Operations', 'QA'
+    PasswordHash  VARCHAR(256)   NOT NULL           -- store salted+hashed passwords
+);
+GO
+
+-- 3. Doc_Issuance table
+CREATE TABLE dbo.Doc_Issuance (
+    IssuanceID         INT             IDENTITY(1,1) PRIMARY KEY,
+    RequestNo          VARCHAR(50)     NOT NULL,   -- “Request No.”
+    RequestDate        DATE            NOT NULL,   -- “Date:”
+    FromDepartment     VARCHAR(100)    NOT NULL,   -- e.g. “Production Department”
+    DocumentTypes      VARCHAR(100)    NOT NULL,   -- comma-delimited codes: 'BMR','BPR','APPENDIX','ADDENDUM'
+    ParentBatchNumber  VARCHAR(50)     NULL,
+    ParentBatchSize    DECIMAL(18,2)   NULL,
+    ParentMfgDate      DATE            NULL,
+    ParentExpDate      DATE            NULL,
+    Product            VARCHAR(200)    NULL,       -- “Product”
+    DocumentNo         VARCHAR(50)     NULL,       -- “Document No.”
+    BatchNo            VARCHAR(50)     NULL,       -- “Batch No.”
+    BatchSiz		   DECIMAL(18,2)   NULL,       -- “Batch Size”
+    ItemMfgDate        DATE            NULL,       -- “Mfg. Date”
+    ItemExpDate        DATE            NULL,       -- “Exp. Date”
+    Market             VARCHAR(100)    NULL,       -- “Market”
+    PackSize           VARCHAR(50)     NULL,       -- “Pack Size”
+    ExportOrderNo      VARCHAR(50)     NULL        -- “Export Order No.”
+);
+GO
+
+-- 3a. Enforce valid comma-delimited tokens in DocumentTypes
+ALTER TABLE dbo.Doc_Issuance
+ADD CONSTRAINT CK_Doc_Issuance_DocTypes
+  CHECK (
+    DocumentTypes NOT LIKE '%,,%' AND
+    DocumentTypes NOT LIKE ',%'  AND
+    DocumentTypes NOT LIKE '%,'  AND
+    (
+         DocumentTypes = 'BMR'
+      OR DocumentTypes = 'BPR'
+      OR DocumentTypes = 'APPENDIX'
+      OR DocumentTypes = 'ADDENDUM'
+      OR DocumentTypes LIKE 'BMR,%'
+      OR DocumentTypes LIKE 'BPR,%'
+      OR DocumentTypes LIKE 'APPENDIX,%'
+      OR DocumentTypes LIKE 'ADDENDUM,%'
+      OR DocumentTypes LIKE '%,BMR'
+      OR DocumentTypes LIKE '%,BPR'
+      OR DocumentTypes LIKE '%,APPENDIX'
+      OR DocumentTypes LIKE '%,ADDENDUM'
+      OR DocumentTypes LIKE '%,BMR,%'
+      OR DocumentTypes LIKE '%,BPR,%'
+      OR DocumentTypes LIKE '%,APPENDIX,%'
+      OR DocumentTypes LIKE '%,ADDENDUM,%'
+    )
+  );
+GO
+
+-- 4. Issuance_Tracker table
+CREATE TABLE dbo.Issuance_Tracker (
+    TrackerID            INT            IDENTITY(1,1) PRIMARY KEY,
+    IssuanceID           INT            NOT NULL 
+        FOREIGN KEY REFERENCES dbo.Doc_Issuance(IssuanceID),
+    -- Request stage
+    PreparedBy           VARCHAR(100)   NOT NULL,
+    RequestedAt          DATETIME       NOT NULL,
+    RequestComment       VARCHAR(MAX)   NULL,
+    -- GM Operations stage
+    GmOperationsAction   VARCHAR(20)    NULL 
+        CHECK (GmOperationsAction IN ('Authorized','Rejected')),
+    AuthorizedBy         VARCHAR(100)   NULL,
+    GmOperationsAt       DATETIME       NULL,
+    GmOperationsComment  VARCHAR(MAX)   NULL,
+    -- QA stage
+    QAAction             VARCHAR(20)    NULL 
+        CHECK (QAAction IN ('Approved','Rejected')),
+    ApprovedBy           VARCHAR(100)   NULL,
+    QAAt                 DATETIME       NULL,
+    QAComment            VARCHAR(MAX)   NULL
+);
+GO
+
+-- 5. Optional: seed common roles (you'll replace password hashes)
+INSERT INTO dbo.User_Roles (RoleName, PasswordHash)
+VALUES 
+  ('Requester',    'test'),
+  ('GM_Operations','test1'),
+  ('QA',           'test2');
+GO

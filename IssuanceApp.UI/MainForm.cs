@@ -53,13 +53,12 @@ namespace DocumentIssuanceApp
 
             InitializeAuditTrailTab();
 
-            InitializeUsersTab();
+            SetupTabs();                  // General tab setup (permissions etc.)
 
             SetupTabs();
 
             this.Load += MainForm_Load_ForScalingSetup;
-            this.Resize += MainForm_Resize_Handler;
-            this.tabControlMain.SelectedIndexChanged += tabControlMain_SelectedIndexChanged;
+            this.Resize += MainForm_Resize_Handler; // Handles general resize events (like re-centering login panel)
 
             SetupTlpQaRequestDetailsRowStyles();
         }
@@ -96,26 +95,6 @@ namespace DocumentIssuanceApp
             if (this.tabPageLogin != null)
             {
                 this.tabPageLogin.Resize += TabPageLogin_Resize;
-            }
-        }
-
-        private void tabControlMain_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (tabControlMain.SelectedTab == tabPageUsers)
-            {
-                LoadUserRoles();
-            }
-            else if (tabControlMain.SelectedTab == tabPageGmOperations)
-            {
-                LoadGmPendingQueue();
-            }
-            else if (tabControlMain.SelectedTab == tabPageQa)
-            {
-                LoadQaPendingQueue();
-            }
-            else if (tabControlMain.SelectedTab == tabPageAuditTrail)
-            {
-                LoadAuditTrailData();
             }
         }
 
