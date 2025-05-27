@@ -53,7 +53,6 @@ namespace DocumentIssuanceApp
             this.lblBmrDocNo = new System.Windows.Forms.Label();
             this.txtBmrDocNoDI = new System.Windows.Forms.TextBox();
             this.chkDocTypeBPRDI = new System.Windows.Forms.CheckBox();
-            this.lblBprDocNo = new System.Windows.Forms.Label();
             this.txtBprDocNoDI = new System.Windows.Forms.TextBox();
             this.chkDocTypeAppendixDI = new System.Windows.Forms.CheckBox();
             this.lblAppendixDocNo = new System.Windows.Forms.Label();
@@ -61,6 +60,7 @@ namespace DocumentIssuanceApp
             this.chkDocTypeAddendumDI = new System.Windows.Forms.CheckBox();
             this.lblAddendumDocNo = new System.Windows.Forms.Label();
             this.txtAddendumDocNoDI = new System.Windows.Forms.TextBox();
+            this.lblBprDocNo = new System.Windows.Forms.Label();
             this.pnlTopRightDI = new System.Windows.Forms.Panel();
             this.txtRequestNoValueDI = new System.Windows.Forms.TextBox();
             this.lblRequestNoLabelDI = new System.Windows.Forms.Label();
@@ -598,18 +598,6 @@ namespace DocumentIssuanceApp
             this.chkDocTypeBPRDI.Text = "BPR";
             this.chkDocTypeBPRDI.UseVisualStyleBackColor = true;
             // 
-            // lblBprDocNo
-            // 
-            this.lblBprDocNo.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.lblBprDocNo.AutoSize = true;
-            this.lblBprDocNo.Font = new System.Drawing.Font("Segoe UI", 9.75F);
-            this.lblBprDocNo.Location = new System.Drawing.Point(147, 30);
-            this.lblBprDocNo.Name = "lblBprDocNo";
-            this.lblBprDocNo.Size = new System.Drawing.Size(130, 30);
-            this.lblBprDocNo.TabIndex = 4;
-            this.lblBprDocNo.Text = "BPR Document No.:";
-            this.lblBprDocNo.Visible = false;
-            // 
             // txtBprDocNoDI
             // 
             this.txtBprDocNoDI.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
@@ -690,6 +678,18 @@ namespace DocumentIssuanceApp
             this.txtAddendumDocNoDI.TabIndex = 11;
             this.txtAddendumDocNoDI.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.txtAddendumDocNoDI.Visible = false;
+            // 
+            // lblBprDocNo
+            // 
+            this.lblBprDocNo.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblBprDocNo.AutoSize = true;
+            this.lblBprDocNo.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.lblBprDocNo.Location = new System.Drawing.Point(147, 30);
+            this.lblBprDocNo.Name = "lblBprDocNo";
+            this.lblBprDocNo.Size = new System.Drawing.Size(130, 30);
+            this.lblBprDocNo.TabIndex = 4;
+            this.lblBprDocNo.Text = "BPR Document No.:";
+            this.lblBprDocNo.Visible = false;
             // 
             // pnlTopRightDI
             // 
