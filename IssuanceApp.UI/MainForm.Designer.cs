@@ -34,6 +34,7 @@ namespace DocumentIssuanceApp
         private void InitializeComponent()
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.tabControlMain = new System.Windows.Forms.TabControl();
             this.tabPageLogin = new System.Windows.Forms.TabPage();
             this.panelLoginContainer = new System.Windows.Forms.Panel();
@@ -1463,6 +1464,7 @@ namespace DocumentIssuanceApp
             // 
             this.dgvGmQueue.AllowUserToAddRows = false;
             this.dgvGmQueue.AllowUserToDeleteRows = false;
+            this.dgvGmQueue.AllowUserToResizeColumns = false;
             this.dgvGmQueue.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvGmQueue.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvGmQueue.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -1473,6 +1475,7 @@ namespace DocumentIssuanceApp
             this.colGmPreparedBy,
             this.colGmRequestedAt});
             this.dgvGmQueue.Dock = System.Windows.Forms.DockStyle.Fill;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.dgvGmQueue.Location = new System.Drawing.Point(3, 43);
             this.dgvGmQueue.MultiSelect = false;
             this.dgvGmQueue.Name = "dgvGmQueue";
@@ -2020,6 +2023,7 @@ namespace DocumentIssuanceApp
             // 
             this.dgvQaQueue.AllowUserToAddRows = false;
             this.dgvQaQueue.AllowUserToDeleteRows = false;
+            this.dgvQaQueue.AllowUserToResizeColumns = false;
             this.dgvQaQueue.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvQaQueue.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvQaQueue.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -2031,6 +2035,7 @@ namespace DocumentIssuanceApp
             this.colQaAuthorizedBy,
             this.colQaGmActionAt});
             this.dgvQaQueue.Dock = System.Windows.Forms.DockStyle.Fill;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.dgvQaQueue.Location = new System.Drawing.Point(3, 38);
             this.dgvQaQueue.MultiSelect = false;
             this.dgvQaQueue.Name = "dgvQaQueue";
@@ -2825,15 +2830,15 @@ namespace DocumentIssuanceApp
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dgvAuditTrail.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Segoe UI", 9.75F);
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle1.NullValue = "NA";
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvAuditTrail.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.NullValue = "NA";
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvAuditTrail.DefaultCellStyle = dataGridViewCellStyle2;
             this.dgvAuditTrail.Location = new System.Drawing.Point(3, 121);
             this.dgvAuditTrail.Name = "dgvAuditTrail";
             this.dgvAuditTrail.ReadOnly = true;
