@@ -27,6 +27,7 @@ namespace IssuanceApp.Data
         // Add any other properties from Doc_Issuance that you might want to display
         public string FromDepartment { get; set; }
         public string BatchNo { get; set; }
+        public string DocumentNumbers { get; set; }
         // ... etc.
     }
 
