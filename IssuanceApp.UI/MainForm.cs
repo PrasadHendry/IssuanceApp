@@ -55,8 +55,6 @@ namespace DocumentIssuanceApp
 
             SetupTabs();                  // General tab setup (permissions etc.)
 
-            SetupTabs();
-
             this.Load += MainForm_Load_ForScalingSetup;
             this.Resize += MainForm_Resize_Handler; // Handles general resize events (like re-centering login panel)
 
