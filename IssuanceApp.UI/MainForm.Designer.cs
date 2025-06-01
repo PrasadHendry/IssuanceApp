@@ -34,7 +34,6 @@ namespace DocumentIssuanceApp
         private void InitializeComponent()
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.tabControlMain = new System.Windows.Forms.TabControl();
             this.tabPageLogin = new System.Windows.Forms.TabPage();
             this.panelLoginContainer = new System.Windows.Forms.Panel();
@@ -1475,7 +1474,6 @@ namespace DocumentIssuanceApp
             this.colGmPreparedBy,
             this.colGmRequestedAt});
             this.dgvGmQueue.Dock = System.Windows.Forms.DockStyle.Fill;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.dgvGmQueue.Location = new System.Drawing.Point(3, 43);
             this.dgvGmQueue.MultiSelect = false;
             this.dgvGmQueue.Name = "dgvGmQueue";
@@ -2034,8 +2032,16 @@ namespace DocumentIssuanceApp
             this.colQaPreparedBy,
             this.colQaAuthorizedBy,
             this.colQaGmActionAt});
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle1.NullValue = "NA";
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvQaQueue.DefaultCellStyle = dataGridViewCellStyle1;
             this.dgvQaQueue.Dock = System.Windows.Forms.DockStyle.Fill;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.dgvQaQueue.Location = new System.Drawing.Point(3, 38);
             this.dgvQaQueue.MultiSelect = false;
             this.dgvQaQueue.Name = "dgvQaQueue";
@@ -2830,15 +2836,7 @@ namespace DocumentIssuanceApp
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dgvAuditTrail.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 9.75F);
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle2.NullValue = "NA";
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvAuditTrail.DefaultCellStyle = dataGridViewCellStyle2;
+            this.dgvAuditTrail.DefaultCellStyle = dataGridViewCellStyle1;
             this.dgvAuditTrail.Location = new System.Drawing.Point(3, 121);
             this.dgvAuditTrail.Name = "dgvAuditTrail";
             this.dgvAuditTrail.ReadOnly = true;
@@ -3265,24 +3263,24 @@ namespace DocumentIssuanceApp
         private System.Windows.Forms.Label lblParentBatchNoDI;
         private System.Windows.Forms.TextBox txtParentBatchNoDI;
         private System.Windows.Forms.Label lblParentBatchSizeDI;
-        // Removed numParentBatchSizeDI
+        // Removed numParentBatchSizeDI (comment from original, accurate)
         private System.Windows.Forms.Label lblParentMfgDateDI;
-        // Removed dtpParentMfgDateDI
+        // Removed dtpParentMfgDateDI (comment from original, accurate)
         private System.Windows.Forms.Label lblParentExpDateDI;
-        // Removed dtpParentExpDateDI
+        // Removed dtpParentExpDateDI (comment from original, accurate)
         private System.Windows.Forms.GroupBox grpItemDetailsDI;
         private System.Windows.Forms.TableLayoutPanel tlpItemDetails;
         private System.Windows.Forms.Label lblProductDI;
         private System.Windows.Forms.TextBox txtProductDI;
-        // Removed lblDocumentNoDI & txtDocumentNoDI
+        // Removed lblDocumentNoDI & txtDocumentNoDI (comment from original, accurate)
         private System.Windows.Forms.Label lblBatchNoDI;
         private System.Windows.Forms.TextBox txtBatchNoDI;
         private System.Windows.Forms.Label lblBatchSizeDI;
-        // Removed txtBatchSizeDI
+        // Removed txtBatchSizeDI (comment from original, accurate)
         private System.Windows.Forms.Label lblItemMfgDateDI;
-        // Removed dtpItemMfgDateDI
+        // Removed dtpItemMfgDateDI (comment from original, accurate)
         private System.Windows.Forms.Label lblItemExpDateDI;
-        // Removed dtpItemExpDateDI
+        // Removed dtpItemExpDateDI (comment from original, accurate)
         private System.Windows.Forms.Label lblMarketDI;
         private System.Windows.Forms.TextBox txtMarketDI;
         private System.Windows.Forms.Label lblPackSizeDI;
