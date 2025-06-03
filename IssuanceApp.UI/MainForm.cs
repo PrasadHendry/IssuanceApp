@@ -877,6 +877,8 @@ namespace DocumentIssuanceApp
         }
         #endregion GM Operations Tab Logic
 
+        #region QA Tab Logic
+
         private void SetupTlpQaRequestDetailsRowStyles()
         {
             if (this.tlpQaRequestDetails == null)
@@ -902,9 +904,6 @@ namespace DocumentIssuanceApp
             this.tlpQaRequestDetails.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, specialRowHeight));
             this.tlpQaRequestDetails.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, standardRowHeight));
         }
-
-
-        #region QA Tab Logic
 
         private void InitializeQaTab()
         {
