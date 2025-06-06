@@ -1,55 +1,35 @@
-﻿// MainForm.cs (Code-behind with Enhanced Font Scaling & Document Issuance Logic)
+﻿// MainForm.cs (Final Version with Framework-based Scaling)
 using System;
-using System.Collections.Generic; // Required for List<string>
+using System.Collections.Generic;
 using System.Drawing;
-using System.IO; // New: For file operations (CSV export)
-using System.Security.Principal; // Required for WindowsIdentity
+using System.IO;
+using System.Security.Principal;
 using System.Text;
 using System.Windows.Forms;
-using IssuanceApp.Data; //  AuditTrailEntry and UserRole 
-using System.Threading.Tasks; // Required for Task.Run() in async methods
-using System.Globalization; // Required for CultureInfo.InvariantCulture
-using System.Collections; // Required for ArrayList
-using System.ComponentModel; // Required for BindingSource
-using System.Linq; // Required for .Cast<T>()
-
+using IssuanceApp.Data;
+using System.Threading.Tasks;
+using System.Globalization;
+using System.Collections;
+using System.ComponentModel;
+using System.Linq;
 
 namespace DocumentIssuanceApp
 {
-
     public partial class MainForm : Form
     {
         private Timer statusTimer;
         private string loggedInRole = null;
-        private string loggedInUserName = null; // Store actual username after login
-
-        // Fields for font and control scaling (primarily for one-time scaling on initial maximize)
-        private SizeF _originalFormClientSize;
-        private Font _originalFormFont;
-        private Size _originalPanelLoginContainerSize;
-        private Font _originalPanelLoginContainerFont;
-        private Font _originalTabControlFont;
-
-        private bool _initialScalingPerformed = false;
-
-        // Constants for scaling limits
-        private const float MinFontSize = 8f;
-        private const float MaxFontSize = 18f;
-        private const int MinPanelLoginWidth = 300;
-        private const int MinPanelLoginHeight = 200;
+        private string loggedInUserName = null;
 
         private BindingSource userRolesBindingSource;
 
-        // --- START: User Management Mode Fields ---
         private enum UserManagementMode { None, Adding, Editing }
         private UserManagementMode _currentUsersTabMode = UserManagementMode.None;
-        private UserRole _roleBeingEdited = null; // To store the role object during an edit operation
-        // --- END: User Management Mode Fields ---
-
+        private UserRole _roleBeingEdited = null;
 
         public MainForm()
         {
-            InitializeComponent(); // Content of this method will be from testMainForm.Designer.txt
+            InitializeComponent();
             InitializeCustomComponents();
 
             SetupStatusBar();
@@ -62,37 +42,15 @@ namespace DocumentIssuanceApp
             InitializeGmOperationsTab();
 
             InitializeQaTab();
-            // DELETED: Call to SetupTlpQaRequestDetailsRowStyles() was here.
 
             InitializeAuditTrailTab();
             InitializeUsersTab();
 
             SetupTabs();
 
-            this.Load += MainForm_Load_ForScalingSetup;
-            this.Resize += MainForm_Resize_Handler;
-        }
-
-        private void MainForm_Load_ForScalingSetup(object sender, EventArgs e)
-        {
-            // Capture original dimensions and fonts before any scaling occurs.
-            // This is crucial for calculating correct scale factors later.
-            _originalFormClientSize = this.ClientSize;
-            _originalFormFont = new Font(this.Font.FontFamily, this.Font.Size, this.Font.Style);
-
-            if (tabControlMain != null)
-            {
-                _originalTabControlFont = new Font(tabControlMain.Font.FontFamily, tabControlMain.Font.Size, tabControlMain.Font.Style);
-            }
-
-            if (panelLoginContainer != null)
-            {
-                _originalPanelLoginContainerSize = panelLoginContainer.Size;
-                _originalPanelLoginContainerFont = new Font(panelLoginContainer.Font.FontFamily, panelLoginContainer.Font.Size, panelLoginContainer.Font.Style);
-            }
-
-            // Centering is now handled automatically by the TableLayoutPanel in the designer.
-            this.WindowState = FormWindowState.Maximized; // Maximize the form on load to trigger initial scaling.
+            // The form's AutoScaleMode property will now handle all scaling.
+            // No manual scaling code is needed.
+            this.Load += (s, e) => { this.WindowState = FormWindowState.Maximized; };
         }
 
         private void InitializeCustomComponents()
@@ -102,8 +60,6 @@ namespace DocumentIssuanceApp
             statusTimer.Interval = 1000;
             statusTimer.Tick += StatusTimer_Tick;
             statusTimer.Start();
-
-            // The TabPageLogin_Resize event is no longer needed as the TLP handles centering.
         }
 
         private void SetupStatusBar()
@@ -197,12 +153,10 @@ namespace DocumentIssuanceApp
 
         private bool AuthenticateUser(string roleName, string password)
         {
-            // In a real application, this would involve checking against a database
-            // with hashed passwords and user roles.
             if (roleName == "Requester" && password == "test") return true;
             if (roleName == "GM_Operations" && password == "test1") return true;
             if (roleName == "QA" && password == "test2") return true;
-            if (roleName == "Admin" && password == "adminpass") return true; // Example Admin password
+            if (roleName == "Admin" && password == "adminpass") return true;
             return false;
         }
 
@@ -218,10 +172,9 @@ namespace DocumentIssuanceApp
             if (tabPageDocumentIssuance != null) tabPageDocumentIssuance.Enabled = isRequester || isAdmin;
             if (tabPageGmOperations != null) tabPageGmOperations.Enabled = isGm || isAdmin;
             if (tabPageQa != null) tabPageQa.Enabled = isQa || isAdmin;
-            if (tabPageUsers != null) tabPageUsers.Enabled = isAdmin; // Users tab only for Admin
-            if (tabPageAuditTrail != null) tabPageAuditTrail.Enabled = !string.IsNullOrEmpty(role); // Audit trail for any logged-in user
+            if (tabPageUsers != null) tabPageUsers.Enabled = isAdmin;
+            if (tabPageAuditTrail != null) tabPageAuditTrail.Enabled = !string.IsNullOrEmpty(role);
 
-            // If no role (logged out), select login tab
             if (string.IsNullOrEmpty(role) && tabPageLogin != null)
             {
                 if (tabControlMain.TabPages.Contains(tabPageLogin))
@@ -247,10 +200,10 @@ namespace DocumentIssuanceApp
                     targetTab = tabPageQa;
                     break;
                 case "Admin":
-                    targetTab = tabPageUsers; // Admin default to Users tab
+                    targetTab = tabPageUsers;
                     break;
                 default:
-                    targetTab = tabPageLogin; // Fallback to login tab
+                    targetTab = tabPageLogin;
                     break;
             }
 
@@ -260,15 +213,12 @@ namespace DocumentIssuanceApp
             }
             else if (tabPageLogin != null && tabControlMain.TabPages.Contains(tabPageLogin))
             {
-                // Fallback if the intended tab is not available or disabled for some reason
                 tabControlMain.SelectedTab = tabPageLogin;
             }
         }
 
         private void SetupTabs()
         {
-            // Any general tab setup logic can go here.
-            // For now, most setup is role-dependent after login.
         }
 
         protected override void OnFormClosing(FormClosingEventArgs e)
@@ -282,85 +232,16 @@ namespace DocumentIssuanceApp
             base.OnFormClosing(e);
         }
 
-        private void MainForm_Resize_Handler(object sender, EventArgs e)
-        {
-            // Perform initial scaling only once when the form is first maximized.
-            if (!_initialScalingPerformed && this.WindowState == FormWindowState.Maximized)
-            {
-                PerformInitialScaling();
-                _initialScalingPerformed = true;
-            }
-        }
-
-        private void PerformInitialScaling()
-        {
-            // Ensure original dimensions were captured. If not, scaling cannot be performed reliably.
-            if (_originalFormClientSize.Width == 0 || _originalFormClientSize.Height == 0)
-            {
-                Console.WriteLine("Original form client size not captured or invalid, skipping initial scaling.");
-                return;
-            }
-
-            SizeF currentMaximizedFormClientSize = this.ClientSize;
-
-            float scaleFactorX = (currentMaximizedFormClientSize.Width / _originalFormClientSize.Width);
-            float scaleFactorY = (currentMaximizedFormClientSize.Height / _originalFormClientSize.Height);
-
-            float fontScaleFactor = Math.Min(scaleFactorX, scaleFactorY);
-
-            if (fontScaleFactor <= 0.1f)
-            {
-                Console.WriteLine($"Calculated font scale factor ({fontScaleFactor}) is too small, defaulting to 1.0 for initial scaling.");
-                fontScaleFactor = 1.0f;
-            }
-            if (scaleFactorX <= 0.1f)
-            {
-                Console.WriteLine($"Calculated X-axis scale factor ({scaleFactorX}) is too small, defaulting to 1.0.");
-                scaleFactorX = 1.0f;
-            }
-            if (scaleFactorY <= 0.1f)
-            {
-                Console.WriteLine($"Calculated Y-axis scale factor ({scaleFactorY}) is too small, defaulting to 1.0.");
-                scaleFactorY = 1.0f;
-            }
-
-            // Scale Form Font
-            if (_originalFormFont != null)
-            {
-                float newFormFontSize = _originalFormFont.Size * fontScaleFactor;
-                newFormFontSize = Math.Max(MinFontSize, Math.Min(MaxFontSize, newFormFontSize)); // Clamp font size
-                this.Font = new Font(_originalFormFont.FontFamily, newFormFontSize, _originalFormFont.Style);
-            }
-
-            // Scale TabControl Font
-            if (tabControlMain != null && _originalTabControlFont != null)
-            {
-                float newTabControlFontSize = _originalTabControlFont.Size * fontScaleFactor;
-                newTabControlFontSize = Math.Max(MinFontSize, Math.Min(MaxFontSize, newTabControlFontSize));
-                tabControlMain.Font = new Font(_originalTabControlFont.FontFamily, newTabControlFontSize, _originalTabControlFont.Style);
-            }
-
-            // Scale Login Panel Font ONLY. The size and position are now automatic.
-            if (panelLoginContainer != null && _originalPanelLoginContainerFont != null)
-            {
-                float newPanelFontSize = _originalPanelLoginContainerFont.Size * fontScaleFactor;
-                newPanelFontSize = Math.Max(MinFontSize, Math.Min(MaxFontSize, newPanelFontSize));
-                panelLoginContainer.Font = new Font(_originalPanelLoginContainerFont.FontFamily, newPanelFontSize, _originalPanelLoginContainerFont.Style);
-            }
-        }
-
         #region Document Issuance Tab Logic
 
         private void InitializeDocumentIssuanceTab()
         {
-            // 1. Document Type Checkboxes & Document Numbers
             if (chkDocTypeBMRDI != null) chkDocTypeBMRDI.CheckedChanged += DocTypeCheckbox_CheckedChanged;
             if (chkDocTypeBPRDI != null) chkDocTypeBPRDI.CheckedChanged += DocTypeCheckbox_CheckedChanged;
             if (chkDocTypeAppendixDI != null) chkDocTypeAppendixDI.CheckedChanged += DocTypeCheckbox_CheckedChanged;
             if (chkDocTypeAddendumDI != null) chkDocTypeAddendumDI.CheckedChanged += DocTypeCheckbox_CheckedChanged;
             UpdateDocumentNumberFieldsVisibility();
 
-            // 2. Date Fields -> Month/Year Dropdowns
             string[] monthNames = CultureInfo.CurrentCulture.DateTimeFormat.AbbreviatedMonthNames
                                       .Where(m => !string.IsNullOrEmpty(m)).ToArray();
             int currentYear = DateTime.Now.Year;
@@ -371,7 +252,6 @@ namespace DocumentIssuanceApp
             PopulateMonthYearComboBox(cmbItemMfgMonthDI, cmbItemMfgYearDI, monthNames, years, false);
             PopulateMonthYearComboBox(cmbItemExpMonthDI, cmbItemExpYearDI, monthNames, years, false);
 
-            // 3. Batch Size Fields -> Value + Unit
             string[] batchUnits = { "KGS", "TAB", "ML", "GM", "LTR", "MG", "CAPS", "VIALS", "AMPOULES" };
             PopulateUnitComboBox(cmbParentBatchSizeUnitDI, batchUnits, true);
             PopulateUnitComboBox(cmbItemBatchSizeUnitDI, batchUnits, false);
@@ -379,7 +259,6 @@ namespace DocumentIssuanceApp
             if (txtParentBatchSizeValueDI != null) txtParentBatchSizeValueDI.KeyPress += NumericTextBox_KeyPress;
             if (txtItemBatchSizeValueDI != null) txtItemBatchSizeValueDI.KeyPress += NumericTextBox_KeyPress;
 
-            // 4. Department Dropdown Constraint
             if (cmbFromDepartmentDI != null)
             {
                 cmbFromDepartmentDI.Items.Clear();
@@ -491,13 +370,11 @@ namespace DocumentIssuanceApp
 
         private void BtnSubmitRequestDI_Click(object sender, EventArgs e)
         {
-            // --- Input Validation ---
             if (cmbFromDepartmentDI?.SelectedItem == null || string.IsNullOrWhiteSpace(cmbFromDepartmentDI.SelectedItem.ToString()))
             { MessageBox.Show("Please select a 'From Department'.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning); cmbFromDepartmentDI?.Focus(); return; }
             if (string.IsNullOrWhiteSpace(txtProductDI?.Text))
             { MessageBox.Show("Please enter the 'Product'.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning); txtProductDI?.Focus(); return; }
 
-            // --- Collect and Validate Document Numbers ---
             var docNumbersList = new List<string>();
             if (chkDocTypeBMRDI.Checked) { if (string.IsNullOrWhiteSpace(txtBmrDocNoDI.Text)) { MessageBox.Show("BMR is checked, please enter BMR Document No.", "Validation Error"); txtBmrDocNoDI.Focus(); return; } docNumbersList.Add(txtBmrDocNoDI.Text.Trim()); }
             if (chkDocTypeBPRDI.Checked) { if (string.IsNullOrWhiteSpace(txtBprDocNoDI.Text)) { MessageBox.Show("BPR is checked, please enter BPR Document No.", "Validation Error"); txtBprDocNoDI.Focus(); return; } docNumbersList.Add(txtBprDocNoDI.Text.Trim()); }
@@ -512,7 +389,6 @@ namespace DocumentIssuanceApp
             }
             string combinedDocumentNumbers = string.Join(",", docNumbersList);
 
-            // --- Collect and Validate Batch Sizes ---
             string parentBatchSizeStr = null;
             bool parentBatchValueEntered = !string.IsNullOrWhiteSpace(txtParentBatchSizeValueDI?.Text);
             bool parentBatchUnitSelected = cmbParentBatchSizeUnitDI?.SelectedItem != null && cmbParentBatchSizeUnitDI.SelectedItem.ToString() != "N/A";
@@ -529,7 +405,6 @@ namespace DocumentIssuanceApp
             if (cmbItemBatchSizeUnitDI?.SelectedItem == null || cmbItemBatchSizeUnitDI.SelectedItem.ToString() == "N/A") { MessageBox.Show("Please select a Unit for the Item Batch Size.", "Validation Error"); cmbItemBatchSizeUnitDI.Focus(); return; }
             itemBatchSizeStr = $"{txtItemBatchSizeValueDI.Text.Trim()} {cmbItemBatchSizeUnitDI.SelectedItem}";
 
-            // --- Data Collection ---
             var issuanceData = new
             {
                 RequestNo = txtRequestNoValueDI?.Text ?? "N/A",
@@ -629,7 +504,7 @@ namespace DocumentIssuanceApp
             return $"{month}/{year}";
         }
 
-        #endregion Document Issuance Tab Logic
+        #endregion
 
         #region GM Operations Tab Logic
 
@@ -810,7 +685,7 @@ namespace DocumentIssuanceApp
                 LoadGmPendingQueue();
             }
         }
-        #endregion GM Operations Tab Logic
+        #endregion
 
         #region QA Tab Logic
 
@@ -996,7 +871,7 @@ namespace DocumentIssuanceApp
             }
         }
 
-        #endregion QA Tab Logic
+        #endregion
 
         #region Audit Trail Tab Logic
 
@@ -1054,7 +929,6 @@ namespace DocumentIssuanceApp
             dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditRequestNo", HeaderText = "Request No.", DataPropertyName = "RequestNo", Width = 120, DefaultCellStyle = new DataGridViewCellStyle { WrapMode = DataGridViewTriState.True }, Frozen = true });
             dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditRequestDate", HeaderText = "Request Date", DataPropertyName = "RequestDate", DefaultCellStyle = new DataGridViewCellStyle { Format = "dd-MMM-yyyy" }, Width = 100, });
             dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditProduct", HeaderText = "Product", DataPropertyName = "Product", Width = 150 });
-            // Updated column for Document Numbers. Assumes AuditTrailEntry has a "DocumentNumbers" property.
             dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditDocumentNumbers", HeaderText = "Document No(s).", DataPropertyName = "DocumentNumbers", Width = 180, DefaultCellStyle = new DataGridViewCellStyle { WrapMode = DataGridViewTriState.True } });
             dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditStatusDerived", HeaderText = "Status", DataPropertyName = "DerivedStatus", Width = 150 });
             dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditPreparedBy", HeaderText = "Prepared By", DataPropertyName = "PreparedBy", Width = 120 });
@@ -1079,7 +953,6 @@ namespace DocumentIssuanceApp
             string requestNoFilter = txtAuditRequestNo?.Text.Trim() ?? "";
             string productFilter = txtAuditProduct?.Text.Trim() ?? "";
 
-            // AuditTrailEntry class needs a "DocumentNumbers" property.
             var allPlaceholderAuditData = new List<AuditTrailEntry>
             {
                 new AuditTrailEntry { RequestNo = "REQ-20240101-001", RequestDate = DateTime.Now.AddDays(-10), Product = "Product A (Pharma)", DocumentNumbers = "BMR-001,APP-001A", DerivedStatus = "Approved (Issued)", PreparedBy = "user.requester", RequestedAt = DateTime.Now.AddDays(-10).AddHours(1), GmOperationsAction = "Authorized", AuthorizedBy = "gm.user", GmOperationsAt = DateTime.Now.AddDays(-9), GmOperationsComment = "Looks good. Standard procedure.", QAAction = "Approved", ApprovedBy = "qa.lead", QAAt = DateTime.Now.AddDays(-8), QAComment = "Verified and issued. All checks passed." },
@@ -1170,7 +1043,7 @@ namespace DocumentIssuanceApp
             MessageBox.Show("Excel export functionality is not yet implemented.", "TODO", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        #endregion Audit Trail Tab Logic
+        #endregion
 
         #region Users Tab Logic
 
@@ -1499,9 +1372,9 @@ namespace DocumentIssuanceApp
                 {
                     MessageBox.Show("Could not delete role: selected role data is unavailable.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-            }
 
+            }
         }
+        #endregion Users Tab Logic
     }
-    #endregion Users Tab Logic
 }
