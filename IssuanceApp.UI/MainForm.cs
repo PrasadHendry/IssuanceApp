@@ -1499,9 +1499,9 @@ namespace DocumentIssuanceApp
                 {
                     MessageBox.Show("Could not delete role: selected role data is unavailable.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-
             }
+
         }
-        #endregion Users Tab Logic
     }
+    #endregion Users Tab Logic
 }
