@@ -62,7 +62,7 @@ namespace DocumentIssuanceApp
             InitializeGmOperationsTab();
 
             InitializeQaTab();
-            SetupTlpQaRequestDetailsRowStyles();
+            // DELETED: Call to SetupTlpQaRequestDetailsRowStyles() was here.
 
             InitializeAuditTrailTab();
             InitializeUsersTab();
@@ -91,7 +91,7 @@ namespace DocumentIssuanceApp
                 _originalPanelLoginContainerFont = new Font(panelLoginContainer.Font.FontFamily, panelLoginContainer.Font.Size, panelLoginContainer.Font.Style);
             }
 
-            CenterLoginPanel(); // Initial centering
+            // Centering is now handled automatically by the TableLayoutPanel in the designer.
             this.WindowState = FormWindowState.Maximized; // Maximize the form on load to trigger initial scaling.
         }
 
@@ -103,10 +103,7 @@ namespace DocumentIssuanceApp
             statusTimer.Tick += StatusTimer_Tick;
             statusTimer.Start();
 
-            if (this.tabPageLogin != null)
-            {
-                this.tabPageLogin.Resize += TabPageLogin_Resize;
-            }
+            // The TabPageLogin_Resize event is no longer needed as the TLP handles centering.
         }
 
         private void SetupStatusBar()
@@ -285,31 +282,6 @@ namespace DocumentIssuanceApp
             base.OnFormClosing(e);
         }
 
-        private void TabPageLogin_Resize(object sender, EventArgs e)
-        {
-            CenterLoginPanel();
-        }
-
-        private void CenterLoginPanel()
-        {
-            if (panelLoginContainer != null && tabPageLogin != null && panelLoginContainer.Parent == tabPageLogin)
-            {
-                // Ensure panel is not larger than its container
-                if (panelLoginContainer.Width > tabPageLogin.ClientSize.Width)
-                {
-                    panelLoginContainer.Width = Math.Max(MinPanelLoginWidth, tabPageLogin.ClientSize.Width - 20); // 20 for some padding
-                }
-                if (panelLoginContainer.Height > tabPageLogin.ClientSize.Height)
-                {
-                    panelLoginContainer.Height = Math.Max(MinPanelLoginHeight, tabPageLogin.ClientSize.Height - 20);
-                }
-
-                int panelX = (tabPageLogin.ClientSize.Width - panelLoginContainer.Width) / 2;
-                int panelY = (tabPageLogin.ClientSize.Height - panelLoginContainer.Height) / 2;
-                panelLoginContainer.Location = new Point(Math.Max(0, panelX), Math.Max(0, panelY));
-            }
-        }
-
         private void MainForm_Resize_Handler(object sender, EventArgs e)
         {
             // Perform initial scaling only once when the form is first maximized.
@@ -318,8 +290,6 @@ namespace DocumentIssuanceApp
                 PerformInitialScaling();
                 _initialScalingPerformed = true;
             }
-            // Always recenter the login panel if it's visible and the form resizes.
-            CenterLoginPanel();
         }
 
         private void PerformInitialScaling()
@@ -333,17 +303,11 @@ namespace DocumentIssuanceApp
 
             SizeF currentMaximizedFormClientSize = this.ClientSize;
 
-            // Calculate scaling factors based on the change in client size.
             float scaleFactorX = (currentMaximizedFormClientSize.Width / _originalFormClientSize.Width);
             float scaleFactorY = (currentMaximizedFormClientSize.Height / _originalFormClientSize.Height);
 
-            // For font scaling, it's often better to use the smaller of the two factors
-            // to prevent text from becoming too large in one dimension if the aspect ratio changes significantly.
             float fontScaleFactor = Math.Min(scaleFactorX, scaleFactorY);
 
-            // Safety checks for calculated scale factors.
-            // If factors are extremely small (e.g., due to an issue with original size capture or unexpected window state),
-            // default to 1.0 to avoid errors or overly tiny UI elements.
             if (fontScaleFactor <= 0.1f)
             {
                 Console.WriteLine($"Calculated font scale factor ({fontScaleFactor}) is too small, defaulting to 1.0 for initial scaling.");
@@ -376,37 +340,13 @@ namespace DocumentIssuanceApp
                 tabControlMain.Font = new Font(_originalTabControlFont.FontFamily, newTabControlFontSize, _originalTabControlFont.Style);
             }
 
-            // Scale Login Panel and its Font
-            if (panelLoginContainer != null)
+            // Scale Login Panel Font ONLY. The size and position are now automatic.
+            if (panelLoginContainer != null && _originalPanelLoginContainerFont != null)
             {
-                if (_originalPanelLoginContainerFont != null)
-                {
-                    float newPanelFontSize = _originalPanelLoginContainerFont.Size * fontScaleFactor;
-                    newPanelFontSize = Math.Max(MinFontSize, Math.Min(MaxFontSize, newPanelFontSize));
-                    panelLoginContainer.Font = new Font(_originalPanelLoginContainerFont.FontFamily, newPanelFontSize, _originalPanelLoginContainerFont.Style);
-                }
-
-                // Scale panelLoginContainer size
-                if (!_originalPanelLoginContainerSize.IsEmpty && _originalPanelLoginContainerSize.Width > 0)
-                {
-                    int newPanelWidth = (int)(_originalPanelLoginContainerSize.Width * scaleFactorX);
-                    int newPanelHeight = (int)(_originalPanelLoginContainerSize.Height * scaleFactorY);
-
-                    // Clamp panel size to minimums and ensure it fits within its parent tab page
-                    newPanelWidth = Math.Max(MinPanelLoginWidth, newPanelWidth);
-                    newPanelHeight = Math.Max(MinPanelLoginHeight, newPanelHeight);
-
-                    if (tabPageLogin != null)
-                    {
-                        newPanelWidth = Math.Min(newPanelWidth, tabPageLogin.ClientSize.Width - panelLoginContainer.Margin.Horizontal);
-                        newPanelHeight = Math.Min(newPanelHeight, tabPageLogin.ClientSize.Height - panelLoginContainer.Margin.Vertical);
-                    }
-                    // Ensure dimensions are positive before setting.
-                    panelLoginContainer.Size = new Size(Math.Max(10, newPanelWidth), Math.Max(10, newPanelHeight));
-                }
+                float newPanelFontSize = _originalPanelLoginContainerFont.Size * fontScaleFactor;
+                newPanelFontSize = Math.Max(MinFontSize, Math.Min(MaxFontSize, newPanelFontSize));
+                panelLoginContainer.Font = new Font(_originalPanelLoginContainerFont.FontFamily, newPanelFontSize, _originalPanelLoginContainerFont.Style);
             }
-            // Recenter login panel after its size and parent's size might have changed.
-            CenterLoginPanel();
         }
 
         #region Document Issuance Tab Logic
@@ -564,7 +504,6 @@ namespace DocumentIssuanceApp
             if (chkDocTypeAppendixDI.Checked) { if (string.IsNullOrWhiteSpace(txtAppendixDocNoDI.Text)) { MessageBox.Show("Appendix is checked, please enter Appendix Document No.", "Validation Error"); txtAppendixDocNoDI.Focus(); return; } docNumbersList.Add(txtAppendixDocNoDI.Text.Trim()); }
             if (chkDocTypeAddendumDI.Checked) { if (string.IsNullOrWhiteSpace(txtAddendumDocNoDI.Text)) { MessageBox.Show("Addendum is checked, please enter Addendum Document No.", "Validation Error"); txtAddendumDocNoDI.Focus(); return; } docNumbersList.Add(txtAddendumDocNoDI.Text.Trim()); }
 
-            // At least one document type must be selected
             if (!docNumbersList.Any())
             {
                 MessageBox.Show("Please select at least one 'Document Type' and provide its number.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -596,20 +535,16 @@ namespace DocumentIssuanceApp
                 RequestNo = txtRequestNoValueDI?.Text ?? "N/A",
                 RequestDate = dtpRequestDateDI?.Value.Date ?? DateTime.MinValue.Date,
                 FromDepartment = cmbFromDepartmentDI.SelectedItem.ToString(),
-                // DocumentTypes is REMOVED
                 DocumentNo = combinedDocumentNumbers,
-
                 ParentBatchNumber = string.IsNullOrWhiteSpace(txtParentBatchNoDI?.Text) ? null : txtParentBatchNoDI.Text.Trim(),
                 ParentBatchSize = parentBatchSizeStr,
                 ParentMfgDate = GetDateStringFromComboBoxes(cmbParentMfgMonthDI, cmbParentMfgYearDI),
                 ParentExpDate = GetDateStringFromComboBoxes(cmbParentExpMonthDI, cmbParentExpYearDI),
-
                 Product = txtProductDI.Text.Trim(),
                 BatchNo = string.IsNullOrWhiteSpace(txtBatchNoDI?.Text) ? null : txtBatchNoDI.Text.Trim(),
                 BatchSize = itemBatchSizeStr,
                 ItemMfgDate = GetDateStringFromComboBoxes(cmbItemMfgMonthDI, cmbItemMfgYearDI),
                 ItemExpDate = GetDateStringFromComboBoxes(cmbItemExpMonthDI, cmbItemExpYearDI),
-
                 Market = string.IsNullOrWhiteSpace(txtMarketDI?.Text) ? null : txtMarketDI.Text.Trim(),
                 PackSize = string.IsNullOrWhiteSpace(txtPackSizeDI?.Text) ? null : txtPackSizeDI.Text.Trim(),
                 ExportOrderNo = string.IsNullOrWhiteSpace(txtExportOrderNoDI?.Text) ? null : txtExportOrderNoDI.Text.Trim(),
@@ -619,12 +554,7 @@ namespace DocumentIssuanceApp
 
             try
             {
-                // TODO: Implement actual data saving logic. Your data access method should now accept
-                // the `issuanceData` object and map its properties to the parameters for your INSERT statement
-                // into the dbo.Doc_Issuance table.
-
                 Console.WriteLine("--- Document Issuance Request Submitted (Updated Formats) ---");
-                // ... (Console logs for debugging) ...
 
                 lblStatusValueDI.Text = $"Request '{issuanceData.RequestNo}' submitted successfully!";
                 lblStatusValueDI.ForeColor = Color.Green;
@@ -640,9 +570,6 @@ namespace DocumentIssuanceApp
                 MessageBox.Show($"Error submitting request: {ex.Message}\n{ex.StackTrace}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
-        // REMOVED: GetSelectedDocumentTypes() method is no longer needed.
-        // private string GetSelectedDocumentTypes() { ... }
 
         private void BtnClearFormDI_Click(object sender, EventArgs e)
         {
@@ -661,7 +588,6 @@ namespace DocumentIssuanceApp
             if (chkDocTypeBPRDI != null) chkDocTypeBPRDI.Checked = false;
             if (chkDocTypeAppendixDI != null) chkDocTypeAppendixDI.Checked = false;
             if (chkDocTypeAddendumDI != null) chkDocTypeAddendumDI.Checked = false;
-            // The CheckChanged event handler will hide and clear the textboxes
 
             if (dtpRequestDateDI != null) dtpRequestDateDI.Value = DateTime.Now;
             if (cmbFromDepartmentDI != null && cmbFromDepartmentDI.Items.Count > 0) cmbFromDepartmentDI.SelectedIndex = 0;
@@ -678,7 +604,7 @@ namespace DocumentIssuanceApp
             if (txtBatchNoDI != null) txtBatchNoDI.Clear();
             if (txtItemBatchSizeValueDI != null) txtItemBatchSizeValueDI.Clear();
             if (cmbItemBatchSizeUnitDI != null && cmbItemBatchSizeUnitDI.Items.Count > 0) cmbItemBatchSizeUnitDI.SelectedIndex = 0;
-            if (cmbItemMfgMonthDI != null) cmbItemMfgMonthDI.SelectedIndex = DateTime.Now.Month - 1; // Not allowing N/A
+            if (cmbItemMfgMonthDI != null) cmbItemMfgMonthDI.SelectedIndex = DateTime.Now.Month - 1;
             if (cmbItemMfgYearDI != null) cmbItemMfgYearDI.SelectedItem = DateTime.Now.Year.ToString();
             if (cmbItemExpMonthDI != null) cmbItemExpMonthDI.SelectedIndex = DateTime.Now.Month - 1;
             if (cmbItemExpYearDI != null) cmbItemExpYearDI.SelectedItem = DateTime.Now.Year.ToString();
@@ -711,16 +637,14 @@ namespace DocumentIssuanceApp
         {
             if (dgvGmQueue != null)
             {
-                dgvGmQueue.AutoGenerateColumns = false; // We define columns manually
-                // Ensure DataPropertyName matches the properties of the objects in your data source
+                dgvGmQueue.AutoGenerateColumns = false;
                 if (dgvGmQueue.Columns["colGmRequestNo"] != null) dgvGmQueue.Columns["colGmRequestNo"].DataPropertyName = "RequestNo";
                 if (dgvGmQueue.Columns["colGmRequestDate"] != null) dgvGmQueue.Columns["colGmRequestDate"].DataPropertyName = "RequestDate";
                 if (dgvGmQueue.Columns["colGmProduct"] != null) dgvGmQueue.Columns["colGmProduct"].DataPropertyName = "Product";
-                // colGmDocTypes now displays actual document numbers (comma-separated)
                 if (dgvGmQueue.Columns["colGmDocTypes"] != null)
                 {
                     dgvGmQueue.Columns["colGmDocTypes"].DataPropertyName = "DocumentNo";
-                    dgvGmQueue.Columns["colGmDocTypes"].HeaderText = "Document No(s)."; // As per designer
+                    dgvGmQueue.Columns["colGmDocTypes"].HeaderText = "Document No(s).";
                 }
                 if (dgvGmQueue.Columns["colGmPreparedBy"] != null) dgvGmQueue.Columns["colGmPreparedBy"].DataPropertyName = "PreparedBy";
                 if (dgvGmQueue.Columns["colGmRequestedAt"] != null) dgvGmQueue.Columns["colGmRequestedAt"].DataPropertyName = "RequestedAt";
@@ -739,9 +663,6 @@ namespace DocumentIssuanceApp
 
         private void LoadGmPendingQueue()
         {
-            // In a real app, this would fetch data from the database
-            // For simulation, we use placeholder data.
-            // The objects should have a "DocumentNo" property holding comma-separated strings.
             if (dgvGmQueue == null) return;
 
             var placeholderData = new List<object>
@@ -755,7 +676,7 @@ namespace DocumentIssuanceApp
             dgvGmQueue.DataSource = placeholderData;
 
             if (lblGmQueueTitle != null) lblGmQueueTitle.Text = $"Pending GM Approval Queue ({dgvGmQueue.Rows.Count})";
-            ClearGmSelectedRequestDetails(); // Clear details when list reloads
+            ClearGmSelectedRequestDetails();
             if (txtGmComment != null) txtGmComment.Clear();
         }
 
@@ -801,8 +722,6 @@ namespace DocumentIssuanceApp
             if (txtGmDetailPreparedBy != null) txtGmDetailPreparedBy.Text = GetValueFromCellByBoundName("PreparedBy");
             if (txtGmDetailRequestedAt != null) txtGmDetailRequestedAt.Text = GetDateValueFromCellByBoundName("RequestedAt", "dd-MMM-yyyy HH:mm");
 
-            // Simulated detailed data based on RequestNo (replace with actual DB query if needed)
-            // Note: MfgDate and ExpDate are now MMM/yyyy strings
             var requestNo = GetValueFromCellByBoundName("RequestNo");
             if (requestNo == "REQ-20240101-001")
             {
@@ -845,7 +764,7 @@ namespace DocumentIssuanceApp
             if (dgvGmQueue != null && dgvGmQueue.SelectedRows.Count > 0)
             {
                 DisplayGmSelectedRequestDetails(dgvGmQueue.SelectedRows[0]);
-                if (txtGmComment != null) txtGmComment.Clear(); // Clear previous comments
+                if (txtGmComment != null) txtGmComment.Clear();
             }
             else
             {
@@ -894,43 +813,6 @@ namespace DocumentIssuanceApp
         #endregion GM Operations Tab Logic
 
         #region QA Tab Logic
-
-        private void SetupTlpQaRequestDetailsRowStyles()
-        {
-            if (this.tlpQaRequestDetails == null)
-            {
-                Console.WriteLine("tlpQaRequestDetails is null, cannot set row styles.");
-                return;
-            }
-            if (this.tlpQaRequestDetails.RowCount < 9)
-            {
-                Console.WriteLine($"tlpQaRequestDetails.RowCount is {this.tlpQaRequestDetails.RowCount}, which is less than 9. Row styles might not apply correctly for all specified indices.");
-            }
-
-            this.tlpQaRequestDetails.RowStyles.Clear();
-
-            float standardRowHeight = 28F;
-            float specialRowHeight = 50F;
-
-            for (int i = 0; i < 9; i++)
-            {
-                if (this.tlpQaRequestDetails.RowStyles.Count <= i)
-                {
-                    if (i == 6 || i == 7)
-                        this.tlpQaRequestDetails.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, specialRowHeight));
-                    else
-                        this.tlpQaRequestDetails.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, standardRowHeight));
-                }
-                else
-                {
-                    if (i == 6 || i == 7)
-                        this.tlpQaRequestDetails.RowStyles[i] = new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, specialRowHeight);
-                    else
-                        this.tlpQaRequestDetails.RowStyles[i] = new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, standardRowHeight);
-                }
-            }
-        }
-
 
         private void InitializeQaTab()
         {
@@ -1448,7 +1330,6 @@ namespace DocumentIssuanceApp
                         txtRoleNameManage.Focus();
                         return;
                     }
-
                     if (!IsRoleNameUnique(newRoleName))
                     {
                         MessageBox.Show($"Role name '{newRoleName}' already exists. Please enter a unique name.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
