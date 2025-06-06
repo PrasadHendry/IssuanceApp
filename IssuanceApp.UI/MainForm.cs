@@ -49,7 +49,7 @@ namespace DocumentIssuanceApp
 
         public MainForm()
         {
-            InitializeComponent();
+            InitializeComponent(); // Content of this method will be from testMainForm.Designer.txt
             InitializeCustomComponents();
 
             SetupStatusBar();
@@ -62,12 +62,12 @@ namespace DocumentIssuanceApp
             InitializeGmOperationsTab();
 
             InitializeQaTab();
-            SetupTlpQaRequestDetailsRowStyles(); // Call after InitializeQaTab if it relies on QA tab controls
+            SetupTlpQaRequestDetailsRowStyles();
 
             InitializeAuditTrailTab();
-            InitializeUsersTab(); // Initialize Users tab
+            InitializeUsersTab();
 
-            SetupTabs(); // General tab setup (permissions etc.) - called after individual inits
+            SetupTabs();
 
             this.Load += MainForm_Load_ForScalingSetup;
             this.Resize += MainForm_Resize_Handler;
@@ -75,6 +75,8 @@ namespace DocumentIssuanceApp
 
         private void MainForm_Load_ForScalingSetup(object sender, EventArgs e)
         {
+            // Capture original dimensions and fonts before any scaling occurs.
+            // This is crucial for calculating correct scale factors later.
             _originalFormClientSize = this.ClientSize;
             _originalFormFont = new Font(this.Font.FontFamily, this.Font.Size, this.Font.Style);
 
@@ -89,17 +91,15 @@ namespace DocumentIssuanceApp
                 _originalPanelLoginContainerFont = new Font(panelLoginContainer.Font.FontFamily, panelLoginContainer.Font.Size, panelLoginContainer.Font.Style);
             }
 
-            CenterLoginPanel();
-
-            // Maximize the form after capturing original sizes and setting up scaling variables
-            this.WindowState = FormWindowState.Maximized;
+            CenterLoginPanel(); // Initial centering
+            this.WindowState = FormWindowState.Maximized; // Maximize the form on load to trigger initial scaling.
         }
 
         private void InitializeCustomComponents()
         {
             this.Text = "Document Issuance System";
             statusTimer = new Timer();
-            statusTimer.Interval = 1000; // 1 second
+            statusTimer.Interval = 1000;
             statusTimer.Tick += StatusTimer_Tick;
             statusTimer.Start();
 
@@ -111,7 +111,7 @@ namespace DocumentIssuanceApp
 
         private void SetupStatusBar()
         {
-            string osUserName = "Unknown User"; // Default
+            string osUserName = "Unknown User";
             try
             {
                 WindowsIdentity currentUser = WindowsIdentity.GetCurrent();
@@ -130,7 +130,6 @@ namespace DocumentIssuanceApp
                 Console.WriteLine("Error getting OS username: " + ex.Message);
                 osUserName = "N/A (Error)";
             }
-            // Initialize with OS user, update with app user after login
             toolStripStatusLabelUser.Text = $"User: {osUserName} (Not Logged In)";
             toolStripStatusLabelDateTime.Text = DateTime.Now.ToString("dd-MMM-yyyy hh:mm tt");
         }
@@ -174,8 +173,7 @@ namespace DocumentIssuanceApp
             if (isAuthenticated)
             {
                 loggedInRole = selectedRole;
-                loggedInUserName = selectedRole; // For simplicity, using role name as app username.
-                                                 // In a real app, fetch actual username.
+                loggedInUserName = selectedRole;
                 toolStripStatusLabelUser.Text = $"User: {loggedInUserName} ({loggedInRole})";
 
                 lblLoginStatus.Text = $"Login successful as {loggedInRole}.";
@@ -195,18 +193,19 @@ namespace DocumentIssuanceApp
                 lblLoginStatus.ForeColor = Color.Red;
                 loggedInRole = null;
                 loggedInUserName = null;
-                SetupStatusBar(); // Reset to OS user, "Not Logged In"
+                SetupStatusBar();
                 EnableTabsBasedOnRole(null);
             }
         }
 
         private bool AuthenticateUser(string roleName, string password)
         {
-            // IMPORTANT: Placeholder authentication.
+            // In a real application, this would involve checking against a database
+            // with hashed passwords and user roles.
             if (roleName == "Requester" && password == "test") return true;
             if (roleName == "GM_Operations" && password == "test1") return true;
             if (roleName == "QA" && password == "test2") return true;
-            if (roleName == "Admin" && password == "adminpass") return true;
+            if (roleName == "Admin" && password == "adminpass") return true; // Example Admin password
             return false;
         }
 
@@ -222,9 +221,10 @@ namespace DocumentIssuanceApp
             if (tabPageDocumentIssuance != null) tabPageDocumentIssuance.Enabled = isRequester || isAdmin;
             if (tabPageGmOperations != null) tabPageGmOperations.Enabled = isGm || isAdmin;
             if (tabPageQa != null) tabPageQa.Enabled = isQa || isAdmin;
-            if (tabPageUsers != null) tabPageUsers.Enabled = isAdmin;
-            if (tabPageAuditTrail != null) tabPageAuditTrail.Enabled = !string.IsNullOrEmpty(role);
+            if (tabPageUsers != null) tabPageUsers.Enabled = isAdmin; // Users tab only for Admin
+            if (tabPageAuditTrail != null) tabPageAuditTrail.Enabled = !string.IsNullOrEmpty(role); // Audit trail for any logged-in user
 
+            // If no role (logged out), select login tab
             if (string.IsNullOrEmpty(role) && tabPageLogin != null)
             {
                 if (tabControlMain.TabPages.Contains(tabPageLogin))
@@ -250,10 +250,10 @@ namespace DocumentIssuanceApp
                     targetTab = tabPageQa;
                     break;
                 case "Admin":
-                    targetTab = tabPageUsers; // Default to Users tab for Admin
+                    targetTab = tabPageUsers; // Admin default to Users tab
                     break;
                 default:
-                    targetTab = tabPageLogin;
+                    targetTab = tabPageLogin; // Fallback to login tab
                     break;
             }
 
@@ -263,12 +263,15 @@ namespace DocumentIssuanceApp
             }
             else if (tabPageLogin != null && tabControlMain.TabPages.Contains(tabPageLogin))
             {
+                // Fallback if the intended tab is not available or disabled for some reason
                 tabControlMain.SelectedTab = tabPageLogin;
             }
         }
 
         private void SetupTabs()
         {
+            // Any general tab setup logic can go here.
+            // For now, most setup is role-dependent after login.
         }
 
         protected override void OnFormClosing(FormClosingEventArgs e)
@@ -291,9 +294,10 @@ namespace DocumentIssuanceApp
         {
             if (panelLoginContainer != null && tabPageLogin != null && panelLoginContainer.Parent == tabPageLogin)
             {
+                // Ensure panel is not larger than its container
                 if (panelLoginContainer.Width > tabPageLogin.ClientSize.Width)
                 {
-                    panelLoginContainer.Width = Math.Max(MinPanelLoginWidth, tabPageLogin.ClientSize.Width - 20);
+                    panelLoginContainer.Width = Math.Max(MinPanelLoginWidth, tabPageLogin.ClientSize.Width - 20); // 20 for some padding
                 }
                 if (panelLoginContainer.Height > tabPageLogin.ClientSize.Height)
                 {
@@ -308,16 +312,19 @@ namespace DocumentIssuanceApp
 
         private void MainForm_Resize_Handler(object sender, EventArgs e)
         {
+            // Perform initial scaling only once when the form is first maximized.
             if (!_initialScalingPerformed && this.WindowState == FormWindowState.Maximized)
             {
                 PerformInitialScaling();
                 _initialScalingPerformed = true;
             }
+            // Always recenter the login panel if it's visible and the form resizes.
             CenterLoginPanel();
         }
 
         private void PerformInitialScaling()
         {
+            // Ensure original dimensions were captured. If not, scaling cannot be performed reliably.
             if (_originalFormClientSize.Width == 0 || _originalFormClientSize.Height == 0)
             {
                 Console.WriteLine("Original form client size not captured or invalid, skipping initial scaling.");
@@ -325,27 +332,43 @@ namespace DocumentIssuanceApp
             }
 
             SizeF currentMaximizedFormClientSize = this.ClientSize;
+
+            // Calculate scaling factors based on the change in client size.
             float scaleFactorX = (currentMaximizedFormClientSize.Width / _originalFormClientSize.Width);
             float scaleFactorY = (currentMaximizedFormClientSize.Height / _originalFormClientSize.Height);
 
+            // For font scaling, it's often better to use the smaller of the two factors
+            // to prevent text from becoming too large in one dimension if the aspect ratio changes significantly.
             float fontScaleFactor = Math.Min(scaleFactorX, scaleFactorY);
 
+            // Safety checks for calculated scale factors.
+            // If factors are extremely small (e.g., due to an issue with original size capture or unexpected window state),
+            // default to 1.0 to avoid errors or overly tiny UI elements.
             if (fontScaleFactor <= 0.1f)
             {
-                Console.WriteLine($"Invalid font scale factor {fontScaleFactor}, defaulting to 1.0 for initial scaling.");
+                Console.WriteLine($"Calculated font scale factor ({fontScaleFactor}) is too small, defaulting to 1.0 for initial scaling.");
                 fontScaleFactor = 1.0f;
             }
-            if (scaleFactorX <= 0.1f) scaleFactorX = 1.0f;
-            if (scaleFactorY <= 0.1f) scaleFactorY = 1.0f;
+            if (scaleFactorX <= 0.1f)
+            {
+                Console.WriteLine($"Calculated X-axis scale factor ({scaleFactorX}) is too small, defaulting to 1.0.");
+                scaleFactorX = 1.0f;
+            }
+            if (scaleFactorY <= 0.1f)
+            {
+                Console.WriteLine($"Calculated Y-axis scale factor ({scaleFactorY}) is too small, defaulting to 1.0.");
+                scaleFactorY = 1.0f;
+            }
 
-
+            // Scale Form Font
             if (_originalFormFont != null)
             {
                 float newFormFontSize = _originalFormFont.Size * fontScaleFactor;
-                newFormFontSize = Math.Max(MinFontSize, Math.Min(MaxFontSize, newFormFontSize));
+                newFormFontSize = Math.Max(MinFontSize, Math.Min(MaxFontSize, newFormFontSize)); // Clamp font size
                 this.Font = new Font(_originalFormFont.FontFamily, newFormFontSize, _originalFormFont.Style);
             }
 
+            // Scale TabControl Font
             if (tabControlMain != null && _originalTabControlFont != null)
             {
                 float newTabControlFontSize = _originalTabControlFont.Size * fontScaleFactor;
@@ -353,6 +376,7 @@ namespace DocumentIssuanceApp
                 tabControlMain.Font = new Font(_originalTabControlFont.FontFamily, newTabControlFontSize, _originalTabControlFont.Style);
             }
 
+            // Scale Login Panel and its Font
             if (panelLoginContainer != null)
             {
                 if (_originalPanelLoginContainerFont != null)
@@ -362,11 +386,13 @@ namespace DocumentIssuanceApp
                     panelLoginContainer.Font = new Font(_originalPanelLoginContainerFont.FontFamily, newPanelFontSize, _originalPanelLoginContainerFont.Style);
                 }
 
+                // Scale panelLoginContainer size
                 if (!_originalPanelLoginContainerSize.IsEmpty && _originalPanelLoginContainerSize.Width > 0)
                 {
                     int newPanelWidth = (int)(_originalPanelLoginContainerSize.Width * scaleFactorX);
                     int newPanelHeight = (int)(_originalPanelLoginContainerSize.Height * scaleFactorY);
 
+                    // Clamp panel size to minimums and ensure it fits within its parent tab page
                     newPanelWidth = Math.Max(MinPanelLoginWidth, newPanelWidth);
                     newPanelHeight = Math.Max(MinPanelLoginHeight, newPanelHeight);
 
@@ -375,9 +401,11 @@ namespace DocumentIssuanceApp
                         newPanelWidth = Math.Min(newPanelWidth, tabPageLogin.ClientSize.Width - panelLoginContainer.Margin.Horizontal);
                         newPanelHeight = Math.Min(newPanelHeight, tabPageLogin.ClientSize.Height - panelLoginContainer.Margin.Vertical);
                     }
+                    // Ensure dimensions are positive before setting.
                     panelLoginContainer.Size = new Size(Math.Max(10, newPanelWidth), Math.Max(10, newPanelHeight));
                 }
             }
+            // Recenter login panel after its size and parent's size might have changed.
             CenterLoginPanel();
         }
 
@@ -391,15 +419,18 @@ namespace DocumentIssuanceApp
             if (btnSubmitRequestDI != null) btnSubmitRequestDI.Click += BtnSubmitRequestDI_Click;
             if (btnClearFormDI != null) btnClearFormDI.Click += BtnClearFormDI_Click;
 
+            // Populate new ComboBoxes for dates and units
             PopulateYearComboBoxes(cmbParentMfgYearDI, cmbParentExpYearDI, cmbItemMfgYearDI, cmbItemExpYearDI);
             PopulateMonthComboBoxes(cmbParentMfgMonthDI, cmbParentExpMonthDI, cmbItemMfgMonthDI, cmbItemExpMonthDI);
             PopulateUnitComboBoxes(cmbParentBatchSizeUnitDI, cmbItemBatchSizeUnitDI);
 
+            // Wire up event handlers for document type checkboxes
             if (chkDocTypeBMRDI != null) chkDocTypeBMRDI.CheckedChanged += DocTypeCheckBox_CheckedChanged;
             if (chkDocTypeBPRDI != null) chkDocTypeBPRDI.CheckedChanged += DocTypeCheckBox_CheckedChanged;
             if (chkDocTypeAppendixDI != null) chkDocTypeAppendixDI.CheckedChanged += DocTypeCheckBox_CheckedChanged;
             if (chkDocTypeAddendumDI != null) chkDocTypeAddendumDI.CheckedChanged += DocTypeCheckBox_CheckedChanged;
 
+            // Set initial visibility of document number textboxes based on checkbox state (all unchecked initially)
             DocTypeCheckBox_CheckedChanged(null, null);
         }
 
@@ -410,12 +441,12 @@ namespace DocumentIssuanceApp
             {
                 if (cb == null) continue;
                 cb.Items.Clear();
-                cb.Items.Add("");
+                cb.Items.Add(""); // Add an empty item for optional selection
                 for (int i = currentYear - 10; i <= currentYear + 10; i++)
                 {
                     cb.Items.Add(i.ToString());
                 }
-                cb.SelectedIndex = 0;
+                cb.SelectedIndex = 0; // Select the empty item by default
             }
         }
 
@@ -427,21 +458,22 @@ namespace DocumentIssuanceApp
             {
                 if (cb == null) continue;
                 cb.Items.Clear();
-                cb.Items.Add("");
+                cb.Items.Add(""); // Add an empty item
                 cb.Items.AddRange(monthAbbr);
-                cb.SelectedIndex = 0;
+                cb.SelectedIndex = 0; // Select the empty item by default
             }
         }
 
         private void PopulateUnitComboBoxes(params ComboBox[] comboBoxes)
         {
-            string[] units = { "KGS", "TAB", "L", "Units", "g", "mg", "mL", "CAP" };
+            string[] units = { "KGS", "TAB", "L", "Units", "g", "mg", "mL", "CAP" }; // Add more units as needed
             foreach (var cb in comboBoxes)
             {
                 if (cb == null) continue;
                 cb.Items.Clear();
+                // cb.Items.Add(""); // Optional: Add empty item if unit is truly optional even when value is present
                 cb.Items.AddRange(units);
-                if (cb.Items.Count > 0) cb.SelectedIndex = 0;
+                if (cb.Items.Count > 0) cb.SelectedIndex = 0; // Default to the first unit
             }
         }
 
@@ -480,6 +512,7 @@ namespace DocumentIssuanceApp
             }
         }
 
+
         private void LoadInitialDocumentIssuanceData()
         {
             if (lblTrackerNoValueDI != null) lblTrackerNoValueDI.Text = GenerateNewTrackerNumber();
@@ -488,12 +521,14 @@ namespace DocumentIssuanceApp
 
         private string GenerateNewTrackerNumber()
         {
+            // Example: TRK-202310-1234
             Random rnd = new Random();
             return $"TRK-{DateTime.Now.Year}{DateTime.Now.Month:D2}-{rnd.Next(1000, 9999)}";
         }
 
         private string GenerateNewRequestNumber()
         {
+            // Example: REQ-YYYYMMDD-XXX
             Random rnd = new Random();
             return $"REQ-{DateTime.Now:yyyyMMdd}-{rnd.Next(100, 999):D3}";
         }
@@ -505,14 +540,15 @@ namespace DocumentIssuanceApp
 
             if (string.IsNullOrWhiteSpace(month) || string.IsNullOrWhiteSpace(year))
             {
-                return null;
+                return null; // Or string.Empty if DB column is NOT NULL and empty string is preferred over NULL
             }
-            return $"{month}/{year}";
+            return $"{month}/{year}"; // Format: "MMM/yyyy"
         }
 
 
         private void BtnSubmitRequestDI_Click(object sender, EventArgs e)
         {
+            // --- Basic Validations ---
             if (cmbFromDepartmentDI == null || cmbFromDepartmentDI.SelectedItem == null || string.IsNullOrWhiteSpace(cmbFromDepartmentDI.SelectedItem.ToString()))
             {
                 MessageBox.Show("Please select a 'From Department'.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -526,89 +562,90 @@ namespace DocumentIssuanceApp
                 return;
             }
 
-            string selectedDocTypes = GetSelectedDocumentTypes();
-            if (string.IsNullOrEmpty(selectedDocTypes))
-            {
-                MessageBox.Show("Please select at least one 'Document Type'.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                grpDocTypeDI?.Focus();
-                return;
-            }
-
+            // --- Collect Document Numbers ---
             List<string> specificDocNumbers = new List<string>();
             if (chkDocTypeBMRDI.Checked)
             {
-                if (string.IsNullOrWhiteSpace(txtBmrDocNoDI.Text)) { MessageBox.Show("BMR is checked, please enter BMR Document No.", "Validation Error"); txtBmrDocNoDI.Focus(); return; }
-                specificDocNumbers.Add(txtBmrDocNoDI.Text);
+                if (string.IsNullOrWhiteSpace(txtBmrDocNoDI.Text)) { MessageBox.Show("BMR is checked, please enter BMR Document No.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning); txtBmrDocNoDI.Focus(); return; }
+                specificDocNumbers.Add(txtBmrDocNoDI.Text.Trim());
             }
             if (chkDocTypeBPRDI.Checked)
             {
-                if (string.IsNullOrWhiteSpace(txtBprDocNoDI.Text)) { MessageBox.Show("BPR is checked, please enter BPR Document No.", "Validation Error"); txtBprDocNoDI.Focus(); return; }
-                specificDocNumbers.Add(txtBprDocNoDI.Text);
+                if (string.IsNullOrWhiteSpace(txtBprDocNoDI.Text)) { MessageBox.Show("BPR is checked, please enter BPR Document No.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning); txtBprDocNoDI.Focus(); return; }
+                specificDocNumbers.Add(txtBprDocNoDI.Text.Trim());
             }
             if (chkDocTypeAppendixDI.Checked)
             {
-                if (string.IsNullOrWhiteSpace(txtAppendixDocNoDI.Text)) { MessageBox.Show("Appendix is checked, please enter Appendix Document No.", "Validation Error"); txtAppendixDocNoDI.Focus(); return; }
-                specificDocNumbers.Add(txtAppendixDocNoDI.Text);
+                if (string.IsNullOrWhiteSpace(txtAppendixDocNoDI.Text)) { MessageBox.Show("Appendix is checked, please enter Appendix Document No.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning); txtAppendixDocNoDI.Focus(); return; }
+                specificDocNumbers.Add(txtAppendixDocNoDI.Text.Trim());
             }
             if (chkDocTypeAddendumDI.Checked)
             {
-                if (string.IsNullOrWhiteSpace(txtAddendumDocNoDI.Text)) { MessageBox.Show("Addendum is checked, please enter Addendum Document No.", "Validation Error"); txtAddendumDocNoDI.Focus(); return; }
-                specificDocNumbers.Add(txtAddendumDocNoDI.Text);
+                if (string.IsNullOrWhiteSpace(txtAddendumDocNoDI.Text)) { MessageBox.Show("Addendum is checked, please enter Addendum Document No.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning); txtAddendumDocNoDI.Focus(); return; }
+                specificDocNumbers.Add(txtAddendumDocNoDI.Text.Trim());
             }
             string combinedDocumentNumbers = string.Join(",", specificDocNumbers);
 
+            bool anyCheckboxChecked = chkDocTypeBMRDI.Checked || chkDocTypeBPRDI.Checked || chkDocTypeAppendixDI.Checked || chkDocTypeAddendumDI.Checked;
+            if (anyCheckboxChecked && specificDocNumbers.Count == 0) // Should be caught by individual checks above, but as a safeguard
+            {
+                MessageBox.Show("Please ensure document numbers are entered for all selected document types.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                if (chkDocTypeBMRDI.Checked && string.IsNullOrWhiteSpace(txtBmrDocNoDI.Text)) txtBmrDocNoDI.Focus();
+                else if (chkDocTypeBPRDI.Checked && string.IsNullOrWhiteSpace(txtBprDocNoDI.Text)) txtBprDocNoDI.Focus();
+                else if (chkDocTypeAppendixDI.Checked && string.IsNullOrWhiteSpace(txtAppendixDocNoDI.Text)) txtAppendixDocNoDI.Focus();
+                else if (chkDocTypeAddendumDI.Checked && string.IsNullOrWhiteSpace(txtAddendumDocNoDI.Text)) txtAddendumDocNoDI.Focus();
+                else grpDocTypeDI?.Focus(); // Fallback focus
+                return;
+            }
+            // The DocumentNo field in DB can be NULL, so if no checkboxes are checked, combinedDocumentNumbers will be empty, leading to NULL.
+
+            // --- Collect Parent Batch Size ---
             string parentBatchSizeString = null;
             if (txtParentBatchSizeValueDI != null && !string.IsNullOrWhiteSpace(txtParentBatchSizeValueDI.Text))
             {
-                if (!decimal.TryParse(txtParentBatchSizeValueDI.Text, out _))
-                {
-                    MessageBox.Show("Invalid Parent Batch Size value. Please enter a numeric value.", "Validation Error"); txtParentBatchSizeValueDI.Focus(); return;
-                }
+                if (!decimal.TryParse(txtParentBatchSizeValueDI.Text, NumberStyles.Any, CultureInfo.InvariantCulture, out _))
+                { MessageBox.Show("Invalid Parent Batch Size value. Please enter a numeric value.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning); txtParentBatchSizeValueDI.Focus(); return; }
                 if (cmbParentBatchSizeUnitDI?.SelectedItem == null || string.IsNullOrWhiteSpace(cmbParentBatchSizeUnitDI.SelectedItem.ToString()))
-                {
-                    MessageBox.Show("Please select a unit for Parent Batch Size.", "Validation Error"); cmbParentBatchSizeUnitDI.Focus(); return;
-                }
-                parentBatchSizeString = $"{txtParentBatchSizeValueDI.Text} {cmbParentBatchSizeUnitDI.SelectedItem.ToString()}";
+                { MessageBox.Show("Please select a unit for Parent Batch Size if a value is entered.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning); cmbParentBatchSizeUnitDI.Focus(); return; }
+                parentBatchSizeString = $"{txtParentBatchSizeValueDI.Text.Trim()} {cmbParentBatchSizeUnitDI.SelectedItem.ToString()}";
             }
 
+            // --- Collect Item Batch Size ---
             string itemBatchSizeString = null;
             if (txtItemBatchSizeValueDI != null && !string.IsNullOrWhiteSpace(txtItemBatchSizeValueDI.Text))
             {
-                if (!decimal.TryParse(txtItemBatchSizeValueDI.Text, out _))
-                {
-                    MessageBox.Show("Invalid Item Batch Size value. Please enter a numeric value.", "Validation Error"); txtItemBatchSizeValueDI.Focus(); return;
-                }
+                if (!decimal.TryParse(txtItemBatchSizeValueDI.Text, NumberStyles.Any, CultureInfo.InvariantCulture, out _))
+                { MessageBox.Show("Invalid Item Batch Size value. Please enter a numeric value.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning); txtItemBatchSizeValueDI.Focus(); return; }
                 if (cmbItemBatchSizeUnitDI?.SelectedItem == null || string.IsNullOrWhiteSpace(cmbItemBatchSizeUnitDI.SelectedItem.ToString()))
-                {
-                    MessageBox.Show("Please select a unit for Item Batch Size.", "Validation Error"); cmbItemBatchSizeUnitDI.Focus(); return;
-                }
-                itemBatchSizeString = $"{txtItemBatchSizeValueDI.Text} {cmbItemBatchSizeUnitDI.SelectedItem.ToString()}";
+                { MessageBox.Show("Please select a unit for Item Batch Size if a value is entered.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning); cmbItemBatchSizeUnitDI.Focus(); return; }
+                itemBatchSizeString = $"{txtItemBatchSizeValueDI.Text.Trim()} {cmbItemBatchSizeUnitDI.SelectedItem.ToString()}";
             }
 
+            // --- Create Data Object ---
             var issuanceData = new
             {
                 TrackerNo = lblTrackerNoValueDI?.Text ?? "N/A",
                 RequestNo = txtRequestNoValueDI?.Text ?? "N/A",
                 RequestDate = dtpRequestDateDI?.Value.Date ?? DateTime.MinValue.Date,
                 FromDepartment = cmbFromDepartmentDI.SelectedItem.ToString(),
-                DocumentTypes = selectedDocTypes,
-                DocumentNo = combinedDocumentNumbers,
-                ParentBatchNumber = txtParentBatchNoDI?.Text,
+                ParentBatchNumber = string.IsNullOrWhiteSpace(txtParentBatchNoDI?.Text) ? null : txtParentBatchNoDI.Text.Trim(),
                 ParentBatchSize = parentBatchSizeString,
                 ParentMfgDate = GetDateStringFromComboBoxes(cmbParentMfgMonthDI, cmbParentMfgYearDI),
                 ParentExpDate = GetDateStringFromComboBoxes(cmbParentExpMonthDI, cmbParentExpYearDI),
-                Product = txtProductDI.Text,
-                BatchNo = txtBatchNoDI?.Text,
+                Product = txtProductDI.Text.Trim(),
+                DocumentNo = string.IsNullOrEmpty(combinedDocumentNumbers) ? null : combinedDocumentNumbers,
+                BatchNo = string.IsNullOrWhiteSpace(txtBatchNoDI?.Text) ? null : txtBatchNoDI.Text.Trim(),
                 BatchSize = itemBatchSizeString,
                 ItemMfgDate = GetDateStringFromComboBoxes(cmbItemMfgMonthDI, cmbItemMfgYearDI),
                 ItemExpDate = GetDateStringFromComboBoxes(cmbItemExpMonthDI, cmbItemExpYearDI),
-                Market = txtMarketDI?.Text,
-                PackSize = txtPackSizeDI?.Text,
-                ExportOrderNo = txtExportOrderNoDI?.Text,
-                Remarks = txtRemarksDI?.Text,
+                Market = string.IsNullOrWhiteSpace(txtMarketDI?.Text) ? null : txtMarketDI.Text.Trim(),
+                PackSize = string.IsNullOrWhiteSpace(txtPackSizeDI?.Text) ? null : txtPackSizeDI.Text.Trim(),
+                ExportOrderNo = string.IsNullOrWhiteSpace(txtExportOrderNoDI?.Text) ? null : txtExportOrderNoDI.Text.Trim(),
+                Remarks = string.IsNullOrWhiteSpace(txtRemarksDI?.Text) ? null : txtRemarksDI.Text.Trim(),
                 RequestedBy = loggedInUserName ?? (toolStripStatusLabelUser?.Text.Replace("User: ", "").Split('(')[0].Trim() ?? "Unknown")
             };
 
+            // --- Simulate Submission (Replace with actual DB logic) ---
             try
             {
                 Console.WriteLine("--- Document Issuance Request Submitted (Simulated) ---");
@@ -616,13 +653,20 @@ namespace DocumentIssuanceApp
                 Console.WriteLine($"Request No: {issuanceData.RequestNo}");
                 Console.WriteLine($"Request Date: {issuanceData.RequestDate:yyyy-MM-dd}");
                 Console.WriteLine($"From Department: {issuanceData.FromDepartment}");
-                Console.WriteLine($"Document Types Selected: {issuanceData.DocumentTypes}");
-                Console.WriteLine($"Specific Document Nos: {issuanceData.DocumentNo}");
+                Console.WriteLine($"Document Nos: {issuanceData.DocumentNo}");
+                Console.WriteLine($"Parent Batch Number: {issuanceData.ParentBatchNumber}");
+                Console.WriteLine($"Parent Batch Size: {issuanceData.ParentBatchSize}");
+                Console.WriteLine($"Parent Mfg Date: {issuanceData.ParentMfgDate}");
+                Console.WriteLine($"Parent Exp Date: {issuanceData.ParentExpDate}");
                 Console.WriteLine($"Product: {issuanceData.Product}");
                 Console.WriteLine($"Batch No: {issuanceData.BatchNo}");
                 Console.WriteLine($"Batch Size: {issuanceData.BatchSize}");
                 Console.WriteLine($"Item Mfg Date: {issuanceData.ItemMfgDate}");
                 Console.WriteLine($"Item Exp Date: {issuanceData.ItemExpDate}");
+                Console.WriteLine($"Market: {issuanceData.Market}");
+                Console.WriteLine($"Pack Size: {issuanceData.PackSize}");
+                Console.WriteLine($"Export Order No: {issuanceData.ExportOrderNo}");
+                Console.WriteLine($"Remarks: {issuanceData.Remarks}");
                 Console.WriteLine($"Requested By: {issuanceData.RequestedBy}");
 
 
@@ -634,7 +678,7 @@ namespace DocumentIssuanceApp
                 MessageBox.Show($"Request '{issuanceData.RequestNo}' submitted successfully!\nTracker No: {issuanceData.TrackerNo}", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 ClearDocumentIssuanceForm();
-                LoadInitialDocumentIssuanceData();
+                LoadInitialDocumentIssuanceData(); // Generate new numbers for next request
             }
             catch (Exception ex)
             {
@@ -647,57 +691,56 @@ namespace DocumentIssuanceApp
             }
         }
 
-        private string GetSelectedDocumentTypes()
-        {
-            var selectedTypes = new List<string>();
-            if (chkDocTypeBMRDI?.Checked == true) selectedTypes.Add("BMR");
-            if (chkDocTypeBPRDI?.Checked == true) selectedTypes.Add("BPR");
-            if (chkDocTypeAppendixDI?.Checked == true) selectedTypes.Add("APPENDIX");
-            if (chkDocTypeAddendumDI?.Checked == true) selectedTypes.Add("ADDENDUM");
-            return string.Join(",", selectedTypes);
-        }
-
         private void BtnClearFormDI_Click(object sender, EventArgs e)
         {
             ClearDocumentIssuanceForm();
             if (lblStatusValueDI != null)
             {
                 lblStatusValueDI.Text = "Form cleared. Ready for new request.";
-                lblStatusValueDI.ForeColor = SystemColors.ControlText;
+                lblStatusValueDI.ForeColor = SystemColors.ControlText; // Default color
             }
-            LoadInitialDocumentIssuanceData();
+            LoadInitialDocumentIssuanceData(); // Regenerate Request No and Tracker No
         }
 
         private void ClearDocumentIssuanceForm()
         {
+            // Unchecking checkboxes will trigger DocTypeCheckBox_CheckedChanged, which clears associated textboxes
             if (chkDocTypeBMRDI != null) chkDocTypeBMRDI.Checked = false;
             if (chkDocTypeBPRDI != null) chkDocTypeBPRDI.Checked = false;
             if (chkDocTypeAppendixDI != null) chkDocTypeAppendixDI.Checked = false;
             if (chkDocTypeAddendumDI != null) chkDocTypeAddendumDI.Checked = false;
 
+            // Explicitly clear textboxes too, in case event doesn't fire as expected or for direct calls
+            if (txtBmrDocNoDI != null) txtBmrDocNoDI.Clear();
+            if (txtBprDocNoDI != null) txtBprDocNoDI.Clear();
+            if (txtAppendixDocNoDI != null) txtAppendixDocNoDI.Clear();
+            if (txtAddendumDocNoDI != null) txtAddendumDocNoDI.Clear();
+
             if (dtpRequestDateDI != null) dtpRequestDateDI.Value = DateTime.Now;
             if (cmbFromDepartmentDI != null)
             {
                 if (cmbFromDepartmentDI.Items.Count > 0) cmbFromDepartmentDI.SelectedIndex = 0;
-                else cmbFromDepartmentDI.SelectedItem = null;
+                else cmbFromDepartmentDI.SelectedItem = null; // Or Set to null if no items
             }
 
+            // Clear Parent Batch Info
             if (txtParentBatchNoDI != null) txtParentBatchNoDI.Clear();
             if (txtParentBatchSizeValueDI != null) txtParentBatchSizeValueDI.Clear();
             if (cmbParentBatchSizeUnitDI != null && cmbParentBatchSizeUnitDI.Items.Count > 0) cmbParentBatchSizeUnitDI.SelectedIndex = 0;
-            if (cmbParentMfgMonthDI != null && cmbParentMfgMonthDI.Items.Count > 0) cmbParentMfgMonthDI.SelectedIndex = 0;
-            if (cmbParentMfgYearDI != null && cmbParentMfgYearDI.Items.Count > 0) cmbParentMfgYearDI.SelectedIndex = 0;
-            if (cmbParentExpMonthDI != null && cmbParentExpMonthDI.Items.Count > 0) cmbParentExpMonthDI.SelectedIndex = 0;
-            if (cmbParentExpYearDI != null && cmbParentExpYearDI.Items.Count > 0) cmbParentExpYearDI.SelectedIndex = 0;
+            if (cmbParentMfgMonthDI != null && cmbParentMfgMonthDI.Items.Count > 0) cmbParentMfgMonthDI.SelectedIndex = 0; // Select ""
+            if (cmbParentMfgYearDI != null && cmbParentMfgYearDI.Items.Count > 0) cmbParentMfgYearDI.SelectedIndex = 0;   // Select ""
+            if (cmbParentExpMonthDI != null && cmbParentExpMonthDI.Items.Count > 0) cmbParentExpMonthDI.SelectedIndex = 0; // Select ""
+            if (cmbParentExpYearDI != null && cmbParentExpYearDI.Items.Count > 0) cmbParentExpYearDI.SelectedIndex = 0;   // Select ""
 
+            // Clear Item/Product Details
             if (txtProductDI != null) txtProductDI.Clear();
             if (txtBatchNoDI != null) txtBatchNoDI.Clear();
             if (txtItemBatchSizeValueDI != null) txtItemBatchSizeValueDI.Clear();
             if (cmbItemBatchSizeUnitDI != null && cmbItemBatchSizeUnitDI.Items.Count > 0) cmbItemBatchSizeUnitDI.SelectedIndex = 0;
-            if (cmbItemMfgMonthDI != null && cmbItemMfgMonthDI.Items.Count > 0) cmbItemMfgMonthDI.SelectedIndex = 0;
-            if (cmbItemMfgYearDI != null && cmbItemMfgYearDI.Items.Count > 0) cmbItemMfgYearDI.SelectedIndex = 0;
-            if (cmbItemExpMonthDI != null && cmbItemExpMonthDI.Items.Count > 0) cmbItemExpMonthDI.SelectedIndex = 0;
-            if (cmbItemExpYearDI != null && cmbItemExpYearDI.Items.Count > 0) cmbItemExpYearDI.SelectedIndex = 0;
+            if (cmbItemMfgMonthDI != null && cmbItemMfgMonthDI.Items.Count > 0) cmbItemMfgMonthDI.SelectedIndex = 0; // Select ""
+            if (cmbItemMfgYearDI != null && cmbItemMfgYearDI.Items.Count > 0) cmbItemMfgYearDI.SelectedIndex = 0;   // Select ""
+            if (cmbItemExpMonthDI != null && cmbItemExpMonthDI.Items.Count > 0) cmbItemExpMonthDI.SelectedIndex = 0; // Select ""
+            if (cmbItemExpYearDI != null && cmbItemExpYearDI.Items.Count > 0) cmbItemExpYearDI.SelectedIndex = 0;   // Select ""
 
             if (txtMarketDI != null) txtMarketDI.Clear();
             if (txtPackSizeDI != null) txtPackSizeDI.Clear();
@@ -714,14 +757,16 @@ namespace DocumentIssuanceApp
         {
             if (dgvGmQueue != null)
             {
-                dgvGmQueue.AutoGenerateColumns = false;
+                dgvGmQueue.AutoGenerateColumns = false; // We define columns manually
+                // Ensure DataPropertyName matches the properties of the objects in your data source
                 if (dgvGmQueue.Columns["colGmRequestNo"] != null) dgvGmQueue.Columns["colGmRequestNo"].DataPropertyName = "RequestNo";
                 if (dgvGmQueue.Columns["colGmRequestDate"] != null) dgvGmQueue.Columns["colGmRequestDate"].DataPropertyName = "RequestDate";
                 if (dgvGmQueue.Columns["colGmProduct"] != null) dgvGmQueue.Columns["colGmProduct"].DataPropertyName = "Product";
+                // colGmDocTypes now displays actual document numbers (comma-separated)
                 if (dgvGmQueue.Columns["colGmDocTypes"] != null)
                 {
                     dgvGmQueue.Columns["colGmDocTypes"].DataPropertyName = "DocumentNo";
-                    dgvGmQueue.Columns["colGmDocTypes"].HeaderText = "Document No(s).";
+                    dgvGmQueue.Columns["colGmDocTypes"].HeaderText = "Document No(s)."; // As per designer
                 }
                 if (dgvGmQueue.Columns["colGmPreparedBy"] != null) dgvGmQueue.Columns["colGmPreparedBy"].DataPropertyName = "PreparedBy";
                 if (dgvGmQueue.Columns["colGmRequestedAt"] != null) dgvGmQueue.Columns["colGmRequestedAt"].DataPropertyName = "RequestedAt";
@@ -740,6 +785,9 @@ namespace DocumentIssuanceApp
 
         private void LoadGmPendingQueue()
         {
+            // In a real app, this would fetch data from the database
+            // For simulation, we use placeholder data.
+            // The objects should have a "DocumentNo" property holding comma-separated strings.
             if (dgvGmQueue == null) return;
 
             var placeholderData = new List<object>
@@ -753,7 +801,7 @@ namespace DocumentIssuanceApp
             dgvGmQueue.DataSource = placeholderData;
 
             if (lblGmQueueTitle != null) lblGmQueueTitle.Text = $"Pending GM Approval Queue ({dgvGmQueue.Rows.Count})";
-            ClearGmSelectedRequestDetails();
+            ClearGmSelectedRequestDetails(); // Clear details when list reloads
             if (txtGmComment != null) txtGmComment.Clear();
         }
 
@@ -778,21 +826,30 @@ namespace DocumentIssuanceApp
                 return;
             }
 
-            string docNoColumnNameInGrid = "colGmDocTypes";
+            string docNoColumnNameInGridData = "DocumentNo";
 
-            Func<string, string> GetValue = (colName) => selectedRow.Cells[colName]?.Value?.ToString() ?? "";
-            Func<string, string, string> GetDateValue = (colName, format) =>
-                selectedRow.Cells[colName]?.Value != null && selectedRow.Cells[colName].Value is DateTime dt ?
-                dt.ToString(format) : (selectedRow.Cells[colName]?.Value?.ToString() ?? "");
+            Func<string, string> GetValueFromCellByBoundName = (boundPropertyName) =>
+            {
+                var cell = selectedRow.Cells.Cast<DataGridViewCell>().FirstOrDefault(c => c.OwningColumn.DataPropertyName == boundPropertyName);
+                return cell?.Value?.ToString() ?? "";
+            };
+            Func<string, string, string> GetDateValueFromCellByBoundName = (boundPropertyName, format) =>
+            {
+                var cell = selectedRow.Cells.Cast<DataGridViewCell>().FirstOrDefault(c => c.OwningColumn.DataPropertyName == boundPropertyName);
+                return cell?.Value != null && cell.Value is DateTime dt ? dt.ToString(format, CultureInfo.InvariantCulture) : (cell?.Value?.ToString() ?? "");
+            };
 
-            if (txtGmDetailRequestNo != null) txtGmDetailRequestNo.Text = GetValue("colGmRequestNo");
-            if (txtGmDetailRequestDate != null) txtGmDetailRequestDate.Text = GetDateValue("colGmRequestDate", "dd-MMM-yyyy");
-            if (txtGmDetailProduct != null) txtGmDetailProduct.Text = GetValue("colGmProduct");
-            if (txtGmDetailDocTypes != null) txtGmDetailDocTypes.Text = GetValue(docNoColumnNameInGrid);
-            if (txtGmDetailPreparedBy != null) txtGmDetailPreparedBy.Text = GetValue("colGmPreparedBy");
-            if (txtGmDetailRequestedAt != null) txtGmDetailRequestedAt.Text = GetDateValue("colGmRequestedAt", "dd-MMM-yyyy HH:mm");
-            // Populate other details based on the selected request (simulated for now)
-            var requestNo = GetValue("colGmRequestNo");
+
+            if (txtGmDetailRequestNo != null) txtGmDetailRequestNo.Text = GetValueFromCellByBoundName("RequestNo");
+            if (txtGmDetailRequestDate != null) txtGmDetailRequestDate.Text = GetDateValueFromCellByBoundName("RequestDate", "dd-MMM-yyyy");
+            if (txtGmDetailProduct != null) txtGmDetailProduct.Text = GetValueFromCellByBoundName("Product");
+            if (txtGmDetailDocTypes != null) txtGmDetailDocTypes.Text = GetValueFromCellByBoundName(docNoColumnNameInGridData);
+            if (txtGmDetailPreparedBy != null) txtGmDetailPreparedBy.Text = GetValueFromCellByBoundName("PreparedBy");
+            if (txtGmDetailRequestedAt != null) txtGmDetailRequestedAt.Text = GetDateValueFromCellByBoundName("RequestedAt", "dd-MMM-yyyy HH:mm");
+
+            // Simulated detailed data based on RequestNo (replace with actual DB query if needed)
+            // Note: MfgDate and ExpDate are now MMM/yyyy strings
+            var requestNo = GetValueFromCellByBoundName("RequestNo");
             if (requestNo == "REQ-20240101-001")
             {
                 if (txtGmDetailFromDept != null) txtGmDetailFromDept.Text = "Production Department";
@@ -815,11 +872,10 @@ namespace DocumentIssuanceApp
             }
             else
             {
-                // Default simulated data for other selections
                 if (txtGmDetailFromDept != null) txtGmDetailFromDept.Text = "Production Department (Simulated)";
                 if (txtGmDetailBatchNo != null) txtGmDetailBatchNo.Text = $"B{DateTime.Now.Millisecond:D3}";
-                if (txtGmDetailMfgDate != null) txtGmDetailMfgDate.Text = DateTime.Now.AddMonths(-1).ToString("MMM/yyyy");
-                if (txtGmDetailExpDate != null) txtGmDetailExpDate.Text = DateTime.Now.AddYears(1).ToString("MMM/yyyy");
+                if (txtGmDetailMfgDate != null) txtGmDetailMfgDate.Text = DateTime.Now.AddMonths(-1).ToString("MMM/yyyy", CultureInfo.InvariantCulture);
+                if (txtGmDetailExpDate != null) txtGmDetailExpDate.Text = DateTime.Now.AddYears(1).ToString("MMM/yyyy", CultureInfo.InvariantCulture);
                 if (txtGmDetailMarket != null) txtGmDetailMarket.Text = "Domestic (Simulated)";
                 if (txtGmDetailPackSize != null) txtGmDetailPackSize.Text = "10x10 (Simulated)";
                 if (txtGmDetailRequesterComments != null) txtGmDetailRequesterComments.Text = "This is a critical request, please expedite. (Simulated Requester Comment)";
@@ -835,7 +891,7 @@ namespace DocumentIssuanceApp
             if (dgvGmQueue != null && dgvGmQueue.SelectedRows.Count > 0)
             {
                 DisplayGmSelectedRequestDetails(dgvGmQueue.SelectedRows[0]);
-                if (txtGmComment != null) txtGmComment.Clear();
+                if (txtGmComment != null) txtGmComment.Clear(); // Clear previous comments
             }
             else
             {
@@ -892,29 +948,35 @@ namespace DocumentIssuanceApp
                 Console.WriteLine("tlpQaRequestDetails is null, cannot set row styles.");
                 return;
             }
-            if (this.tlpQaRequestDetails.RowCount != 9)
+            if (this.tlpQaRequestDetails.RowCount < 9)
             {
-                Console.WriteLine($"tlpQaRequestDetails.RowCount is {this.tlpQaRequestDetails.RowCount}, expected 9. Row styles might not apply correctly.");
+                Console.WriteLine($"tlpQaRequestDetails.RowCount is {this.tlpQaRequestDetails.RowCount}, which is less than 9. Row styles might not apply correctly for all specified indices.");
             }
 
-            this.tlpQaRequestDetails.RowStyles.Clear(); // Ensure clearing existing if any
+            this.tlpQaRequestDetails.RowStyles.Clear();
 
-            float standardRowHeight = 28F; // Example standard height
-            float specialRowHeight = 50F;  // Example height for multi-line textboxes
+            float standardRowHeight = 28F;
+            float specialRowHeight = 50F;
 
-            // Row 0 to 5 (standard)
-            for (int i = 0; i < 6; i++)
+            for (int i = 0; i < 9; i++)
             {
-                this.tlpQaRequestDetails.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, standardRowHeight));
+                if (this.tlpQaRequestDetails.RowStyles.Count <= i)
+                {
+                    if (i == 6 || i == 7)
+                        this.tlpQaRequestDetails.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, specialRowHeight));
+                    else
+                        this.tlpQaRequestDetails.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, standardRowHeight));
+                }
+                else
+                {
+                    if (i == 6 || i == 7)
+                        this.tlpQaRequestDetails.RowStyles[i] = new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, specialRowHeight);
+                    else
+                        this.tlpQaRequestDetails.RowStyles[i] = new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, standardRowHeight);
+                }
             }
-            // Row 6 (Requester Comments - special)
-            this.tlpQaRequestDetails.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, specialRowHeight));
-            // Row 7 (GM Comments - special)
-            this.tlpQaRequestDetails.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, specialRowHeight));
-            // Row 8 (GM Action Time - standard)
-            this.tlpQaRequestDetails.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, standardRowHeight));
-
         }
+
 
         private void InitializeQaTab()
         {
@@ -954,7 +1016,6 @@ namespace DocumentIssuanceApp
         private void LoadQaPendingQueue()
         {
             if (dgvQaQueue == null) return;
-
             var placeholderQaData = new List<object>
             {
                 new { RequestNo = "REQ-20240101-001", RequestDate = DateTime.Now.AddDays(-5), Product = "Product A (Pharma)", DocumentNo = "BMR-001,APP-001A", PreparedBy = "user.requester", AuthorizedBy = "gm.user", GmActionAt = DateTime.Now.AddDays(-2).AddHours(1) },
@@ -991,23 +1052,28 @@ namespace DocumentIssuanceApp
                 return;
             }
 
-            string docNoColumnNameInGrid = "colQaDocTypes";
+            string docNoColumnNameInGridData = "DocumentNo";
 
-            Func<string, string> GetValue = (colName) => selectedRow.Cells[colName]?.Value?.ToString() ?? "";
-            Func<string, string, string> GetDateValue = (colName, format) =>
-                selectedRow.Cells[colName]?.Value != null && selectedRow.Cells[colName].Value is DateTime dt ?
-                dt.ToString(format) : (selectedRow.Cells[colName]?.Value?.ToString() ?? "");
+            Func<string, string> GetValueFromCellByBoundName = (boundPropertyName) =>
+            {
+                var cell = selectedRow.Cells.Cast<DataGridViewCell>().FirstOrDefault(c => c.OwningColumn.DataPropertyName == boundPropertyName);
+                return cell?.Value?.ToString() ?? "";
+            };
+            Func<string, string, string> GetDateValueFromCellByBoundName = (boundPropertyName, format) =>
+            {
+                var cell = selectedRow.Cells.Cast<DataGridViewCell>().FirstOrDefault(c => c.OwningColumn.DataPropertyName == boundPropertyName);
+                return cell?.Value != null && cell.Value is DateTime dt ? dt.ToString(format, CultureInfo.InvariantCulture) : (cell?.Value?.ToString() ?? "");
+            };
 
-            if (txtQaDetailRequestNo != null) txtQaDetailRequestNo.Text = GetValue("colQaRequestNo");
-            if (txtQaDetailRequestDate != null) txtQaDetailRequestDate.Text = GetDateValue("colQaRequestDate", "dd-MMM-yyyy");
-            if (txtQaDetailProduct != null) txtQaDetailProduct.Text = GetValue("colQaProduct");
-            if (txtQaDetailDocTypes != null) txtQaDetailDocTypes.Text = GetValue(docNoColumnNameInGrid);
-            if (txtQaDetailPreparedBy != null) txtQaDetailPreparedBy.Text = GetValue("colQaPreparedBy");
-            // GM User for QA details (assuming colQaAuthorizedBy has GM's name)
-            // txtQaDetailAuthorizedByGM.Text = GetValue("colQaAuthorizedBy"); // Need a new TextBox if separate display for GM who authorized
-            if (txtQaDetailGmActionTime != null) txtQaDetailGmActionTime.Text = GetDateValue("colQaGmActionAt", "dd-MMM-yyyy HH:mm");
-            // Simulated data for other fields - you might want to fetch this from a related data source in a real app
-            var requestNo = GetValue("colQaRequestNo");
+
+            if (txtQaDetailRequestNo != null) txtQaDetailRequestNo.Text = GetValueFromCellByBoundName("RequestNo");
+            if (txtQaDetailRequestDate != null) txtQaDetailRequestDate.Text = GetDateValueFromCellByBoundName("RequestDate", "dd-MMM-yyyy");
+            if (txtQaDetailProduct != null) txtQaDetailProduct.Text = GetValueFromCellByBoundName("Product");
+            if (txtQaDetailDocTypes != null) txtQaDetailDocTypes.Text = GetValueFromCellByBoundName(docNoColumnNameInGridData);
+            if (txtQaDetailPreparedBy != null) txtQaDetailPreparedBy.Text = GetValueFromCellByBoundName("PreparedBy");
+            if (txtQaDetailGmActionTime != null) txtQaDetailGmActionTime.Text = GetDateValueFromCellByBoundName("GmActionAt", "dd-MMM-yyyy HH:mm");
+
+            var requestNo = GetValueFromCellByBoundName("RequestNo");
             if (requestNo == "REQ-20240101-001")
             {
                 if (txtQaDetailFromDept != null) txtQaDetailFromDept.Text = "Production";
@@ -1023,8 +1089,8 @@ namespace DocumentIssuanceApp
             {
                 if (txtQaDetailFromDept != null) txtQaDetailFromDept.Text = "Packaging (Simulated)";
                 if (txtQaDetailBatchNo != null) txtQaDetailBatchNo.Text = $"B-QA{DateTime.Now.Millisecond % 100:D2}";
-                if (txtQaDetailMfgDate != null) txtQaDetailMfgDate.Text = DateTime.Now.AddDays(-45).ToString("MMM/yyyy");
-                if (txtQaDetailExpDate != null) txtQaDetailExpDate.Text = DateTime.Now.AddYears(1).AddMonths(6).ToString("MMM/yyyy");
+                if (txtQaDetailMfgDate != null) txtQaDetailMfgDate.Text = DateTime.Now.AddDays(-45).ToString("MMM/yyyy", CultureInfo.InvariantCulture);
+                if (txtQaDetailExpDate != null) txtQaDetailExpDate.Text = DateTime.Now.AddYears(1).AddMonths(6).ToString("MMM/yyyy", CultureInfo.InvariantCulture);
                 if (txtQaDetailMarket != null) txtQaDetailMarket.Text = "Export - US (Simulated)";
                 if (txtQaDetailPackSize != null) txtQaDetailPackSize.Text = "100 Count Bottle (Simulated)";
                 if (txtQaDetailRequesterComments != null) txtQaDetailRequesterComments.Text = "Follow up on previous comments.";
@@ -1113,7 +1179,7 @@ namespace DocumentIssuanceApp
                 });
                 if (cmbAuditStatus.Items.Count > 0) cmbAuditStatus.SelectedIndex = 0;
             }
-            if (dtpAuditFrom != null) dtpAuditFrom.Value = DateTime.Now.Date.AddDays(-30); // Wider default range
+            if (dtpAuditFrom != null) dtpAuditFrom.Value = DateTime.Now.Date.AddDays(-30);
             if (dtpAuditTo != null) dtpAuditTo.Value = DateTime.Now.Date;
 
             if (dgvAuditTrail != null)
@@ -1140,19 +1206,19 @@ namespace DocumentIssuanceApp
         private void DgvAuditTrail_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
             Console.WriteLine($"DataGridView DataError: Row {e.RowIndex}, Column {e.ColumnIndex} ('{dgvAuditTrail.Columns[e.ColumnIndex].Name}'). Exception: {e.Exception.Message}");
-            // Suppress the default error dialog if desired, or log more gracefully.
-            // e.Cancel = true; // If you want to suppress the default DataGridView error dialog
             MessageBox.Show($"Error displaying data in the audit trail at row {e.RowIndex + 1}, column '{dgvAuditTrail.Columns[e.ColumnIndex].HeaderText}'.\nDetails: {e.Exception.Message}", "Data Display Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
+
 
         private void SetupAuditTrailColumns()
         {
             if (dgvAuditTrail == null) return;
             dgvAuditTrail.Columns.Clear();
 
-            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditRequestNo", HeaderText = "Request No.", DataPropertyName = "RequestNo", Width = 120, Frozen = true });
-            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditRequestDate", HeaderText = "Request Date", DataPropertyName = "RequestDate", DefaultCellStyle = new DataGridViewCellStyle { Format = "dd-MMM-yyyy" }, Width = 100 });
+            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditRequestNo", HeaderText = "Request No.", DataPropertyName = "RequestNo", Width = 120, DefaultCellStyle = new DataGridViewCellStyle { WrapMode = DataGridViewTriState.True }, Frozen = true });
+            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditRequestDate", HeaderText = "Request Date", DataPropertyName = "RequestDate", DefaultCellStyle = new DataGridViewCellStyle { Format = "dd-MMM-yyyy" }, Width = 100, });
             dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditProduct", HeaderText = "Product", DataPropertyName = "Product", Width = 150 });
+            // Updated column for Document Numbers. Assumes AuditTrailEntry has a "DocumentNumbers" property.
             dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditDocumentNumbers", HeaderText = "Document No(s).", DataPropertyName = "DocumentNumbers", Width = 180, DefaultCellStyle = new DataGridViewCellStyle { WrapMode = DataGridViewTriState.True } });
             dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditStatusDerived", HeaderText = "Status", DataPropertyName = "DerivedStatus", Width = 150 });
             dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditPreparedBy", HeaderText = "Prepared By", DataPropertyName = "PreparedBy", Width = 120 });
@@ -1177,15 +1243,13 @@ namespace DocumentIssuanceApp
             string requestNoFilter = txtAuditRequestNo?.Text.Trim() ?? "";
             string productFilter = txtAuditProduct?.Text.Trim() ?? "";
 
+            // AuditTrailEntry class needs a "DocumentNumbers" property.
             var allPlaceholderAuditData = new List<AuditTrailEntry>
             {
                 new AuditTrailEntry { RequestNo = "REQ-20240101-001", RequestDate = DateTime.Now.AddDays(-10), Product = "Product A (Pharma)", DocumentNumbers = "BMR-001,APP-001A", DerivedStatus = "Approved (Issued)", PreparedBy = "user.requester", RequestedAt = DateTime.Now.AddDays(-10).AddHours(1), GmOperationsAction = "Authorized", AuthorizedBy = "gm.user", GmOperationsAt = DateTime.Now.AddDays(-9), GmOperationsComment = "Looks good. Standard procedure.", QAAction = "Approved", ApprovedBy = "qa.lead", QAAt = DateTime.Now.AddDays(-8), QAComment = "Verified and issued. All checks passed." },
                 new AuditTrailEntry { RequestNo = "REQ-20240102-002", RequestDate = DateTime.Now.AddDays(-5), Product = "Product B (Vaccine)", DocumentNumbers = "BPR-002", DerivedStatus = "Rejected by GM", PreparedBy = "another.requester", RequestedAt = DateTime.Now.AddDays(-5).AddHours(2), GmOperationsAction = "Rejected", AuthorizedBy = "gm.head", GmOperationsAt = DateTime.Now.AddDays(-4), GmOperationsComment = "Business case not valid for this quarter. Re-evaluate next cycle." },
                 new AuditTrailEntry { RequestNo = "REQ-20240104-004", RequestDate = DateTime.Now.AddDays(-2), Product = "Product D (Syrup)", DocumentNumbers = "BPR-004,ADD-004Y,APP-004S", DerivedStatus = "Pending QA Approval", PreparedBy = "another.user", RequestedAt = DateTime.Now.AddDays(-2).AddHours(1), GmOperationsAction = "Authorized", AuthorizedBy = "gm.user", GmOperationsAt = DateTime.Now.AddDays(-1), GmOperationsComment = "Approved by GM. Ensure all addendums are cross-checked by QA." },
                 new AuditTrailEntry { RequestNo = "REQ-20240115-005", RequestDate = DateTime.Now.AddDays(-1), Product = "Product E (Injectable)", DocumentNumbers = "BMR-E05", DerivedStatus = "Pending GM Approval", PreparedBy = "new.user", RequestedAt = DateTime.Now.AddDays(-1).AddHours(3) },
-                new AuditTrailEntry { RequestNo = "REQ-20231220-090", RequestDate = DateTime.Now.AddDays(-25), Product = "Product Z (Old Batch)", DocumentNumbers = "BMR-Z090,BPR-Z090", DerivedStatus = "Approved (Issued)", PreparedBy = "legacy.user", RequestedAt = DateTime.Now.AddDays(-25).AddHours(1), GmOperationsAction = "Authorized", AuthorizedBy = "gm.user", GmOperationsAt = DateTime.Now.AddDays(-24), GmOperationsComment = "Routine approval.", QAAction = "Approved", ApprovedBy = "qa.user", QAAt = DateTime.Now.AddDays(-23), QAComment = "Issued." },
-                new AuditTrailEntry { RequestNo = "REQ-20240106-007", RequestDate = DateTime.Now.AddDays(-9), Product = "Product F (Capsule)", DocumentNumbers = "BMR-F007,BPR-F007", DerivedStatus = "Rejected by QA", PreparedBy = "test.user", RequestedAt = DateTime.Now.AddDays(-9).AddHours(2), GmOperationsAction = "Authorized", AuthorizedBy = "another.gm", GmOperationsAt = DateTime.Now.AddDays(-8).AddHours(1), GmOperationsComment = "GM authorized.", QAAction="Rejected", ApprovedBy="qa.lead", QAAt=DateTime.Now.AddDays(-7), QAComment="Discrepancy found in section 3.2 of BPR. Needs correction." },
-                new AuditTrailEntry { RequestNo = "REQ-20240107-008", RequestDate = DateTime.Now.AddDays(-1), Product = "Product G (Cream)", DocumentNumbers = "BMR-G008", DerivedStatus = "Pending QA Approval", PreparedBy = "user.requester", RequestedAt = DateTime.Now.AddDays(-1).AddHours(6), GmOperationsAction="Authorized", AuthorizedBy="gm.user", GmOperationsAt=DateTime.Now.AddHours(-5), GmOperationsComment="Urgent request, approved." }
             };
 
             IEnumerable<AuditTrailEntry> filteredData = allPlaceholderAuditData;
@@ -1284,7 +1348,7 @@ namespace DocumentIssuanceApp
                 dgvUserRoles.MultiSelect = false;
                 dgvUserRoles.AllowUserToAddRows = false;
                 dgvUserRoles.AllowUserToDeleteRows = false;
-                dgvUserRoles.ReadOnly = true; // Grid itself is read-only, editing happens in dedicated fields
+                dgvUserRoles.ReadOnly = true;
 
                 if (dgvUserRoles.Columns["colUserRoleId"] != null) dgvUserRoles.Columns["colUserRoleId"].DataPropertyName = "RoleID";
                 if (dgvUserRoles.Columns["colUserRoleName"] != null) dgvUserRoles.Columns["colUserRoleName"].DataPropertyName = "RoleName";
@@ -1301,15 +1365,14 @@ namespace DocumentIssuanceApp
             if (txtRoleNameManage != null)
             {
                 txtRoleNameManage.Clear();
-                txtRoleNameManage.ReadOnly = true; // Ensure it's read-only initially
+                txtRoleNameManage.ReadOnly = true;
             }
 
-            // Initial button states for "None" mode
             if (btnAddRole != null) btnAddRole.Enabled = true;
             if (btnEditRole != null) btnEditRole.Enabled = false;
             if (btnDeleteRole != null) btnDeleteRole.Enabled = false;
 
-            _currentUsersTabMode = UserManagementMode.None; // Explicitly set mode
+            _currentUsersTabMode = UserManagementMode.None;
         }
 
         private void LoadUserRoles()
@@ -1328,8 +1391,6 @@ namespace DocumentIssuanceApp
 
             this.userRolesBindingSource.DataSource = null;
             this.userRolesBindingSource.DataSource = placeholderRoles;
-
-            // Reset the mode and UI elements after loading/reloading data
             ResetUserManagementToNoneMode();
         }
 
@@ -1337,8 +1398,6 @@ namespace DocumentIssuanceApp
         {
             if (_currentUsersTabMode != UserManagementMode.None)
             {
-                // If in Add/Edit mode, primary button enablement is handled by mode switching logic,
-                // and text box content is managed separately.
                 return;
             }
 
@@ -1355,10 +1414,8 @@ namespace DocumentIssuanceApp
                 txtRoleNameManage.Text = selectedUserRole?.RoleName ?? "";
             }
 
-            // Enable/disable Edit and Delete buttons based on selection in "None" mode
             if (btnEditRole != null) btnEditRole.Enabled = roleSelected;
             if (btnDeleteRole != null) btnDeleteRole.Enabled = roleSelected;
-            // btnAddRole is always enabled in "None" mode (or handled by ResetUserManagementToNoneMode)
         }
 
         private void ResetUserManagementToNoneMode()
@@ -1379,15 +1436,12 @@ namespace DocumentIssuanceApp
             if (btnEditRole != null)
             {
                 btnEditRole.Text = "Edit Role";
-                // Enablement handled by DgvUserRoles_SelectionChanged
             }
 
             if (dgvUserRoles != null)
             {
                 dgvUserRoles.Enabled = true;
             }
-
-            // Refresh text box and button states based on current grid selection
             DgvUserRoles_SelectionChanged(null, null);
         }
 
@@ -1407,7 +1461,7 @@ namespace DocumentIssuanceApp
         {
             switch (_currentUsersTabMode)
             {
-                case UserManagementMode.None: // User clicked "Add Role"
+                case UserManagementMode.None:
                     _currentUsersTabMode = UserManagementMode.Adding;
                     _roleBeingEdited = null;
 
@@ -1432,7 +1486,7 @@ namespace DocumentIssuanceApp
                     txtRoleNameManage?.Focus();
                     break;
 
-                case UserManagementMode.Adding: // User clicked "Save New"
+                case UserManagementMode.Adding:
                     string newRoleName = txtRoleNameManage.Text.Trim();
                     if (string.IsNullOrWhiteSpace(newRoleName))
                     {
@@ -1472,8 +1526,20 @@ namespace DocumentIssuanceApp
                     ResetUserManagementToNoneMode();
                     break;
 
-                case UserManagementMode.Editing: // User clicked "Cancel Edit" (btnAddRole was repurposed)
+                case UserManagementMode.Editing:
                     ResetUserManagementToNoneMode();
+                    if (_roleBeingEdited != null && dgvUserRoles != null)
+                    {
+                        foreach (DataGridViewRow row in dgvUserRoles.Rows)
+                        {
+                            if (row.DataBoundItem is UserRole item && item.RoleID == _roleBeingEdited.RoleID)
+                            {
+                                row.Selected = true;
+                                dgvUserRoles.CurrentCell = row.Cells.Cast<DataGridViewCell>().FirstOrDefault(c => c.Visible);
+                                break;
+                            }
+                        }
+                    }
                     break;
             }
         }
@@ -1482,7 +1548,7 @@ namespace DocumentIssuanceApp
         {
             switch (_currentUsersTabMode)
             {
-                case UserManagementMode.None: // User clicked "Edit Role"
+                case UserManagementMode.None:
                     if (dgvUserRoles.SelectedRows.Count == 0)
                     {
                         MessageBox.Show("Please select a role from the list to edit.", "No Role Selected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -1515,7 +1581,7 @@ namespace DocumentIssuanceApp
                     txtRoleNameManage?.SelectAll();
                     break;
 
-                case UserManagementMode.Editing: // User clicked "Save Changes"
+                case UserManagementMode.Editing:
                     if (_roleBeingEdited == null)
                     {
                         MessageBox.Show("No role selected for editing.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -1541,18 +1607,21 @@ namespace DocumentIssuanceApp
                     MessageBox.Show($"Role '{updatedRoleName}' updated successfully (Simulated).", "Role Updated", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                     int rowIndexToSelect = -1;
-                    for (int i = 0; i < dgvUserRoles.Rows.Count; i++)
+                    if (dgvUserRoles != null)
                     {
-                        if (dgvUserRoles.Rows[i].DataBoundItem is UserRole item && item.RoleID == _roleBeingEdited.RoleID)
+                        for (int i = 0; i < dgvUserRoles.Rows.Count; i++)
                         {
-                            rowIndexToSelect = i;
-                            break;
+                            if (dgvUserRoles.Rows[i].DataBoundItem is UserRole item && item.RoleID == _roleBeingEdited.RoleID)
+                            {
+                                rowIndexToSelect = i;
+                                break;
+                            }
                         }
                     }
 
                     ResetUserManagementToNoneMode();
 
-                    if (rowIndexToSelect != -1 && dgvUserRoles.Rows.Count > rowIndexToSelect)
+                    if (rowIndexToSelect != -1 && dgvUserRoles != null && dgvUserRoles.Rows.Count > rowIndexToSelect)
                     {
                         dgvUserRoles.ClearSelection();
                         dgvUserRoles.Rows[rowIndexToSelect].Selected = true;
@@ -1560,7 +1629,7 @@ namespace DocumentIssuanceApp
                     }
                     break;
 
-                case UserManagementMode.Adding: // User clicked "Cancel Add" (btnEditRole was repurposed)
+                case UserManagementMode.Adding:
                     ResetUserManagementToNoneMode();
                     break;
             }
@@ -1568,7 +1637,7 @@ namespace DocumentIssuanceApp
 
         private void BtnDeleteRole_Click(object sender, EventArgs e)
         {
-            if (_currentUsersTabMode != UserManagementMode.None) return; // Do not allow delete during add/edit
+            if (_currentUsersTabMode != UserManagementMode.None) return;
 
             if (dgvUserRoles == null || dgvUserRoles.SelectedRows.Count == 0)
             {
@@ -1582,25 +1651,23 @@ namespace DocumentIssuanceApp
             {
                 if (selectedUserRole != null)
                 {
-                    // Simulate deletion from data source
                     var rolesListDelete = this.userRolesBindingSource.DataSource as List<UserRole>;
                     if (rolesListDelete != null)
                     {
                         rolesListDelete.Remove(selectedUserRole);
                         this.userRolesBindingSource.ResetBindings(false);
                         MessageBox.Show($"Role {roleNameToDelete} (ID: {selectedUserRole.RoleID}) deleted (Simulated).", "Role Deleted", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        // LoadUserRoles(); // Or just ResetBindings if data source is directly manipulated.
-                        // ResetUserManagementToNoneMode() will be called by LoadUserRoles or after ResetBindings
-                        DgvUserRoles_SelectionChanged(null, null); // Update selection and button states
+                        DgvUserRoles_SelectionChanged(null, null);
                     }
                 }
                 else
                 {
                     MessageBox.Show("Could not delete role: selected role data is unavailable.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
+
             }
         }
-
         #endregion Users Tab Logic
     }
+
 }

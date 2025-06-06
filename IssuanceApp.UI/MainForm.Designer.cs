@@ -33,7 +33,7 @@ namespace DocumentIssuanceApp
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
             this.tabControlMain = new System.Windows.Forms.TabControl();
             this.tabPageLogin = new System.Windows.Forms.TabPage();
             this.panelLoginContainer = new System.Windows.Forms.Panel();
@@ -62,10 +62,11 @@ namespace DocumentIssuanceApp
             this.txtAddendumDocNoDI = new System.Windows.Forms.TextBox();
             this.lblBprDocNo = new System.Windows.Forms.Label();
             this.pnlTopRightDI = new System.Windows.Forms.Panel();
-            this.txtRequestNoValueDI = new System.Windows.Forms.TextBox();
-            this.lblRequestNoLabelDI = new System.Windows.Forms.Label();
-            this.lblTrackerNoValueDI = new System.Windows.Forms.Label();
+            this.tlpTopRightDetailsDI = new System.Windows.Forms.TableLayoutPanel();
             this.lblTrackerNoLabelDI = new System.Windows.Forms.Label();
+            this.lblTrackerNoValueDI = new System.Windows.Forms.Label();
+            this.lblRequestNoLabelDI = new System.Windows.Forms.Label();
+            this.txtRequestNoValueDI = new System.Windows.Forms.TextBox();
             this.pnlRequestDetailsDI = new System.Windows.Forms.Panel();
             this.tlpRequestDetails = new System.Windows.Forms.TableLayoutPanel();
             this.lblRequestDateDI = new System.Windows.Forms.Label();
@@ -115,8 +116,9 @@ namespace DocumentIssuanceApp
             this.grpRemarksDI = new System.Windows.Forms.GroupBox();
             this.txtRemarksDI = new System.Windows.Forms.TextBox();
             this.pnlActionBottomDI = new System.Windows.Forms.Panel();
-            this.btnClearFormDI = new System.Windows.Forms.Button();
+            this.flpActionButtonsDI = new System.Windows.Forms.FlowLayoutPanel();
             this.btnSubmitRequestDI = new System.Windows.Forms.Button();
+            this.btnClearFormDI = new System.Windows.Forms.Button();
             this.pnlStatusDI = new System.Windows.Forms.Panel();
             this.lblStatusValueDI = new System.Windows.Forms.Label();
             this.lblStatusLabelDI = new System.Windows.Forms.Label();
@@ -279,6 +281,7 @@ namespace DocumentIssuanceApp
             this.grpDocTypeDI.SuspendLayout();
             this.tlpDocTypesAndNumbers.SuspendLayout();
             this.pnlTopRightDI.SuspendLayout();
+            this.tlpTopRightDetailsDI.SuspendLayout();
             this.pnlRequestDetailsDI.SuspendLayout();
             this.tlpRequestDetails.SuspendLayout();
             this.grpParentBatchInfoDI.SuspendLayout();
@@ -293,6 +296,7 @@ namespace DocumentIssuanceApp
             this.flpItemExpDate.SuspendLayout();
             this.grpRemarksDI.SuspendLayout();
             this.pnlActionBottomDI.SuspendLayout();
+            this.flpActionButtonsDI.SuspendLayout();
             this.pnlStatusDI.SuspendLayout();
             this.tabPageGmOperations.SuspendLayout();
             this.tlpGmOperationsMain.SuspendLayout();
@@ -461,6 +465,9 @@ namespace DocumentIssuanceApp
             // 
             // tlpDocumentIssuanceMain
             // 
+            this.tlpDocumentIssuanceMain.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.tlpDocumentIssuanceMain.ColumnCount = 1;
             this.tlpDocumentIssuanceMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tlpDocumentIssuanceMain.Controls.Add(this.lblHeaderDI, 0, 0);
@@ -468,10 +475,9 @@ namespace DocumentIssuanceApp
             this.tlpDocumentIssuanceMain.Controls.Add(this.pnlRequestDetailsDI, 0, 2);
             this.tlpDocumentIssuanceMain.Controls.Add(this.grpParentBatchInfoDI, 0, 3);
             this.tlpDocumentIssuanceMain.Controls.Add(this.grpItemDetailsDI, 0, 4);
-            this.tlpDocumentIssuanceMain.Controls.Add(this.grpRemarksDI, 0, 5);
             this.tlpDocumentIssuanceMain.Controls.Add(this.pnlActionBottomDI, 0, 6);
             this.tlpDocumentIssuanceMain.Controls.Add(this.pnlStatusDI, 0, 7);
-            this.tlpDocumentIssuanceMain.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tlpDocumentIssuanceMain.Controls.Add(this.grpRemarksDI, 0, 5);
             this.tlpDocumentIssuanceMain.Location = new System.Drawing.Point(10, 10);
             this.tlpDocumentIssuanceMain.Name = "tlpDocumentIssuanceMain";
             this.tlpDocumentIssuanceMain.RowCount = 8;
@@ -481,7 +487,7 @@ namespace DocumentIssuanceApp
             this.tlpDocumentIssuanceMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpDocumentIssuanceMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpDocumentIssuanceMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpDocumentIssuanceMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 55F));
+            this.tlpDocumentIssuanceMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 51F));
             this.tlpDocumentIssuanceMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
             this.tlpDocumentIssuanceMain.Size = new System.Drawing.Size(1340, 641);
             this.tlpDocumentIssuanceMain.TabIndex = 0;
@@ -696,56 +702,79 @@ namespace DocumentIssuanceApp
             // 
             // pnlTopRightDI
             // 
-            this.pnlTopRightDI.Controls.Add(this.txtRequestNoValueDI);
-            this.pnlTopRightDI.Controls.Add(this.lblRequestNoLabelDI);
-            this.pnlTopRightDI.Controls.Add(this.lblTrackerNoValueDI);
-            this.pnlTopRightDI.Controls.Add(this.lblTrackerNoLabelDI);
+            this.pnlTopRightDI.Controls.Add(this.tlpTopRightDetailsDI);
             this.pnlTopRightDI.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlTopRightDI.Location = new System.Drawing.Point(936, 3);
             this.pnlTopRightDI.Name = "pnlTopRightDI";
-            this.pnlTopRightDI.Padding = new System.Windows.Forms.Padding(5, 0, 0, 0);
+            this.pnlTopRightDI.Padding = new System.Windows.Forms.Padding(5, 10, 5, 5);
             this.pnlTopRightDI.Size = new System.Drawing.Size(395, 149);
             this.pnlTopRightDI.TabIndex = 1;
             // 
-            // txtRequestNoValueDI
+            // tlpTopRightDetailsDI
             // 
-            this.txtRequestNoValueDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
-            this.txtRequestNoValueDI.Location = new System.Drawing.Point(132, 29);
-            this.txtRequestNoValueDI.Name = "txtRequestNoValueDI";
-            this.txtRequestNoValueDI.ReadOnly = true;
-            this.txtRequestNoValueDI.Size = new System.Drawing.Size(220, 25);
-            this.txtRequestNoValueDI.TabIndex = 3;
-            this.txtRequestNoValueDI.Text = "(placeholder)";
-            // 
-            // lblRequestNoLabelDI
-            // 
-            this.lblRequestNoLabelDI.AutoSize = true;
-            this.lblRequestNoLabelDI.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
-            this.lblRequestNoLabelDI.Location = new System.Drawing.Point(18, 32);
-            this.lblRequestNoLabelDI.Name = "lblRequestNoLabelDI";
-            this.lblRequestNoLabelDI.Size = new System.Drawing.Size(85, 17);
-            this.lblRequestNoLabelDI.TabIndex = 2;
-            this.lblRequestNoLabelDI.Text = "Request No.:";
-            // 
-            // lblTrackerNoValueDI
-            // 
-            this.lblTrackerNoValueDI.AutoSize = true;
-            this.lblTrackerNoValueDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
-            this.lblTrackerNoValueDI.Location = new System.Drawing.Point(128, 5);
-            this.lblTrackerNoValueDI.Name = "lblTrackerNoValueDI";
-            this.lblTrackerNoValueDI.Size = new System.Drawing.Size(52, 17);
-            this.lblTrackerNoValueDI.TabIndex = 1;
-            this.lblTrackerNoValueDI.Text = "(empty)";
+            this.tlpTopRightDetailsDI.ColumnCount = 2;
+            this.tlpTopRightDetailsDI.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tlpTopRightDetailsDI.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tlpTopRightDetailsDI.Controls.Add(this.lblTrackerNoLabelDI, 0, 0);
+            this.tlpTopRightDetailsDI.Controls.Add(this.lblTrackerNoValueDI, 1, 0);
+            this.tlpTopRightDetailsDI.Controls.Add(this.lblRequestNoLabelDI, 0, 1);
+            this.tlpTopRightDetailsDI.Controls.Add(this.txtRequestNoValueDI, 1, 1);
+            this.tlpTopRightDetailsDI.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tlpTopRightDetailsDI.Location = new System.Drawing.Point(5, 10);
+            this.tlpTopRightDetailsDI.Name = "tlpTopRightDetailsDI";
+            this.tlpTopRightDetailsDI.RowCount = 2;
+            this.tlpTopRightDetailsDI.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tlpTopRightDetailsDI.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tlpTopRightDetailsDI.Size = new System.Drawing.Size(385, 134);
+            this.tlpTopRightDetailsDI.TabIndex = 0;
             // 
             // lblTrackerNoLabelDI
             // 
+            this.lblTrackerNoLabelDI.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.lblTrackerNoLabelDI.AutoSize = true;
             this.lblTrackerNoLabelDI.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
-            this.lblTrackerNoLabelDI.Location = new System.Drawing.Point(25, 5);
+            this.lblTrackerNoLabelDI.Location = new System.Drawing.Point(9, 25);
             this.lblTrackerNoLabelDI.Name = "lblTrackerNoLabelDI";
             this.lblTrackerNoLabelDI.Size = new System.Drawing.Size(79, 17);
             this.lblTrackerNoLabelDI.TabIndex = 0;
             this.lblTrackerNoLabelDI.Text = "Tracker No.:";
+            this.lblTrackerNoLabelDI.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lblTrackerNoValueDI
+            // 
+            this.lblTrackerNoValueDI.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblTrackerNoValueDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.lblTrackerNoValueDI.Location = new System.Drawing.Point(94, 25);
+            this.lblTrackerNoValueDI.Margin = new System.Windows.Forms.Padding(3, 0, 10, 0);
+            this.lblTrackerNoValueDI.Name = "lblTrackerNoValueDI";
+            this.lblTrackerNoValueDI.Size = new System.Drawing.Size(281, 17);
+            this.lblTrackerNoValueDI.TabIndex = 1;
+            this.lblTrackerNoValueDI.Text = "(empty)";
+            this.lblTrackerNoValueDI.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // lblRequestNoLabelDI
+            // 
+            this.lblRequestNoLabelDI.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblRequestNoLabelDI.AutoSize = true;
+            this.lblRequestNoLabelDI.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
+            this.lblRequestNoLabelDI.Location = new System.Drawing.Point(3, 92);
+            this.lblRequestNoLabelDI.Name = "lblRequestNoLabelDI";
+            this.lblRequestNoLabelDI.Size = new System.Drawing.Size(85, 17);
+            this.lblRequestNoLabelDI.TabIndex = 2;
+            this.lblRequestNoLabelDI.Text = "Request No.:";
+            this.lblRequestNoLabelDI.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // txtRequestNoValueDI
+            // 
+            this.txtRequestNoValueDI.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtRequestNoValueDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.txtRequestNoValueDI.Location = new System.Drawing.Point(94, 88);
+            this.txtRequestNoValueDI.Margin = new System.Windows.Forms.Padding(3, 3, 10, 3);
+            this.txtRequestNoValueDI.Name = "txtRequestNoValueDI";
+            this.txtRequestNoValueDI.ReadOnly = true;
+            this.txtRequestNoValueDI.Size = new System.Drawing.Size(281, 25);
+            this.txtRequestNoValueDI.TabIndex = 3;
+            this.txtRequestNoValueDI.Text = "(placeholder)";
             // 
             // pnlRequestDetailsDI
             // 
@@ -793,24 +822,27 @@ namespace DocumentIssuanceApp
             // 
             // dtpRequestDateDI
             // 
-            this.dtpRequestDateDI.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.dtpRequestDateDI.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.dtpRequestDateDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
             this.dtpRequestDateDI.Location = new System.Drawing.Point(111, 6);
             this.dtpRequestDateDI.Name = "dtpRequestDateDI";
-            this.dtpRequestDateDI.Size = new System.Drawing.Size(294, 25);
+            this.dtpRequestDateDI.Size = new System.Drawing.Size(172, 25);
             this.dtpRequestDateDI.TabIndex = 1;
             // 
             // lblFromDepartmentDI
             // 
-            this.lblFromDepartmentDI.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblFromDepartmentDI.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.lblFromDepartmentDI.AutoSize = true;
             this.lblFromDepartmentDI.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
-            this.lblFromDepartmentDI.Location = new System.Drawing.Point(941, 10);
+            this.lblFromDepartmentDI.Location = new System.Drawing.Point(941, 3);
             this.lblFromDepartmentDI.Margin = new System.Windows.Forms.Padding(3, 0, 10, 0);
             this.lblFromDepartmentDI.Name = "lblFromDepartmentDI";
-            this.lblFromDepartmentDI.Size = new System.Drawing.Size(120, 17);
+            this.lblFromDepartmentDI.Size = new System.Drawing.Size(120, 31);
             this.lblFromDepartmentDI.TabIndex = 2;
             this.lblFromDepartmentDI.Text = "From Department:";
+            this.lblFromDepartmentDI.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // cmbFromDepartmentDI
             // 
@@ -1299,14 +1331,15 @@ namespace DocumentIssuanceApp
             // 
             // grpRemarksDI
             // 
-            this.grpRemarksDI.AutoSize = true;
+            this.grpRemarksDI.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.grpRemarksDI.Controls.Add(this.txtRemarksDI);
-            this.grpRemarksDI.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.grpRemarksDI.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
+            this.grpRemarksDI.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold);
             this.grpRemarksDI.Location = new System.Drawing.Point(3, 512);
             this.grpRemarksDI.Name = "grpRemarksDI";
             this.grpRemarksDI.Padding = new System.Windows.Forms.Padding(10);
-            this.grpRemarksDI.Size = new System.Drawing.Size(1334, 31);
+            this.grpRemarksDI.Size = new System.Drawing.Size(1334, 35);
             this.grpRemarksDI.TabIndex = 5;
             this.grpRemarksDI.TabStop = false;
             this.grpRemarksDI.Text = "Remarks";
@@ -1314,8 +1347,8 @@ namespace DocumentIssuanceApp
             // txtRemarksDI
             // 
             this.txtRemarksDI.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtRemarksDI.Font = new System.Drawing.Font("Segoe UI", 9.75F);
-            this.txtRemarksDI.Location = new System.Drawing.Point(10, 28);
+            this.txtRemarksDI.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.txtRemarksDI.Location = new System.Drawing.Point(10, 26);
             this.txtRemarksDI.Multiline = true;
             this.txtRemarksDI.Name = "txtRemarksDI";
             this.txtRemarksDI.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
@@ -1324,33 +1357,47 @@ namespace DocumentIssuanceApp
             // 
             // pnlActionBottomDI
             // 
-            this.pnlActionBottomDI.Controls.Add(this.btnClearFormDI);
-            this.pnlActionBottomDI.Controls.Add(this.btnSubmitRequestDI);
-            this.pnlActionBottomDI.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlActionBottomDI.Location = new System.Drawing.Point(3, 549);
+            this.pnlActionBottomDI.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.pnlActionBottomDI.Controls.Add(this.flpActionButtonsDI);
+            this.pnlActionBottomDI.Location = new System.Drawing.Point(3, 553);
             this.pnlActionBottomDI.Name = "pnlActionBottomDI";
-            this.pnlActionBottomDI.Size = new System.Drawing.Size(1334, 49);
+            this.pnlActionBottomDI.Size = new System.Drawing.Size(1334, 45);
             this.pnlActionBottomDI.TabIndex = 6;
             // 
-            // btnClearFormDI
+            // flpActionButtonsDI
             // 
-            this.btnClearFormDI.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnClearFormDI.Location = new System.Drawing.Point(150, 5);
-            this.btnClearFormDI.Name = "btnClearFormDI";
-            this.btnClearFormDI.Size = new System.Drawing.Size(100, 35);
-            this.btnClearFormDI.TabIndex = 1;
-            this.btnClearFormDI.Text = "Clear Form";
-            this.btnClearFormDI.UseVisualStyleBackColor = true;
+            this.flpActionButtonsDI.Controls.Add(this.btnSubmitRequestDI);
+            this.flpActionButtonsDI.Controls.Add(this.btnClearFormDI);
+            this.flpActionButtonsDI.Dock = System.Windows.Forms.DockStyle.Left;
+            this.flpActionButtonsDI.Location = new System.Drawing.Point(0, 0);
+            this.flpActionButtonsDI.Name = "flpActionButtonsDI";
+            this.flpActionButtonsDI.Padding = new System.Windows.Forms.Padding(10, 5, 0, 0);
+            this.flpActionButtonsDI.Size = new System.Drawing.Size(300, 45);
+            this.flpActionButtonsDI.TabIndex = 0;
             // 
             // btnSubmitRequestDI
             // 
+            this.btnSubmitRequestDI.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.btnSubmitRequestDI.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSubmitRequestDI.Location = new System.Drawing.Point(10, 5);
+            this.btnSubmitRequestDI.Location = new System.Drawing.Point(13, 8);
             this.btnSubmitRequestDI.Name = "btnSubmitRequestDI";
             this.btnSubmitRequestDI.Size = new System.Drawing.Size(130, 35);
             this.btnSubmitRequestDI.TabIndex = 0;
             this.btnSubmitRequestDI.Text = "Submit Request";
             this.btnSubmitRequestDI.UseVisualStyleBackColor = true;
+            // 
+            // btnClearFormDI
+            // 
+            this.btnClearFormDI.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.btnClearFormDI.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnClearFormDI.Location = new System.Drawing.Point(149, 8);
+            this.btnClearFormDI.Name = "btnClearFormDI";
+            this.btnClearFormDI.Size = new System.Drawing.Size(100, 35);
+            this.btnClearFormDI.TabIndex = 1;
+            this.btnClearFormDI.Text = "Clear Form";
+            this.btnClearFormDI.UseVisualStyleBackColor = true;
             // 
             // pnlStatusDI
             // 
@@ -1512,7 +1559,8 @@ namespace DocumentIssuanceApp
             // 
             // colGmDocTypes
             // 
-            this.colGmDocTypes.HeaderText = "Document Types";
+            this.colGmDocTypes.DataPropertyName = "DocumentNo";
+            this.colGmDocTypes.HeaderText = "Document No(s).";
             this.colGmDocTypes.MinimumWidth = 6;
             this.colGmDocTypes.Name = "colGmDocTypes";
             this.colGmDocTypes.ReadOnly = true;
@@ -2038,15 +2086,15 @@ namespace DocumentIssuanceApp
             this.colQaPreparedBy,
             this.colQaAuthorizedBy,
             this.colQaGmActionAt});
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Segoe UI", 9.75F);
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle1.NullValue = "NA";
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvQaQueue.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle9.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            dataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle9.NullValue = "NA";
+            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvQaQueue.DefaultCellStyle = dataGridViewCellStyle9;
             this.dgvQaQueue.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgvQaQueue.Location = new System.Drawing.Point(3, 38);
             this.dgvQaQueue.MultiSelect = false;
@@ -2080,7 +2128,8 @@ namespace DocumentIssuanceApp
             // 
             // colQaDocTypes
             // 
-            this.colQaDocTypes.HeaderText = "Document Types";
+            this.colQaDocTypes.DataPropertyName = "DocumentNo";
+            this.colQaDocTypes.HeaderText = "Document No(s).";
             this.colQaDocTypes.MinimumWidth = 6;
             this.colQaDocTypes.Name = "colQaDocTypes";
             this.colQaDocTypes.ReadOnly = true;
@@ -3111,7 +3160,7 @@ namespace DocumentIssuanceApp
             // toolStripStatusLabelSpring
             // 
             this.toolStripStatusLabelSpring.Name = "toolStripStatusLabelSpring";
-            this.toolStripStatusLabelSpring.Size = new System.Drawing.Size(1025, 21);
+            this.toolStripStatusLabelSpring.Size = new System.Drawing.Size(1056, 21);
             this.toolStripStatusLabelSpring.Spring = true;
             // 
             // toolStripStatusLabelDateTime
@@ -3145,7 +3194,8 @@ namespace DocumentIssuanceApp
             this.tlpDocTypesAndNumbers.ResumeLayout(false);
             this.tlpDocTypesAndNumbers.PerformLayout();
             this.pnlTopRightDI.ResumeLayout(false);
-            this.pnlTopRightDI.PerformLayout();
+            this.tlpTopRightDetailsDI.ResumeLayout(false);
+            this.tlpTopRightDetailsDI.PerformLayout();
             this.pnlRequestDetailsDI.ResumeLayout(false);
             this.pnlRequestDetailsDI.PerformLayout();
             this.tlpRequestDetails.ResumeLayout(false);
@@ -3169,6 +3219,7 @@ namespace DocumentIssuanceApp
             this.grpRemarksDI.ResumeLayout(false);
             this.grpRemarksDI.PerformLayout();
             this.pnlActionBottomDI.ResumeLayout(false);
+            this.flpActionButtonsDI.ResumeLayout(false);
             this.pnlStatusDI.ResumeLayout(false);
             this.pnlStatusDI.PerformLayout();
             this.tabPageGmOperations.ResumeLayout(false);
@@ -3451,6 +3502,7 @@ namespace DocumentIssuanceApp
         private System.Windows.Forms.Button btnEditRole;
         private System.Windows.Forms.Button btnDeleteRole;
 
+
         // For Document Numbers (associated with Document Type Checkboxes)
         private System.Windows.Forms.TableLayoutPanel tlpDocTypesAndNumbers;
         private System.Windows.Forms.Label lblBmrDocNo;
@@ -3483,5 +3535,9 @@ namespace DocumentIssuanceApp
         private System.Windows.Forms.FlowLayoutPanel flpItemBatchSize;
         private System.Windows.Forms.TextBox txtItemBatchSizeValueDI;
         private System.Windows.Forms.ComboBox cmbItemBatchSizeUnitDI;
+
+        // New Layout Panels
+        private System.Windows.Forms.TableLayoutPanel tlpTopRightDetailsDI;
+        private System.Windows.Forms.FlowLayoutPanel flpActionButtonsDI;
     }
 }

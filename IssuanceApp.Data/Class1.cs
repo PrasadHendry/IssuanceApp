@@ -6,39 +6,43 @@ using System.Text;
 namespace IssuanceApp.Data
 {
 
-    // Define a concrete class for Audit Trail entries
+    public class UserRole
+    {
+        public int RoleID { get; set; }
+        public string RoleName { get; set; }
+        // Add PasswordHash if needed here, or manage separately
+    }
+
     public class AuditTrailEntry
     {
         public string RequestNo { get; set; }
-        public DateTime? RequestDate { get; set; } // Use Nullable DateTime
+        public DateTime RequestDate { get; set; }
         public string Product { get; set; }
-        public string DocumentTypes { get; set; }
-        public string DerivedStatus { get; set; }
+        public string DocumentNumbers { get; set; } // Comma-separated doc numbers
+        public string DerivedStatus { get; set; } // e.g., "Pending GM", "Approved"
         public string PreparedBy { get; set; }
-        public DateTime? RequestedAt { get; set; } // Use Nullable DateTime
-        public string GmOperationsAction { get; set; }
+        public DateTime? RequestedAt { get; set; }
+        public string GmOperationsAction { get; set; } // "Authorized", "Rejected"
         public string AuthorizedBy { get; set; } // GM User
-        public DateTime? GmOperationsAt { get; set; } // Use Nullable DateTime
+        public DateTime? GmOperationsAt { get; set; }
         public string GmOperationsComment { get; set; }
-        public string QAAction { get; set; }
+        public string QAAction { get; set; } // "Approved", "Rejected"
         public string ApprovedBy { get; set; } // QA User
-        public DateTime? QAAt { get; set; } // Use Nullable DateTime
+        public DateTime? QAAt { get; set; }
         public string QAComment { get; set; }
-        // Add any other properties from Doc_Issuance that you might want to display
+        // ... add other fields from Doc_Issuance as needed for audit ...
         public string FromDepartment { get; set; }
+        public string ParentBatchNumber { get; set; }
+        public string ParentBatchSize { get; set; }
+        public string ParentMfgDate { get; set; }
+        public string ParentExpDate { get; set; }
         public string BatchNo { get; set; }
-        public string DocumentNumbers { get; set; }
-        // ... etc.
-    }
+        public string BatchSize { get; set; }
+        public string ItemMfgDate { get; set; }
+        public string ItemExpDate { get; set; }
+        public string Market { get; set; }
+        public string PackSize { get; set; }
+        public string ExportOrderNo { get; set; }
 
-    public class UserRole
-    {
-        // Public property for RoleID, matching DataPropertyName "RoleID" in the DataGridView column
-        public int RoleID { get; set; }
-
-        // Public property for RoleName, matching DataPropertyName "RoleName" in the DataGridView column
-        public string RoleName { get; set; }
-
-        // You can add more properties here if needed in the future
     }
 }
