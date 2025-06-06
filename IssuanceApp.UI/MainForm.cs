@@ -413,105 +413,123 @@ namespace DocumentIssuanceApp
 
         private void InitializeDocumentIssuanceTab()
         {
+            // 1. Document Type Checkboxes & Document Numbers
+            if (chkDocTypeBMRDI != null) chkDocTypeBMRDI.CheckedChanged += DocTypeCheckbox_CheckedChanged;
+            if (chkDocTypeBPRDI != null) chkDocTypeBPRDI.CheckedChanged += DocTypeCheckbox_CheckedChanged;
+            if (chkDocTypeAppendixDI != null) chkDocTypeAppendixDI.CheckedChanged += DocTypeCheckbox_CheckedChanged;
+            if (chkDocTypeAddendumDI != null) chkDocTypeAddendumDI.CheckedChanged += DocTypeCheckbox_CheckedChanged;
+            UpdateDocumentNumberFieldsVisibility();
+
+            // 2. Date Fields -> Month/Year Dropdowns
+            string[] monthNames = CultureInfo.CurrentCulture.DateTimeFormat.AbbreviatedMonthNames
+                                      .Where(m => !string.IsNullOrEmpty(m)).ToArray();
+            int currentYear = DateTime.Now.Year;
+            List<string> years = Enumerable.Range(currentYear - 10, 21).Select(y => y.ToString()).ToList();
+
+            PopulateMonthYearComboBox(cmbParentMfgMonthDI, cmbParentMfgYearDI, monthNames, years, true);
+            PopulateMonthYearComboBox(cmbParentExpMonthDI, cmbParentExpYearDI, monthNames, years, true);
+            PopulateMonthYearComboBox(cmbItemMfgMonthDI, cmbItemMfgYearDI, monthNames, years, false);
+            PopulateMonthYearComboBox(cmbItemExpMonthDI, cmbItemExpYearDI, monthNames, years, false);
+
+            // 3. Batch Size Fields -> Value + Unit
+            string[] batchUnits = { "KGS", "TAB", "ML", "GM", "LTR", "MG", "CAPS", "VIALS", "AMPOULES" };
+            PopulateUnitComboBox(cmbParentBatchSizeUnitDI, batchUnits, true);
+            PopulateUnitComboBox(cmbItemBatchSizeUnitDI, batchUnits, false);
+
+            if (txtParentBatchSizeValueDI != null) txtParentBatchSizeValueDI.KeyPress += NumericTextBox_KeyPress;
+            if (txtItemBatchSizeValueDI != null) txtItemBatchSizeValueDI.KeyPress += NumericTextBox_KeyPress;
+
+            // 4. Department Dropdown Constraint
+            if (cmbFromDepartmentDI != null)
+            {
+                cmbFromDepartmentDI.Items.Clear();
+                cmbFromDepartmentDI.Items.AddRange(new string[] {
+                    "Production Department",
+                    "Quality Assurance",
+                    "Research & Development",
+                    "Regulatory Affairs",
+                    "Manufacturing",
+                    "Packaging Department"
+                });
+                if (cmbFromDepartmentDI.Items.Count > 0) cmbFromDepartmentDI.SelectedIndex = 0;
+            }
+
             if (dtpRequestDateDI != null) dtpRequestDateDI.Value = DateTime.Now;
-            if (cmbFromDepartmentDI != null && cmbFromDepartmentDI.Items.Count > 0) cmbFromDepartmentDI.SelectedIndex = 0;
             if (lblStatusValueDI != null) lblStatusValueDI.Text = "Ready to create a new request.";
             if (btnSubmitRequestDI != null) btnSubmitRequestDI.Click += BtnSubmitRequestDI_Click;
             if (btnClearFormDI != null) btnClearFormDI.Click += BtnClearFormDI_Click;
 
-            // Populate new ComboBoxes for dates and units
-            PopulateYearComboBoxes(cmbParentMfgYearDI, cmbParentExpYearDI, cmbItemMfgYearDI, cmbItemExpYearDI);
-            PopulateMonthComboBoxes(cmbParentMfgMonthDI, cmbParentExpMonthDI, cmbItemMfgMonthDI, cmbItemExpMonthDI);
-            PopulateUnitComboBoxes(cmbParentBatchSizeUnitDI, cmbItemBatchSizeUnitDI);
-
-            // Wire up event handlers for document type checkboxes
-            if (chkDocTypeBMRDI != null) chkDocTypeBMRDI.CheckedChanged += DocTypeCheckBox_CheckedChanged;
-            if (chkDocTypeBPRDI != null) chkDocTypeBPRDI.CheckedChanged += DocTypeCheckBox_CheckedChanged;
-            if (chkDocTypeAppendixDI != null) chkDocTypeAppendixDI.CheckedChanged += DocTypeCheckBox_CheckedChanged;
-            if (chkDocTypeAddendumDI != null) chkDocTypeAddendumDI.CheckedChanged += DocTypeCheckBox_CheckedChanged;
-
-            // Set initial visibility of document number textboxes based on checkbox state (all unchecked initially)
-            DocTypeCheckBox_CheckedChanged(null, null);
+            LoadInitialDocumentIssuanceData();
         }
 
-        private void PopulateYearComboBoxes(params ComboBox[] comboBoxes)
+        private void DocTypeCheckbox_CheckedChanged(object sender, EventArgs e)
         {
-            int currentYear = DateTime.Now.Year;
-            foreach (var cb in comboBoxes)
-            {
-                if (cb == null) continue;
-                cb.Items.Clear();
-                cb.Items.Add(""); // Add an empty item for optional selection
-                for (int i = currentYear - 10; i <= currentYear + 10; i++)
-                {
-                    cb.Items.Add(i.ToString());
-                }
-                cb.SelectedIndex = 0; // Select the empty item by default
-            }
+            UpdateDocumentNumberFieldsVisibility();
         }
 
-        private void PopulateMonthComboBoxes(params ComboBox[] comboBoxes)
-        {
-            string[] monthAbbr = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
-
-            foreach (var cb in comboBoxes)
-            {
-                if (cb == null) continue;
-                cb.Items.Clear();
-                cb.Items.Add(""); // Add an empty item
-                cb.Items.AddRange(monthAbbr);
-                cb.SelectedIndex = 0; // Select the empty item by default
-            }
-        }
-
-        private void PopulateUnitComboBoxes(params ComboBox[] comboBoxes)
-        {
-            string[] units = { "KGS", "TAB", "L", "Units", "g", "mg", "mL", "CAP" }; // Add more units as needed
-            foreach (var cb in comboBoxes)
-            {
-                if (cb == null) continue;
-                cb.Items.Clear();
-                // cb.Items.Add(""); // Optional: Add empty item if unit is truly optional even when value is present
-                cb.Items.AddRange(units);
-                if (cb.Items.Count > 0) cb.SelectedIndex = 0; // Default to the first unit
-            }
-        }
-
-        private void DocTypeCheckBox_CheckedChanged(object sender, EventArgs e)
+        private void UpdateDocumentNumberFieldsVisibility()
         {
             bool bmrChecked = chkDocTypeBMRDI?.Checked ?? false;
             if (lblBmrDocNo != null) lblBmrDocNo.Visible = bmrChecked;
-            if (txtBmrDocNoDI != null)
-            {
-                txtBmrDocNoDI.Visible = bmrChecked;
-                if (!bmrChecked) txtBmrDocNoDI.Clear();
-            }
+            if (txtBmrDocNoDI != null) txtBmrDocNoDI.Visible = bmrChecked;
+            if (!bmrChecked && txtBmrDocNoDI != null) txtBmrDocNoDI.Clear();
 
             bool bprChecked = chkDocTypeBPRDI?.Checked ?? false;
             if (lblBprDocNo != null) lblBprDocNo.Visible = bprChecked;
-            if (txtBprDocNoDI != null)
-            {
-                txtBprDocNoDI.Visible = bprChecked;
-                if (!bprChecked) txtBprDocNoDI.Clear();
-            }
+            if (txtBprDocNoDI != null) txtBprDocNoDI.Visible = bprChecked;
+            if (!bprChecked && txtBprDocNoDI != null) txtBprDocNoDI.Clear();
 
             bool appendixChecked = chkDocTypeAppendixDI?.Checked ?? false;
             if (lblAppendixDocNo != null) lblAppendixDocNo.Visible = appendixChecked;
-            if (txtAppendixDocNoDI != null)
-            {
-                txtAppendixDocNoDI.Visible = appendixChecked;
-                if (!appendixChecked) txtAppendixDocNoDI.Clear();
-            }
+            if (txtAppendixDocNoDI != null) txtAppendixDocNoDI.Visible = appendixChecked;
+            if (!appendixChecked && txtAppendixDocNoDI != null) txtAppendixDocNoDI.Clear();
 
             bool addendumChecked = chkDocTypeAddendumDI?.Checked ?? false;
             if (lblAddendumDocNo != null) lblAddendumDocNo.Visible = addendumChecked;
-            if (txtAddendumDocNoDI != null)
+            if (txtAddendumDocNoDI != null) txtAddendumDocNoDI.Visible = addendumChecked;
+            if (!addendumChecked && txtAddendumDocNoDI != null) txtAddendumDocNoDI.Clear();
+        }
+
+        private void PopulateMonthYearComboBox(ComboBox cmbMonth, ComboBox cmbYear, string[] months, List<string> years, bool allowNotApplicable)
+        {
+            if (cmbMonth != null)
             {
-                txtAddendumDocNoDI.Visible = addendumChecked;
-                if (!addendumChecked) txtAddendumDocNoDI.Clear();
+                cmbMonth.Items.Clear();
+                if (allowNotApplicable) cmbMonth.Items.Add("N/A");
+                cmbMonth.Items.AddRange(months);
+                cmbMonth.SelectedIndex = allowNotApplicable ? 0 : (DateTime.Now.Month - 1);
+            }
+            if (cmbYear != null)
+            {
+                cmbYear.Items.Clear();
+                if (allowNotApplicable) cmbYear.Items.Add("N/A");
+                cmbYear.Items.AddRange(years.ToArray());
+                cmbYear.SelectedItem = allowNotApplicable ? "N/A" : DateTime.Now.Year.ToString();
             }
         }
 
+        private void PopulateUnitComboBox(ComboBox cmbUnit, string[] units, bool allowNotApplicable)
+        {
+            if (cmbUnit != null)
+            {
+                cmbUnit.Items.Clear();
+                if (allowNotApplicable) cmbUnit.Items.Add("N/A");
+                cmbUnit.Items.AddRange(units);
+                cmbUnit.SelectedIndex = 0;
+            }
+        }
+
+        private void NumericTextBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && (e.KeyChar != '.'))
+            {
+                e.Handled = true;
+            }
+            if ((e.KeyChar == '.') && ((sender as TextBox).Text.IndexOf('.') > -1))
+            {
+                e.Handled = true;
+            }
+        }
 
         private void LoadInitialDocumentIssuanceData()
         {
@@ -521,175 +539,110 @@ namespace DocumentIssuanceApp
 
         private string GenerateNewTrackerNumber()
         {
-            // Example: TRK-202310-1234
-            Random rnd = new Random();
-            return $"TRK-{DateTime.Now.Year}{DateTime.Now.Month:D2}-{rnd.Next(1000, 9999)}";
+            return $"TRK-{DateTime.Now:yyyyMMddHHmmssfff}";
         }
 
         private string GenerateNewRequestNumber()
         {
-            // Example: REQ-YYYYMMDD-XXX
             Random rnd = new Random();
-            return $"REQ-{DateTime.Now:yyyyMMdd}-{rnd.Next(100, 999):D3}";
+            string sequence = rnd.Next(1, 1000).ToString("D3");
+            return $"REQ-{DateTime.Now:yyyyMMdd}-{sequence}";
         }
-
-        private string GetDateStringFromComboBoxes(ComboBox monthComboBox, ComboBox yearComboBox)
-        {
-            string month = monthComboBox?.SelectedItem?.ToString();
-            string year = yearComboBox?.SelectedItem?.ToString();
-
-            if (string.IsNullOrWhiteSpace(month) || string.IsNullOrWhiteSpace(year))
-            {
-                return null; // Or string.Empty if DB column is NOT NULL and empty string is preferred over NULL
-            }
-            return $"{month}/{year}"; // Format: "MMM/yyyy"
-        }
-
 
         private void BtnSubmitRequestDI_Click(object sender, EventArgs e)
         {
-            // --- Basic Validations ---
-            if (cmbFromDepartmentDI == null || cmbFromDepartmentDI.SelectedItem == null || string.IsNullOrWhiteSpace(cmbFromDepartmentDI.SelectedItem.ToString()))
+            // --- Input Validation ---
+            if (cmbFromDepartmentDI?.SelectedItem == null || string.IsNullOrWhiteSpace(cmbFromDepartmentDI.SelectedItem.ToString()))
+            { MessageBox.Show("Please select a 'From Department'.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning); cmbFromDepartmentDI?.Focus(); return; }
+            if (string.IsNullOrWhiteSpace(txtProductDI?.Text))
+            { MessageBox.Show("Please enter the 'Product'.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning); txtProductDI?.Focus(); return; }
+
+            // --- Collect and Validate Document Numbers ---
+            var docNumbersList = new List<string>();
+            if (chkDocTypeBMRDI.Checked) { if (string.IsNullOrWhiteSpace(txtBmrDocNoDI.Text)) { MessageBox.Show("BMR is checked, please enter BMR Document No.", "Validation Error"); txtBmrDocNoDI.Focus(); return; } docNumbersList.Add(txtBmrDocNoDI.Text.Trim()); }
+            if (chkDocTypeBPRDI.Checked) { if (string.IsNullOrWhiteSpace(txtBprDocNoDI.Text)) { MessageBox.Show("BPR is checked, please enter BPR Document No.", "Validation Error"); txtBprDocNoDI.Focus(); return; } docNumbersList.Add(txtBprDocNoDI.Text.Trim()); }
+            if (chkDocTypeAppendixDI.Checked) { if (string.IsNullOrWhiteSpace(txtAppendixDocNoDI.Text)) { MessageBox.Show("Appendix is checked, please enter Appendix Document No.", "Validation Error"); txtAppendixDocNoDI.Focus(); return; } docNumbersList.Add(txtAppendixDocNoDI.Text.Trim()); }
+            if (chkDocTypeAddendumDI.Checked) { if (string.IsNullOrWhiteSpace(txtAddendumDocNoDI.Text)) { MessageBox.Show("Addendum is checked, please enter Addendum Document No.", "Validation Error"); txtAddendumDocNoDI.Focus(); return; } docNumbersList.Add(txtAddendumDocNoDI.Text.Trim()); }
+
+            // At least one document type must be selected
+            if (!docNumbersList.Any())
             {
-                MessageBox.Show("Please select a 'From Department'.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                cmbFromDepartmentDI?.Focus();
+                MessageBox.Show("Please select at least one 'Document Type' and provide its number.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                grpDocTypeDI?.Focus();
                 return;
             }
-            if (txtProductDI == null || string.IsNullOrWhiteSpace(txtProductDI.Text))
+            string combinedDocumentNumbers = string.Join(",", docNumbersList);
+
+            // --- Collect and Validate Batch Sizes ---
+            string parentBatchSizeStr = null;
+            bool parentBatchValueEntered = !string.IsNullOrWhiteSpace(txtParentBatchSizeValueDI?.Text);
+            bool parentBatchUnitSelected = cmbParentBatchSizeUnitDI?.SelectedItem != null && cmbParentBatchSizeUnitDI.SelectedItem.ToString() != "N/A";
+            if (parentBatchValueEntered)
             {
-                MessageBox.Show("Please enter the 'Product'.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                txtProductDI?.Focus();
-                return;
+                if (!decimal.TryParse(txtParentBatchSizeValueDI.Text, out _)) { MessageBox.Show("Parent Batch Size must be a valid number.", "Validation Error"); txtParentBatchSizeValueDI.Focus(); return; }
+                if (!parentBatchUnitSelected) { MessageBox.Show("Please select a Unit for the Parent Batch Size.", "Validation Error"); cmbParentBatchSizeUnitDI.Focus(); return; }
+                parentBatchSizeStr = $"{txtParentBatchSizeValueDI.Text.Trim()} {cmbParentBatchSizeUnitDI.SelectedItem}";
             }
 
-            // --- Collect Document Numbers ---
-            List<string> specificDocNumbers = new List<string>();
-            if (chkDocTypeBMRDI.Checked)
-            {
-                if (string.IsNullOrWhiteSpace(txtBmrDocNoDI.Text)) { MessageBox.Show("BMR is checked, please enter BMR Document No.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning); txtBmrDocNoDI.Focus(); return; }
-                specificDocNumbers.Add(txtBmrDocNoDI.Text.Trim());
-            }
-            if (chkDocTypeBPRDI.Checked)
-            {
-                if (string.IsNullOrWhiteSpace(txtBprDocNoDI.Text)) { MessageBox.Show("BPR is checked, please enter BPR Document No.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning); txtBprDocNoDI.Focus(); return; }
-                specificDocNumbers.Add(txtBprDocNoDI.Text.Trim());
-            }
-            if (chkDocTypeAppendixDI.Checked)
-            {
-                if (string.IsNullOrWhiteSpace(txtAppendixDocNoDI.Text)) { MessageBox.Show("Appendix is checked, please enter Appendix Document No.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning); txtAppendixDocNoDI.Focus(); return; }
-                specificDocNumbers.Add(txtAppendixDocNoDI.Text.Trim());
-            }
-            if (chkDocTypeAddendumDI.Checked)
-            {
-                if (string.IsNullOrWhiteSpace(txtAddendumDocNoDI.Text)) { MessageBox.Show("Addendum is checked, please enter Addendum Document No.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning); txtAddendumDocNoDI.Focus(); return; }
-                specificDocNumbers.Add(txtAddendumDocNoDI.Text.Trim());
-            }
-            string combinedDocumentNumbers = string.Join(",", specificDocNumbers);
+            string itemBatchSizeStr;
+            if (string.IsNullOrWhiteSpace(txtItemBatchSizeValueDI?.Text)) { MessageBox.Show("Item Batch Size value is required.", "Validation Error"); txtItemBatchSizeValueDI.Focus(); return; }
+            if (!decimal.TryParse(txtItemBatchSizeValueDI.Text, out _)) { MessageBox.Show("Item Batch Size must be a valid number.", "Validation Error"); txtItemBatchSizeValueDI.Focus(); return; }
+            if (cmbItemBatchSizeUnitDI?.SelectedItem == null || cmbItemBatchSizeUnitDI.SelectedItem.ToString() == "N/A") { MessageBox.Show("Please select a Unit for the Item Batch Size.", "Validation Error"); cmbItemBatchSizeUnitDI.Focus(); return; }
+            itemBatchSizeStr = $"{txtItemBatchSizeValueDI.Text.Trim()} {cmbItemBatchSizeUnitDI.SelectedItem}";
 
-            bool anyCheckboxChecked = chkDocTypeBMRDI.Checked || chkDocTypeBPRDI.Checked || chkDocTypeAppendixDI.Checked || chkDocTypeAddendumDI.Checked;
-            if (anyCheckboxChecked && specificDocNumbers.Count == 0) // Should be caught by individual checks above, but as a safeguard
-            {
-                MessageBox.Show("Please ensure document numbers are entered for all selected document types.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                if (chkDocTypeBMRDI.Checked && string.IsNullOrWhiteSpace(txtBmrDocNoDI.Text)) txtBmrDocNoDI.Focus();
-                else if (chkDocTypeBPRDI.Checked && string.IsNullOrWhiteSpace(txtBprDocNoDI.Text)) txtBprDocNoDI.Focus();
-                else if (chkDocTypeAppendixDI.Checked && string.IsNullOrWhiteSpace(txtAppendixDocNoDI.Text)) txtAppendixDocNoDI.Focus();
-                else if (chkDocTypeAddendumDI.Checked && string.IsNullOrWhiteSpace(txtAddendumDocNoDI.Text)) txtAddendumDocNoDI.Focus();
-                else grpDocTypeDI?.Focus(); // Fallback focus
-                return;
-            }
-            // The DocumentNo field in DB can be NULL, so if no checkboxes are checked, combinedDocumentNumbers will be empty, leading to NULL.
-
-            // --- Collect Parent Batch Size ---
-            string parentBatchSizeString = null;
-            if (txtParentBatchSizeValueDI != null && !string.IsNullOrWhiteSpace(txtParentBatchSizeValueDI.Text))
-            {
-                if (!decimal.TryParse(txtParentBatchSizeValueDI.Text, NumberStyles.Any, CultureInfo.InvariantCulture, out _))
-                { MessageBox.Show("Invalid Parent Batch Size value. Please enter a numeric value.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning); txtParentBatchSizeValueDI.Focus(); return; }
-                if (cmbParentBatchSizeUnitDI?.SelectedItem == null || string.IsNullOrWhiteSpace(cmbParentBatchSizeUnitDI.SelectedItem.ToString()))
-                { MessageBox.Show("Please select a unit for Parent Batch Size if a value is entered.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning); cmbParentBatchSizeUnitDI.Focus(); return; }
-                parentBatchSizeString = $"{txtParentBatchSizeValueDI.Text.Trim()} {cmbParentBatchSizeUnitDI.SelectedItem.ToString()}";
-            }
-
-            // --- Collect Item Batch Size ---
-            string itemBatchSizeString = null;
-            if (txtItemBatchSizeValueDI != null && !string.IsNullOrWhiteSpace(txtItemBatchSizeValueDI.Text))
-            {
-                if (!decimal.TryParse(txtItemBatchSizeValueDI.Text, NumberStyles.Any, CultureInfo.InvariantCulture, out _))
-                { MessageBox.Show("Invalid Item Batch Size value. Please enter a numeric value.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning); txtItemBatchSizeValueDI.Focus(); return; }
-                if (cmbItemBatchSizeUnitDI?.SelectedItem == null || string.IsNullOrWhiteSpace(cmbItemBatchSizeUnitDI.SelectedItem.ToString()))
-                { MessageBox.Show("Please select a unit for Item Batch Size if a value is entered.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning); cmbItemBatchSizeUnitDI.Focus(); return; }
-                itemBatchSizeString = $"{txtItemBatchSizeValueDI.Text.Trim()} {cmbItemBatchSizeUnitDI.SelectedItem.ToString()}";
-            }
-
-            // --- Create Data Object ---
+            // --- Data Collection ---
             var issuanceData = new
             {
-                TrackerNo = lblTrackerNoValueDI?.Text ?? "N/A",
                 RequestNo = txtRequestNoValueDI?.Text ?? "N/A",
                 RequestDate = dtpRequestDateDI?.Value.Date ?? DateTime.MinValue.Date,
                 FromDepartment = cmbFromDepartmentDI.SelectedItem.ToString(),
+                // DocumentTypes is REMOVED
+                DocumentNo = combinedDocumentNumbers,
+
                 ParentBatchNumber = string.IsNullOrWhiteSpace(txtParentBatchNoDI?.Text) ? null : txtParentBatchNoDI.Text.Trim(),
-                ParentBatchSize = parentBatchSizeString,
+                ParentBatchSize = parentBatchSizeStr,
                 ParentMfgDate = GetDateStringFromComboBoxes(cmbParentMfgMonthDI, cmbParentMfgYearDI),
                 ParentExpDate = GetDateStringFromComboBoxes(cmbParentExpMonthDI, cmbParentExpYearDI),
+
                 Product = txtProductDI.Text.Trim(),
-                DocumentNo = string.IsNullOrEmpty(combinedDocumentNumbers) ? null : combinedDocumentNumbers,
                 BatchNo = string.IsNullOrWhiteSpace(txtBatchNoDI?.Text) ? null : txtBatchNoDI.Text.Trim(),
-                BatchSize = itemBatchSizeString,
+                BatchSize = itemBatchSizeStr,
                 ItemMfgDate = GetDateStringFromComboBoxes(cmbItemMfgMonthDI, cmbItemMfgYearDI),
                 ItemExpDate = GetDateStringFromComboBoxes(cmbItemExpMonthDI, cmbItemExpYearDI),
+
                 Market = string.IsNullOrWhiteSpace(txtMarketDI?.Text) ? null : txtMarketDI.Text.Trim(),
                 PackSize = string.IsNullOrWhiteSpace(txtPackSizeDI?.Text) ? null : txtPackSizeDI.Text.Trim(),
                 ExportOrderNo = string.IsNullOrWhiteSpace(txtExportOrderNoDI?.Text) ? null : txtExportOrderNoDI.Text.Trim(),
-                Remarks = string.IsNullOrWhiteSpace(txtRemarksDI?.Text) ? null : txtRemarksDI.Text.Trim(),
+                Remarks = txtRemarksDI?.Text.Trim(),
                 RequestedBy = loggedInUserName ?? (toolStripStatusLabelUser?.Text.Replace("User: ", "").Split('(')[0].Trim() ?? "Unknown")
             };
 
-            // --- Simulate Submission (Replace with actual DB logic) ---
             try
             {
-                Console.WriteLine("--- Document Issuance Request Submitted (Simulated) ---");
-                Console.WriteLine($"Tracker No: {issuanceData.TrackerNo}");
-                Console.WriteLine($"Request No: {issuanceData.RequestNo}");
-                Console.WriteLine($"Request Date: {issuanceData.RequestDate:yyyy-MM-dd}");
-                Console.WriteLine($"From Department: {issuanceData.FromDepartment}");
-                Console.WriteLine($"Document Nos: {issuanceData.DocumentNo}");
-                Console.WriteLine($"Parent Batch Number: {issuanceData.ParentBatchNumber}");
-                Console.WriteLine($"Parent Batch Size: {issuanceData.ParentBatchSize}");
-                Console.WriteLine($"Parent Mfg Date: {issuanceData.ParentMfgDate}");
-                Console.WriteLine($"Parent Exp Date: {issuanceData.ParentExpDate}");
-                Console.WriteLine($"Product: {issuanceData.Product}");
-                Console.WriteLine($"Batch No: {issuanceData.BatchNo}");
-                Console.WriteLine($"Batch Size: {issuanceData.BatchSize}");
-                Console.WriteLine($"Item Mfg Date: {issuanceData.ItemMfgDate}");
-                Console.WriteLine($"Item Exp Date: {issuanceData.ItemExpDate}");
-                Console.WriteLine($"Market: {issuanceData.Market}");
-                Console.WriteLine($"Pack Size: {issuanceData.PackSize}");
-                Console.WriteLine($"Export Order No: {issuanceData.ExportOrderNo}");
-                Console.WriteLine($"Remarks: {issuanceData.Remarks}");
-                Console.WriteLine($"Requested By: {issuanceData.RequestedBy}");
+                // TODO: Implement actual data saving logic. Your data access method should now accept
+                // the `issuanceData` object and map its properties to the parameters for your INSERT statement
+                // into the dbo.Doc_Issuance table.
 
+                Console.WriteLine("--- Document Issuance Request Submitted (Updated Formats) ---");
+                // ... (Console logs for debugging) ...
 
-                if (lblStatusValueDI != null)
-                {
-                    lblStatusValueDI.Text = $"Request '{issuanceData.RequestNo}' submitted successfully!";
-                    lblStatusValueDI.ForeColor = Color.Green;
-                }
-                MessageBox.Show($"Request '{issuanceData.RequestNo}' submitted successfully!\nTracker No: {issuanceData.TrackerNo}", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                lblStatusValueDI.Text = $"Request '{issuanceData.RequestNo}' submitted successfully!";
+                lblStatusValueDI.ForeColor = Color.Green;
+                MessageBox.Show($"Request '{issuanceData.RequestNo}' submitted successfully!\nTracker No: {lblTrackerNoValueDI?.Text ?? "N/A"}", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 ClearDocumentIssuanceForm();
-                LoadInitialDocumentIssuanceData(); // Generate new numbers for next request
+                LoadInitialDocumentIssuanceData();
             }
             catch (Exception ex)
             {
-                if (lblStatusValueDI != null)
-                {
-                    lblStatusValueDI.Text = "Error submitting request.";
-                    lblStatusValueDI.ForeColor = Color.Red;
-                }
-                MessageBox.Show($"Error submitting request: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                lblStatusValueDI.Text = "Error submitting request.";
+                lblStatusValueDI.ForeColor = Color.Red;
+                MessageBox.Show($"Error submitting request: {ex.Message}\n{ex.StackTrace}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        // REMOVED: GetSelectedDocumentTypes() method is no longer needed.
+        // private string GetSelectedDocumentTypes() { ... }
 
         private void BtnClearFormDI_Click(object sender, EventArgs e)
         {
@@ -697,58 +650,59 @@ namespace DocumentIssuanceApp
             if (lblStatusValueDI != null)
             {
                 lblStatusValueDI.Text = "Form cleared. Ready for new request.";
-                lblStatusValueDI.ForeColor = SystemColors.ControlText; // Default color
+                lblStatusValueDI.ForeColor = SystemColors.ControlText;
             }
-            LoadInitialDocumentIssuanceData(); // Regenerate Request No and Tracker No
+            LoadInitialDocumentIssuanceData();
         }
 
         private void ClearDocumentIssuanceForm()
         {
-            // Unchecking checkboxes will trigger DocTypeCheckBox_CheckedChanged, which clears associated textboxes
             if (chkDocTypeBMRDI != null) chkDocTypeBMRDI.Checked = false;
             if (chkDocTypeBPRDI != null) chkDocTypeBPRDI.Checked = false;
             if (chkDocTypeAppendixDI != null) chkDocTypeAppendixDI.Checked = false;
             if (chkDocTypeAddendumDI != null) chkDocTypeAddendumDI.Checked = false;
-
-            // Explicitly clear textboxes too, in case event doesn't fire as expected or for direct calls
-            if (txtBmrDocNoDI != null) txtBmrDocNoDI.Clear();
-            if (txtBprDocNoDI != null) txtBprDocNoDI.Clear();
-            if (txtAppendixDocNoDI != null) txtAppendixDocNoDI.Clear();
-            if (txtAddendumDocNoDI != null) txtAddendumDocNoDI.Clear();
+            // The CheckChanged event handler will hide and clear the textboxes
 
             if (dtpRequestDateDI != null) dtpRequestDateDI.Value = DateTime.Now;
-            if (cmbFromDepartmentDI != null)
-            {
-                if (cmbFromDepartmentDI.Items.Count > 0) cmbFromDepartmentDI.SelectedIndex = 0;
-                else cmbFromDepartmentDI.SelectedItem = null; // Or Set to null if no items
-            }
+            if (cmbFromDepartmentDI != null && cmbFromDepartmentDI.Items.Count > 0) cmbFromDepartmentDI.SelectedIndex = 0;
 
-            // Clear Parent Batch Info
             if (txtParentBatchNoDI != null) txtParentBatchNoDI.Clear();
             if (txtParentBatchSizeValueDI != null) txtParentBatchSizeValueDI.Clear();
             if (cmbParentBatchSizeUnitDI != null && cmbParentBatchSizeUnitDI.Items.Count > 0) cmbParentBatchSizeUnitDI.SelectedIndex = 0;
-            if (cmbParentMfgMonthDI != null && cmbParentMfgMonthDI.Items.Count > 0) cmbParentMfgMonthDI.SelectedIndex = 0; // Select ""
-            if (cmbParentMfgYearDI != null && cmbParentMfgYearDI.Items.Count > 0) cmbParentMfgYearDI.SelectedIndex = 0;   // Select ""
-            if (cmbParentExpMonthDI != null && cmbParentExpMonthDI.Items.Count > 0) cmbParentExpMonthDI.SelectedIndex = 0; // Select ""
-            if (cmbParentExpYearDI != null && cmbParentExpYearDI.Items.Count > 0) cmbParentExpYearDI.SelectedIndex = 0;   // Select ""
+            if (cmbParentMfgMonthDI != null && cmbParentMfgMonthDI.Items.Count > 0) cmbParentMfgMonthDI.SelectedIndex = 0;
+            if (cmbParentMfgYearDI != null && cmbParentMfgYearDI.Items.Count > 0) cmbParentMfgYearDI.SelectedIndex = 0;
+            if (cmbParentExpMonthDI != null && cmbParentExpMonthDI.Items.Count > 0) cmbParentExpMonthDI.SelectedIndex = 0;
+            if (cmbParentExpYearDI != null && cmbParentExpYearDI.Items.Count > 0) cmbParentExpYearDI.SelectedIndex = 0;
 
-            // Clear Item/Product Details
             if (txtProductDI != null) txtProductDI.Clear();
             if (txtBatchNoDI != null) txtBatchNoDI.Clear();
             if (txtItemBatchSizeValueDI != null) txtItemBatchSizeValueDI.Clear();
             if (cmbItemBatchSizeUnitDI != null && cmbItemBatchSizeUnitDI.Items.Count > 0) cmbItemBatchSizeUnitDI.SelectedIndex = 0;
-            if (cmbItemMfgMonthDI != null && cmbItemMfgMonthDI.Items.Count > 0) cmbItemMfgMonthDI.SelectedIndex = 0; // Select ""
-            if (cmbItemMfgYearDI != null && cmbItemMfgYearDI.Items.Count > 0) cmbItemMfgYearDI.SelectedIndex = 0;   // Select ""
-            if (cmbItemExpMonthDI != null && cmbItemExpMonthDI.Items.Count > 0) cmbItemExpMonthDI.SelectedIndex = 0; // Select ""
-            if (cmbItemExpYearDI != null && cmbItemExpYearDI.Items.Count > 0) cmbItemExpYearDI.SelectedIndex = 0;   // Select ""
+            if (cmbItemMfgMonthDI != null) cmbItemMfgMonthDI.SelectedIndex = DateTime.Now.Month - 1; // Not allowing N/A
+            if (cmbItemMfgYearDI != null) cmbItemMfgYearDI.SelectedItem = DateTime.Now.Year.ToString();
+            if (cmbItemExpMonthDI != null) cmbItemExpMonthDI.SelectedIndex = DateTime.Now.Month - 1;
+            if (cmbItemExpYearDI != null) cmbItemExpYearDI.SelectedItem = DateTime.Now.Year.ToString();
 
             if (txtMarketDI != null) txtMarketDI.Clear();
             if (txtPackSizeDI != null) txtPackSizeDI.Clear();
             if (txtExportOrderNoDI != null) txtExportOrderNoDI.Clear();
-
             if (txtRemarksDI != null) txtRemarksDI.Clear();
+
             if (lblStatusValueDI != null) lblStatusValueDI.Text = "Form cleared.";
         }
+
+        private string GetDateStringFromComboBoxes(ComboBox monthComboBox, ComboBox yearComboBox)
+        {
+            string month = monthComboBox?.SelectedItem?.ToString();
+            string year = yearComboBox?.SelectedItem?.ToString();
+
+            if (string.IsNullOrWhiteSpace(month) || string.IsNullOrWhiteSpace(year) || month == "N/A" || year == "N/A")
+            {
+                return null;
+            }
+            return $"{month}/{year}";
+        }
+
         #endregion Document Issuance Tab Logic
 
         #region GM Operations Tab Logic
@@ -1669,5 +1623,4 @@ namespace DocumentIssuanceApp
         }
         #endregion Users Tab Logic
     }
-
 }
