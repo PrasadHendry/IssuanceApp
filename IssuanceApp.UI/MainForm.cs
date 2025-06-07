@@ -1,17 +1,20 @@
-﻿// MainForm.cs (Code-behind with Enhanced Font Scaling & Document Issuance Logic)
+﻿// Generated with the "Framework-First" scaling approach implemented.
+// All custom scaling code has been removed to rely on the .NET Framework's
+// built-in DPI awareness, which is enabled via the app.manifest file.
+
 using System;
-using System.Collections.Generic; // Required for List<string>
+using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
-using System.IO; // New: For file operations (CSV export)
-using System.Security.Principal; // Required for WindowsIdentity
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Security.Principal;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
-using IssuanceApp.Data; //  AuditTrailEntry and UserRole 
-using System.Threading.Tasks; // Required for Task.Run() in async methods
-using System.Globalization; // Required for CultureInfo.InvariantCulture
-using System.Collections; // Required for ArrayList
-using System.ComponentModel; // Required for BindingSource
-using System.Linq; // Required for .Cast<T>()
+using IssuanceApp.Data;
 
 
 namespace DocumentIssuanceApp
@@ -22,21 +25,6 @@ namespace DocumentIssuanceApp
         private Timer statusTimer;
         private string loggedInRole = null;
         private string loggedInUserName = null; // Store actual username after login
-
-        // Fields for font and control scaling (primarily for one-time scaling on initial maximize)
-        private SizeF _originalFormClientSize;
-        private Font _originalFormFont;
-        private Size _originalPanelLoginContainerSize;
-        private Font _originalPanelLoginContainerFont;
-        private Font _originalTabControlFont;
-
-        private bool _initialScalingPerformed = false;
-
-        // Constants for scaling limits
-        private const float MinFontSize = 8f;
-        private const float MaxFontSize = 18f;
-        private const int MinPanelLoginWidth = 300;
-        private const int MinPanelLoginHeight = 200;
 
         private BindingSource userRolesBindingSource;
 
@@ -49,7 +37,7 @@ namespace DocumentIssuanceApp
 
         public MainForm()
         {
-            InitializeComponent(); // Content of this method will be from testMainForm.Designer.txt
+            InitializeComponent();
             InitializeCustomComponents();
 
             SetupStatusBar();
@@ -62,37 +50,15 @@ namespace DocumentIssuanceApp
             InitializeGmOperationsTab();
 
             InitializeQaTab();
-            // DELETED: Call to SetupTlpQaRequestDetailsRowStyles() was here.
 
             InitializeAuditTrailTab();
             InitializeUsersTab();
 
             SetupTabs();
 
-            this.Load += MainForm_Load_ForScalingSetup;
-            this.Resize += MainForm_Resize_Handler;
-        }
-
-        private void MainForm_Load_ForScalingSetup(object sender, EventArgs e)
-        {
-            // Capture original dimensions and fonts before any scaling occurs.
-            // This is crucial for calculating correct scale factors later.
-            _originalFormClientSize = this.ClientSize;
-            _originalFormFont = new Font(this.Font.FontFamily, this.Font.Size, this.Font.Style);
-
-            if (tabControlMain != null)
-            {
-                _originalTabControlFont = new Font(tabControlMain.Font.FontFamily, tabControlMain.Font.Size, tabControlMain.Font.Style);
-            }
-
-            if (panelLoginContainer != null)
-            {
-                _originalPanelLoginContainerSize = panelLoginContainer.Size;
-                _originalPanelLoginContainerFont = new Font(panelLoginContainer.Font.FontFamily, panelLoginContainer.Font.Size, panelLoginContainer.Font.Style);
-            }
-
-            // Centering is now handled automatically by the TableLayoutPanel in the designer.
-            this.WindowState = FormWindowState.Maximized; // Maximize the form on load to trigger initial scaling.
+            // NOTE: Custom scaling event handlers have been removed.
+            // The form's AutoScaleMode=Dpi and the app.manifest now handle all scaling.
+            this.WindowState = FormWindowState.Maximized;
         }
 
         private void InitializeCustomComponents()
@@ -102,8 +68,6 @@ namespace DocumentIssuanceApp
             statusTimer.Interval = 1000;
             statusTimer.Tick += StatusTimer_Tick;
             statusTimer.Start();
-
-            // The TabPageLogin_Resize event is no longer needed as the TLP handles centering.
         }
 
         private void SetupStatusBar()
@@ -280,73 +244,6 @@ namespace DocumentIssuanceApp
                 statusTimer = null;
             }
             base.OnFormClosing(e);
-        }
-
-        private void MainForm_Resize_Handler(object sender, EventArgs e)
-        {
-            // Perform initial scaling only once when the form is first maximized.
-            if (!_initialScalingPerformed && this.WindowState == FormWindowState.Maximized)
-            {
-                PerformInitialScaling();
-                _initialScalingPerformed = true;
-            }
-        }
-
-        private void PerformInitialScaling()
-        {
-            // Ensure original dimensions were captured. If not, scaling cannot be performed reliably.
-            if (_originalFormClientSize.Width == 0 || _originalFormClientSize.Height == 0)
-            {
-                Console.WriteLine("Original form client size not captured or invalid, skipping initial scaling.");
-                return;
-            }
-
-            SizeF currentMaximizedFormClientSize = this.ClientSize;
-
-            float scaleFactorX = (currentMaximizedFormClientSize.Width / _originalFormClientSize.Width);
-            float scaleFactorY = (currentMaximizedFormClientSize.Height / _originalFormClientSize.Height);
-
-            float fontScaleFactor = Math.Min(scaleFactorX, scaleFactorY);
-
-            if (fontScaleFactor <= 0.1f)
-            {
-                Console.WriteLine($"Calculated font scale factor ({fontScaleFactor}) is too small, defaulting to 1.0 for initial scaling.");
-                fontScaleFactor = 1.0f;
-            }
-            if (scaleFactorX <= 0.1f)
-            {
-                Console.WriteLine($"Calculated X-axis scale factor ({scaleFactorX}) is too small, defaulting to 1.0.");
-                scaleFactorX = 1.0f;
-            }
-            if (scaleFactorY <= 0.1f)
-            {
-                Console.WriteLine($"Calculated Y-axis scale factor ({scaleFactorY}) is too small, defaulting to 1.0.");
-                scaleFactorY = 1.0f;
-            }
-
-            // Scale Form Font
-            if (_originalFormFont != null)
-            {
-                float newFormFontSize = _originalFormFont.Size * fontScaleFactor;
-                newFormFontSize = Math.Max(MinFontSize, Math.Min(MaxFontSize, newFormFontSize)); // Clamp font size
-                this.Font = new Font(_originalFormFont.FontFamily, newFormFontSize, _originalFormFont.Style);
-            }
-
-            // Scale TabControl Font
-            if (tabControlMain != null && _originalTabControlFont != null)
-            {
-                float newTabControlFontSize = _originalTabControlFont.Size * fontScaleFactor;
-                newTabControlFontSize = Math.Max(MinFontSize, Math.Min(MaxFontSize, newTabControlFontSize));
-                tabControlMain.Font = new Font(_originalTabControlFont.FontFamily, newTabControlFontSize, _originalTabControlFont.Style);
-            }
-
-            // Scale Login Panel Font ONLY. The size and position are now automatic.
-            if (panelLoginContainer != null && _originalPanelLoginContainerFont != null)
-            {
-                float newPanelFontSize = _originalPanelLoginContainerFont.Size * fontScaleFactor;
-                newPanelFontSize = Math.Max(MinFontSize, Math.Min(MaxFontSize, newPanelFontSize));
-                panelLoginContainer.Font = new Font(_originalPanelLoginContainerFont.FontFamily, newPanelFontSize, _originalPanelLoginContainerFont.Style);
-            }
         }
 
         #region Document Issuance Tab Logic
@@ -1503,5 +1400,7 @@ namespace DocumentIssuanceApp
             }
         }
         #endregion Users Tab Logic
+
     }
+
 }
