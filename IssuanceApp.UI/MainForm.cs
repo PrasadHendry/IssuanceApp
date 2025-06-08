@@ -1,7 +1,7 @@
-﻿// Generated with the "Framework-First" scaling approach implemented.
-// The form's AutoScaleMode is set to Dpi, and all custom scaling code has been removed.
-// This relies on the .NET Framework's built-in DPI awareness, which is enabled
-// via the app.manifest file (set to PerMonitorV2).
+﻿// Generated with a robust Font-based scaling approach.
+// The form's AutoScaleMode is set to Font, and a base font is set on the main form.
+// All child controls are configured to inherit this font, allowing the .NET Framework
+// to automatically scale the entire UI based on the system's DPI and font settings.
 
 using System;
 using System.Collections;
@@ -57,8 +57,7 @@ namespace DocumentIssuanceApp
 
             SetupTabs();
 
-            // NOTE: Custom scaling event handlers have been removed.
-            // The form's AutoScaleMode=Dpi and the app.manifest now handle all scaling.
+            // NOTE: Scaling is now handled by AutoScaleMode=Font.
             this.WindowState = FormWindowState.Maximized;
         }
 
