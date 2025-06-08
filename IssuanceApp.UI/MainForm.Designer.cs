@@ -392,8 +392,8 @@ namespace DocumentIssuanceApp
             // 
             // panelLoginContainer
             // 
-            this.panelLoginContainer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.panelLoginContainer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panelLoginContainer.Controls.Add(this.lblLoginStatus);
             this.panelLoginContainer.Controls.Add(this.btnLogin);
@@ -477,7 +477,6 @@ namespace DocumentIssuanceApp
             // 
             this.tabPageDocumentIssuance.AutoScroll = true;
             this.tabPageDocumentIssuance.Controls.Add(this.tlpDocumentIssuanceMain);
-            this.tabPageDocumentIssuance.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tabPageDocumentIssuance.Location = new System.Drawing.Point(4, 30);
             this.tabPageDocumentIssuance.Name = "tabPageDocumentIssuance";
             this.tabPageDocumentIssuance.Padding = new System.Windows.Forms.Padding(10);
@@ -1442,7 +1441,6 @@ namespace DocumentIssuanceApp
             // tabPageGmOperations
             // 
             this.tabPageGmOperations.Controls.Add(this.tlpGmOperationsMain);
-            this.tabPageGmOperations.Font = new System.Drawing.Font("Segoe UI", 9.75F);
             this.tabPageGmOperations.Location = new System.Drawing.Point(4, 30);
             this.tabPageGmOperations.Name = "tabPageGmOperations";
             this.tabPageGmOperations.Padding = new System.Windows.Forms.Padding(10);
@@ -2013,7 +2011,6 @@ namespace DocumentIssuanceApp
             // tabPageQa
             // 
             this.tabPageQa.Controls.Add(this.tlpQaOperationsMain);
-            this.tabPageQa.Font = new System.Drawing.Font("Segoe UI", 9.75F);
             this.tabPageQa.Location = new System.Drawing.Point(4, 30);
             this.tabPageQa.Name = "tabPageQa";
             this.tabPageQa.Padding = new System.Windows.Forms.Padding(10);
@@ -2692,7 +2689,6 @@ namespace DocumentIssuanceApp
             // tabPageAuditTrail
             // 
             this.tabPageAuditTrail.Controls.Add(this.tlpAuditTrailMain);
-            this.tabPageAuditTrail.Font = new System.Drawing.Font("Segoe UI", 9.75F);
             this.tabPageAuditTrail.Location = new System.Drawing.Point(4, 30);
             this.tabPageAuditTrail.Name = "tabPageAuditTrail";
             this.tabPageAuditTrail.Padding = new System.Windows.Forms.Padding(10);
@@ -2955,7 +2951,6 @@ namespace DocumentIssuanceApp
             // tabPageUsers
             // 
             this.tabPageUsers.Controls.Add(this.scUsersMain);
-            this.tabPageUsers.Font = new System.Drawing.Font("Segoe UI", 9.75F);
             this.tabPageUsers.Location = new System.Drawing.Point(4, 30);
             this.tabPageUsers.Name = "tabPageUsers";
             this.tabPageUsers.Padding = new System.Windows.Forms.Padding(10);

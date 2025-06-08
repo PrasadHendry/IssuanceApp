@@ -1,6 +1,7 @@
 ﻿// Generated with the "Framework-First" scaling approach implemented.
-// All custom scaling code has been removed to rely on the .NET Framework's
-// built-in DPI awareness, which is enabled via the app.manifest file.
+// The form's AutoScaleMode is set to Dpi, and all custom scaling code has been removed.
+// This relies on the .NET Framework's built-in DPI awareness, which is enabled
+// via the app.manifest file (set to PerMonitorV2).
 
 using System;
 using System.Collections;
