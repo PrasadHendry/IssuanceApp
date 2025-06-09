@@ -384,7 +384,7 @@ namespace DocumentIssuanceApp
             this.tlpLoginMain.Name = "tlpLoginMain";
             this.tlpLoginMain.RowCount = 3;
             this.tlpLoginMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tlpLoginMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tlpLoginMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.AutoSize));
             this.tlpLoginMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tlpLoginMain.Size = new System.Drawing.Size(1354, 646);
             this.tlpLoginMain.TabIndex = 1;
@@ -502,15 +502,15 @@ namespace DocumentIssuanceApp
             this.tlpDocumentIssuanceMain.Location = new System.Drawing.Point(10, 10);
             this.tlpDocumentIssuanceMain.Name = "tlpDocumentIssuanceMain";
             this.tlpDocumentIssuanceMain.RowCount = 8;
-            this.tlpDocumentIssuanceMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
-            this.tlpDocumentIssuanceMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpDocumentIssuanceMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpDocumentIssuanceMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpDocumentIssuanceMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpDocumentIssuanceMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 100F));
-            this.tlpDocumentIssuanceMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 55F));
-            this.tlpDocumentIssuanceMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
-            this.tlpDocumentIssuanceMain.Size = new System.Drawing.Size(1319, 715);
+            this.tlpDocumentIssuanceMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.AutoSize)); // Better
+            this.tlpDocumentIssuanceMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.AutoSize)); // Better
+            this.tlpDocumentIssuanceMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.AutoSize)); // Better
+            this.tlpDocumentIssuanceMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.AutoSize)); // Better
+            this.tlpDocumentIssuanceMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.AutoSize)); // Better
+            this.tlpDocumentIssuanceMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F)); // Changed
+            this.tlpDocumentIssuanceMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.AutoSize)); // Better
+            this.tlpDocumentIssuanceMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.AutoSize)); // Better
+            this.tlpDocumentIssuanceMain.Size = new System.Drawing.Size(1319, 632); // Size will be managed by Dock
             this.tlpDocumentIssuanceMain.TabIndex = 0;
             // 
             // lblHeaderDI
@@ -1603,12 +1603,12 @@ namespace DocumentIssuanceApp
             this.tlpGmRequestDetails.Location = new System.Drawing.Point(10, 32);
             this.tlpGmRequestDetails.Name = "tlpGmRequestDetails";
             this.tlpGmRequestDetails.RowCount = 7;
-            this.tlpGmRequestDetails.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpGmRequestDetails.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpGmRequestDetails.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpGmRequestDetails.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpGmRequestDetails.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpGmRequestDetails.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tlpGmRequestDetails.RowStyles.Add(new System.Windows.Forms.RowStyle((System.Windows.Forms.SizeType.AutoSize)));
+            this.tlpGmRequestDetails.RowStyles.Add(new System.Windows.Forms.RowStyle((System.Windows.Forms.SizeType.AutoSize)));
+            this.tlpGmRequestDetails.RowStyles.Add(new System.Windows.Forms.RowStyle((System.Windows.Forms.SizeType.AutoSize)));
+            this.tlpGmRequestDetails.RowStyles.Add(new System.Windows.Forms.RowStyle((System.Windows.Forms.SizeType.AutoSize)));
+            this.tlpGmRequestDetails.RowStyles.Add(new System.Windows.Forms.RowStyle((System.Windows.Forms.SizeType.AutoSize)));
+            this.tlpGmRequestDetails.RowStyles.Add(new System.Windows.Forms.RowStyle((System.Windows.Forms.SizeType.AutoSize)));
             this.tlpGmRequestDetails.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 50F));
             this.tlpGmRequestDetails.Size = new System.Drawing.Size(1287, 256);
             this.tlpGmRequestDetails.TabIndex = 0;
@@ -1887,7 +1887,7 @@ namespace DocumentIssuanceApp
             this.tlpGmActionControls.Location = new System.Drawing.Point(10, 32);
             this.tlpGmActionControls.Name = "tlpGmActionControls";
             this.tlpGmActionControls.RowCount = 3;
-            this.tlpGmActionControls.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tlpGmActionControls.RowStyles.Add(new System.Windows.Forms.RowStyle((System.Windows.Forms.SizeType.AutoSize)));
             this.tlpGmActionControls.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tlpGmActionControls.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 45F));
             this.tlpGmActionControls.Size = new System.Drawing.Size(1287, 92);
@@ -2183,15 +2183,15 @@ namespace DocumentIssuanceApp
             this.tlpQaRequestDetails.Location = new System.Drawing.Point(10, 32);
             this.tlpQaRequestDetails.Name = "tlpQaRequestDetails";
             this.tlpQaRequestDetails.RowCount = 9;
-            this.tlpQaRequestDetails.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpQaRequestDetails.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpQaRequestDetails.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpQaRequestDetails.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpQaRequestDetails.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpQaRequestDetails.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tlpQaRequestDetails.RowStyles.Add(new System.Windows.Forms.RowStyle((System.Windows.Forms.SizeType.AutoSize)));
+            this.tlpQaRequestDetails.RowStyles.Add(new System.Windows.Forms.RowStyle((System.Windows.Forms.SizeType.AutoSize)));
+            this.tlpQaRequestDetails.RowStyles.Add(new System.Windows.Forms.RowStyle((System.Windows.Forms.SizeType.AutoSize)));
+            this.tlpQaRequestDetails.RowStyles.Add(new System.Windows.Forms.RowStyle((System.Windows.Forms.SizeType.AutoSize)));
+            this.tlpQaRequestDetails.RowStyles.Add(new System.Windows.Forms.RowStyle((System.Windows.Forms.SizeType.AutoSize)));
+            this.tlpQaRequestDetails.RowStyles.Add(new System.Windows.Forms.RowStyle((System.Windows.Forms.SizeType.AutoSize)));
             this.tlpQaRequestDetails.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 50F));
             this.tlpQaRequestDetails.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 50F));
-            this.tlpQaRequestDetails.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tlpQaRequestDetails.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.AutoSize));
             this.tlpQaRequestDetails.Size = new System.Drawing.Size(1287, 370);
             this.tlpQaRequestDetails.TabIndex = 0;
             // 
@@ -2644,7 +2644,7 @@ namespace DocumentIssuanceApp
             this.tlpAuditTrailMain.Location = new System.Drawing.Point(10, 10);
             this.tlpAuditTrailMain.Name = "tlpAuditTrailMain";
             this.tlpAuditTrailMain.RowCount = 3;
-            this.tlpAuditTrailMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tlpAuditTrailMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.AutoSize));
             this.tlpAuditTrailMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tlpAuditTrailMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 45F));
             this.tlpAuditTrailMain.Size = new System.Drawing.Size(1340, 632);
