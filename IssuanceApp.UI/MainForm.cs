@@ -176,7 +176,6 @@ namespace DocumentIssuanceApp
             bool isRequester = (role == "Requester");
             bool isGm = (role == "GM_Operations");
             bool isQa = (role == "QA");
-
             if (tabControlMain == null) return;
 
             if (tabPageDocumentIssuance != null) tabPageDocumentIssuance.Enabled = isRequester || isAdmin;
