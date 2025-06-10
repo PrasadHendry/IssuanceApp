@@ -376,7 +376,7 @@ namespace DocumentIssuanceApp
             // 
             this.tlpLoginMain.ColumnCount = 3;
             this.tlpLoginMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tlpLoginMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tlpLoginMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.AutoSize));
             this.tlpLoginMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tlpLoginMain.Controls.Add(this.panelLoginContainer, 1, 1);
             this.tlpLoginMain.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -502,14 +502,14 @@ namespace DocumentIssuanceApp
             this.tlpDocumentIssuanceMain.Location = new System.Drawing.Point(10, 10);
             this.tlpDocumentIssuanceMain.Name = "tlpDocumentIssuanceMain";
             this.tlpDocumentIssuanceMain.RowCount = 8;
-            this.tlpDocumentIssuanceMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.AutoSize)); // Better
-            this.tlpDocumentIssuanceMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.AutoSize)); // Better
-            this.tlpDocumentIssuanceMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.AutoSize)); // Better
-            this.tlpDocumentIssuanceMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.AutoSize)); // Better
-            this.tlpDocumentIssuanceMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.AutoSize)); // Better
-            this.tlpDocumentIssuanceMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F)); // Changed
-            this.tlpDocumentIssuanceMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.AutoSize)); // Better
-            this.tlpDocumentIssuanceMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.AutoSize)); // Better
+            this.tlpDocumentIssuanceMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.AutoSize));     
+            this.tlpDocumentIssuanceMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.AutoSize));     
+            this.tlpDocumentIssuanceMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.AutoSize));  
+            this.tlpDocumentIssuanceMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.AutoSize)); 
+            this.tlpDocumentIssuanceMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.AutoSize)); 
+            this.tlpDocumentIssuanceMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tlpDocumentIssuanceMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.AutoSize)); 
+            this.tlpDocumentIssuanceMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.AutoSize)); 
             this.tlpDocumentIssuanceMain.Size = new System.Drawing.Size(1319, 632); // Size will be managed by Dock
             this.tlpDocumentIssuanceMain.TabIndex = 0;
             // 
@@ -721,7 +721,7 @@ namespace DocumentIssuanceApp
             // tlpTopRightDetailsDI
             // 
             this.tlpTopRightDetailsDI.ColumnCount = 2;
-            this.tlpTopRightDetailsDI.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tlpTopRightDetailsDI.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.AutoSize));
             this.tlpTopRightDetailsDI.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tlpTopRightDetailsDI.Controls.Add(this.lblTrackerNoLabelDI, 0, 0);
             this.tlpTopRightDetailsDI.Controls.Add(this.lblTrackerNoValueDI, 1, 0);
@@ -792,10 +792,10 @@ namespace DocumentIssuanceApp
             // 
             this.tlpRequestDetails.AutoSize = true;
             this.tlpRequestDetails.ColumnCount = 5;
-            this.tlpRequestDetails.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tlpRequestDetails.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.AutoSize));
             this.tlpRequestDetails.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 300F));
             this.tlpRequestDetails.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpRequestDetails.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tlpRequestDetails.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.AutoSize));
             this.tlpRequestDetails.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 260F));
             this.tlpRequestDetails.Controls.Add(this.lblRequestDateDI, 0, 0);
             this.tlpRequestDetails.Controls.Add(this.dtpRequestDateDI, 1, 0);
@@ -870,9 +870,9 @@ namespace DocumentIssuanceApp
             // 
             this.tlpParentBatchInfo.AutoSize = true;
             this.tlpParentBatchInfo.ColumnCount = 4;
-            this.tlpParentBatchInfo.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tlpParentBatchInfo.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.AutoSize));
             this.tlpParentBatchInfo.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tlpParentBatchInfo.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tlpParentBatchInfo.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.AutoSize));
             this.tlpParentBatchInfo.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tlpParentBatchInfo.Controls.Add(this.lblParentBatchNoDI, 0, 0);
             this.tlpParentBatchInfo.Controls.Add(this.txtParentBatchNoDI, 1, 0);
@@ -1046,11 +1046,11 @@ namespace DocumentIssuanceApp
             // 
             this.tlpItemDetails.AutoSize = true;
             this.tlpItemDetails.ColumnCount = 6;
-            this.tlpItemDetails.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tlpItemDetails.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.AutoSize));
             this.tlpItemDetails.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33F));
-            this.tlpItemDetails.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tlpItemDetails.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.AutoSize));
             this.tlpItemDetails.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33F));
-            this.tlpItemDetails.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tlpItemDetails.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.AutoSize));
             this.tlpItemDetails.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.34F));
             this.tlpItemDetails.Controls.Add(this.lblProductDI, 0, 0);
             this.tlpItemDetails.Controls.Add(this.txtProductDI, 1, 0);
@@ -1546,7 +1546,7 @@ namespace DocumentIssuanceApp
             this.tlpGmBottomSection.Location = new System.Drawing.Point(3, 253);
             this.tlpGmBottomSection.Name = "tlpGmBottomSection";
             this.tlpGmBottomSection.RowCount = 2;
-            this.tlpGmBottomSection.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tlpGmBottomSection.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.AutoSize));
             this.tlpGmBottomSection.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 140F));
             this.tlpGmBottomSection.Size = new System.Drawing.Size(1313, 374);
             this.tlpGmBottomSection.TabIndex = 1;
@@ -2122,7 +2122,7 @@ namespace DocumentIssuanceApp
             this.tlpQaBottomSection.Location = new System.Drawing.Point(3, 253);
             this.tlpQaBottomSection.Name = "tlpQaBottomSection";
             this.tlpQaBottomSection.RowCount = 2;
-            this.tlpQaBottomSection.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tlpQaBottomSection.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.AutoSize));
             this.tlpQaBottomSection.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 180F));
             this.tlpQaBottomSection.Size = new System.Drawing.Size(1313, 408);
             this.tlpQaBottomSection.TabIndex = 1;
@@ -2514,7 +2514,7 @@ namespace DocumentIssuanceApp
             this.tlpQaActionControls.Name = "tlpQaActionControls";
             this.tlpQaActionControls.RowCount = 4;
             this.tlpQaActionControls.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
-            this.tlpQaActionControls.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tlpQaActionControls.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.AutoSize));
             this.tlpQaActionControls.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tlpQaActionControls.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 47F));
             this.tlpQaActionControls.Size = new System.Drawing.Size(1287, 132);
@@ -2667,11 +2667,11 @@ namespace DocumentIssuanceApp
             // 
             this.tlpAuditFilters.AutoSize = true;
             this.tlpAuditFilters.ColumnCount = 8;
-            this.tlpAuditFilters.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tlpAuditFilters.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.AutoSize));
             this.tlpAuditFilters.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 150F));
-            this.tlpAuditFilters.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tlpAuditFilters.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.AutoSize));
             this.tlpAuditFilters.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 150F));
-            this.tlpAuditFilters.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tlpAuditFilters.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.AutoSize));
             this.tlpAuditFilters.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 180F));
             this.tlpAuditFilters.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 130F));
             this.tlpAuditFilters.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -2997,7 +2997,7 @@ namespace DocumentIssuanceApp
             // tlpManageRole
             // 
             this.tlpManageRole.ColumnCount = 2;
-            this.tlpManageRole.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tlpManageRole.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.AutoSize));
             this.tlpManageRole.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tlpManageRole.Controls.Add(this.lblRoleNameManage, 0, 0);
             this.tlpManageRole.Controls.Add(this.txtRoleNameManage, 1, 0);
@@ -3147,7 +3147,9 @@ namespace DocumentIssuanceApp
             this.flpParentBatchSize.ResumeLayout(false);
             this.flpParentBatchSize.PerformLayout();
             this.flpParentMfgDate.ResumeLayout(false);
+            this.flpParentMfgDate.PerformLayout();  // ADDED - was missing
             this.flpParentExpDate.ResumeLayout(false);
+            this.flpParentExpDate.PerformLayout();  // ADDED - was missing
             this.grpItemDetailsDI.ResumeLayout(false);
             this.grpItemDetailsDI.PerformLayout();
             this.tlpItemDetails.ResumeLayout(false);
@@ -3155,7 +3157,9 @@ namespace DocumentIssuanceApp
             this.flpItemBatchSize.ResumeLayout(false);
             this.flpItemBatchSize.PerformLayout();
             this.flpItemMfgDate.ResumeLayout(false);
+            this.flpItemMfgDate.PerformLayout();    // ADDED - was missing
             this.flpItemExpDate.ResumeLayout(false);
+            this.flpItemExpDate.PerformLayout();    // ADDED - was missing
             this.grpRemarksDI.ResumeLayout(false);
             this.grpRemarksDI.PerformLayout();
             this.pnlActionBottomDI.ResumeLayout(false);
