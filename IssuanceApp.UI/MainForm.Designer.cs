@@ -612,7 +612,7 @@ namespace DocumentIssuanceApp
             this.txtBmrDocNoDI.Name = "txtBmrDocNoDI";
             this.txtBmrDocNoDI.Size = new System.Drawing.Size(621, 25);
             this.txtBmrDocNoDI.TabIndex = 2;
-            this.txtBmrDocNoDI.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtBmrDocNoDI.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
             this.txtBmrDocNoDI.Visible = false;
             // 
             // chkDocTypeBPRDI
@@ -633,7 +633,7 @@ namespace DocumentIssuanceApp
             this.txtBprDocNoDI.Name = "txtBprDocNoDI";
             this.txtBprDocNoDI.Size = new System.Drawing.Size(621, 25);
             this.txtBprDocNoDI.TabIndex = 5;
-            this.txtBprDocNoDI.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtBprDocNoDI.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
             this.txtBprDocNoDI.Visible = false;
             // 
             // chkDocTypeAppendixDI
