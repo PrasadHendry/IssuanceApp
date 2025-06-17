@@ -29,12 +29,16 @@ namespace DocumentIssuanceApp
 
         private BindingSource userRolesBindingSource;
 
+        // --- New controls for dynamic UI ---
+        private List<TabPage> allTabPages;
+        private ToolStripDropDownButton toolStripDropDownButtonUserActions;
+        private ToolStripMenuItem signOutToolStripMenuItem;
 
 
         public MainForm()
         {
             InitializeComponent();
-            InitializeCustomComponents();
+            InitializeDynamicControls(); // Initialize programmatically added controls
 
             SetupStatusBar();
 
@@ -54,6 +58,52 @@ namespace DocumentIssuanceApp
 
             // NOTE: Scaling is now handled by AutoScaleMode=Font.
             this.WindowState = FormWindowState.Maximized;
+        }
+
+        private void InitializeDynamicControls()
+        {
+            // 1. Cache all TabPage controls for dynamic showing/hiding
+            allTabPages = new List<TabPage>();
+            foreach (TabPage tp in tabControlMain.TabPages)
+            {
+                allTabPages.Add(tp);
+            }
+
+            // 2. Create and configure the Sign Out button
+            this.toolStripDropDownButtonUserActions = new ToolStripDropDownButton();
+            this.signOutToolStripMenuItem = new ToolStripMenuItem();
+
+            // -- Sign Out Menu Item --
+            this.signOutToolStripMenuItem.Name = "signOutToolStripMenuItem";
+            this.signOutToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.signOutToolStripMenuItem.Text = "Sign Out";
+            this.signOutToolStripMenuItem.Click += SignOutToolStripMenuItem_Click;
+
+            // -- User Actions DropDown Button --
+            this.toolStripDropDownButtonUserActions.DisplayStyle = ToolStripItemDisplayStyle.Text;
+            this.toolStripDropDownButtonUserActions.DropDownItems.AddRange(new ToolStripItem[] {
+            this.signOutToolStripMenuItem});
+            this.toolStripDropDownButtonUserActions.Name = "toolStripDropDownButtonUserActions";
+            this.toolStripDropDownButtonUserActions.Size = new System.Drawing.Size(90, 24);
+            this.toolStripDropDownButtonUserActions.Text = "User Actions";
+            this.toolStripDropDownButtonUserActions.Visible = false; // Initially hidden
+
+            // Add the new button to the status strip
+            // Insert it right after the user status label for a clean look
+            this.statusStripMain.Items.Insert(1, this.toolStripDropDownButtonUserActions);
+        }
+
+        private void SignOutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var confirmResult = MessageBox.Show("Are you sure you want to sign out and exit the application?",
+                                             "Confirm Sign Out",
+                                             MessageBoxButtons.YesNo,
+                                             MessageBoxIcon.Question);
+
+            if (confirmResult == DialogResult.Yes)
+            {
+                Application.Exit();
+            }
         }
 
         private void InitializeCustomComponents()
@@ -174,24 +224,62 @@ namespace DocumentIssuanceApp
 
         private void EnableTabsBasedOnRole(string role)
         {
+            bool isLoggedIn = !string.IsNullOrEmpty(role);
+
+            // Show/hide the "User Actions" (Sign Out) button
+            if (toolStripDropDownButtonUserActions != null)
+            {
+                toolStripDropDownButtonUserActions.Visible = isLoggedIn;
+            }
+
+            // Clear all tabs before adding back the accessible ones
+            tabControlMain.TabPages.Clear();
+
+            if (!isLoggedIn)
+            {
+                // If logged out, only show the Login tab
+                var loginTab = allTabPages.FirstOrDefault(t => t.Name == nameof(tabPageLogin));
+                if (loginTab != null)
+                {
+                    tabControlMain.TabPages.Add(loginTab);
+                }
+                return;
+            }
+
+            // If logged in, add tabs based on role, but never the Login tab
             bool isAdmin = (role == "Admin");
             bool isRequester = (role == "Requester");
             bool isGm = (role == "GM_Operations");
             bool isQa = (role == "QA");
-            if (tabControlMain == null) return;
 
-            if (tabPageDocumentIssuance != null) tabPageDocumentIssuance.Enabled = isRequester || isAdmin;
-            if (tabPageGmOperations != null) tabPageGmOperations.Enabled = isGm || isAdmin;
-            if (tabPageQa != null) tabPageQa.Enabled = isQa || isAdmin;
-            if (tabPageUsers != null) tabPageUsers.Enabled = isAdmin; // Users tab only for Admin
-            if (tabPageAuditTrail != null) tabPageAuditTrail.Enabled = !string.IsNullOrEmpty(role); // Audit trail for any logged-in user
-
-            // If no role (logged out), select login tab
-            if (string.IsNullOrEmpty(role) && tabPageLogin != null)
+            foreach (var tab in allTabPages)
             {
-                if (tabControlMain.TabPages.Contains(tabPageLogin))
+                bool shouldShowTab = false;
+                switch (tab.Name)
                 {
-                    tabControlMain.SelectedTab = tabPageLogin;
+                    case nameof(tabPageLogin):
+                        shouldShowTab = false; // Never show login tab when logged in
+                        break;
+                    case nameof(tabPageDocumentIssuance):
+                        shouldShowTab = isRequester || isAdmin;
+                        break;
+                    case nameof(tabPageGmOperations):
+                        shouldShowTab = isGm || isAdmin;
+                        break;
+                    case nameof(tabPageQa):
+                        shouldShowTab = isQa || isAdmin;
+                        break;
+                    case nameof(tabPageUsers):
+                        shouldShowTab = isAdmin;
+                        break;
+                    case nameof(tabPageAuditTrail):
+                        shouldShowTab = true; // Always show for any logged-in user
+                        break;
+                }
+
+                if (shouldShowTab)
+                {
+                    tabControlMain.TabPages.Add(tab);
                 }
             }
         }
@@ -203,30 +291,30 @@ namespace DocumentIssuanceApp
             switch (role)
             {
                 case "Requester":
-                    targetTab = tabPageDocumentIssuance;
+                    targetTab = allTabPages.FirstOrDefault(t => t.Name == nameof(tabPageDocumentIssuance));
                     break;
                 case "GM_Operations":
-                    targetTab = tabPageGmOperations;
+                    targetTab = allTabPages.FirstOrDefault(t => t.Name == nameof(tabPageGmOperations));
                     break;
                 case "QA":
-                    targetTab = tabPageQa;
+                    targetTab = allTabPages.FirstOrDefault(t => t.Name == nameof(tabPageQa));
                     break;
                 case "Admin":
-                    targetTab = tabPageUsers; // Admin default to Users tab
+                    targetTab = allTabPages.FirstOrDefault(t => t.Name == nameof(tabPageUsers)); // Admin default to Users tab
                     break;
                 default:
-                    targetTab = tabPageLogin; // Fallback to login tab
+                    targetTab = allTabPages.FirstOrDefault(t => t.Name == nameof(tabPageLogin)); // Fallback to login tab
                     break;
             }
 
-            if (targetTab != null && tabControlMain.TabPages.Contains(targetTab) && targetTab.Enabled)
+            if (targetTab != null && tabControlMain.TabPages.Contains(targetTab))
             {
                 tabControlMain.SelectedTab = targetTab;
             }
-            else if (tabPageLogin != null && tabControlMain.TabPages.Contains(tabPageLogin))
+            else if (tabControlMain.TabPages.Count > 0)
             {
-                // Fallback if the intended tab is not available or disabled for some reason
-                tabControlMain.SelectedTab = tabPageLogin;
+                // Fallback if the intended tab is not available, select the first one
+                tabControlMain.SelectedIndex = 0;
             }
         }
 

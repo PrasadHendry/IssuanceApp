@@ -3199,8 +3199,6 @@ namespace DocumentIssuanceApp
             ((System.ComponentModel.ISupportInitialize)(this.dgvAuditTrail)).EndInit();
             this.flpAuditExportButtons.ResumeLayout(false);
             this.tabPageUsers.ResumeLayout(false);
-            this.scUsersMain.Panel1.ResumeLayout(false);
-            this.scUsersMain.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.scUsersMain)).EndInit();
             this.scUsersMain.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvUserRoles)).EndInit();
