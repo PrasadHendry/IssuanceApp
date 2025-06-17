@@ -29,11 +29,6 @@ namespace DocumentIssuanceApp
 
         private BindingSource userRolesBindingSource;
 
-        // --- START: User Management Mode Fields ---
-        private enum UserManagementMode { None, Adding, Editing }
-        private UserManagementMode _currentUsersTabMode = UserManagementMode.None;
-        private UserRole _roleBeingEdited = null; // To store the role object during an edit operation
-        // --- END: User Management Mode Fields ---
 
 
         public MainForm()
@@ -1095,10 +1090,8 @@ namespace DocumentIssuanceApp
                 dgvUserRoles.SelectionChanged += DgvUserRoles_SelectionChanged;
             }
 
-            if (btnAddRole != null) btnAddRole.Click += BtnAddRole_Click;
-            if (btnEditRole != null) btnEditRole.Click += BtnEditRole_Click;
-            if (btnDeleteRole != null) btnDeleteRole.Click += BtnDeleteRole_Click;
             if (btnRefreshUserRoles != null) btnRefreshUserRoles.Click += BtnRefreshUserRoles_Click;
+            if (btnResetPassword != null) btnResetPassword.Click += BtnResetPassword_Click;
 
             if (txtRoleNameManage != null)
             {
@@ -1106,11 +1099,7 @@ namespace DocumentIssuanceApp
                 txtRoleNameManage.ReadOnly = true;
             }
 
-            if (btnAddRole != null) btnAddRole.Enabled = true;
-            if (btnEditRole != null) btnEditRole.Enabled = false;
-            if (btnDeleteRole != null) btnDeleteRole.Enabled = false;
-
-            _currentUsersTabMode = UserManagementMode.None;
+            if (btnResetPassword != null) btnResetPassword.Enabled = false;
         }
 
         private void LoadUserRoles()
@@ -1129,16 +1118,15 @@ namespace DocumentIssuanceApp
 
             this.userRolesBindingSource.DataSource = null;
             this.userRolesBindingSource.DataSource = placeholderRoles;
-            ResetUserManagementToNoneMode();
+
+            // Reset state after loading
+            if (txtRoleNameManage != null) txtRoleNameManage.Clear();
+            if (btnResetPassword != null) btnResetPassword.Enabled = false;
+            if (dgvUserRoles != null) dgvUserRoles.ClearSelection();
         }
 
         private void DgvUserRoles_SelectionChanged(object sender, EventArgs e)
         {
-            if (_currentUsersTabMode != UserManagementMode.None)
-            {
-                return;
-            }
-
             bool roleSelected = dgvUserRoles != null && dgvUserRoles.SelectedRows.Count > 0;
             UserRole selectedUserRole = null;
 
@@ -1152,258 +1140,35 @@ namespace DocumentIssuanceApp
                 txtRoleNameManage.Text = selectedUserRole?.RoleName ?? "";
             }
 
-            if (btnEditRole != null) btnEditRole.Enabled = roleSelected;
-            if (btnDeleteRole != null) btnDeleteRole.Enabled = roleSelected;
-        }
-
-        private void ResetUserManagementToNoneMode()
-        {
-            _currentUsersTabMode = UserManagementMode.None;
-            _roleBeingEdited = null;
-
-            if (txtRoleNameManage != null)
-            {
-                txtRoleNameManage.ReadOnly = true;
-            }
-
-            if (btnAddRole != null)
-            {
-                btnAddRole.Text = "Add Role";
-                btnAddRole.Enabled = true;
-            }
-            if (btnEditRole != null)
-            {
-                btnEditRole.Text = "Edit Role";
-            }
-
-            if (dgvUserRoles != null)
-            {
-                dgvUserRoles.Enabled = true;
-            }
-            DgvUserRoles_SelectionChanged(null, null);
-        }
-
-        private bool IsRoleNameUnique(string roleName, int currentRoleIdToExclude = -1)
-        {
-            if (string.IsNullOrWhiteSpace(roleName)) return false;
-
-            var rolesList = this.userRolesBindingSource.DataSource as List<UserRole>;
-            if (rolesList == null) return true;
-
-            return !rolesList.Any(r => r.RoleName.Equals(roleName, StringComparison.OrdinalIgnoreCase) && r.RoleID != currentRoleIdToExclude);
+            if (btnResetPassword != null) btnResetPassword.Enabled = roleSelected;
         }
 
         private void BtnRefreshUserRoles_Click(object sender, EventArgs e) { LoadUserRoles(); }
 
-        private void BtnAddRole_Click(object sender, EventArgs e)
+        private void BtnResetPassword_Click(object sender, EventArgs e)
         {
-            switch (_currentUsersTabMode)
-            {
-                case UserManagementMode.None:
-                    _currentUsersTabMode = UserManagementMode.Adding;
-                    _roleBeingEdited = null;
-
-                    if (txtRoleNameManage != null)
-                    {
-                        txtRoleNameManage.Clear();
-                        txtRoleNameManage.ReadOnly = false;
-                    }
-
-                    if (btnAddRole != null) btnAddRole.Text = "Save New";
-                    if (btnEditRole != null)
-                    {
-                        btnEditRole.Text = "Cancel Add";
-                        btnEditRole.Enabled = true;
-                    }
-                    if (btnDeleteRole != null) btnDeleteRole.Enabled = false;
-                    if (dgvUserRoles != null)
-                    {
-                        dgvUserRoles.Enabled = false;
-                        dgvUserRoles.ClearSelection();
-                    }
-                    txtRoleNameManage?.Focus();
-                    break;
-
-                case UserManagementMode.Adding:
-                    string newRoleName = txtRoleNameManage.Text.Trim();
-                    if (string.IsNullOrWhiteSpace(newRoleName))
-                    {
-                        MessageBox.Show("Role name cannot be empty.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        txtRoleNameManage.Focus();
-                        return;
-                    }
-                    if (!IsRoleNameUnique(newRoleName))
-                    {
-                        MessageBox.Show($"Role name '{newRoleName}' already exists. Please enter a unique name.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        txtRoleNameManage.Focus();
-                        return;
-                    }
-
-                    var rolesListAdd = this.userRolesBindingSource.DataSource as List<UserRole>;
-                    if (rolesListAdd != null)
-                    {
-                        int maxId = 0;
-                        if (rolesListAdd.Any()) maxId = rolesListAdd.Max(r => r.RoleID);
-
-                        var newRole = new UserRole { RoleID = maxId + 1, RoleName = newRoleName };
-                        rolesListAdd.Add(newRole);
-                        this.userRolesBindingSource.ResetBindings(false);
-
-                        foreach (DataGridViewRow row in dgvUserRoles.Rows)
-                        {
-                            if (row.DataBoundItem is UserRole item && item.RoleID == newRole.RoleID)
-                            {
-                                row.Selected = true;
-                                dgvUserRoles.CurrentCell = row.Cells.Cast<DataGridViewCell>().FirstOrDefault(c => c.Visible);
-                                break;
-                            }
-                        }
-                        MessageBox.Show($"Role '{newRoleName}' added successfully (Simulated).", "Role Added", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
-                    ResetUserManagementToNoneMode();
-                    break;
-
-                case UserManagementMode.Editing:
-                    ResetUserManagementToNoneMode();
-                    if (_roleBeingEdited != null && dgvUserRoles != null)
-                    {
-                        foreach (DataGridViewRow row in dgvUserRoles.Rows)
-                        {
-                            if (row.DataBoundItem is UserRole item && item.RoleID == _roleBeingEdited.RoleID)
-                            {
-                                row.Selected = true;
-                                dgvUserRoles.CurrentCell = row.Cells.Cast<DataGridViewCell>().FirstOrDefault(c => c.Visible);
-                                break;
-                            }
-                        }
-                    }
-                    break;
-            }
-        }
-
-        private void BtnEditRole_Click(object sender, EventArgs e)
-        {
-            switch (_currentUsersTabMode)
-            {
-                case UserManagementMode.None:
-                    if (dgvUserRoles.SelectedRows.Count == 0)
-                    {
-                        MessageBox.Show("Please select a role from the list to edit.", "No Role Selected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        return;
-                    }
-                    _roleBeingEdited = dgvUserRoles.SelectedRows[0].DataBoundItem as UserRole;
-                    if (_roleBeingEdited == null)
-                    {
-                        MessageBox.Show("Selected role data is invalid.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        return;
-                    }
-
-                    _currentUsersTabMode = UserManagementMode.Editing;
-
-                    if (txtRoleNameManage != null)
-                    {
-                        txtRoleNameManage.ReadOnly = false;
-                    }
-
-                    if (btnEditRole != null) btnEditRole.Text = "Save Changes";
-                    if (btnAddRole != null)
-                    {
-                        btnAddRole.Text = "Cancel Edit";
-                        btnAddRole.Enabled = true;
-                    }
-                    if (btnDeleteRole != null) btnDeleteRole.Enabled = false;
-                    if (dgvUserRoles != null) dgvUserRoles.Enabled = false;
-
-                    txtRoleNameManage?.Focus();
-                    txtRoleNameManage?.SelectAll();
-                    break;
-
-                case UserManagementMode.Editing:
-                    if (_roleBeingEdited == null)
-                    {
-                        MessageBox.Show("No role selected for editing.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        ResetUserManagementToNoneMode();
-                        return;
-                    }
-                    string updatedRoleName = txtRoleNameManage.Text.Trim();
-                    if (string.IsNullOrWhiteSpace(updatedRoleName))
-                    {
-                        MessageBox.Show("Role name cannot be empty.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        txtRoleNameManage.Focus();
-                        return;
-                    }
-                    if (!IsRoleNameUnique(updatedRoleName, _roleBeingEdited.RoleID))
-                    {
-                        MessageBox.Show($"Role name '{updatedRoleName}' already exists. Please enter a unique name.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        txtRoleNameManage.Focus();
-                        return;
-                    }
-
-                    _roleBeingEdited.RoleName = updatedRoleName;
-                    this.userRolesBindingSource.ResetBindings(false);
-                    MessageBox.Show($"Role '{updatedRoleName}' updated successfully (Simulated).", "Role Updated", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                    int rowIndexToSelect = -1;
-                    if (dgvUserRoles != null)
-                    {
-                        for (int i = 0; i < dgvUserRoles.Rows.Count; i++)
-                        {
-                            if (dgvUserRoles.Rows[i].DataBoundItem is UserRole item && item.RoleID == _roleBeingEdited.RoleID)
-                            {
-                                rowIndexToSelect = i;
-                                break;
-                            }
-                        }
-                    }
-
-                    ResetUserManagementToNoneMode();
-
-                    if (rowIndexToSelect != -1 && dgvUserRoles != null && dgvUserRoles.Rows.Count > rowIndexToSelect)
-                    {
-                        dgvUserRoles.ClearSelection();
-                        dgvUserRoles.Rows[rowIndexToSelect].Selected = true;
-                        dgvUserRoles.CurrentCell = dgvUserRoles.Rows[rowIndexToSelect].Cells.Cast<DataGridViewCell>().FirstOrDefault(c => c.Visible);
-                    }
-                    break;
-
-                case UserManagementMode.Adding:
-                    ResetUserManagementToNoneMode();
-                    break;
-            }
-        }
-
-        private void BtnDeleteRole_Click(object sender, EventArgs e)
-        {
-            if (_currentUsersTabMode != UserManagementMode.None) return;
-
             if (dgvUserRoles == null || dgvUserRoles.SelectedRows.Count == 0)
             {
-                MessageBox.Show("Please select a role from the list to delete.", "No Role Selected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Please select a role from the list to reset its password.", "No Role Selected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            UserRole selectedUserRole = dgvUserRoles.SelectedRows[0].DataBoundItem as UserRole;
-            string roleNameToDelete = selectedUserRole != null ? $"'{selectedUserRole.RoleName}'" : "the selected role";
 
-            if (MessageBox.Show($"Are you sure you want to delete {roleNameToDelete}?", "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+            UserRole selectedRole = dgvUserRoles.SelectedRows[0].DataBoundItem as UserRole;
+            if (selectedRole == null)
             {
-                if (selectedUserRole != null)
-                {
-                    var rolesListDelete = this.userRolesBindingSource.DataSource as List<UserRole>;
-                    if (rolesListDelete != null)
-                    {
-                        rolesListDelete.Remove(selectedUserRole);
-                        this.userRolesBindingSource.ResetBindings(false);
-                        MessageBox.Show($"Role {roleNameToDelete} (ID: {selectedUserRole.RoleID}) deleted (Simulated).", "Role Deleted", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        DgvUserRoles_SelectionChanged(null, null);
-                    }
-                }
-                else
-                {
-                    MessageBox.Show("Could not delete role: selected role data is unavailable.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+                MessageBox.Show("The selected role is invalid. Cannot proceed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
 
+            string roleName = selectedRole.RoleName;
+
+            if (MessageBox.Show($"Are you sure you want to reset the password for the '{roleName}' role?", "Confirm Password Reset", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                // This is a simulation. In a real app, you would update the database.
+                MessageBox.Show($"Password for role '{roleName}' has been reset to the default (Simulated).", "Password Reset", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
+
         #endregion Users Tab Logic
 
     }

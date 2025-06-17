@@ -267,9 +267,7 @@ namespace DocumentIssuanceApp
             this.lblRoleNameManage = new System.Windows.Forms.Label();
             this.txtRoleNameManage = new System.Windows.Forms.TextBox();
             this.flpRoleManagementButtons = new System.Windows.Forms.FlowLayoutPanel();
-            this.btnAddRole = new System.Windows.Forms.Button();
-            this.btnEditRole = new System.Windows.Forms.Button();
-            this.btnDeleteRole = new System.Windows.Forms.Button();
+            this.btnResetPassword = new System.Windows.Forms.Button();
             this.statusStripMain = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabelUser = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabelSpring = new System.Windows.Forms.ToolStripStatusLabel();
@@ -392,8 +390,8 @@ namespace DocumentIssuanceApp
             // 
             // panelLoginContainer
             // 
-            this.panelLoginContainer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.panelLoginContainer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panelLoginContainer.Controls.Add(this.lblLoginStatus);
             this.panelLoginContainer.Controls.Add(this.btnLogin);
@@ -3044,9 +3042,7 @@ namespace DocumentIssuanceApp
             // flpRoleManagementButtons
             // 
             this.tlpManageRole.SetColumnSpan(this.flpRoleManagementButtons, 2);
-            this.flpRoleManagementButtons.Controls.Add(this.btnAddRole);
-            this.flpRoleManagementButtons.Controls.Add(this.btnEditRole);
-            this.flpRoleManagementButtons.Controls.Add(this.btnDeleteRole);
+            this.flpRoleManagementButtons.Controls.Add(this.btnResetPassword);
             this.flpRoleManagementButtons.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flpRoleManagementButtons.Location = new System.Drawing.Point(3, 38);
             this.flpRoleManagementButtons.Name = "flpRoleManagementButtons";
@@ -3054,37 +3050,16 @@ namespace DocumentIssuanceApp
             this.flpRoleManagementButtons.Size = new System.Drawing.Size(846, 551);
             this.flpRoleManagementButtons.TabIndex = 2;
             // 
-            // btnAddRole
+            // btnResetPassword
             // 
-            this.btnAddRole.Font = new System.Drawing.Font("Segoe UI Semibold", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnAddRole.Location = new System.Drawing.Point(3, 8);
-            this.btnAddRole.Name = "btnAddRole";
-            this.btnAddRole.Size = new System.Drawing.Size(120, 35);
-            this.btnAddRole.TabIndex = 0;
-            this.btnAddRole.Text = "Add Role";
-            this.btnAddRole.UseVisualStyleBackColor = true;
-            // 
-            // btnEditRole
-            // 
-            this.btnEditRole.Enabled = false;
-            this.btnEditRole.Font = new System.Drawing.Font("Segoe UI Semibold", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnEditRole.Location = new System.Drawing.Point(129, 8);
-            this.btnEditRole.Name = "btnEditRole";
-            this.btnEditRole.Size = new System.Drawing.Size(120, 35);
-            this.btnEditRole.TabIndex = 1;
-            this.btnEditRole.Text = "Edit Role";
-            this.btnEditRole.UseVisualStyleBackColor = true;
-            // 
-            // btnDeleteRole
-            // 
-            this.btnDeleteRole.Enabled = false;
-            this.btnDeleteRole.Font = new System.Drawing.Font("Segoe UI Semibold", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnDeleteRole.Location = new System.Drawing.Point(255, 8);
-            this.btnDeleteRole.Name = "btnDeleteRole";
-            this.btnDeleteRole.Size = new System.Drawing.Size(120, 35);
-            this.btnDeleteRole.TabIndex = 2;
-            this.btnDeleteRole.Text = "Delete Role";
-            this.btnDeleteRole.UseVisualStyleBackColor = true;
+            this.btnResetPassword.Enabled = false;
+            this.btnResetPassword.Font = new System.Drawing.Font("Segoe UI Semibold", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnResetPassword.Location = new System.Drawing.Point(3, 8);
+            this.btnResetPassword.Name = "btnResetPassword";
+            this.btnResetPassword.Size = new System.Drawing.Size(140, 35);
+            this.btnResetPassword.TabIndex = 1;
+            this.btnResetPassword.Text = "Reset Password";
+            this.btnResetPassword.UseVisualStyleBackColor = true;
             // 
             // statusStripMain
             // 
@@ -3451,9 +3426,7 @@ namespace DocumentIssuanceApp
         private System.Windows.Forms.Label lblRoleNameManage;
         private System.Windows.Forms.TextBox txtRoleNameManage;
         private System.Windows.Forms.FlowLayoutPanel flpRoleManagementButtons;
-        private System.Windows.Forms.Button btnAddRole;
-        private System.Windows.Forms.Button btnEditRole;
-        private System.Windows.Forms.Button btnDeleteRole;
+        private System.Windows.Forms.Button btnResetPassword;
         private System.Windows.Forms.TableLayoutPanel tlpDocTypesAndNumbers;
         private System.Windows.Forms.Label lblBmrDocNo;
         private System.Windows.Forms.TextBox txtBmrDocNoDI;
