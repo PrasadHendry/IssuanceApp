@@ -2561,7 +2561,7 @@ namespace DocumentIssuanceApp
             this.numQaPrintCount.Name = "numQaPrintCount";
             this.numQaPrintCount.Size = new System.Drawing.Size(70, 25);
             this.numQaPrintCount.TabIndex = 1;
-            this.numQaPrintCount.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
+            this.numQaPrintCount.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.numQaPrintCount.Value = new decimal(new int[] {
             1,
             0,

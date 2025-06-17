@@ -72,26 +72,33 @@ namespace DocumentIssuanceApp
 
         private void SetupStatusBar()
         {
-            string osUserName = "Unknown User";
+            string osUserDisplay = "Unknown User";
             try
             {
                 WindowsIdentity currentUser = WindowsIdentity.GetCurrent();
                 if (currentUser != null && !string.IsNullOrEmpty(currentUser.Name))
                 {
-                    osUserName = currentUser.Name;
+                    string fullUserName = currentUser.Name;
+                    // Extract username after the backslash, or use the full name if no backslash
+                    osUserDisplay = fullUserName.Split('\\').LastOrDefault();
+                    if (string.IsNullOrEmpty(osUserDisplay))
+                    {
+                        osUserDisplay = fullUserName;
+                    }
                 }
             }
             catch (System.Security.SecurityException secEx)
             {
                 Console.WriteLine("Security error getting OS username: " + secEx.Message);
-                osUserName = "N/A (Permissions)";
+                osUserDisplay = "N/A (Permissions)";
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Error getting OS username: " + ex.Message);
-                osUserName = "N/A (Error)";
+                osUserDisplay = "N/A (Error)";
             }
-            toolStripStatusLabelUser.Text = $"User: {osUserName} (Not Logged In)";
+            this.loggedInUserName = osUserDisplay; // Store the extracted OS username for later use
+            toolStripStatusLabelUser.Text = $"{osUserDisplay} (Not Logged In)";
             toolStripStatusLabelDateTime.Text = DateTime.Now.ToString("dd-MMM-yyyy hh:mm tt");
         }
 
@@ -134,8 +141,8 @@ namespace DocumentIssuanceApp
             if (isAuthenticated)
             {
                 loggedInRole = selectedRole;
-                loggedInUserName = selectedRole;
-                toolStripStatusLabelUser.Text = $"User: {loggedInUserName} ({loggedInRole})";
+                // The loggedInUserName field is already populated with the OS user from SetupStatusBar.
+                toolStripStatusLabelUser.Text = $"{loggedInUserName} ({loggedInRole})";
 
                 lblLoginStatus.Text = $"Login successful as {loggedInRole}.";
                 lblLoginStatus.ForeColor = Color.Green;
@@ -153,7 +160,7 @@ namespace DocumentIssuanceApp
                 lblLoginStatus.Text = "Invalid role or password.";
                 lblLoginStatus.ForeColor = Color.Red;
                 loggedInRole = null;
-                loggedInUserName = null;
+                // Do not null out the OS username. SetupStatusBar will reset the display text.
                 SetupStatusBar();
                 EnableTabsBasedOnRole(null);
             }
