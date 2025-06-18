@@ -143,7 +143,7 @@ namespace DocumentIssuanceApp
                 osUserDisplay = "N/A (Error)";
             }
             this.loggedInUserName = osUserDisplay; // Store the extracted OS username for later use
-            toolStripStatusLabelUser.Text = $"{osUserDisplay} (Not Logged In)";
+            toolStripStatusLabelUser.Text = $"User: {osUserDisplay} (Not Logged In)";
             toolStripStatusLabelDateTime.Text = DateTime.Now.ToString("dd-MMM-yyyy hh:mm tt");
         }
 
@@ -152,7 +152,7 @@ namespace DocumentIssuanceApp
             if (toolStripStatusLabelDateTime != null)
             {
                 toolStripStatusLabelDateTime.Text = DateTime.Now.ToString("dd-MMM-yyyy hh:mm tt");
-            }
+            } 
         }
 
         private void InitializeLoginTab()
@@ -201,7 +201,7 @@ namespace DocumentIssuanceApp
             {
                 loggedInRole = selectedRole;
                 // The loggedInUserName field is already populated with the OS user from SetupStatusBar.
-                toolStripStatusLabelUser.Text = $"{loggedInUserName} ({loggedInRole})";
+                toolStripStatusLabelUser.Text = $"User: {loggedInUserName} ({loggedInRole})";
 
                 lblLoginStatus.Text = $"Login successful as {loggedInRole}.";
                 lblLoginStatus.ForeColor = Color.Green;
