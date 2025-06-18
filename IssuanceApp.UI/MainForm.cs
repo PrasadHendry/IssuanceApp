@@ -160,6 +160,20 @@ namespace DocumentIssuanceApp
             if (cmbRole == null || txtPassword == null || btnLogin == null || lblLoginStatus == null) return;
 
             cmbRole.Items.Clear();
+
+            // --- DB INTEGRATION POINT ---
+            // Instead of hardcoding roles, they should be fetched from the database.
+            // This makes the application more maintainable.
+            //
+            // SQL Statement:
+            // SELECT RoleName FROM dbo.User_Roles ORDER BY RoleName;
+            //
+            // C# Logic:
+            // 1. Execute the query.
+            // 2. Loop through the results and add each RoleName to cmbRole.Items.
+            // 3. Handle potential exceptions (e.g., DB connection failed).
+            //
+            // Example Placeholder:
             cmbRole.Items.AddRange(new object[] { "Requester", "GM_Operations", "QA", "Admin" });
             if (cmbRole.Items.Count > 0) cmbRole.SelectedIndex = 0;
 
@@ -213,8 +227,25 @@ namespace DocumentIssuanceApp
 
         private bool AuthenticateUser(string roleName, string password)
         {
-            // In a real application, this would involve checking against a database
-            // with hashed passwords and user roles.
+            // --- DB INTEGRATION POINT ---
+            // This is a critical security point. The hardcoded passwords must be replaced
+            // with a database check against the User_Roles table.
+            // IMPORTANT: Passwords in the DB should be stored as salted hashes, not plain text.
+            //
+            // SQL Statement:
+            // SELECT PasswordHash FROM dbo.User_Roles WHERE RoleName = @roleName;
+            //
+            // C# Logic:
+            // 1. Execute the query using the provided 'roleName' as a parameter (@roleName).
+            // 2. If a record is found, retrieve the 'PasswordHash' from the database.
+            // 3. Use a secure hashing library (e.g., BCrypt.Net) to verify the user-provided 'password'
+            //    against the database hash.
+            // 4. Return true if they match, otherwise return false.
+            //
+            // Potential Issue: Case-sensitivity of RoleName depends on the database's collation.
+            // For logins, a case-insensitive collation (default in SQL Server) is usually acceptable.
+            //
+            // Example Placeholder:
             if (roleName == "Requester" && password == "test") return true;
             if (roleName == "GM_Operations" && password == "test1") return true;
             if (roleName == "QA" && password == "test2") return true;
@@ -470,6 +501,30 @@ namespace DocumentIssuanceApp
 
         private string GenerateNewRequestNumber()
         {
+            // --- DB INTEGRATION POINT (CRITICAL) ---
+            // The current random number generation is NOT safe for a multi-user environment.
+            // It can create a "race condition" where two users get the same number.
+            // The correct approach is to use a database SEQUENCE object.
+            //
+            // **Step 1: Create the SEQUENCE in SQL Server (one-time setup)**
+            // CREATE SEQUENCE dbo.DailyRequestSequence AS INT START WITH 1 INCREMENT BY 1;
+            //
+            // **Step 2: Create a SQL Server Agent Job to reset the sequence daily at midnight.**
+            // Job Step T-SQL: ALTER SEQUENCE dbo.DailyRequestSequence RESTART WITH 1;
+            //
+            // **Step 3: Replace the C# logic below with a database call.**
+            //
+            // New SQL Statement to execute here:
+            // SELECT NEXT VALUE FOR dbo.DailyRequestSequence;
+            //
+            // New C# Logic:
+            // 1. Execute the query above. It will return a single integer (e.g., 1, 2, 3...).
+            // 2. Format that integer into the final request number string.
+            //    Example: int nextVal = (int)command.ExecuteScalar();
+            //             return $"REQ-{DateTime.Now:yyyyMMdd}-{nextVal:D3}";
+            // This is guaranteed to be unique and avoids race conditions.
+            //
+            // Example Placeholder:
             Random rnd = new Random();
             string sequence = rnd.Next(1, 1000).ToString("D3");
             return $"REQ-{DateTime.Now:yyyyMMdd}-{sequence}";
@@ -540,6 +595,37 @@ namespace DocumentIssuanceApp
 
             try
             {
+                // --- DB INTEGRATION POINT ---
+                // This is the core data insertion logic. The collected data in 'issuanceData'
+                // needs to be saved to the database. This should be done within a transaction
+                // to ensure both tables (Doc_Issuance and Issuance_Tracker) are updated correctly.
+                //
+                // **Best Practice: Add a UNIQUE constraint to the RequestNo column in the DB.**
+                // ALTER TABLE dbo.Doc_Issuance ADD CONSTRAINT UQ_Doc_Issuance_RequestNo UNIQUE (RequestNo);
+                // This provides a final layer of protection against duplicate request numbers.
+                //
+                // C# Logic:
+                // 1. Begin a SQL transaction.
+                // 2. Execute the first INSERT statement into Doc_Issuance.
+                // 3. Get the ID of the newly inserted row using SCOPE_IDENTITY().
+                // 4. Execute the second INSERT statement into Issuance_Tracker, using the new ID.
+                // 5. If both succeed, commit the transaction.
+                // 6. If either fails, roll back the transaction.
+                //
+                // SQL Statement 1 (Insert into main table and get ID):
+                // DECLARE @NewIssuanceID INT;
+                // INSERT INTO dbo.Doc_Issuance (RequestNo, RequestDate, FromDepartment, DocumentNo, ParentBatchNumber, ParentBatchSize, ParentMfgDate, ParentExpDate, Product, BatchNo, BatchSize, ItemMfgDate, ItemExpDate, Market, PackSize, ExportOrderNo)
+                // VALUES (@RequestNo, @RequestDate, @FromDepartment, @DocumentNo, @ParentBatchNumber, @ParentBatchSize, @ParentMfgDate, @ParentExpDate, @Product, @BatchNo, @BatchSize, @ItemMfgDate, @ItemExpDate, @Market, @PackSize, @ExportOrderNo);
+                // SET @NewIssuanceID = SCOPE_IDENTITY();
+                // SELECT @NewIssuanceID;
+                //
+                // SQL Statement 2 (Insert into tracker table):
+                // INSERT INTO dbo.Issuance_Tracker (IssuanceID, PreparedBy, RequestedAt, RequestComment)
+                // VALUES (@IssuanceID, @PreparedBy, GETDATE(), @RequestComment);
+                //
+                // Note: All @variables should be passed as secure SQL parameters.
+                //
+                // Example Placeholder:
                 Console.WriteLine("--- Document Issuance Request Submitted (Updated Formats) ---");
 
                 lblStatusValueDI.Text = $"Request '{issuanceData.RequestNo}' submitted successfully!";
@@ -619,6 +705,28 @@ namespace DocumentIssuanceApp
 
         #region GM Operations Tab Logic
 
+        // --- DB PERFORMANCE BEST PRACTICE ---
+        // For the GM, QA, and Audit Trail tabs to be performant as data grows,
+        // it is CRITICAL to add indexes to the database tables. Without them,
+        // the application will become very slow.
+        //
+        // Recommended Indexes (run these on your SQL Server database):
+        //
+        // -- Speeds up looking for a request by its unique number
+        // CREATE UNIQUE INDEX IX_Doc_Issuance_RequestNo ON dbo.Doc_Issuance(RequestNo);
+        //
+        // -- Speeds up the JOIN between the two main tables
+        // CREATE INDEX IX_Issuance_Tracker_IssuanceID ON dbo.Issuance_Tracker(IssuanceID);
+        //
+        // -- A "covering index" to make loading the GM and QA queues extremely fast
+        // CREATE INDEX IX_Issuance_Tracker_WorkflowStatus
+        // ON dbo.Issuance_Tracker(GmOperationsAction, QAAction)
+        // INCLUDE (PreparedBy, AuthorizedBy, GmOperationsAt);
+        //
+        // -- Speeds up date range filtering in the Audit Trail
+        // CREATE INDEX IX_Doc_Issuance_RequestDate ON dbo.Doc_Issuance(RequestDate);
+        // -----------------------------------------------------------------
+
         private void InitializeGmOperationsTab()
         {
             if (dgvGmQueue != null)
@@ -651,6 +759,33 @@ namespace DocumentIssuanceApp
         {
             if (dgvGmQueue == null) return;
 
+            // --- DB INTEGRATION POINT ---
+            // The placeholder data should be replaced with a query that fetches all requests
+            // awaiting GM action. These are requests where `GmOperationsAction` is NULL.
+            //
+            // SQL Statement:
+            // SELECT
+            //     i.RequestNo,
+            //     i.RequestDate,
+            //     i.Product,
+            //     i.DocumentNo,
+            //     t.PreparedBy,
+            //     t.RequestedAt
+            // FROM
+            //     dbo.Doc_Issuance AS i
+            // JOIN
+            //     dbo.Issuance_Tracker AS t ON i.IssuanceID = t.IssuanceID
+            // WHERE
+            //     t.GmOperationsAction IS NULL
+            // ORDER BY
+            //     t.RequestedAt ASC;
+            //
+            // C# Logic:
+            // 1. Execute the query.
+            // 2. Bind the resulting DataTable or List of objects to dgvGmQueue.DataSource.
+            // 3. Update the queue count label.
+            //
+            // Example Placeholder:
             var placeholderData = new List<object>
             {
                 new { RequestNo = "REQ-20240101-001", RequestDate = DateTime.Now.AddDays(-5), Product = "Product A (Pharma)", DocumentNo = "BMR-001,APP-001A", PreparedBy = "user.requester", RequestedAt = DateTime.Now.AddDays(-5).AddHours(2) },
@@ -687,6 +822,28 @@ namespace DocumentIssuanceApp
                 return;
             }
 
+            // --- DB INTEGRATION POINT ---
+            // The hardcoded details based on RequestNo should be replaced by a single, detailed
+            // database query when a user selects a row in the grid.
+            //
+            // SQL Statement:
+            // SELECT
+            //     i.*, -- Selects all columns from Doc_Issuance
+            //     t.RequestComment
+            // FROM
+            //     dbo.Doc_Issuance AS i
+            // JOIN
+            //     dbo.Issuance_Tracker AS t ON i.IssuanceID = t.IssuanceID
+            // WHERE
+            //     i.RequestNo = @RequestNo;
+            //
+            // C# Logic:
+            // 1. Get the RequestNo from the selected grid row.
+            // 2. Execute the query using the RequestNo as a parameter (@RequestNo).
+            // 3. Populate all the textboxes in the 'grpGmSelectedRequest' groupbox with the data
+            //    returned from the query.
+            //
+            // Example Placeholder:
             string docNoColumnNameInGridData = "DocumentNo";
 
             Func<string, string> GetValueFromCellByBoundName = (boundPropertyName) =>
@@ -770,6 +927,30 @@ namespace DocumentIssuanceApp
 
             if (MessageBox.Show($"Are you sure you want to authorize request '{requestNo}'?", "Confirm Authorization", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
+                // --- DB INTEGRATION POINT (AUTHORIZE) ---
+                // This action should update the Issuance_Tracker table for the selected request.
+                //
+                // SQL Statement:
+                // UPDATE dbo.Issuance_Tracker
+                // SET
+                //     GmOperationsAction = 'Authorized',
+                //     AuthorizedBy = @AuthorizedBy,
+                //     GmOperationsAt = GETDATE(),
+                //     GmOperationsComment = @GmOperationsComment
+                // WHERE
+                //     IssuanceID = (SELECT IssuanceID FROM dbo.Doc_Issuance WHERE RequestNo = @RequestNo);
+                //
+                // **Best Practice: Check for stale data in a multi-user environment.**
+                // The `ExecuteNonQuery()` method in C# returns the number of rows affected.
+                // If it returns 0, it means another user already acted on this request.
+                // You should inform the user and refresh the grid.
+                //
+                // C# Logic:
+                // int rowsAffected = command.ExecuteNonQuery();
+                // if (rowsAffected > 0) { // Success }
+                // else { // Failure, data was stale }
+                //
+                // Example Placeholder:
                 MessageBox.Show($"Request '{requestNo}' authorized (Simulated).", "Authorization Successful", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 LoadGmPendingQueue();
             }
@@ -792,6 +973,22 @@ namespace DocumentIssuanceApp
 
             if (MessageBox.Show($"Are you sure you want to reject request '{requestNo}'?", "Confirm Rejection", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
+                // --- DB INTEGRATION POINT (REJECT) ---
+                // This is similar to Authorize but sets the action to 'Rejected'.
+                //
+                // SQL Statement:
+                // UPDATE dbo.Issuance_Tracker
+                // SET
+                //     GmOperationsAction = 'Rejected',
+                //     AuthorizedBy = @AuthorizedBy,
+                //     GmOperationsAt = GETDATE(),
+                //     GmOperationsComment = @GmOperationsComment
+                // WHERE
+                //     IssuanceID = (SELECT IssuanceID FROM dbo.Doc_Issuance WHERE RequestNo = @RequestNo);
+                //
+                // **Best Practice: Also check rows affected here, just like in Authorize.**
+                //
+                // Example Placeholder:
                 MessageBox.Show($"Request '{requestNo}' rejected (Simulated). Comment: {txtGmComment?.Text}", "Rejection Processed", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 LoadGmPendingQueue();
             }
@@ -838,6 +1035,35 @@ namespace DocumentIssuanceApp
         private void LoadQaPendingQueue()
         {
             if (dgvQaQueue == null) return;
+            // --- DB INTEGRATION POINT ---
+            // This query should fetch requests that have been authorized by the GM but are
+            // still awaiting final approval/rejection from QA.
+            // Condition: GmOperationsAction = 'Authorized' AND QAAction IS NULL.
+            //
+            // SQL Statement:
+            // SELECT
+            //     i.RequestNo,
+            //     i.RequestDate,
+            //     i.Product,
+            //     i.DocumentNo,
+            //     t.PreparedBy,
+            //     t.AuthorizedBy,
+            //     t.GmOperationsAt AS GmActionAt
+            // FROM
+            //     dbo.Doc_Issuance AS i
+            // JOIN
+            //     dbo.Issuance_Tracker AS t ON i.IssuanceID = t.IssuanceID
+            // WHERE
+            //     t.GmOperationsAction = 'Authorized' AND t.QAAction IS NULL
+            // ORDER BY
+            //     t.GmOperationsAt ASC;
+            //
+            // C# Logic:
+            // 1. Execute the query.
+            // 2. Bind the results to dgvQaQueue.DataSource.
+            // 3. Update the queue count label.
+            //
+            // Example Placeholder:
             var placeholderQaData = new List<object>
             {
                 new { RequestNo = "REQ-20240101-001", RequestDate = DateTime.Now.AddDays(-5), Product = "Product A (Pharma)", DocumentNo = "BMR-001,APP-001A", PreparedBy = "user.requester", AuthorizedBy = "gm.user", GmActionAt = DateTime.Now.AddDays(-2).AddHours(1) },
@@ -874,6 +1100,28 @@ namespace DocumentIssuanceApp
                 return;
             }
 
+            // --- DB INTEGRATION POINT ---
+            // Similar to the GM details view, this should be a single database query to fetch
+            // all details for the selected request, including comments from both the requester and the GM.
+            //
+            // SQL Statement:
+            // SELECT
+            //     i.*, -- Selects all columns from Doc_Issuance
+            //     t.RequestComment,
+            //     t.GmOperationsComment
+            // FROM
+            //     dbo.Doc_Issuance AS i
+            // JOIN
+            //     dbo.Issuance_Tracker AS t ON i.IssuanceID = t.IssuanceID
+            // WHERE
+            //     i.RequestNo = @RequestNo;
+            //
+            // C# Logic:
+            // 1. Get the RequestNo from the selected grid row.
+            // 2. Execute the query with the RequestNo as a parameter.
+            // 3. Populate all the textboxes in 'grpQaSelectedRequest' with the returned data.
+            //
+            // Example Placeholder:
             string docNoColumnNameInGridData = "DocumentNo";
 
             Func<string, string> GetValueFromCellByBoundName = (boundPropertyName) =>
@@ -955,6 +1203,22 @@ namespace DocumentIssuanceApp
 
             if (MessageBox.Show($"Are you sure you want to approve request '{requestNo}'?\nPrint Count: {printCount}", "Confirm Approval", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
+                // --- DB INTEGRATION POINT (APPROVE) ---
+                // This is the final approval step. It updates the Issuance_Tracker table.
+                //
+                // SQL Statement:
+                // UPDATE dbo.Issuance_Tracker
+                // SET
+                //     QAAction = 'Approved',
+                //     ApprovedBy = @ApprovedBy,
+                //     QAAt = GETDATE(),
+                //     QAComment = @QAComment
+                // WHERE
+                //     IssuanceID = (SELECT IssuanceID FROM dbo.Doc_Issuance WHERE RequestNo = @RequestNo);
+                //
+                // **Best Practice: Check rows affected here for stale data.**
+                //
+                // Example Placeholder:
                 MessageBox.Show($"Request '{requestNo}' approved (Simulated). Printed {printCount} copies.", "Approval Successful", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 LoadQaPendingQueue();
             }
@@ -977,6 +1241,22 @@ namespace DocumentIssuanceApp
 
             if (MessageBox.Show($"Are you sure you want to reject request '{requestNo}'?", "Confirm Rejection", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
+                // --- DB INTEGRATION POINT (REJECT) ---
+                // This is the final rejection step. It updates the Issuance_Tracker table.
+                //
+                // SQL Statement:
+                // UPDATE dbo.Issuance_Tracker
+                // SET
+                //     QAAction = 'Rejected',
+                //     ApprovedBy = @ApprovedBy, -- The user who performed the action
+                //     QAAt = GETDATE(),
+                //     QAComment = @QAComment
+                // WHERE
+                //     IssuanceID = (SELECT IssuanceID FROM dbo.Doc_Issuance WHERE RequestNo = @RequestNo);
+                //
+                // **Best Practice: Check rows affected here for stale data.**
+                //
+                // Example Placeholder:
                 MessageBox.Show($"Request '{requestNo}' rejected (Simulated). Comment: {txtQaComment?.Text}", "Rejection Processed", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 LoadQaPendingQueue();
             }
@@ -1058,13 +1338,47 @@ namespace DocumentIssuanceApp
         {
             if (dgvAuditTrail == null) return;
 
+            // --- DB INTEGRATION POINT ---
+            // This is the most comprehensive query. It joins the two main tables and uses a CASE
+            // statement to create the "DerivedStatus" column based on the workflow state.
+            // The WHERE clause will be built dynamically based on the filter controls.
+            //
+            // SQL Statement (Base):
+            // SELECT
+            //     i.RequestNo, i.RequestDate, i.Product, i.DocumentNo AS DocumentNumbers,
+            //     t.PreparedBy, t.RequestedAt,
+            //     t.GmOperationsAction, t.AuthorizedBy, t.GmOperationsAt, t.GmOperationsComment,
+            //     t.QAAction, t.ApprovedBy, t.QAAt, t.QAComment,
+            //     CASE
+            //         WHEN t.QAAction = 'Approved' THEN 'Approved (Issued)'
+            //         WHEN t.QAAction = 'Rejected' THEN 'Rejected by QA'
+            //         WHEN t.GmOperationsAction = 'Rejected' THEN 'Rejected by GM'
+            //         WHEN t.GmOperationsAction = 'Authorized' AND t.QAAction IS NULL THEN 'Pending QA Approval'
+            //         WHEN t.GmOperationsAction IS NULL THEN 'Pending GM Approval'
+            //         ELSE 'Unknown'
+            //     END AS DerivedStatus
+            // FROM
+            //     dbo.Doc_Issuance AS i
+            // JOIN
+            //     dbo.Issuance_Tracker AS t ON i.IssuanceID = t.IssuanceID
+            //
+            // C# Logic:
+            // 1. Start with the base query string.
+            // 2. Check each filter control (dates, status, request no, product).
+            // 3. If a filter is active, append a corresponding WHERE clause (e.g., "WHERE i.RequestDate BETWEEN @FromDate AND @ToDate").
+            //    Use a List<SqlParameter> to safely add parameter values.
+            // 4. For the status filter, you'll need to add a HAVING clause on the derived status, or wrap the query:
+            //    "SELECT * FROM (...) AS AuditQuery WHERE DerivedStatus = @Status"
+            // 5. Execute the final, constructed query with its parameters.
+            // 6. Bind the results to the dgvAuditTrail.DataSource.
+            //
+            // Example Placeholder:
             DateTime fromDate = dtpAuditFrom?.Value.Date ?? DateTime.MinValue;
             DateTime toDate = dtpAuditTo?.Value.Date.AddDays(1).AddTicks(-1) ?? DateTime.MaxValue;
             string statusFilter = cmbAuditStatus?.SelectedItem?.ToString() ?? "All";
             string requestNoFilter = txtAuditRequestNo?.Text.Trim() ?? "";
             string productFilter = txtAuditProduct?.Text.Trim() ?? "";
 
-            // AuditTrailEntry class needs a "DocumentNumbers" property.
             var allPlaceholderAuditData = new List<AuditTrailEntry>
             {
                 new AuditTrailEntry { RequestNo = "REQ-20240101-001", RequestDate = DateTime.Now.AddDays(-10), Product = "Product A (Pharma)", DocumentNumbers = "BMR-001,APP-001A", DerivedStatus = "Approved (Issued)", PreparedBy = "user.requester", RequestedAt = DateTime.Now.AddDays(-10).AddHours(1), GmOperationsAction = "Authorized", AuthorizedBy = "gm.user", GmOperationsAt = DateTime.Now.AddDays(-9), GmOperationsComment = "Looks good. Standard procedure.", QAAction = "Approved", ApprovedBy = "qa.lead", QAAt = DateTime.Now.AddDays(-8), QAComment = "Verified and issued. All checks passed." },
@@ -1194,6 +1508,18 @@ namespace DocumentIssuanceApp
         {
             if (this.userRolesBindingSource == null) return;
 
+            // --- DB INTEGRATION POINT ---
+            // This method should populate the user roles grid from the database.
+            //
+            // SQL Statement:
+            // SELECT RoleID, RoleName FROM dbo.User_Roles ORDER BY RoleName;
+            //
+            // C# Logic:
+            // 1. Execute the query.
+            // 2. Create a List<UserRole> from the results.
+            // 3. Set the userRolesBindingSource.DataSource to this list.
+            //
+            // Example Placeholder:
             var placeholderRoles = new List<UserRole>
             {
                 new UserRole { RoleID = 1, RoleName = "Requester" },
@@ -1252,7 +1578,20 @@ namespace DocumentIssuanceApp
 
             if (MessageBox.Show($"Are you sure you want to reset the password for the '{roleName}' role?", "Confirm Password Reset", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
-                // This is a simulation. In a real app, you would update the database.
+                // --- DB INTEGRATION POINT ---
+                // This action should update the password hash in the database for the selected role.
+                // A new password should be generated (or prompted for), securely hashed, and then stored.
+                //
+                // SQL Statement:
+                // UPDATE dbo.User_Roles SET PasswordHash = @NewPasswordHash WHERE RoleName = @RoleName;
+                //
+                // C# Logic:
+                // 1. Prompt the admin for a new password or generate a secure random one.
+                // 2. Hash the new password using a secure library (e.g., BCrypt.Net).
+                // 3. Execute the UPDATE statement, passing the new hash and the role name as parameters.
+                // 4. Inform the user of the successful reset.
+                //
+                // Example Placeholder:
                 MessageBox.Show($"Password for role '{roleName}' has been reset to the default (Simulated).", "Password Reset", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
