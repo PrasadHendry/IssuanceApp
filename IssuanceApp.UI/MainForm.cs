@@ -17,7 +17,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using IssuanceApp.Data;
 
-
 namespace DocumentIssuanceApp
 {
 
@@ -40,6 +39,15 @@ namespace DocumentIssuanceApp
             InitializeComponent();
             InitializeDynamicControls(); // Initialize programmatically added controls
 
+            // Set up form properties and timers
+            this.Text = "Document Issuance System";
+            statusTimer = new Timer
+            {
+                Interval = 1000
+            };
+            statusTimer.Tick += StatusTimer_Tick;
+            statusTimer.Start();
+
             SetupStatusBar();
 
             InitializeLoginTab();
@@ -56,7 +64,6 @@ namespace DocumentIssuanceApp
 
             SetupTabs();
 
-            // NOTE: Scaling is now handled by AutoScaleMode=Font.
             this.WindowState = FormWindowState.Maximized;
         }
 
@@ -82,7 +89,7 @@ namespace DocumentIssuanceApp
             // -- User Actions DropDown Button --
             this.toolStripDropDownButtonUserActions.DisplayStyle = ToolStripItemDisplayStyle.Text;
             this.toolStripDropDownButtonUserActions.DropDownItems.AddRange(new ToolStripItem[] {
-            this.signOutToolStripMenuItem});
+        this.signOutToolStripMenuItem});
             this.toolStripDropDownButtonUserActions.Name = "toolStripDropDownButtonUserActions";
             this.toolStripDropDownButtonUserActions.Size = new System.Drawing.Size(90, 24);
             this.toolStripDropDownButtonUserActions.Text = "User Actions";
@@ -104,15 +111,6 @@ namespace DocumentIssuanceApp
             {
                 Application.Exit();
             }
-        }
-
-        private void InitializeCustomComponents()
-        {
-            this.Text = "Document Issuance System";
-            statusTimer = new Timer();
-            statusTimer.Interval = 1000;
-            statusTimer.Tick += StatusTimer_Tick;
-            statusTimer.Start();
         }
 
         private void SetupStatusBar()
@@ -152,7 +150,7 @@ namespace DocumentIssuanceApp
             if (toolStripStatusLabelDateTime != null)
             {
                 toolStripStatusLabelDateTime.Text = DateTime.Now.ToString("dd-MMM-yyyy hh:mm tt");
-            } 
+            }
         }
 
         private void InitializeLoginTab()
@@ -401,13 +399,13 @@ namespace DocumentIssuanceApp
             {
                 cmbFromDepartmentDI.Items.Clear();
                 cmbFromDepartmentDI.Items.AddRange(new string[] {
-                    "Production Department",
-                    "Quality Assurance",
-                    "Research & Development",
-                    "Regulatory Affairs",
-                    "Manufacturing",
-                    "Packaging Department"
-                });
+                "Production Department",
+                "Quality Assurance",
+                "Research & Development",
+                "Regulatory Affairs",
+                "Manufacturing",
+                "Packaging Department"
+            });
                 if (cmbFromDepartmentDI.Items.Count > 0) cmbFromDepartmentDI.SelectedIndex = 0;
             }
 
@@ -496,7 +494,10 @@ namespace DocumentIssuanceApp
 
         private string GenerateNewTrackerNumber()
         {
-            return $"TRK-{DateTime.Now:yyyyMMddHHmmssfff}";
+            // As per the database schema, the real TrackerID is an INT IDENTITY column.
+            // Its value is only known *after* the record is inserted into the database.
+            // Displaying a pre-generated number here is misleading.
+            return "(Assigned on submission)";
         }
 
         private string GenerateNewRequestNumber()
@@ -630,7 +631,7 @@ namespace DocumentIssuanceApp
 
                 lblStatusValueDI.Text = $"Request '{issuanceData.RequestNo}' submitted successfully!";
                 lblStatusValueDI.ForeColor = Color.Green;
-                MessageBox.Show($"Request '{issuanceData.RequestNo}' submitted successfully!\nTracker No: {lblTrackerNoValueDI?.Text ?? "N/A"}", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show($"Request '{issuanceData.RequestNo}' submitted successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 ClearDocumentIssuanceForm();
                 LoadInitialDocumentIssuanceData();
@@ -787,13 +788,13 @@ namespace DocumentIssuanceApp
             //
             // Example Placeholder:
             var placeholderData = new List<object>
-            {
-                new { RequestNo = "REQ-20240101-001", RequestDate = DateTime.Now.AddDays(-5), Product = "Product A (Pharma)", DocumentNo = "BMR-001,APP-001A", PreparedBy = "user.requester", RequestedAt = DateTime.Now.AddDays(-5).AddHours(2) },
-                new { RequestNo = "REQ-20240102-002", RequestDate = DateTime.Now.AddDays(-4), Product = "Product B (Vaccine) - High Priority", DocumentNo = "BPR-002", PreparedBy = "another.requester", RequestedAt = DateTime.Now.AddDays(-4).AddHours(3) },
-                new { RequestNo = "REQ-20240103-003", RequestDate = DateTime.Now.AddDays(-3), Product = "Product C (Tablet)", DocumentNo = "ADD-003X,BMR-XYZ,APP-003C", PreparedBy = "test.user", RequestedAt = DateTime.Now.AddDays(-3).AddHours(1) },
-                new { RequestNo = "REQ-20240104-005", RequestDate = DateTime.Now.AddDays(-2), Product = "Product D (Syrup)", DocumentNo = "BMR-D005", PreparedBy = "user.requester", RequestedAt = DateTime.Now.AddDays(-2).AddHours(5) },
-                new { RequestNo = "REQ-20240105-006", RequestDate = DateTime.Now.AddDays(-1), Product = "Product E (Ointment)", DocumentNo = "BPR-E006,APP-E006A", PreparedBy = "new.dev", RequestedAt = DateTime.Now.AddDays(-1).AddHours(2) }
-            };
+        {
+            new { RequestNo = $"REQ-{DateTime.Now.AddDays(-5).ToString("yyyyMMdd")}-001", RequestDate = DateTime.Now.AddDays(-5), Product = "Product A (Pharma)", DocumentNo = "BMR-001,APP-001A", PreparedBy = "user.requester", RequestedAt = DateTime.Now.AddDays(-5).AddHours(2) },
+            new { RequestNo = $"REQ-{DateTime.Now.AddDays(-4).ToString("yyyyMMdd")}-002", RequestDate = DateTime.Now.AddDays(-4), Product = "Product B (Vaccine) - High Priority", DocumentNo = "BPR-002", PreparedBy = "another.requester", RequestedAt = DateTime.Now.AddDays(-4).AddHours(3) },
+            new { RequestNo = $"REQ-{DateTime.Now.AddDays(-3).ToString("yyyyMMdd")}-003", RequestDate = DateTime.Now.AddDays(-3), Product = "Product C (Tablet)", DocumentNo = "ADD-003X,BMR-XYZ,APP-003C", PreparedBy = "test.user", RequestedAt = DateTime.Now.AddDays(-3).AddHours(1) },
+            new { RequestNo = $"REQ-{DateTime.Now.AddDays(-2).ToString("yyyyMMdd")}-005", RequestDate = DateTime.Now.AddDays(-2), Product = "Product D (Syrup)", DocumentNo = "BMR-D005", PreparedBy = "user.requester", RequestedAt = DateTime.Now.AddDays(-2).AddHours(5) },
+            new { RequestNo = $"REQ-{DateTime.Now.AddDays(-1).ToString("yyyyMMdd")}-006", RequestDate = DateTime.Now.AddDays(-1), Product = "Product E (Ointment)", DocumentNo = "BPR-E006,APP-E006A", PreparedBy = "new.dev", RequestedAt = DateTime.Now.AddDays(-1).AddHours(2) }
+        };
             dgvGmQueue.DataSource = placeholderData;
 
             if (lblGmQueueTitle != null) lblGmQueueTitle.Text = $"Pending GM Approval Queue ({dgvGmQueue.Rows.Count})";
@@ -866,7 +867,7 @@ namespace DocumentIssuanceApp
             if (txtGmDetailRequestedAt != null) txtGmDetailRequestedAt.Text = GetDateValueFromCellByBoundName("RequestedAt", "dd-MMM-yyyy HH:mm");
 
             var requestNo = GetValueFromCellByBoundName("RequestNo");
-            if (requestNo == "REQ-20240101-001")
+            if (requestNo.EndsWith("-001"))
             {
                 if (txtGmDetailFromDept != null) txtGmDetailFromDept.Text = "Production Department";
                 if (txtGmDetailBatchNo != null) txtGmDetailBatchNo.Text = "BATCH-A001";
@@ -876,7 +877,7 @@ namespace DocumentIssuanceApp
                 if (txtGmDetailPackSize != null) txtGmDetailPackSize.Text = "10x10 Blister";
                 if (txtGmDetailRequesterComments != null) txtGmDetailRequesterComments.Text = "Standard request for Product A.";
             }
-            else if (requestNo == "REQ-20240102-002")
+            else if (requestNo.EndsWith("-002"))
             {
                 if (txtGmDetailFromDept != null) txtGmDetailFromDept.Text = "Packaging Department";
                 if (txtGmDetailBatchNo != null) txtGmDetailBatchNo.Text = "BATCH-V002";
@@ -1065,12 +1066,12 @@ namespace DocumentIssuanceApp
             //
             // Example Placeholder:
             var placeholderQaData = new List<object>
-            {
-                new { RequestNo = "REQ-20240101-001", RequestDate = DateTime.Now.AddDays(-5), Product = "Product A (Pharma)", DocumentNo = "BMR-001,APP-001A", PreparedBy = "user.requester", AuthorizedBy = "gm.user", GmActionAt = DateTime.Now.AddDays(-2).AddHours(1) },
-                new { RequestNo = "REQ-20240104-004", RequestDate = DateTime.Now.AddDays(-2), Product = "Product D (Syrup)", DocumentNo = "BPR-004,ADD-004Y", PreparedBy = "another.user", AuthorizedBy = "gm.user", GmActionAt = DateTime.Now.AddDays(-1).AddHours(4) },
-                new { RequestNo = "REQ-20240106-007", RequestDate = DateTime.Now.AddDays(-3), Product = "Product F (Capsule)", DocumentNo = "BMR-F007,BPR-F007", PreparedBy = "test.user", AuthorizedBy = "another.gm", GmActionAt = DateTime.Now.AddDays(-2).AddHours(3) },
-                new { RequestNo = "REQ-20240107-008", RequestDate = DateTime.Now.AddDays(-1), Product = "Product G (Cream)", DocumentNo = "BMR-G008", PreparedBy = "user.requester", AuthorizedBy = "gm.user", GmActionAt = DateTime.Now.AddHours(-5) }
-            };
+        {
+            new { RequestNo = $"REQ-{DateTime.Now.AddDays(-5).ToString("yyyyMMdd")}-001", RequestDate = DateTime.Now.AddDays(-5), Product = "Product A (Pharma)", DocumentNo = "BMR-001,APP-001A", PreparedBy = "user.requester", AuthorizedBy = "gm.user", GmActionAt = DateTime.Now.AddDays(-2).AddHours(1) },
+            new { RequestNo = $"REQ-{DateTime.Now.AddDays(-2).ToString("yyyyMMdd")}-004", RequestDate = DateTime.Now.AddDays(-2), Product = "Product D (Syrup)", DocumentNo = "BPR-004,ADD-004Y", PreparedBy = "another.user", AuthorizedBy = "gm.user", GmActionAt = DateTime.Now.AddDays(-1).AddHours(4) },
+            new { RequestNo = $"REQ-{DateTime.Now.AddDays(-3).ToString("yyyyMMdd")}-007", RequestDate = DateTime.Now.AddDays(-3), Product = "Product F (Capsule)", DocumentNo = "BMR-F007,BPR-F007", PreparedBy = "test.user", AuthorizedBy = "another.gm", GmActionAt = DateTime.Now.AddDays(-2).AddHours(3) },
+            new { RequestNo = $"REQ-{DateTime.Now.AddDays(-1).ToString("yyyyMMdd")}-008", RequestDate = DateTime.Now.AddDays(-1), Product = "Product G (Cream)", DocumentNo = "BMR-G008", PreparedBy = "user.requester", AuthorizedBy = "gm.user", GmActionAt = DateTime.Now.AddHours(-5) }
+        };
             dgvQaQueue.DataSource = placeholderQaData;
 
             if (lblQaQueueTitle != null) lblQaQueueTitle.Text = $"Pending QA Approval Queue ({dgvQaQueue.Rows.Count})";
@@ -1144,7 +1145,7 @@ namespace DocumentIssuanceApp
             if (txtQaDetailGmActionTime != null) txtQaDetailGmActionTime.Text = GetDateValueFromCellByBoundName("GmActionAt", "dd-MMM-yyyy HH:mm");
 
             var requestNo = GetValueFromCellByBoundName("RequestNo");
-            if (requestNo == "REQ-20240101-001")
+            if (requestNo.EndsWith("-001"))
             {
                 if (txtQaDetailFromDept != null) txtQaDetailFromDept.Text = "Production";
                 if (txtQaDetailBatchNo != null) txtQaDetailBatchNo.Text = "BATCH-A001";
@@ -1272,13 +1273,13 @@ namespace DocumentIssuanceApp
             {
                 cmbAuditStatus.Items.Clear();
                 cmbAuditStatus.Items.AddRange(new object[] {
-                    "All",
-                    "Pending GM Approval",
-                    "Pending QA Approval",
-                    "Approved (Issued)",
-                    "Rejected by GM",
-                    "Rejected by QA"
-                });
+                "All",
+                "Pending GM Approval",
+                "Pending QA Approval",
+                "Approved (Issued)",
+                "Rejected by GM",
+                "Rejected by QA"
+            });
                 if (cmbAuditStatus.Items.Count > 0) cmbAuditStatus.SelectedIndex = 0;
             }
             if (dtpAuditFrom != null) dtpAuditFrom.Value = DateTime.Now.Date.AddDays(-30);
@@ -1380,12 +1381,12 @@ namespace DocumentIssuanceApp
             string productFilter = txtAuditProduct?.Text.Trim() ?? "";
 
             var allPlaceholderAuditData = new List<AuditTrailEntry>
-            {
-                new AuditTrailEntry { RequestNo = "REQ-20240101-001", RequestDate = DateTime.Now.AddDays(-10), Product = "Product A (Pharma)", DocumentNumbers = "BMR-001,APP-001A", DerivedStatus = "Approved (Issued)", PreparedBy = "user.requester", RequestedAt = DateTime.Now.AddDays(-10).AddHours(1), GmOperationsAction = "Authorized", AuthorizedBy = "gm.user", GmOperationsAt = DateTime.Now.AddDays(-9), GmOperationsComment = "Looks good. Standard procedure.", QAAction = "Approved", ApprovedBy = "qa.lead", QAAt = DateTime.Now.AddDays(-8), QAComment = "Verified and issued. All checks passed." },
-                new AuditTrailEntry { RequestNo = "REQ-20240102-002", RequestDate = DateTime.Now.AddDays(-5), Product = "Product B (Vaccine)", DocumentNumbers = "BPR-002", DerivedStatus = "Rejected by GM", PreparedBy = "another.requester", RequestedAt = DateTime.Now.AddDays(-5).AddHours(2), GmOperationsAction = "Rejected", AuthorizedBy = "gm.head", GmOperationsAt = DateTime.Now.AddDays(-4), GmOperationsComment = "Business case not valid for this quarter. Re-evaluate next cycle." },
-                new AuditTrailEntry { RequestNo = "REQ-20240104-004", RequestDate = DateTime.Now.AddDays(-2), Product = "Product D (Syrup)", DocumentNumbers = "BPR-004,ADD-004Y,APP-004S", DerivedStatus = "Pending QA Approval", PreparedBy = "another.user", RequestedAt = DateTime.Now.AddDays(-2).AddHours(1), GmOperationsAction = "Authorized", AuthorizedBy = "gm.user", GmOperationsAt = DateTime.Now.AddDays(-1), GmOperationsComment = "Approved by GM. Ensure all addendums are cross-checked by QA." },
-                new AuditTrailEntry { RequestNo = "REQ-20240115-005", RequestDate = DateTime.Now.AddDays(-1), Product = "Product E (Injectable)", DocumentNumbers = "BMR-E05", DerivedStatus = "Pending GM Approval", PreparedBy = "new.user", RequestedAt = DateTime.Now.AddDays(-1).AddHours(3) },
-            };
+        {
+            new AuditTrailEntry { RequestNo = $"REQ-{DateTime.Now.AddDays(-10).ToString("yyyyMMdd")}-001", RequestDate = DateTime.Now.AddDays(-10), Product = "Product A (Pharma)", DocumentNumbers = "BMR-001,APP-001A", DerivedStatus = "Approved (Issued)", PreparedBy = "user.requester", RequestedAt = DateTime.Now.AddDays(-10).AddHours(1), GmOperationsAction = "Authorized", AuthorizedBy = "gm.user", GmOperationsAt = DateTime.Now.AddDays(-9), GmOperationsComment = "Looks good. Standard procedure.", QAAction = "Approved", ApprovedBy = "qa.lead", QAAt = DateTime.Now.AddDays(-8), QAComment = "Verified and issued. All checks passed." },
+            new AuditTrailEntry { RequestNo = $"REQ-{DateTime.Now.AddDays(-5).ToString("yyyyMMdd")}-002", RequestDate = DateTime.Now.AddDays(-5), Product = "Product B (Vaccine)", DocumentNumbers = "BPR-002", DerivedStatus = "Rejected by GM", PreparedBy = "another.requester", RequestedAt = DateTime.Now.AddDays(-5).AddHours(2), GmOperationsAction = "Rejected", AuthorizedBy = "gm.head", GmOperationsAt = DateTime.Now.AddDays(-4), GmOperationsComment = "Business case not valid for this quarter. Re-evaluate next cycle." },
+            new AuditTrailEntry { RequestNo = $"REQ-{DateTime.Now.AddDays(-2).ToString("yyyyMMdd")}-004", RequestDate = DateTime.Now.AddDays(-2), Product = "Product D (Syrup)", DocumentNumbers = "BPR-004,ADD-004Y,APP-004S", DerivedStatus = "Pending QA Approval", PreparedBy = "another.user", RequestedAt = DateTime.Now.AddDays(-2).AddHours(1), GmOperationsAction = "Authorized", AuthorizedBy = "gm.user", GmOperationsAt = DateTime.Now.AddDays(-1), GmOperationsComment = "Approved by GM. Ensure all addendums are cross-checked by QA." },
+            new AuditTrailEntry { RequestNo = $"REQ-{DateTime.Now.AddDays(-1).ToString("yyyyMMdd")}-005", RequestDate = DateTime.Now.AddDays(-1), Product = "Product E (Injectable)", DocumentNumbers = "BMR-E05", DerivedStatus = "Pending GM Approval", PreparedBy = "new.user", RequestedAt = DateTime.Now.AddDays(-1).AddHours(3) },
+        };
 
             IEnumerable<AuditTrailEntry> filteredData = allPlaceholderAuditData;
 
@@ -1521,14 +1522,14 @@ namespace DocumentIssuanceApp
             //
             // Example Placeholder:
             var placeholderRoles = new List<UserRole>
-            {
-                new UserRole { RoleID = 1, RoleName = "Requester" },
-                new UserRole { RoleID = 2, RoleName = "GM_Operations" },
-                new UserRole { RoleID = 3, RoleName = "QA" },
-                new UserRole { RoleID = 4, RoleName = "Admin" },
-                new UserRole { RoleID = 5, RoleName = "Supervisor" },
-                new UserRole { RoleID = 6, RoleName = "Auditor" }
-            };
+        {
+            new UserRole { RoleID = 1, RoleName = "Requester" },
+            new UserRole { RoleID = 2, RoleName = "GM_Operations" },
+            new UserRole { RoleID = 3, RoleName = "QA" },
+            new UserRole { RoleID = 4, RoleName = "Admin" },
+            new UserRole { RoleID = 5, RoleName = "Supervisor" },
+            new UserRole { RoleID = 6, RoleName = "Auditor" }
+        };
 
             this.userRolesBindingSource.DataSource = null;
             this.userRolesBindingSource.DataSource = placeholderRoles;
@@ -1599,5 +1600,4 @@ namespace DocumentIssuanceApp
         #endregion Users Tab Logic
 
     }
-
 }
