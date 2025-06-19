@@ -34,10 +34,39 @@ namespace DocumentIssuanceApp
         private ToolStripDropDownButton toolStripDropDownButtonUserActions;
         private ToolStripMenuItem signOutToolStripMenuItem;
 
+        // Flags for lazy loading tab data
+        private bool _gmDataLoaded = false;
+        private bool _qaDataLoaded = false;
+        private bool _auditDataLoaded = false;
+        private bool _usersDataLoaded = false;
+
 
         public MainForm()
         {
             InitializeComponent();
+
+            // --- Add this block to enable Double Buffering for smoother rendering ---
+            // This is especially helpful for the complex Audit Trail grid.
+            if (dgvGmQueue != null)
+            {
+                typeof(DataGridView).InvokeMember("DoubleBuffered",
+                    System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.SetProperty,
+                    null, dgvGmQueue, new object[] { true });
+            }
+            if (dgvQaQueue != null)
+            {
+                typeof(DataGridView).InvokeMember("DoubleBuffered",
+                    System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.SetProperty,
+                    null, dgvQaQueue, new object[] { true });
+            }
+            if (dgvAuditTrail != null)
+            {
+                typeof(DataGridView).InvokeMember("DoubleBuffered",
+                    System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.SetProperty,
+                    null, dgvAuditTrail, new object[] { true });
+            }
+            // --- End of Double Buffering block ---
+
             InitializeDynamicControls(); // Initialize programmatically added controls
 
             // Set up form properties and timers
@@ -48,6 +77,10 @@ namespace DocumentIssuanceApp
             };
             statusTimer.Tick += StatusTimer_Tick;
             statusTimer.Start();
+
+            // Subscribe to the TabControl's event for lazy loading
+            this.tabControlMain.SelectedIndexChanged += new System.EventHandler(this.TabControlMain_SelectedIndexChanged);
+
 
             SetupStatusBar();
 
@@ -66,6 +99,35 @@ namespace DocumentIssuanceApp
             SetupTabs();
 
             this.WindowState = FormWindowState.Maximized;
+        }
+
+        private void TabControlMain_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (tabControlMain.SelectedTab == null) return;
+
+            // Use the TabPage name for reliable checking
+            string selectedTabName = tabControlMain.SelectedTab.Name;
+
+            if (selectedTabName == nameof(tabPageGmOperations) && !_gmDataLoaded)
+            {
+                LoadGmPendingQueue();
+                _gmDataLoaded = true;
+            }
+            else if (selectedTabName == nameof(tabPageQa) && !_qaDataLoaded)
+            {
+                LoadQaPendingQueue();
+                _qaDataLoaded = true;
+            }
+            else if (selectedTabName == nameof(tabPageAuditTrail) && !_auditDataLoaded)
+            {
+                LoadAuditTrailData();
+                _auditDataLoaded = true;
+            }
+            else if (selectedTabName == nameof(tabPageUsers) && !_usersDataLoaded)
+            {
+                LoadUserRoles();
+                _usersDataLoaded = true;
+            }
         }
 
         private void InitializeDynamicControls()
@@ -205,13 +267,16 @@ namespace DocumentIssuanceApp
                 lblLoginStatus.Text = $"Login successful as {loggedInRole}.";
                 lblLoginStatus.ForeColor = Color.Green;
                 txtPassword.Clear();
-                EnableTabsBasedOnRole(loggedInRole);
-                SwitchToDefaultTabForRole(loggedInRole);
 
-                if (loggedInRole == "GM_Operations" || loggedInRole == "Admin") LoadGmPendingQueue();
-                if (loggedInRole == "QA" || loggedInRole == "Admin") LoadQaPendingQueue();
-                if (loggedInRole == "Admin") LoadUserRoles();
-                if (!string.IsNullOrEmpty(loggedInRole)) LoadAuditTrailData();
+                // --- MODIFICATION for Lazy Loading ---
+                // Reset flags so data reloads on next session if needed
+                _gmDataLoaded = false;
+                _qaDataLoaded = false;
+                _auditDataLoaded = false;
+                _usersDataLoaded = false;
+
+                EnableTabsBasedOnRole(loggedInRole);
+                SwitchToDefaultTabForRole(loggedInRole); // This will trigger the first data load
             }
             else
             {
@@ -1310,21 +1375,27 @@ namespace DocumentIssuanceApp
             if (dgvAuditTrail == null) return;
             dgvAuditTrail.Columns.Clear();
 
-            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditRequestNo", HeaderText = "Request No.", DataPropertyName = "RequestNo", Width = 120, DefaultCellStyle = new DataGridViewCellStyle { WrapMode = DataGridViewTriState.True }, Frozen = true });
+            var wrapTextStyle = new DataGridViewCellStyle
+            {
+                WrapMode = DataGridViewTriState.True,
+                Alignment = DataGridViewContentAlignment.TopLeft
+            };
+
+            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditRequestNo", HeaderText = "Request No.", DataPropertyName = "RequestNo", Width = 120, Frozen = true });
             dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditRequestDate", HeaderText = "Request Date", DataPropertyName = "RequestDate", DefaultCellStyle = new DataGridViewCellStyle { Format = "dd-MMM-yyyy" }, Width = 100, });
             dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditProduct", HeaderText = "Product", DataPropertyName = "Product", Width = 150 });
-            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditDocumentNumbers", HeaderText = "Document No(s).", DataPropertyName = "DocumentNumbers", Width = 180, DefaultCellStyle = new DataGridViewCellStyle { WrapMode = DataGridViewTriState.True } });
+            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditDocumentNumbers", HeaderText = "Document No(s).", DataPropertyName = "DocumentNumbers", Width = 180, DefaultCellStyle = wrapTextStyle });
             dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditStatusDerived", HeaderText = "Status", DataPropertyName = "DerivedStatus", Width = 150 });
             dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditPreparedBy", HeaderText = "Prepared By", DataPropertyName = "PreparedBy", Width = 120 });
             dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditRequestedAt", HeaderText = "Requested At", DataPropertyName = "RequestedAt", DefaultCellStyle = new DataGridViewCellStyle { Format = "dd-MMM-yyyy HH:mm" }, Width = 130 });
             dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditGmAction", HeaderText = "GM Action", DataPropertyName = "GmOperationsAction", Width = 100 });
             dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditAuthorizedBy", HeaderText = "GM User", DataPropertyName = "AuthorizedBy", Width = 120 });
             dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditGmActionAt", HeaderText = "GM Action At", DataPropertyName = "GmOperationsAt", DefaultCellStyle = new DataGridViewCellStyle { Format = "dd-MMM-yyyy HH:mm" }, Width = 130 });
-            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditGmComment", HeaderText = "GM Comment", DataPropertyName = "GmOperationsComment", Width = 200, DefaultCellStyle = new DataGridViewCellStyle { WrapMode = DataGridViewTriState.True } });
+            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditGmComment", HeaderText = "GM Comment", DataPropertyName = "GmOperationsComment", Width = 200, DefaultCellStyle = wrapTextStyle });
             dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditQaAction", HeaderText = "QA Action", DataPropertyName = "QAAction", Width = 100 });
             dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditApprovedBy", HeaderText = "QA User", DataPropertyName = "ApprovedBy", Width = 120 });
             dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditQaActionAt", HeaderText = "QA Action At", DataPropertyName = "QAAt", DefaultCellStyle = new DataGridViewCellStyle { Format = "dd-MMM-yyyy HH:mm" }, Width = 130 });
-            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditQaComment", HeaderText = "QA Comment", DataPropertyName = "QAComment", Width = 200, DefaultCellStyle = new DataGridViewCellStyle { WrapMode = DataGridViewTriState.True } });
+            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditQaComment", HeaderText = "QA Comment", DataPropertyName = "QAComment", Width = 200, DefaultCellStyle = wrapTextStyle });
         }
 
         private void LoadAuditTrailData()

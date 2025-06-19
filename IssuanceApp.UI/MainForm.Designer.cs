@@ -1,4 +1,6 @@
-﻿// MainForm.Designer.cs
+﻿using DocumentIssuanceApp;
+
+// MainForm.Designer.cs
 // This code is typically auto-generated and managed by the Visual Studio WinForms Designer.
 using System.Drawing;
 using System.Windows.Forms;
@@ -35,6 +37,7 @@ namespace DocumentIssuanceApp
         private void InitializeComponent()
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.tabControlMain = new System.Windows.Forms.TabControl();
             this.tabPageLogin = new System.Windows.Forms.TabPage();
             this.tlpLoginMain = new System.Windows.Forms.TableLayoutPanel();
@@ -1451,6 +1454,7 @@ namespace DocumentIssuanceApp
             this.dgvGmQueue.AllowUserToAddRows = false;
             this.dgvGmQueue.AllowUserToDeleteRows = false;
             this.dgvGmQueue.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dgvGmQueue.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.dgvGmQueue.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvGmQueue.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colGmRequestNo,
@@ -1459,6 +1463,14 @@ namespace DocumentIssuanceApp
             this.colGmDocTypes,
             this.colGmPreparedBy,
             this.colGmRequestedAt});
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvGmQueue.DefaultCellStyle = dataGridViewCellStyle1;
             this.dgvGmQueue.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgvGmQueue.Location = new System.Drawing.Point(3, 43);
             this.dgvGmQueue.MultiSelect = false;
@@ -2012,6 +2024,7 @@ namespace DocumentIssuanceApp
             this.dgvQaQueue.AllowUserToAddRows = false;
             this.dgvQaQueue.AllowUserToDeleteRows = false;
             this.dgvQaQueue.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dgvQaQueue.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.dgvQaQueue.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvQaQueue.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colQaRequestNo,
@@ -2021,15 +2034,15 @@ namespace DocumentIssuanceApp
             this.colQaPreparedBy,
             this.colQaAuthorizedBy,
             this.colQaGmActionAt});
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle1.NullValue = "NA";
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvQaQueue.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.NullValue = "NA";
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvQaQueue.DefaultCellStyle = dataGridViewCellStyle2;
             this.dgvQaQueue.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgvQaQueue.Location = new System.Drawing.Point(3, 38);
             this.dgvQaQueue.MultiSelect = false;
@@ -2526,19 +2539,19 @@ namespace DocumentIssuanceApp
             this.numQaPrintCount.Location = new System.Drawing.Point(90, 5);
             this.numQaPrintCount.Margin = new System.Windows.Forms.Padding(3, 5, 3, 3);
             this.numQaPrintCount.Minimum = new decimal(new int[] {
-        1,
-        0,
-        0,
-        0});
+            1,
+            0,
+            0,
+            0});
             this.numQaPrintCount.Name = "numQaPrintCount";
             this.numQaPrintCount.Size = new System.Drawing.Size(70, 25);
             this.numQaPrintCount.TabIndex = 1;
             this.numQaPrintCount.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.numQaPrintCount.Value = new decimal(new int[] {
-        1,
-        0,
-        0,
-        0});
+            1,
+            0,
+            0,
+            0});
             // 
             // btnQaBrowseSelectDocument
             // 
@@ -2811,6 +2824,7 @@ namespace DocumentIssuanceApp
             // 
             this.dgvAuditTrail.AllowUserToAddRows = false;
             this.dgvAuditTrail.AllowUserToDeleteRows = false;
+            this.dgvAuditTrail.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.dgvAuditTrail.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvAuditTrail.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgvAuditTrail.Location = new System.Drawing.Point(3, 117);
@@ -2898,8 +2912,8 @@ namespace DocumentIssuanceApp
             this.dgvUserRoles.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvUserRoles.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvUserRoles.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-        this.colUserRoleId,
-        this.colUserRoleName});
+            this.colUserRoleId,
+            this.colUserRoleName});
             this.dgvUserRoles.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgvUserRoles.Location = new System.Drawing.Point(5, 40);
             this.dgvUserRoles.MultiSelect = false;
@@ -3039,9 +3053,9 @@ namespace DocumentIssuanceApp
             // 
             this.statusStripMain.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.statusStripMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-        this.toolStripStatusLabelUser,
-        this.toolStripStatusLabelSpring,
-        this.toolStripStatusLabelDateTime});
+            this.toolStripStatusLabelUser,
+            this.toolStripStatusLabelSpring,
+            this.toolStripStatusLabelDateTime});
             this.statusStripMain.Location = new System.Drawing.Point(0, 694);
             this.statusStripMain.Name = "statusStripMain";
             this.statusStripMain.Size = new System.Drawing.Size(1368, 26);
