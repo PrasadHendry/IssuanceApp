@@ -65,8 +65,6 @@ namespace DocumentIssuanceApp
             this.lblBprDocNo = new System.Windows.Forms.Label();
             this.pnlTopRightDI = new System.Windows.Forms.Panel();
             this.tlpTopRightDetailsDI = new System.Windows.Forms.TableLayoutPanel();
-            this.lblTrackerNoLabelDI = new System.Windows.Forms.Label();
-            this.lblTrackerNoValueDI = new System.Windows.Forms.Label();
             this.lblRequestNoLabelDI = new System.Windows.Forms.Label();
             this.txtRequestNoValueDI = new System.Windows.Forms.TextBox();
             this.pnlRequestDetailsDI = new System.Windows.Forms.Panel();
@@ -724,45 +722,21 @@ namespace DocumentIssuanceApp
             this.tlpTopRightDetailsDI.ColumnCount = 2;
             this.tlpTopRightDetailsDI.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tlpTopRightDetailsDI.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpTopRightDetailsDI.Controls.Add(this.lblTrackerNoLabelDI, 0, 0);
-            this.tlpTopRightDetailsDI.Controls.Add(this.lblTrackerNoValueDI, 1, 0);
-            this.tlpTopRightDetailsDI.Controls.Add(this.lblRequestNoLabelDI, 0, 1);
-            this.tlpTopRightDetailsDI.Controls.Add(this.txtRequestNoValueDI, 1, 1);
+            this.tlpTopRightDetailsDI.Controls.Add(this.lblRequestNoLabelDI, 0, 0);
+            this.tlpTopRightDetailsDI.Controls.Add(this.txtRequestNoValueDI, 1, 0);
             this.tlpTopRightDetailsDI.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tlpTopRightDetailsDI.Location = new System.Drawing.Point(5, 10);
             this.tlpTopRightDetailsDI.Name = "tlpTopRightDetailsDI";
-            this.tlpTopRightDetailsDI.RowCount = 2;
-            this.tlpTopRightDetailsDI.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tlpTopRightDetailsDI.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tlpTopRightDetailsDI.RowCount = 1;
+            this.tlpTopRightDetailsDI.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tlpTopRightDetailsDI.Size = new System.Drawing.Size(378, 128);
             this.tlpTopRightDetailsDI.TabIndex = 0;
-            // 
-            // lblTrackerNoLabelDI
-            // 
-            this.lblTrackerNoLabelDI.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.lblTrackerNoLabelDI.AutoSize = true;
-            this.lblTrackerNoLabelDI.Location = new System.Drawing.Point(9, 23);
-            this.lblTrackerNoLabelDI.Name = "lblTrackerNoLabelDI";
-            this.lblTrackerNoLabelDI.Size = new System.Drawing.Size(79, 17);
-            this.lblTrackerNoLabelDI.TabIndex = 0;
-            this.lblTrackerNoLabelDI.Text = "Tracker No.:";
-            // 
-            // lblTrackerNoValueDI
-            // 
-            this.lblTrackerNoValueDI.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblTrackerNoValueDI.Location = new System.Drawing.Point(94, 23);
-            this.lblTrackerNoValueDI.Margin = new System.Windows.Forms.Padding(3, 0, 10, 0);
-            this.lblTrackerNoValueDI.Name = "lblTrackerNoValueDI";
-            this.lblTrackerNoValueDI.Size = new System.Drawing.Size(274, 17);
-            this.lblTrackerNoValueDI.TabIndex = 1;
-            this.lblTrackerNoValueDI.Text = "(empty)";
-            this.lblTrackerNoValueDI.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // lblRequestNoLabelDI
             // 
             this.lblRequestNoLabelDI.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.lblRequestNoLabelDI.AutoSize = true;
-            this.lblRequestNoLabelDI.Location = new System.Drawing.Point(3, 87);
+            this.lblRequestNoLabelDI.Location = new System.Drawing.Point(3, 55);
             this.lblRequestNoLabelDI.Name = "lblRequestNoLabelDI";
             this.lblRequestNoLabelDI.Size = new System.Drawing.Size(85, 17);
             this.lblRequestNoLabelDI.TabIndex = 2;
@@ -771,7 +745,7 @@ namespace DocumentIssuanceApp
             // txtRequestNoValueDI
             // 
             this.txtRequestNoValueDI.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtRequestNoValueDI.Location = new System.Drawing.Point(94, 83);
+            this.txtRequestNoValueDI.Location = new System.Drawing.Point(94, 51);
             this.txtRequestNoValueDI.Margin = new System.Windows.Forms.Padding(3, 3, 10, 3);
             this.txtRequestNoValueDI.Name = "txtRequestNoValueDI";
             this.txtRequestNoValueDI.ReadOnly = true;
@@ -2552,19 +2526,19 @@ namespace DocumentIssuanceApp
             this.numQaPrintCount.Location = new System.Drawing.Point(90, 5);
             this.numQaPrintCount.Margin = new System.Windows.Forms.Padding(3, 5, 3, 3);
             this.numQaPrintCount.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
+        1,
+        0,
+        0,
+        0});
             this.numQaPrintCount.Name = "numQaPrintCount";
             this.numQaPrintCount.Size = new System.Drawing.Size(70, 25);
             this.numQaPrintCount.TabIndex = 1;
             this.numQaPrintCount.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.numQaPrintCount.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
+        1,
+        0,
+        0,
+        0});
             // 
             // btnQaBrowseSelectDocument
             // 
@@ -2924,8 +2898,8 @@ namespace DocumentIssuanceApp
             this.dgvUserRoles.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvUserRoles.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvUserRoles.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.colUserRoleId,
-            this.colUserRoleName});
+        this.colUserRoleId,
+        this.colUserRoleName});
             this.dgvUserRoles.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgvUserRoles.Location = new System.Drawing.Point(5, 40);
             this.dgvUserRoles.MultiSelect = false;
@@ -3065,9 +3039,9 @@ namespace DocumentIssuanceApp
             // 
             this.statusStripMain.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.statusStripMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripStatusLabelUser,
-            this.toolStripStatusLabelSpring,
-            this.toolStripStatusLabelDateTime});
+        this.toolStripStatusLabelUser,
+        this.toolStripStatusLabelSpring,
+        this.toolStripStatusLabelDateTime});
             this.statusStripMain.Location = new System.Drawing.Point(0, 694);
             this.statusStripMain.Name = "statusStripMain";
             this.statusStripMain.Size = new System.Drawing.Size(1368, 26);
@@ -3239,8 +3213,6 @@ namespace DocumentIssuanceApp
         private System.Windows.Forms.Panel pnlTopRightDI;
         private System.Windows.Forms.TextBox txtRequestNoValueDI;
         private System.Windows.Forms.Label lblRequestNoLabelDI;
-        private System.Windows.Forms.Label lblTrackerNoValueDI;
-        private System.Windows.Forms.Label lblTrackerNoLabelDI;
         private System.Windows.Forms.Panel pnlRequestDetailsDI;
         private System.Windows.Forms.TableLayoutPanel tlpRequestDetails;
         private System.Windows.Forms.Label lblRequestDateDI;
@@ -3454,8 +3426,5 @@ namespace DocumentIssuanceApp
         private System.Windows.Forms.ComboBox cmbItemBatchSizeUnitDI;
         private System.Windows.Forms.TableLayoutPanel tlpTopRightDetailsDI;
         private System.Windows.Forms.FlowLayoutPanel flpActionButtonsDI;
-        private System.Windows.Forms.Label lblTrackerNoValueDI;
-        private System.Windows.Forms.Label lblTrackerNoLabelDI;
     }
-
 }
