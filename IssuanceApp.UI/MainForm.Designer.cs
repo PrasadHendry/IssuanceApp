@@ -3454,7 +3454,8 @@ namespace DocumentIssuanceApp
         private System.Windows.Forms.ComboBox cmbItemBatchSizeUnitDI;
         private System.Windows.Forms.TableLayoutPanel tlpTopRightDetailsDI;
         private System.Windows.Forms.FlowLayoutPanel flpActionButtonsDI;
-
+        private System.Windows.Forms.Label lblTrackerNoValueDI;
+        private System.Windows.Forms.Label lblTrackerNoLabelDI;
     }
 
 }
