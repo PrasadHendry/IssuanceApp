@@ -1,6 +1,4 @@
-﻿using DocumentIssuanceApp;
-
-// MainForm.Designer.cs
+﻿// MainForm.Designer.cs
 // This code is typically auto-generated and managed by the Visual Studio WinForms Designer.
 using System.Drawing;
 using System.Windows.Forms;
@@ -1454,7 +1452,7 @@ namespace DocumentIssuanceApp
             this.dgvGmQueue.AllowUserToAddRows = false;
             this.dgvGmQueue.AllowUserToDeleteRows = false;
             this.dgvGmQueue.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.dgvGmQueue.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
+            this.dgvGmQueue.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.DisplayedCells;
             this.dgvGmQueue.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvGmQueue.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colGmRequestNo,
@@ -2024,7 +2022,7 @@ namespace DocumentIssuanceApp
             this.dgvQaQueue.AllowUserToAddRows = false;
             this.dgvQaQueue.AllowUserToDeleteRows = false;
             this.dgvQaQueue.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.dgvQaQueue.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
+            this.dgvQaQueue.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.DisplayedCells;
             this.dgvQaQueue.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvQaQueue.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colQaRequestNo,
@@ -2824,7 +2822,7 @@ namespace DocumentIssuanceApp
             // 
             this.dgvAuditTrail.AllowUserToAddRows = false;
             this.dgvAuditTrail.AllowUserToDeleteRows = false;
-            this.dgvAuditTrail.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
+            this.dgvAuditTrail.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.DisplayedCells;
             this.dgvAuditTrail.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvAuditTrail.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgvAuditTrail.Location = new System.Drawing.Point(3, 117);
@@ -2834,6 +2832,7 @@ namespace DocumentIssuanceApp
             this.dgvAuditTrail.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvAuditTrail.Size = new System.Drawing.Size(1330, 475);
             this.dgvAuditTrail.TabIndex = 1;
+            this.dgvAuditTrail.VirtualMode = true;
             // 
             // flpAuditExportButtons
             // 

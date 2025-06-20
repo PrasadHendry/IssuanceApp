@@ -40,6 +40,15 @@ namespace DocumentIssuanceApp
         private bool _auditDataLoaded = false;
         private bool _usersDataLoaded = false;
 
+        // --- LOW MEMORY VIRTUAL MODE: Cache now holds only primary keys (integers) ---
+        private List<int> _auditTrailKeyCache;
+        // --- LOW MEMORY VIRTUAL MODE: Caches the data for exactly one row to prevent re-querying for each cell in that row ---
+        private AuditTrailEntry _currentAuditRowCache;
+        private int _currentAuditRowCacheIndex = -1;
+        // --- LOW MEMORY VIRTUAL MODE: Variables to track sorting for database queries ---
+        private SortOrder _auditSortOrder = SortOrder.None;
+        private string _auditSortColumn = string.Empty;
+
 
         public MainForm()
         {
@@ -816,47 +825,57 @@ namespace DocumentIssuanceApp
         private void LoadGmPendingQueue()
         {
             if (dgvGmQueue == null) return;
-
-            // --- DB INTEGRATION POINT ---
-            // The placeholder data should be replaced with a query that fetches all requests
-            // awaiting GM action. These are requests where `GmOperationsAction` is NULL.
-            //
-            // SQL Statement:
-            // SELECT
-            //     i.RequestNo,
-            //     i.RequestDate,
-            //     i.Product,
-            //     i.DocumentNo,
-            //     t.PreparedBy,
-            //     t.RequestedAt
-            // FROM
-            //     dbo.Doc_Issuance AS i
-            // JOIN
-            //     dbo.Issuance_Tracker AS t ON i.IssuanceID = t.IssuanceID
-            // WHERE
-            //     t.GmOperationsAction IS NULL
-            // ORDER BY
-            //     t.RequestedAt ASC;
-            //
-            // C# Logic:
-            // 1. Execute the query.
-            // 2. Bind the resulting DataTable or List of objects to dgvGmQueue.DataSource.
-            // 3. Update the queue count label.
-            //
-            // Example Placeholder:
-            var placeholderData = new List<object>
+            this.Cursor = Cursors.WaitCursor;
+            try
             {
-                new { RequestNo = $"REQ-{DateTime.Now.AddDays(-5).ToString("yyyyMMdd")}-001", RequestDate = DateTime.Now.AddDays(-5), Product = "Product A (Pharma)", DocumentNo = "BMR-001,APP-001A", PreparedBy = "user.requester", RequestedAt = DateTime.Now.AddDays(-5).AddHours(2) },
-                new { RequestNo = $"REQ-{DateTime.Now.AddDays(-4).ToString("yyyyMMdd")}-002", RequestDate = DateTime.Now.AddDays(-4), Product = "Product B (Vaccine) - High Priority", DocumentNo = "BPR-002", PreparedBy = "another.requester", RequestedAt = DateTime.Now.AddDays(-4).AddHours(3) },
-                new { RequestNo = $"REQ-{DateTime.Now.AddDays(-3).ToString("yyyyMMdd")}-003", RequestDate = DateTime.Now.AddDays(-3), Product = "Product C (Tablet)", DocumentNo = "ADD-003X,BMR-XYZ,APP-003C", PreparedBy = "test.user", RequestedAt = DateTime.Now.AddDays(-3).AddHours(1) },
-                new { RequestNo = $"REQ-{DateTime.Now.AddDays(-2).ToString("yyyyMMdd")}-005", RequestDate = DateTime.Now.AddDays(-2), Product = "Product D (Syrup)", DocumentNo = "BMR-D005", PreparedBy = "user.requester", RequestedAt = DateTime.Now.AddDays(-2).AddHours(5) },
-                new { RequestNo = $"REQ-{DateTime.Now.AddDays(-1).ToString("yyyyMMdd")}-006", RequestDate = DateTime.Now.AddDays(-1), Product = "Product E (Ointment)", DocumentNo = "BPR-E006,APP-E006A", PreparedBy = "new.dev", RequestedAt = DateTime.Now.AddDays(-1).AddHours(2) }
-            };
-            dgvGmQueue.DataSource = placeholderData;
+                dgvGmQueue.SuspendLayout();
 
-            if (lblGmQueueTitle != null) lblGmQueueTitle.Text = $"Pending GM Approval Queue ({dgvGmQueue.Rows.Count})";
-            ClearGmSelectedRequestDetails();
-            if (txtGmComment != null) txtGmComment.Clear();
+                // --- DB INTEGRATION POINT ---
+                // The placeholder data should be replaced with a query that fetches all requests
+                // awaiting GM action. These are requests where `GmOperationsAction` is NULL.
+                //
+                // SQL Statement:
+                // SELECT
+                //     i.RequestNo,
+                //     i.RequestDate,
+                //     i.Product,
+                //     i.DocumentNo,
+                //     t.PreparedBy,
+                //     t.RequestedAt
+                // FROM
+                //     dbo.Doc_Issuance AS i
+                // JOIN
+                //     dbo.Issuance_Tracker AS t ON i.IssuanceID = t.IssuanceID
+                // WHERE
+                //     t.GmOperationsAction IS NULL
+                // ORDER BY
+                //     t.RequestedAt ASC;
+                //
+                // C# Logic:
+                // 1. Execute the query.
+                // 2. Bind the resulting DataTable or List of objects to dgvGmQueue.DataSource.
+                // 3. Update the queue count label.
+                //
+                // Example Placeholder:
+                var placeholderData = new List<object>
+                {
+                    new { RequestNo = $"REQ-{DateTime.Now.AddDays(-5).ToString("yyyyMMdd")}-001", RequestDate = DateTime.Now.AddDays(-5), Product = "Product A (Pharma)", DocumentNo = "BMR-001,APP-001A", PreparedBy = "user.requester", RequestedAt = DateTime.Now.AddDays(-5).AddHours(2) },
+                    new { RequestNo = $"REQ-{DateTime.Now.AddDays(-4).ToString("yyyyMMdd")}-002", RequestDate = DateTime.Now.AddDays(-4), Product = "Product B (Vaccine) - High Priority", DocumentNo = "BPR-002", PreparedBy = "another.requester", RequestedAt = DateTime.Now.AddDays(-4).AddHours(3) },
+                    new { RequestNo = $"REQ-{DateTime.Now.AddDays(-3).ToString("yyyyMMdd")}-003", RequestDate = DateTime.Now.AddDays(-3), Product = "Product C (Tablet)", DocumentNo = "ADD-003X,BMR-XYZ,APP-003C", PreparedBy = "test.user", RequestedAt = DateTime.Now.AddDays(-3).AddHours(1) },
+                    new { RequestNo = $"REQ-{DateTime.Now.AddDays(-2).ToString("yyyyMMdd")}-005", RequestDate = DateTime.Now.AddDays(-2), Product = "Product D (Syrup)", DocumentNo = "BMR-D005", PreparedBy = "user.requester", RequestedAt = DateTime.Now.AddDays(-2).AddHours(5) },
+                    new { RequestNo = $"REQ-{DateTime.Now.AddDays(-1).ToString("yyyyMMdd")}-006", RequestDate = DateTime.Now.AddDays(-1), Product = "Product E (Ointment)", DocumentNo = "BPR-E006,APP-E006A", PreparedBy = "new.dev", RequestedAt = DateTime.Now.AddDays(-1).AddHours(2) }
+                };
+                dgvGmQueue.DataSource = placeholderData;
+
+                if (lblGmQueueTitle != null) lblGmQueueTitle.Text = $"Pending GM Approval Queue ({dgvGmQueue.Rows.Count})";
+                ClearGmSelectedRequestDetails();
+                if (txtGmComment != null) txtGmComment.Clear();
+            }
+            finally
+            {
+                dgvGmQueue.ResumeLayout();
+                this.Cursor = Cursors.Default;
+            }
         }
 
         private void ClearGmSelectedRequestDetails()
@@ -1093,48 +1112,59 @@ namespace DocumentIssuanceApp
         private void LoadQaPendingQueue()
         {
             if (dgvQaQueue == null) return;
-            // --- DB INTEGRATION POINT ---
-            // This query should fetch requests that have been authorized by the GM but are
-            // still awaiting final approval/rejection from QA.
-            // Condition: GmOperationsAction = 'Authorized' AND QAAction IS NULL.
-            //
-            // SQL Statement:
-            // SELECT
-            //     i.RequestNo,
-            //     i.RequestDate,
-            //     i.Product,
-            //     i.DocumentNo,
-            //     t.PreparedBy,
-            //     t.AuthorizedBy,
-            //     t.GmOperationsAt AS GmActionAt
-            // FROM
-            //     dbo.Doc_Issuance AS i
-            // JOIN
-            //     dbo.Issuance_Tracker AS t ON i.IssuanceID = t.IssuanceID
-            // WHERE
-            //     t.GmOperationsAction = 'Authorized' AND t.QAAction IS NULL
-            // ORDER BY
-            //     t.GmOperationsAt ASC;
-            //
-            // C# Logic:
-            // 1. Execute the query.
-            // 2. Bind the results to dgvQaQueue.DataSource.
-            // 3. Update the queue count label.
-            //
-            // Example Placeholder:
-            var placeholderQaData = new List<object>
+            this.Cursor = Cursors.WaitCursor;
+            try
             {
-                new { RequestNo = $"REQ-{DateTime.Now.AddDays(-5).ToString("yyyyMMdd")}-001", RequestDate = DateTime.Now.AddDays(-5), Product = "Product A (Pharma)", DocumentNo = "BMR-001,APP-001A", PreparedBy = "user.requester", AuthorizedBy = "gm.user", GmActionAt = DateTime.Now.AddDays(-2).AddHours(1) },
-                new { RequestNo = $"REQ-{DateTime.Now.AddDays(-2).ToString("yyyyMMdd")}-004", RequestDate = DateTime.Now.AddDays(-2), Product = "Product D (Syrup)", DocumentNo = "BPR-004,ADD-004Y", PreparedBy = "another.user", AuthorizedBy = "gm.user", GmActionAt = DateTime.Now.AddDays(-1).AddHours(4) },
-                new { RequestNo = $"REQ-{DateTime.Now.AddDays(-3).ToString("yyyyMMdd")}-007", RequestDate = DateTime.Now.AddDays(-3), Product = "Product F (Capsule)", DocumentNo = "BMR-F007,BPR-F007", PreparedBy = "test.user", AuthorizedBy = "another.gm", GmActionAt = DateTime.Now.AddDays(-2).AddHours(3) },
-                new { RequestNo = $"REQ-{DateTime.Now.AddDays(-1).ToString("yyyyMMdd")}-008", RequestDate = DateTime.Now.AddDays(-1), Product = "Product G (Cream)", DocumentNo = "BMR-G008", PreparedBy = "user.requester", AuthorizedBy = "gm.user", GmActionAt = DateTime.Now.AddHours(-5) }
-            };
-            dgvQaQueue.DataSource = placeholderQaData;
+                dgvQaQueue.SuspendLayout();
 
-            if (lblQaQueueTitle != null) lblQaQueueTitle.Text = $"Pending QA Approval Queue ({dgvQaQueue.Rows.Count})";
-            ClearQaSelectedRequestDetails();
-            if (txtQaComment != null) txtQaComment.Clear();
-            if (numQaPrintCount != null) numQaPrintCount.Value = 1;
+                // --- DB INTEGRATION POINT ---
+                // This query should fetch requests that have been authorized by the GM but are
+                // still awaiting final approval/rejection from QA.
+                // Condition: GmOperationsAction = 'Authorized' AND QAAction IS NULL.
+                //
+                // SQL Statement:
+                // SELECT
+                //     i.RequestNo,
+                //     i.RequestDate,
+                //     i.Product,
+                //     i.DocumentNo,
+                //     t.PreparedBy,
+                //     t.AuthorizedBy,
+                //     t.GmOperationsAt AS GmActionAt
+                // FROM
+                //     dbo.Doc_Issuance AS i
+                // JOIN
+                //     dbo.Issuance_Tracker AS t ON i.IssuanceID = t.IssuanceID
+                // WHERE
+                //     t.GmOperationsAction = 'Authorized' AND t.QAAction IS NULL
+                // ORDER BY
+                //     t.GmOperationsAt ASC;
+                //
+                // C# Logic:
+                // 1. Execute the query.
+                // 2. Bind the results to dgvQaQueue.DataSource.
+                // 3. Update the queue count label.
+                //
+                // Example Placeholder:
+                var placeholderQaData = new List<object>
+                {
+                    new { RequestNo = $"REQ-{DateTime.Now.AddDays(-5).ToString("yyyyMMdd")}-001", RequestDate = DateTime.Now.AddDays(-5), Product = "Product A (Pharma)", DocumentNo = "BMR-001,APP-001A", PreparedBy = "user.requester", AuthorizedBy = "gm.user", GmActionAt = DateTime.Now.AddDays(-2).AddHours(1) },
+                    new { RequestNo = $"REQ-{DateTime.Now.AddDays(-2).ToString("yyyyMMdd")}-004", RequestDate = DateTime.Now.AddDays(-2), Product = "Product D (Syrup)", DocumentNo = "BPR-004,ADD-004Y", PreparedBy = "another.user", AuthorizedBy = "gm.user", GmActionAt = DateTime.Now.AddDays(-1).AddHours(4) },
+                    new { RequestNo = $"REQ-{DateTime.Now.AddDays(-3).ToString("yyyyMMdd")}-007", RequestDate = DateTime.Now.AddDays(-3), Product = "Product F (Capsule)", DocumentNo = "BMR-F007,BPR-F007", PreparedBy = "test.user", AuthorizedBy = "another.gm", GmActionAt = DateTime.Now.AddDays(-2).AddHours(3) },
+                    new { RequestNo = $"REQ-{DateTime.Now.AddDays(-1).ToString("yyyyMMdd")}-008", RequestDate = DateTime.Now.AddDays(-1), Product = "Product G (Cream)", DocumentNo = "BMR-G008", PreparedBy = "user.requester", AuthorizedBy = "gm.user", GmActionAt = DateTime.Now.AddHours(-5) }
+                };
+                dgvQaQueue.DataSource = placeholderQaData;
+
+                if (lblQaQueueTitle != null) lblQaQueueTitle.Text = $"Pending QA Approval Queue ({dgvQaQueue.Rows.Count})";
+                ClearQaSelectedRequestDetails();
+                if (txtQaComment != null) txtQaComment.Clear();
+                if (numQaPrintCount != null) numQaPrintCount.Value = 1;
+            }
+            finally
+            {
+                dgvQaQueue.ResumeLayout();
+                this.Cursor = Cursors.Default;
+            }
         }
 
         private void ClearQaSelectedRequestDetails()
@@ -1350,7 +1380,13 @@ namespace DocumentIssuanceApp
                 dgvAuditTrail.AllowUserToDeleteRows = false;
                 dgvAuditTrail.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
                 dgvAuditTrail.ScrollBars = ScrollBars.Both;
-                dgvAuditTrail.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
+                dgvAuditTrail.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCells;
+
+                dgvAuditTrail.VirtualMode = true;
+                dgvAuditTrail.CellValueNeeded += DgvAuditTrail_CellValueNeeded;
+                dgvAuditTrail.ColumnHeaderMouseClick += DgvAuditTrail_ColumnHeaderMouseClick;
+                dgvAuditTrail.SelectionChanged += DgvAuditTrail_SelectionChanged;
+
                 SetupAuditTrailColumns();
                 dgvAuditTrail.DataError += DgvAuditTrail_DataError;
             }
@@ -1360,15 +1396,63 @@ namespace DocumentIssuanceApp
             if (btnRefreshAuditList != null) btnRefreshAuditList.Click += BtnRefreshAuditList_Click;
             if (btnExportToCsv != null) btnExportToCsv.Click += BtnExportToCsv_Click;
             if (btnExportToExcel != null) btnExportToExcel.Click += BtnExportToExcel_Click;
-
         }
 
         private void DgvAuditTrail_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
             Console.WriteLine($"DataGridView DataError: Row {e.RowIndex}, Column {e.ColumnIndex} ('{dgvAuditTrail.Columns[e.ColumnIndex].Name}'). Exception: {e.Exception.Message}");
-            MessageBox.Show($"Error displaying data in the audit trail at row {e.RowIndex + 1}, column '{dgvAuditTrail.Columns[e.ColumnIndex].HeaderText}'.\nDetails: {e.Exception.Message}", "Data Display Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            e.ThrowException = false;
         }
 
+        private void DgvAuditTrail_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
+        {
+            if (_auditTrailKeyCache == null || e.RowIndex >= _auditTrailKeyCache.Count) return;
+
+            if (e.RowIndex != _currentAuditRowCacheIndex)
+            {
+                int recordKey = _auditTrailKeyCache[e.RowIndex];
+
+                // --- DB INTEGRATION POINT: Fetch a single, full row object using its key ---
+                // string sql = "SELECT * FROM V_AuditTrailView WHERE IssuanceID = @Key";
+                // _currentAuditRowCache = YourDatabaseAccessLayer.FetchSingleRecord<AuditTrailEntry>(sql, recordKey);
+
+                // --- Placeholder Simulation ---
+                _currentAuditRowCache = new AuditTrailEntry
+                {
+                    RequestNo = $"REQ-VIRTUAL-{recordKey}",
+                    RequestDate = DateTime.Now.AddDays(-recordKey),
+                    Product = "Virtual Product " + (recordKey % 10),
+                    DocumentNumbers = "BMR-VIRT, BPR-VIRT",
+                    DerivedStatus = "Approved (Issued)",
+                    PreparedBy = "virtual.user"
+                };
+                // --- End of Simulation ---
+
+                _currentAuditRowCacheIndex = e.RowIndex;
+            }
+
+            if (_currentAuditRowCache == null) return;
+
+            string colName = dgvAuditTrail.Columns[e.ColumnIndex].Name;
+            switch (colName)
+            {
+                case "colAuditRequestNo": e.Value = _currentAuditRowCache.RequestNo; break;
+                case "colAuditRequestDate": e.Value = _currentAuditRowCache.RequestDate; break;
+                case "colAuditProduct": e.Value = _currentAuditRowCache.Product; break;
+                case "colAuditDocumentNumbers": e.Value = _currentAuditRowCache.DocumentNumbers; break;
+                case "colAuditStatusDerived": e.Value = _currentAuditRowCache.DerivedStatus; break;
+                case "colAuditPreparedBy": e.Value = _currentAuditRowCache.PreparedBy; break;
+                case "colAuditRequestedAt": e.Value = _currentAuditRowCache.RequestedAt; break;
+                case "colAuditGmAction": e.Value = _currentAuditRowCache.GmOperationsAction; break;
+                case "colAuditAuthorizedBy": e.Value = _currentAuditRowCache.AuthorizedBy; break;
+                case "colAuditGmActionAt": e.Value = _currentAuditRowCache.GmOperationsAt; break;
+                case "colAuditGmComment": e.Value = _currentAuditRowCache.GmOperationsComment; break;
+                case "colAuditQaAction": e.Value = _currentAuditRowCache.QAAction; break;
+                case "colAuditApprovedBy": e.Value = _currentAuditRowCache.ApprovedBy; break;
+                case "colAuditQaActionAt": e.Value = _currentAuditRowCache.QAAt; break;
+                case "colAuditQaComment": e.Value = _currentAuditRowCache.QAComment; break;
+            }
+        }
 
         private void SetupAuditTrailColumns()
         {
@@ -1401,76 +1485,74 @@ namespace DocumentIssuanceApp
         private void LoadAuditTrailData()
         {
             if (dgvAuditTrail == null) return;
+            this.Cursor = Cursors.WaitCursor;
 
-            // --- DB INTEGRATION POINT ---
-            // This is the most comprehensive query. It joins the two main tables and uses a CASE
-            // statement to create the "DerivedStatus" column based on the workflow state.
-            // The WHERE clause will be built dynamically based on the filter controls.
-            //
-            // SQL Statement (Base):
-            // SELECT
-            //     i.RequestNo, i.RequestDate, i.Product, i.DocumentNo AS DocumentNumbers,
-            //     t.PreparedBy, t.RequestedAt,
-            //     t.GmOperationsAction, t.AuthorizedBy, t.GmOperationsAt, t.GmOperationsComment,
-            //     t.QAAction, t.ApprovedBy, t.QAAt, t.QAComment,
-            //     CASE
-            //         WHEN t.QAAction = 'Approved' THEN 'Approved (Issued)'
-            //         WHEN t.QAAction = 'Rejected' THEN 'Rejected by QA'
-            //         WHEN t.GmOperationsAction = 'Rejected' THEN 'Rejected by GM'
-            //         WHEN t.GmOperationsAction = 'Authorized' AND t.QAAction IS NULL THEN 'Pending QA Approval'
-            //         WHEN t.GmOperationsAction IS NULL THEN 'Pending GM Approval'
-            //         ELSE 'Unknown'
-            //     END AS DerivedStatus
-            // FROM
-            //     dbo.Doc_Issuance AS i
-            // JOIN
-            //     dbo.Issuance_Tracker AS t ON i.IssuanceID = t.IssuanceID
-            //
-            // C# Logic:
-            // 1. Start with the base query string.
-            // 2. Check each filter control (dates, status, request no, product).
-            // 3. If a filter is active, append a corresponding WHERE clause (e.g., "WHERE i.RequestDate BETWEEN @FromDate AND @ToDate").
-            //    Use a List<SqlParameter> to safely add parameter values.
-            // 4. For the status filter, you'll need to add a HAVING clause on the derived status, or wrap the query:
-            //    "SELECT * FROM (...) AS AuditQuery WHERE DerivedStatus = @Status"
-            // 5. Execute the final, constructed query with its parameters.
-            // 6. Bind the results to the dgvAuditTrail.DataSource.
-            //
-            // Example Placeholder:
-            DateTime fromDate = dtpAuditFrom?.Value.Date ?? DateTime.MinValue;
-            DateTime toDate = dtpAuditTo?.Value.Date.AddDays(1).AddTicks(-1) ?? DateTime.MaxValue;
-            string statusFilter = cmbAuditStatus?.SelectedItem?.ToString() ?? "All";
-            string requestNoFilter = txtAuditRequestNo?.Text.Trim() ?? "";
-            string productFilter = txtAuditProduct?.Text.Trim() ?? "";
-
-            var allPlaceholderAuditData = new List<AuditTrailEntry>
+            try
             {
-                new AuditTrailEntry { RequestNo = $"REQ-{DateTime.Now.AddDays(-10).ToString("yyyyMMdd")}-001", RequestDate = DateTime.Now.AddDays(-10), Product = "Product A (Pharma)", DocumentNumbers = "BMR-001,APP-001A", DerivedStatus = "Approved (Issued)", PreparedBy = "user.requester", RequestedAt = DateTime.Now.AddDays(-10).AddHours(1), GmOperationsAction = "Authorized", AuthorizedBy = "gm.user", GmOperationsAt = DateTime.Now.AddDays(-9), GmOperationsComment = "Looks good. Standard procedure.", QAAction = "Approved", ApprovedBy = "qa.lead", QAAt = DateTime.Now.AddDays(-8), QAComment = "Verified and issued. All checks passed." },
-                new AuditTrailEntry { RequestNo = $"REQ-{DateTime.Now.AddDays(-5).ToString("yyyyMMdd")}-002", RequestDate = DateTime.Now.AddDays(-5), Product = "Product B (Vaccine)", DocumentNumbers = "BPR-002", DerivedStatus = "Rejected by GM", PreparedBy = "another.requester", RequestedAt = DateTime.Now.AddDays(-5).AddHours(2), GmOperationsAction = "Rejected", AuthorizedBy = "gm.head", GmOperationsAt = DateTime.Now.AddDays(-4), GmOperationsComment = "Business case not valid for this quarter. Re-evaluate next cycle." },
-                new AuditTrailEntry { RequestNo = $"REQ-{DateTime.Now.AddDays(-2).ToString("yyyyMMdd")}-004", RequestDate = DateTime.Now.AddDays(-2), Product = "Product D (Syrup)", DocumentNumbers = "BPR-004,ADD-004Y,APP-004S", DerivedStatus = "Pending QA Approval", PreparedBy = "another.user", RequestedAt = DateTime.Now.AddDays(-2).AddHours(1), GmOperationsAction = "Authorized", AuthorizedBy = "gm.user", GmOperationsAt = DateTime.Now.AddDays(-1), GmOperationsComment = "Approved by GM. Ensure all addendums are cross-checked by QA." },
-                new AuditTrailEntry { RequestNo = $"REQ-{DateTime.Now.AddDays(-1).ToString("yyyyMMdd")}-005", RequestDate = DateTime.Now.AddDays(-1), Product = "Product E (Injectable)", DocumentNumbers = "BMR-E05", DerivedStatus = "Pending GM Approval", PreparedBy = "new.user", RequestedAt = DateTime.Now.AddDays(-1).AddHours(3) },
-            };
+                dgvAuditTrail.SuspendLayout();
 
-            IEnumerable<AuditTrailEntry> filteredData = allPlaceholderAuditData;
+                // --- DB INTEGRATION POINT (VERY LOW MEMORY) ---
+                // 1. Get filter parameters.
+                // 2. Build the SQL to get ONLY the primary keys based on filters and the current sort order.
+                //    string sql = "SELECT i.IssuanceID FROM ... WHERE ... ORDER BY ...";
+                //    _auditTrailKeyCache = YourDatabaseAccessLayer.GetListOfInts(sql, parameters);
 
-            if (statusFilter != "All")
-            {
-                filteredData = filteredData.Where(entry => entry.DerivedStatus == statusFilter);
+                // --- Placeholder Simulation ---
+                _auditTrailKeyCache = Enumerable.Range(1, 10000).ToList(); // Simulate 10,000 record keys
+                if (_auditSortOrder == SortOrder.Descending) { _auditTrailKeyCache.Reverse(); }
+                // --- End of Simulation ---
+
+                // --- ROBUSTNESS FIX: Derive the count from the cache itself, not a separate query ---
+                int totalRecordCount = (_auditTrailKeyCache == null) ? 0 : _auditTrailKeyCache.Count;
+
+                _currentAuditRowCacheIndex = -1; // Invalidate the single-row cache
+                dgvAuditTrail.RowCount = 0;
+                dgvAuditTrail.RowCount = totalRecordCount;
             }
-            if (!string.IsNullOrEmpty(requestNoFilter))
+            finally
             {
-                filteredData = filteredData.Where(entry => entry.RequestNo.ToLower().Contains(requestNoFilter.ToLower()));
+                dgvAuditTrail.ResumeLayout();
+                this.Cursor = Cursors.Default;
             }
-            if (!string.IsNullOrEmpty(productFilter))
-            {
-                filteredData = filteredData.Where(entry => entry.Product.ToLower().Contains(productFilter.ToLower()));
-            }
-            filteredData = filteredData.Where(entry => entry.RequestDate >= fromDate && entry.RequestDate <= toDate);
-
-
-            dgvAuditTrail.DataSource = null;
-            dgvAuditTrail.DataSource = filteredData.ToList();
         }
+
+        private void DgvAuditTrail_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            string newSortColumn = dgvAuditTrail.Columns[e.ColumnIndex].Name;
+
+            if (_auditSortColumn == newSortColumn)
+            {
+                _auditSortOrder = (_auditSortOrder == SortOrder.Ascending) ? SortOrder.Descending : SortOrder.Ascending;
+            }
+            else
+            {
+                _auditSortOrder = SortOrder.Ascending;
+                _auditSortColumn = newSortColumn;
+            }
+
+            // In a real app, LoadAuditTrailData would read these _auditSort... variables
+            // and build the "ORDER BY" clause for the database query to get the keys.
+            LoadAuditTrailData();
+        }
+
+        private void DgvAuditTrail_SelectionChanged(object sender, EventArgs e)
+        {
+            if (dgvAuditTrail.SelectedRows.Count > 0)
+            {
+                int selectedIndex = dgvAuditTrail.SelectedRows[0].Index;
+                if (_auditTrailKeyCache != null && selectedIndex < _auditTrailKeyCache.Count)
+                {
+                    // This is how you get the selected key in Virtual Mode
+                    int selectedKey = _auditTrailKeyCache[selectedIndex];
+
+                    // You would then use this key to fetch the full object if needed
+                    // for a "details" view, etc.
+                    // For now, we can just show the key.
+                    Console.WriteLine($"Selected audit trail record key: {selectedKey}");
+                }
+            }
+        }
+
 
         private void BtnApplyAuditFilter_Click(object sender, EventArgs e) { LoadAuditTrailData(); }
         private void BtnClearAuditFilters_Click(object sender, EventArgs e)
@@ -1480,6 +1562,8 @@ namespace DocumentIssuanceApp
             if (cmbAuditStatus != null && cmbAuditStatus.Items.Count > 0) cmbAuditStatus.SelectedIndex = 0;
             if (txtAuditRequestNo != null) txtAuditRequestNo.Clear();
             if (txtAuditProduct != null) txtAuditProduct.Clear();
+            _auditSortColumn = string.Empty;
+            _auditSortOrder = SortOrder.None;
             LoadAuditTrailData();
         }
         private void BtnRefreshAuditList_Click(object sender, EventArgs e)
@@ -1488,45 +1572,7 @@ namespace DocumentIssuanceApp
         }
         private void BtnExportToCsv_Click(object sender, EventArgs e)
         {
-            if (dgvAuditTrail == null || dgvAuditTrail.Rows.Count == 0)
-            {
-                MessageBox.Show("No data available to export.", "Export Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
-
-            using (SaveFileDialog sfd = new SaveFileDialog { Filter = "CSV (*.csv)|*.csv", FileName = $"AuditTrail_{DateTime.Now:yyyyMMddHHmmss}.csv" })
-            {
-                if (sfd.ShowDialog() == DialogResult.OK)
-                {
-                    try
-                    {
-                        var sb = new StringBuilder();
-                        var headers = dgvAuditTrail.Columns.Cast<DataGridViewColumn>()
-                                         .Select(column => $"\"{EscapeCsvField(column.HeaderText)}\"");
-                        sb.AppendLine(string.Join(",", headers));
-
-                        foreach (DataGridViewRow row in dgvAuditTrail.Rows)
-                        {
-                            if (row.IsNewRow) continue;
-                            var cells = row.Cells.Cast<DataGridViewCell>()
-                                         .Select(cell => $"\"{EscapeCsvField(cell.FormattedValue?.ToString())}\"");
-                            sb.AppendLine(string.Join(",", cells));
-                        }
-
-                        File.WriteAllText(sfd.FileName, sb.ToString(), Encoding.UTF8);
-                        MessageBox.Show("Audit trail data exported successfully to CSV.", "Export Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Error exporting data: " + ex.Message, "Export Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                }
-            }
-        }
-        private string EscapeCsvField(string field)
-        {
-            if (string.IsNullOrEmpty(field)) return "";
-            return field.Replace("\"", "\"\"");
+            MessageBox.Show("Export in Virtual Mode requires fetching all data from the database. This can be slow and memory-intensive and should be implemented as a background task.", "Export Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
         private void BtnExportToExcel_Click(object sender, EventArgs e)
         {
@@ -1572,35 +1618,46 @@ namespace DocumentIssuanceApp
         {
             if (this.userRolesBindingSource == null) return;
 
-            // --- DB INTEGRATION POINT ---
-            // This method should populate the user roles grid from the database.
-            //
-            // SQL Statement:
-            // SELECT RoleID, RoleName FROM dbo.User_Roles ORDER BY RoleName;
-            //
-            // C# Logic:
-            // 1. Execute the query.
-            // 2. Create a List<UserRole> from the results.
-            // 3. Set the userRolesBindingSource.DataSource to this list.
-            //
-            // Example Placeholder:
-            var placeholderRoles = new List<UserRole>
+            this.Cursor = Cursors.WaitCursor;
+            try
             {
-                new UserRole { RoleID = 1, RoleName = "Requester" },
-                new UserRole { RoleID = 2, RoleName = "GM_Operations" },
-                new UserRole { RoleID = 3, RoleName = "QA" },
-                new UserRole { RoleID = 4, RoleName = "Admin" },
-                new UserRole { RoleID = 5, RoleName = "Supervisor" },
-                new UserRole { RoleID = 6, RoleName = "Auditor" }
-            };
+                dgvUserRoles.SuspendLayout();
 
-            this.userRolesBindingSource.DataSource = null;
-            this.userRolesBindingSource.DataSource = placeholderRoles;
+                // --- DB INTEGRATION POINT ---
+                // This method should populate the user roles grid from the database.
+                //
+                // SQL Statement:
+                // SELECT RoleID, RoleName FROM dbo.User_Roles ORDER BY RoleName;
+                //
+                // C# Logic:
+                // 1. Execute the query.
+                // 2. Create a List<UserRole> from the results.
+                // 3. Set the userRolesBindingSource.DataSource to this list.
+                //
+                // Example Placeholder:
+                var placeholderRoles = new List<UserRole>
+                {
+                    new UserRole { RoleID = 1, RoleName = "Requester" },
+                    new UserRole { RoleID = 2, RoleName = "GM_Operations" },
+                    new UserRole { RoleID = 3, RoleName = "QA" },
+                    new UserRole { RoleID = 4, RoleName = "Admin" },
+                    new UserRole { RoleID = 5, RoleName = "Supervisor" },
+                    new UserRole { RoleID = 6, RoleName = "Auditor" }
+                };
 
-            // Reset state after loading
-            if (txtRoleNameManage != null) txtRoleNameManage.Clear();
-            if (btnResetPassword != null) btnResetPassword.Enabled = false;
-            if (dgvUserRoles != null) dgvUserRoles.ClearSelection();
+                this.userRolesBindingSource.DataSource = null;
+                this.userRolesBindingSource.DataSource = placeholderRoles;
+
+                // Reset state after loading
+                if (txtRoleNameManage != null) txtRoleNameManage.Clear();
+                if (btnResetPassword != null) btnResetPassword.Enabled = false;
+                if (dgvUserRoles != null) dgvUserRoles.ClearSelection();
+            }
+            finally
+            {
+                dgvUserRoles.ResumeLayout();
+                this.Cursor = Cursors.Default;
+            }
         }
 
         private void DgvUserRoles_SelectionChanged(object sender, EventArgs e)
