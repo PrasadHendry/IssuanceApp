@@ -1514,7 +1514,7 @@ namespace DocumentIssuanceApp
                 // 1. Get filter parameters from the UI.
                 // 2. Build the dynamic WHERE and ORDER BY clauses for the SQL query.
                 // 3. Execute a query that returns ONLY the primary keys (IssuanceID) of the filtered/sorted records.
-                //    string sql = "SELECT i.IssuanceID FROM dbo.Doc_Issuance i JOIN ... WHERE ... ORDER BY ...";
+                //    string sql = "SELECT i.IssuanceID FROM ... WHERE ... ORDER BY ...";
                 //    _auditTrailKeyCache = YourDatabaseAccessLayer.GetListOfInts(sql, parameters);
 
                 // --- Placeholder Simulation ---
