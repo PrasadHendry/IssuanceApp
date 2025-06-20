@@ -232,16 +232,18 @@ namespace DocumentIssuanceApp
             cmbRole.Items.Clear();
 
             // --- DB INTEGRATION POINT ---
-            // Instead of hardcoding roles, they should be fetched from the database.
-            // This makes the application more maintainable.
+            // This method populates the role dropdown. It should be one of the first
+            // database calls the application makes.
             //
-            // SQL Statement:
+            // SQL:
             // SELECT RoleName FROM dbo.User_Roles ORDER BY RoleName;
             //
             // C# Logic:
-            // 1. Execute the query.
-            // 2. Loop through the results and add each RoleName to cmbRole.Items.
-            // 3. Handle potential exceptions (e.g., DB connection failed).
+            // 1. In a data access layer, create a method that executes this query and returns a List<string>.
+            // 2. Call that method here.
+            // 3. Use cmbRole.Items.AddRange(rolesList.ToArray());
+            // 4. Wrap the call in a try-catch block to handle DB connection failures gracefully.
+            //    If it fails, show a MessageBox and potentially disable the login button.
             //
             // Example Placeholder:
             cmbRole.Items.AddRange(new object[] { "Requester", "GM_Operations", "QA", "Admin" });
@@ -300,23 +302,20 @@ namespace DocumentIssuanceApp
 
         private bool AuthenticateUser(string roleName, string password)
         {
-            // --- DB INTEGRATION POINT ---
-            // This is a critical security point. The hardcoded passwords must be replaced
-            // with a database check against the User_Roles table.
-            // IMPORTANT: Passwords in the DB should be stored as salted hashes, not plain text.
+            // --- DB INTEGRATION POINT (CRITICAL SECURITY) ---
+            // This method must be replaced with a secure database check.
             //
-            // SQL Statement:
+            // SQL:
             // SELECT PasswordHash FROM dbo.User_Roles WHERE RoleName = @roleName;
             //
             // C# Logic:
-            // 1. Execute the query using the provided 'roleName' as a parameter (@roleName).
-            // 2. If a record is found, retrieve the 'PasswordHash' from the database.
-            // 3. Use a secure hashing library (e.g., BCrypt.Net) to verify the user-provided 'password'
-            //    against the database hash.
-            // 4. Return true if they match, otherwise return false.
-            //
-            // Potential Issue: Case-sensitivity of RoleName depends on the database's collation.
-            // For logins, a case-insensitive collation (default in SQL Server) is usually acceptable.
+            // 1. Execute the query using a parameterized command to prevent SQL injection.
+            //    e.g., command.Parameters.AddWithValue("@roleName", roleName);
+            // 2. If the query returns a result (the hash string), proceed. If not, the role doesn't exist; return false.
+            // 3. Use a secure password hashing library like BCrypt.Net to verify the provided password
+            //    against the hash retrieved from the database.
+            //    e.g., return BCrypt.Net.BCrypt.Verify(password, databaseHash);
+            // 4. NEVER store plain-text passwords. The PasswordHash column in the DB must contain a salted hash.
             //
             // Example Placeholder:
             if (roleName == "Requester" && password == "test") return true;
@@ -568,8 +567,8 @@ namespace DocumentIssuanceApp
 
         private string GenerateNewRequestNumber()
         {
-            // --- DB INTEGRATION POINT (CRITICAL) ---
-            // The current random number generation is NOT safe for a multi-user environment.
+            // --- DB INTEGRATION POINT (CRITICAL FOR UNIQUENESS) ---
+            // The current random number generation is a placeholder and is NOT safe for a multi-user environment.
             // It can create a "race condition" where two users get the same number.
             // The correct approach is to use a database SEQUENCE object.
             //
@@ -581,7 +580,7 @@ namespace DocumentIssuanceApp
             //
             // **Step 3: Replace the C# logic below with a database call.**
             //
-            // New SQL Statement to execute here:
+            // New SQL to execute here:
             // SELECT NEXT VALUE FOR dbo.DailyRequestSequence;
             //
             // New C# Logic:
@@ -662,35 +661,44 @@ namespace DocumentIssuanceApp
 
             try
             {
-                // --- DB INTEGRATION POINT ---
-                // This is the core data insertion logic. The collected data in 'issuanceData'
-                // needs to be saved to the database. This should be done within a transaction
-                // to ensure both tables (Doc_Issuance and Issuance_Tracker) are updated correctly.
+                // --- DB INTEGRATION POINT (TRANSACTIONAL INSERT) ---
+                // This is the core data insertion logic. It must be performed within a database transaction
+                // to ensure that both the Doc_Issuance and Issuance_Tracker tables are updated atomically.
+                // If one insert fails, the other must be rolled back.
                 //
-                // **Best Practice: Add a UNIQUE constraint to the RequestNo column in the DB.**
-                // ALTER TABLE dbo.Doc_Issuance ADD CONSTRAINT UQ_Doc_Issuance_RequestNo UNIQUE (RequestNo);
-                // This provides a final layer of protection against duplicate request numbers.
+                // **Best Practice: Use a Stored Procedure for this operation.**
+                // A stored procedure encapsulates the entire logic on the database server, reducing network
+                // traffic and ensuring the transactional integrity is handled correctly.
                 //
-                // C# Logic:
-                // 1. Begin a SQL transaction.
-                // 2. Execute the first INSERT statement into Doc_Issuance.
-                // 3. Get the ID of the newly inserted row using SCOPE_IDENTITY().
-                // 4. Execute the second INSERT statement into Issuance_Tracker, using the new ID.
-                // 5. If both succeed, commit the transaction.
-                // 6. If either fails, roll back the transaction.
+                // **Example Stored Procedure `dbo.sp_CreateIssuanceRequest`:**
+                // CREATE PROCEDURE dbo.sp_CreateIssuanceRequest
+                //     @RequestNo VARCHAR(50), @RequestDate DATE, ..., @RequestComment VARCHAR(MAX)
+                // AS
+                // BEGIN
+                //     SET NOCOUNT ON;
+                //     BEGIN TRY
+                //         BEGIN TRANSACTION;
                 //
-                // SQL Statement 1 (Insert into main table and get ID):
-                // DECLARE @NewIssuanceID INT;
-                // INSERT INTO dbo.Doc_Issuance (RequestNo, RequestDate, FromDepartment, DocumentNo, ParentBatchNumber, ParentBatchSize, ParentMfgDate, ParentExpDate, Product, BatchNo, BatchSize, ItemMfgDate, ItemExpDate, Market, PackSize, ExportOrderNo)
-                // VALUES (@RequestNo, @RequestDate, @FromDepartment, @DocumentNo, @ParentBatchNumber, @ParentBatchSize, @ParentMfgDate, @ParentExpDate, @Product, @BatchNo, @BatchSize, @ItemMfgDate, @ItemExpDate, @Market, @PackSize, @ExportOrderNo);
-                // SET @NewIssuanceID = SCOPE_IDENTITY();
-                // SELECT @NewIssuanceID;
+                //         DECLARE @NewIssuanceID INT;
                 //
-                // SQL Statement 2 (Insert into tracker table):
-                // INSERT INTO dbo.Issuance_Tracker (IssuanceID, PreparedBy, RequestedAt, RequestComment)
-                // VALUES (@IssuanceID, @PreparedBy, GETDATE(), @RequestComment);
+                //         INSERT INTO dbo.Doc_Issuance (RequestNo, RequestDate, ..., ExportOrderNo)
+                //         VALUES (@RequestNo, @RequestDate, ..., @ExportOrderNo);
                 //
-                // Note: All @variables should be passed as secure SQL parameters.
+                //         SET @NewIssuanceID = SCOPE_IDENTITY();
+                //
+                //         INSERT INTO dbo.Issuance_Tracker (IssuanceID, PreparedBy, RequestedAt, RequestComment)
+                //         VALUES (@NewIssuanceID, @PreparedBy, GETDATE(), @RequestComment);
+                //
+                //         COMMIT TRANSACTION;
+                //     END TRY
+                //     BEGIN CATCH
+                //         IF @@TRANCOUNT > 0 ROLLBACK TRANSACTION;
+                //         THROW; -- Re-throw the error to be caught by the C# application
+                //     END CATCH
+                // END
+                //
+                // **C# Call:**
+                // Execute the stored procedure with all the collected data as parameters.
                 //
                 // Example Placeholder:
                 Console.WriteLine("--- Document Issuance Request Submitted (Updated Formats) ---");
@@ -704,6 +712,7 @@ namespace DocumentIssuanceApp
             }
             catch (Exception ex)
             {
+                // Catch exceptions from the database (e.g., unique key violation, constraint failure)
                 lblStatusValueDI.Text = "Error submitting request.";
                 lblStatusValueDI.ForeColor = Color.Red;
                 MessageBox.Show($"Error submitting request: {ex.Message}\n{ex.StackTrace}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -831,10 +840,10 @@ namespace DocumentIssuanceApp
                 dgvGmQueue.SuspendLayout();
 
                 // --- DB INTEGRATION POINT ---
-                // The placeholder data should be replaced with a query that fetches all requests
-                // awaiting GM action. These are requests where `GmOperationsAction` is NULL.
+                // This query fetches all requests awaiting GM action. These are requests where
+                // GmOperationsAction is NULL in the Issuance_Tracker table.
                 //
-                // SQL Statement:
+                // SQL:
                 // SELECT
                 //     i.RequestNo,
                 //     i.RequestDate,
@@ -900,10 +909,10 @@ namespace DocumentIssuanceApp
             }
 
             // --- DB INTEGRATION POINT ---
-            // The hardcoded details based on RequestNo should be replaced by a single, detailed
-            // database query when a user selects a row in the grid.
+            // This query should fetch all details for the selected request to populate the form.
+            // It's better to run one comprehensive query than multiple small ones.
             //
-            // SQL Statement:
+            // SQL:
             // SELECT
             //     i.*, -- Selects all columns from Doc_Issuance
             //     t.RequestComment
@@ -1005,13 +1014,13 @@ namespace DocumentIssuanceApp
             if (MessageBox.Show($"Are you sure you want to authorize request '{requestNo}'?", "Confirm Authorization", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 // --- DB INTEGRATION POINT (AUTHORIZE) ---
-                // This action should update the Issuance_Tracker table for the selected request.
+                // This action updates the Issuance_Tracker table for the selected request.
                 //
-                // SQL Statement:
+                // SQL:
                 // UPDATE dbo.Issuance_Tracker
                 // SET
                 //     GmOperationsAction = 'Authorized',
-                //     AuthorizedBy = @AuthorizedBy,
+                //     AuthorizedBy = @AuthorizedBy, -- e.g., the loggedInUserName
                 //     GmOperationsAt = GETDATE(),
                 //     GmOperationsComment = @GmOperationsComment
                 // WHERE
@@ -1053,11 +1062,11 @@ namespace DocumentIssuanceApp
                 // --- DB INTEGRATION POINT (REJECT) ---
                 // This is similar to Authorize but sets the action to 'Rejected'.
                 //
-                // SQL Statement:
+                // SQL:
                 // UPDATE dbo.Issuance_Tracker
                 // SET
                 //     GmOperationsAction = 'Rejected',
-                //     AuthorizedBy = @AuthorizedBy,
+                //     AuthorizedBy = @AuthorizedBy, -- e.g., the loggedInUserName
                 //     GmOperationsAt = GETDATE(),
                 //     GmOperationsComment = @GmOperationsComment
                 // WHERE
@@ -1122,7 +1131,7 @@ namespace DocumentIssuanceApp
                 // still awaiting final approval/rejection from QA.
                 // Condition: GmOperationsAction = 'Authorized' AND QAAction IS NULL.
                 //
-                // SQL Statement:
+                // SQL:
                 // SELECT
                 //     i.RequestNo,
                 //     i.RequestDate,
@@ -1189,10 +1198,9 @@ namespace DocumentIssuanceApp
             }
 
             // --- DB INTEGRATION POINT ---
-            // Similar to the GM details view, this should be a single database query to fetch
-            // all details for the selected request, including comments from both the requester and the GM.
+            // This query should fetch all details for the selected request, including comments.
             //
-            // SQL Statement:
+            // SQL:
             // SELECT
             //     i.*, -- Selects all columns from Doc_Issuance
             //     t.RequestComment,
@@ -1294,11 +1302,11 @@ namespace DocumentIssuanceApp
                 // --- DB INTEGRATION POINT (APPROVE) ---
                 // This is the final approval step. It updates the Issuance_Tracker table.
                 //
-                // SQL Statement:
+                // SQL:
                 // UPDATE dbo.Issuance_Tracker
                 // SET
                 //     QAAction = 'Approved',
-                //     ApprovedBy = @ApprovedBy,
+                //     ApprovedBy = @ApprovedBy, -- e.g., the loggedInUserName
                 //     QAAt = GETDATE(),
                 //     QAComment = @QAComment
                 // WHERE
@@ -1332,7 +1340,7 @@ namespace DocumentIssuanceApp
                 // --- DB INTEGRATION POINT (REJECT) ---
                 // This is the final rejection step. It updates the Issuance_Tracker table.
                 //
-                // SQL Statement:
+                // SQL:
                 // UPDATE dbo.Issuance_Tracker
                 // SET
                 //     QAAction = 'Rejected',
@@ -1413,7 +1421,18 @@ namespace DocumentIssuanceApp
                 int recordKey = _auditTrailKeyCache[e.RowIndex];
 
                 // --- DB INTEGRATION POINT: Fetch a single, full row object using its key ---
-                // string sql = "SELECT * FROM V_AuditTrailView WHERE IssuanceID = @Key";
+                // It is highly recommended to create a database VIEW that joins Doc_Issuance and Issuance_Tracker
+                // to make this query simple and efficient.
+                //
+                // Example View `V_AuditTrail`:
+                // CREATE VIEW V_AuditTrail AS
+                // SELECT i.*, t.PreparedBy, t.RequestedAt, ...,
+                //     CASE ... END AS DerivedStatus
+                // FROM dbo.Doc_Issuance i JOIN dbo.Issuance_Tracker t ON i.IssuanceID = t.IssuanceID;
+                //
+                // SQL to execute here:
+                // SELECT * FROM V_AuditTrail WHERE IssuanceID = @Key;
+                //
                 // _currentAuditRowCache = YourDatabaseAccessLayer.FetchSingleRecord<AuditTrailEntry>(sql, recordKey);
 
                 // --- Placeholder Simulation ---
@@ -1492,9 +1511,10 @@ namespace DocumentIssuanceApp
                 dgvAuditTrail.SuspendLayout();
 
                 // --- DB INTEGRATION POINT (VERY LOW MEMORY) ---
-                // 1. Get filter parameters.
-                // 2. Build the SQL to get ONLY the primary keys based on filters and the current sort order.
-                //    string sql = "SELECT i.IssuanceID FROM ... WHERE ... ORDER BY ...";
+                // 1. Get filter parameters from the UI.
+                // 2. Build the dynamic WHERE and ORDER BY clauses for the SQL query.
+                // 3. Execute a query that returns ONLY the primary keys (IssuanceID) of the filtered/sorted records.
+                //    string sql = "SELECT i.IssuanceID FROM dbo.Doc_Issuance i JOIN ... WHERE ... ORDER BY ...";
                 //    _auditTrailKeyCache = YourDatabaseAccessLayer.GetListOfInts(sql, parameters);
 
                 // --- Placeholder Simulation ---
@@ -1626,7 +1646,7 @@ namespace DocumentIssuanceApp
                 // --- DB INTEGRATION POINT ---
                 // This method should populate the user roles grid from the database.
                 //
-                // SQL Statement:
+                // SQL:
                 // SELECT RoleID, RoleName FROM dbo.User_Roles ORDER BY RoleName;
                 //
                 // C# Logic:
@@ -1703,7 +1723,7 @@ namespace DocumentIssuanceApp
                 // This action should update the password hash in the database for the selected role.
                 // A new password should be generated (or prompted for), securely hashed, and then stored.
                 //
-                // SQL Statement:
+                // SQL:
                 // UPDATE dbo.User_Roles SET PasswordHash = @NewPasswordHash WHERE RoleName = @RoleName;
                 //
                 // C# Logic:
