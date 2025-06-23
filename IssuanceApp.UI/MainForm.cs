@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Globalization;
@@ -12,26 +11,40 @@ using IssuanceApp.Data;     // Required to reference the Data project
 
 namespace DocumentIssuanceApp
 {
+    /// <summary>
+    /// This is the main UI form class, also known as the "Code-Behind".
+    /// Its responsibility is to manage the user interface, handle user events (like button clicks),
+    /// and orchestrate calls to the data layer (IssuanceRepository).
+    ///
+    /// CORRELATION:
+    /// - It inherits from System.Windows.Forms.Form.
+    /// - It is a "partial" class, meaning its definition is split. The other part is in MainForm.Designer.cs,
+    ///   which contains the declarations for all the UI controls (e.g., this.btnLogin).
+    /// - It holds an instance of the IssuanceRepository to perform all database operations.
+    /// - It knows nothing about SQL; it only calls methods on the repository.
+    /// </summary>
     public partial class MainForm : Form
     {
-        private readonly IssuanceRepository _repository; // The single instance of our data repository
+        // A single, private instance of the repository for the entire form's lifetime.
+        private readonly IssuanceRepository _repository;
         private Timer statusTimer;
         private string loggedInRole = null;
         private string loggedInUserName = null;
 
         private BindingSource userRolesBindingSource;
 
+        // --- UI State Management ---
         private List<TabPage> allTabPages;
         private ToolStripDropDownButton toolStripDropDownButtonUserActions;
         private ToolStripMenuItem signOutToolStripMenuItem;
 
-        // Flags for lazy loading tab data
+        // Flags for lazy loading tab data to improve performance.
         private bool _gmDataLoaded = false;
         private bool _qaDataLoaded = false;
         private bool _auditDataLoaded = false;
         private bool _usersDataLoaded = false;
 
-        // --- LOW MEMORY VIRTUAL MODE ---
+        // --- Fields for Audit Trail Virtual Mode ---
         private List<int> _auditTrailKeyCache;
         private AuditTrailEntry _currentAuditRowCache;
         private int _currentAuditRowCacheIndex = -1;
@@ -41,9 +54,11 @@ namespace DocumentIssuanceApp
 
         public MainForm()
         {
+            // This method is defined in MainForm.Designer.cs and creates all the UI controls.
             InitializeComponent();
 
-            // Read connection string from App.config and create the repository
+            // Read connection string from App.config and create the repository.
+            // This is the ONLY place the connection string is read.
             try
             {
                 string connStr = ConfigurationManager.ConnectionStrings["IssuanceAppDB"].ConnectionString;
@@ -52,16 +67,13 @@ namespace DocumentIssuanceApp
             catch (Exception ex)
             {
                 MessageBox.Show("Could not read database configuration. The application will now close.\n\nError: " + ex.Message, "Configuration Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                Load += (s, e) => Close(); // Schedule form to close after it's shown
+                Load += (s, e) => Close(); // Schedule form to close after it's shown.
                 return;
             }
 
-            // Enable Double Buffering for smoother rendering
             EnableDoubleBuffering();
-
             InitializeDynamicControls();
 
-            // Set up form properties and timers
             this.Text = "Document Issuance System";
             statusTimer = new Timer { Interval = 1000 };
             statusTimer.Tick += StatusTimer_Tick;
@@ -69,7 +81,7 @@ namespace DocumentIssuanceApp
 
             this.tabControlMain.SelectedIndexChanged += TabControlMain_SelectedIndexChanged;
 
-            // Initialize all UI components and states
+            // Initialize all UI components and states.
             SetupStatusBar();
             InitializeLoginTab();
             InitializeDocumentIssuanceTab();
@@ -78,11 +90,12 @@ namespace DocumentIssuanceApp
             InitializeAuditTrailTab();
             InitializeUsersTab();
 
-            SetupTabs(); // Hides all tabs initially
+            SetupTabs(); // Hides all tabs initially.
 
             this.WindowState = FormWindowState.Maximized;
         }
 
+        // A performance enhancement for smoother rendering of DataGridViews.
         private void EnableDoubleBuffering()
         {
             if (dgvGmQueue != null)
@@ -93,6 +106,8 @@ namespace DocumentIssuanceApp
                 typeof(DataGridView).InvokeMember("DoubleBuffered", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.SetProperty, null, dgvAuditTrail, new object[] { true });
         }
 
+        // This event handler implements "lazy loading" for improved startup performance.
+        // Data for a tab is only fetched from the database the first time the user clicks on it.
         private void TabControlMain_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (tabControlMain.SelectedTab == null) return;
@@ -120,6 +135,7 @@ namespace DocumentIssuanceApp
             }
         }
 
+        // Sets up controls that are not created in the designer, like the "Sign Out" button.
         private void InitializeDynamicControls()
         {
             allTabPages = new List<TabPage>();
@@ -189,6 +205,7 @@ namespace DocumentIssuanceApp
             cmbRole.Items.Clear();
             try
             {
+                // Call the repository to get roles from the database.
                 List<string> roleNames = _repository.GetRoleNames();
                 cmbRole.Items.AddRange(roleNames.ToArray());
                 if (cmbRole.Items.Count > 0) cmbRole.SelectedIndex = 0;
@@ -218,6 +235,7 @@ namespace DocumentIssuanceApp
 
             try
             {
+                // Call the repository to check credentials against the database.
                 bool isAuthenticated = _repository.AuthenticateUser(selectedRole, password);
                 if (isAuthenticated)
                 {
@@ -227,6 +245,7 @@ namespace DocumentIssuanceApp
                     lblLoginStatus.ForeColor = Color.Green;
                     txtPassword.Clear();
 
+                    // Reset lazy-loading flags for the new session.
                     _gmDataLoaded = _qaDataLoaded = _auditDataLoaded = _usersDataLoaded = false;
 
                     EnableTabsBasedOnRole(loggedInRole);
@@ -247,6 +266,7 @@ namespace DocumentIssuanceApp
             }
         }
 
+        // This method controls which tabs are visible based on the logged-in user's role.
         private void EnableTabsBasedOnRole(string role)
         {
             bool isLoggedIn = !string.IsNullOrEmpty(role);
@@ -283,6 +303,7 @@ namespace DocumentIssuanceApp
             }
         }
 
+        // After login, this method selects the most relevant tab for the user's role.
         private void SwitchToDefaultTabForRole(string role)
         {
             TabPage targetTab = null;
@@ -439,6 +460,7 @@ namespace DocumentIssuanceApp
             if (cmbItemBatchSizeUnitDI.SelectedItem == null || cmbItemBatchSizeUnitDI.SelectedItem.ToString() == "N/A") { MessageBox.Show("Please select a Unit for the Item Batch Size.", "Validation Error"); cmbItemBatchSizeUnitDI.Focus(); return; }
 
             // --- Data Collection into DTO ---
+            // Create an instance of the DTO from DataAccessModels.cs to hold the form data.
             var issuanceData = new IssuanceRequestData
             {
                 RequestNo = txtRequestNoValueDI.Text,
@@ -463,6 +485,7 @@ namespace DocumentIssuanceApp
 
             try
             {
+                // Pass the DTO to the repository to handle the database insertion.
                 _repository.CreateIssuanceRequest(issuanceData);
                 lblStatusValueDI.Text = $"Request '{issuanceData.RequestNo}' submitted successfully!";
                 lblStatusValueDI.ForeColor = Color.Green;
@@ -547,6 +570,7 @@ namespace DocumentIssuanceApp
             try
             {
                 dgvGmQueue.DataSource = null;
+                // Call the repository to get the data for the queue.
                 dgvGmQueue.DataSource = _repository.GetGmPendingQueue();
                 lblGmQueueTitle.Text = $"Pending GM Approval Queue ({dgvGmQueue.Rows.Count})";
                 ClearGmSelectedRequestDetails();
@@ -583,6 +607,7 @@ namespace DocumentIssuanceApp
 
             try
             {
+                // Call the repository to get all the other details for the selected request.
                 DataTable dt = _repository.GetFullRequestDetails(requestNo);
                 if (dt.Rows.Count > 0)
                 {
@@ -630,6 +655,7 @@ namespace DocumentIssuanceApp
             {
                 try
                 {
+                    // Call the repository to update the database.
                     bool success = _repository.UpdateGmAction(requestNo, action, txtGmComment.Text, loggedInUserName);
                     if (success)
                     {
@@ -840,6 +866,7 @@ namespace DocumentIssuanceApp
             this.Cursor = Cursors.WaitCursor;
             try
             {
+                // Map the UI column name to the database column name for safe sorting.
                 var columnMap = new Dictionary<string, string>
                 {
                     { "colAuditRequestNo", "RequestNo" }, { "colAuditRequestDate", "RequestDate" },
@@ -848,10 +875,12 @@ namespace DocumentIssuanceApp
                 };
                 columnMap.TryGetValue(_auditSortColumn, out string dbSortColumn);
 
+                // Call the repository to get only the primary keys for the filtered/sorted data.
                 _auditTrailKeyCache = _repository.GetAuditTrailKeys(
                     dtpAuditFrom.Value, dtpAuditTo.Value, cmbAuditStatus.SelectedItem.ToString(),
                     txtAuditRequestNo.Text, txtAuditProduct.Text, dbSortColumn, _auditSortOrder);
 
+                // Invalidate the single-row cache and tell the grid how many rows to expect.
                 _currentAuditRowCacheIndex = -1;
                 dgvAuditTrail.RowCount = 0;
                 dgvAuditTrail.RowCount = _auditTrailKeyCache.Count;
@@ -863,10 +892,12 @@ namespace DocumentIssuanceApp
             finally { this.Cursor = Cursors.Default; }
         }
 
+        // This event is the core of Virtual Mode. It fires for every cell that becomes visible.
         private void DgvAuditTrail_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
         {
             if (_auditTrailKeyCache == null || e.RowIndex >= _auditTrailKeyCache.Count) return;
 
+            // To optimize, we only fetch the full data for a row once, and cache it.
             if (e.RowIndex != _currentAuditRowCacheIndex)
             {
                 int recordKey = _auditTrailKeyCache[e.RowIndex];
@@ -875,6 +906,8 @@ namespace DocumentIssuanceApp
             }
 
             if (_currentAuditRowCache == null) return;
+
+            // Provide the value for the specific cell being requested.
             string colName = dgvAuditTrail.Columns[e.ColumnIndex].Name;
             switch (colName)
             {

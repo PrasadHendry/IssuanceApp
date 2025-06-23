@@ -2,14 +2,25 @@
 
 namespace IssuanceApp.Data
 {
-    // Represents a user role from the database
+    /// <summary>
+    /// This file contains the Plain Old C# Objects (POCOs) or Data Transfer Objects (DTOs).
+    /// Their purpose is to define a clear, strongly-typed structure for data that is passed
+    /// between the UI layer (MainForm.cs) and the Data layer (IssuanceRepository.cs).
+    /// They do not contain any logic, only properties.
+    /// </summary>
+
+    // Represents a user role from the database.
+    // Used by IssuanceRepository to fetch roles and by MainForm to display them in the Users tab grid.
     public class UserRole
     {
         public int RoleID { get; set; }
         public string RoleName { get; set; }
     }
 
-    // Represents a full audit trail record for the virtual grid
+    // Represents a single, complete record for the Audit Trail.
+    // This class combines data from both the Doc_Issuance and Issuance_Tracker tables.
+    // It's used by the Virtual Mode of the Audit Trail grid in MainForm.
+    // The IssuanceRepository populates this object, and the MainForm's CellValueNeeded event reads from it.
     public class AuditTrailEntry
     {
         public string RequestNo { get; set; }
@@ -29,7 +40,9 @@ namespace IssuanceApp.Data
         public string QAComment { get; set; }
     }
 
-    // A Data Transfer Object (DTO) for creating a new issuance request
+    // A Data Transfer Object (DTO) used to pass all the necessary information
+    // for creating a new issuance request from the UI (MainForm) to the Data Layer (IssuanceRepository).
+    // This avoids having a method with a very long list of parameters.
     public class IssuanceRequestData
     {
         public string RequestNo { get; set; }

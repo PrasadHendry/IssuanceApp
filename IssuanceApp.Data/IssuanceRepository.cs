@@ -3,15 +3,27 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
-using System.Windows.Forms; // Required for SortOrder enum
+using System.Windows.Forms; // Required for the SortOrder enum used in a method signature.
 using Microsoft.Data.SqlClient;
 
 namespace IssuanceApp.Data
 {
+    /// <summary>
+    /// This is the Repository class, which acts as the application's Data Access Layer (DAL).
+    /// Its sole responsibility is to handle all communication with the SQL Server database.
+    /// It encapsulates all SQL queries and commands.
+    ///
+    /// CORRELATION:
+    /// - It is instantiated and used by the UI Layer (MainForm.cs).
+    /// - It uses the classes defined in DataAccessModels.cs to return structured data.
+    /// - It knows nothing about the UI (e.g., it never references a TextBox or a Button).
+    /// </summary>
     public class IssuanceRepository
     {
         private readonly string _connectionString;
 
+        // The constructor receives the database connection string.
+        // This is passed from MainForm, which reads it from App.config.
         public IssuanceRepository(string connectionString)
         {
             if (string.IsNullOrEmpty(connectionString))
@@ -21,6 +33,7 @@ namespace IssuanceApp.Data
         }
 
         #region Generic Data Access Helpers
+        // These private methods are internal tools to avoid repeating code for database operations.
         private DataTable GetDataTable(string sql, List<SqlParameter> parameters = null)
         {
             DataTable dt = new DataTable();
@@ -80,6 +93,7 @@ namespace IssuanceApp.Data
         #endregion
 
         #region Login and User Management
+        // Called by MainForm to populate the login dropdown.
         public List<string> GetRoleNames()
         {
             var roles = new List<string>();
@@ -92,6 +106,7 @@ namespace IssuanceApp.Data
             return roles;
         }
 
+        // Called by MainForm when the user clicks the Login button.
         public bool AuthenticateUser(string roleName, string password)
         {
             string sql = "SELECT PasswordHash FROM dbo.User_Roles WHERE RoleName = @roleName;";
@@ -99,19 +114,21 @@ namespace IssuanceApp.Data
             object result = ExecuteScalar(sql, parameters);
             if (result != null)
             {
-                // In production, use a secure hashing library like BCrypt.Net
-                // return BCrypt.Net.BCrypt.Verify(password, result.ToString());
+                // In production, this should use a secure hashing library like BCrypt.Net
+                // e.g., return BCrypt.Net.BCrypt.Verify(password, result.ToString());
                 return password == result.ToString();
             }
             return false;
         }
 
+        // Called by MainForm to populate the grid in the Users tab.
         public DataTable GetUserRolesForGrid()
         {
             string sql = "SELECT RoleID, RoleName FROM dbo.User_Roles ORDER BY RoleName;";
             return GetDataTable(sql);
         }
 
+        // Called by MainForm when an admin resets a password.
         public bool ResetUserPassword(string roleName, string newPasswordHash)
         {
             string sql = "UPDATE dbo.User_Roles SET PasswordHash = @NewPasswordHash WHERE RoleName = @RoleName;";
@@ -125,6 +142,7 @@ namespace IssuanceApp.Data
         #endregion
 
         #region Document Issuance
+        // Called by MainForm to get a new, unique request number when the form loads.
         public string GenerateNewRequestNumber()
         {
             string prefix = $"REQ-{DateTime.Now:yyyyMMdd}-";
@@ -139,6 +157,8 @@ namespace IssuanceApp.Data
             return $"{prefix}{nextSequence:D3}";
         }
 
+        // Called by MainForm when the "Submit Request" button is clicked.
+        // It takes the DTO from DataAccessModels.cs as its parameter.
         public void CreateIssuanceRequest(IssuanceRequestData data)
         {
             using (var conn = new SqlConnection(_connectionString))
@@ -172,6 +192,7 @@ namespace IssuanceApp.Data
         #endregion
 
         #region GM & QA Operations
+        // Called by MainForm to populate the grid on the GM Operations tab.
         public DataTable GetGmPendingQueue()
         {
             string sql = @"
@@ -183,6 +204,7 @@ namespace IssuanceApp.Data
             return GetDataTable(sql);
         }
 
+        // Called by MainForm to populate the grid on the QA tab.
         public DataTable GetQaPendingQueue()
         {
             string sql = @"
@@ -194,6 +216,7 @@ namespace IssuanceApp.Data
             return GetDataTable(sql);
         }
 
+        // Called by MainForm to populate the detailed view when a request is selected in a grid.
         public DataTable GetFullRequestDetails(string requestNo)
         {
             string sql = @"
@@ -204,6 +227,7 @@ namespace IssuanceApp.Data
             return GetDataTable(sql, new List<SqlParameter> { new SqlParameter("@RequestNo", requestNo) });
         }
 
+        // Called by MainForm when the GM Authorize or Reject button is clicked.
         public bool UpdateGmAction(string requestNo, string action, string comment, string userName)
         {
             string sql = @"
@@ -220,6 +244,7 @@ namespace IssuanceApp.Data
             return ExecuteNonQuery(sql, parameters) > 0;
         }
 
+        // Called by MainForm when the QA Approve or Reject button is clicked.
         public bool UpdateQaAction(string requestNo, string action, string comment, string userName)
         {
             string sql = @"
@@ -238,6 +263,8 @@ namespace IssuanceApp.Data
         #endregion
 
         #region Audit Trail
+        // Called by MainForm to get a list of primary keys for the virtual grid.
+        // This is the first step of the Virtual Mode process.
         public List<int> GetAuditTrailKeys(DateTime from, DateTime to, string status, string requestNo, string product, string sortColumn, System.Windows.Forms.SortOrder sortOrder)
         {
             var sqlBuilder = new StringBuilder(@"
@@ -280,6 +307,7 @@ namespace IssuanceApp.Data
             }
 
             // ** SECURITY FIX: Whitelist validation for ORDER BY clause **
+            // This prevents SQL injection by ensuring only valid, safe column names can be used for sorting.
             string safeSortColumn = "RequestDate"; // Default sort column
             var validSortColumns = new List<string> { "RequestNo", "RequestDate", "Product", "DerivedStatus", "PreparedBy", "RequestedAt" };
             if (!string.IsNullOrEmpty(sortColumn) && validSortColumns.Contains(sortColumn))
@@ -294,6 +322,8 @@ namespace IssuanceApp.Data
             return keysTable.AsEnumerable().Select(row => row.Field<int>("IssuanceID")).ToList();
         }
 
+        // Called by MainForm's CellValueNeeded event to get the data for a single row.
+        // This is the second step of the Virtual Mode process. It's called on-demand as the user scrolls.
         public AuditTrailEntry GetAuditTrailEntry(int key)
         {
             string sql = @"
