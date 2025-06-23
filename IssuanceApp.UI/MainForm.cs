@@ -10,9 +10,8 @@ using System.Windows.Forms;
 using System.Configuration; // Required for App.config
 using IssuanceApp.Data;     // Required to reference the Data project
 
-namespace IssuanceApp.UI
+namespace DocumentIssuanceApp
 {
-    // CRITICAL FIX: Added ": Form" to ensure this class inherits from System.Windows.Forms.Form
     public partial class MainForm : Form
     {
         private readonly IssuanceRepository _repository; // The single instance of our data repository
@@ -905,6 +904,26 @@ namespace IssuanceApp.UI
             LoadAuditTrailData();
         }
 
+        private void DgvAuditTrail_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        {
+            Console.WriteLine($"DataGridView DataError: Row {e.RowIndex}, Column {e.ColumnIndex} ('{dgvAuditTrail.Columns[e.ColumnIndex].Name}'). Exception: {e.Exception.Message}");
+            e.ThrowException = false;
+        }
+
+        private void DgvAuditTrail_SelectionChanged(object sender, EventArgs e)
+        {
+            if (dgvAuditTrail.SelectedRows.Count > 0)
+            {
+                int selectedIndex = dgvAuditTrail.SelectedRows[0].Index;
+                if (_auditTrailKeyCache != null && selectedIndex < _auditTrailKeyCache.Count)
+                {
+                    int selectedKey = _auditTrailKeyCache[selectedIndex];
+                    Console.WriteLine($"Selected audit trail record key: {selectedKey}");
+                }
+            }
+        }
+
+        private void BtnApplyAuditFilter_Click(object sender, EventArgs e) { LoadAuditTrailData(); }
         private void BtnClearAuditFilters_Click(object sender, EventArgs e)
         {
             dtpAuditFrom.Value = DateTime.Now.Date.AddDays(-30);
@@ -915,6 +934,18 @@ namespace IssuanceApp.UI
             _auditSortColumn = string.Empty;
             _auditSortOrder = SortOrder.None;
             LoadAuditTrailData();
+        }
+        private void BtnRefreshAuditList_Click(object sender, EventArgs e)
+        {
+            LoadAuditTrailData();
+        }
+        private void BtnExportToCsv_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Export in Virtual Mode requires fetching all data from the database. This can be slow and memory-intensive and should be implemented as a background task.", "Export Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+        private void BtnExportToExcel_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Excel export functionality is not yet implemented.", "TODO", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
         #endregion
 
