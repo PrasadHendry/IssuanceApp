@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
+using System.Windows.Forms; // Required for SortOrder enum
 using Microsoft.Data.SqlClient;
 
 namespace IssuanceApp.Data
@@ -237,7 +238,7 @@ namespace IssuanceApp.Data
         #endregion
 
         #region Audit Trail
-        public List<int> GetAuditTrailKeys(DateTime from, DateTime to, string status, string requestNo, string product, string sortColumn, SortOrder sortOrder)
+        public List<int> GetAuditTrailKeys(DateTime from, DateTime to, string status, string requestNo, string product, string sortColumn, System.Windows.Forms.SortOrder sortOrder)
         {
             var sqlBuilder = new StringBuilder(@"
                 WITH AuditData AS (
@@ -278,14 +279,16 @@ namespace IssuanceApp.Data
                 parameters.Add(new SqlParameter("@Product", $"%{product.Trim()}%"));
             }
 
-            if (!string.IsNullOrEmpty(sortColumn))
+            // ** SECURITY FIX: Whitelist validation for ORDER BY clause **
+            string safeSortColumn = "RequestDate"; // Default sort column
+            var validSortColumns = new List<string> { "RequestNo", "RequestDate", "Product", "DerivedStatus", "PreparedBy", "RequestedAt" };
+            if (!string.IsNullOrEmpty(sortColumn) && validSortColumns.Contains(sortColumn))
             {
-                sqlBuilder.Append($" ORDER BY {sortColumn} {(sortOrder == SortOrder.Ascending ? "ASC" : "DESC")}");
+                safeSortColumn = sortColumn;
             }
-            else
-            {
-                sqlBuilder.Append(" ORDER BY RequestDate DESC"); // Default sort
-            }
+
+            string sortDirection = (sortOrder == System.Windows.Forms.SortOrder.Ascending) ? "ASC" : "DESC";
+            sqlBuilder.Append($" ORDER BY {safeSortColumn} {sortDirection}");
 
             DataTable keysTable = GetDataTable(sqlBuilder.ToString(), parameters);
             return keysTable.AsEnumerable().Select(row => row.Field<int>("IssuanceID")).ToList();

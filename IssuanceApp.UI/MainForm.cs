@@ -12,6 +12,7 @@ using IssuanceApp.Data;     // Required to reference the Data project
 
 namespace IssuanceApp.UI
 {
+    // CRITICAL FIX: Added ": Form" to ensure this class inherits from System.Windows.Forms.Form
     public partial class MainForm : Form
     {
         private readonly IssuanceRepository _repository; // The single instance of our data repository
