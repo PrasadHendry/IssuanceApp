@@ -282,10 +282,10 @@ namespace DocumentIssuanceApp
                 return;
             }
 
-            bool isAdmin = (role == "Admin");
             bool isRequester = (role == "Requester");
             bool isGm = (role == "GM_Operations");
             bool isQa = (role == "QA");
+            bool isAdmin = (role == "Admin");
 
             foreach (var tab in allTabPages)
             {
