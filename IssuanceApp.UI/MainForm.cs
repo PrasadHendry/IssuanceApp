@@ -35,12 +35,8 @@ namespace DocumentIssuanceApp
 
         // --- UI State Management ---
         private List<TabPage> allTabPages;
-        private ToolStripDropDownButton toolStripDropDownButtonUserActions;
-        private ToolStripMenuItem signOutToolStripMenuItem;
 
         // Flags for lazy loading tab data to improve performance.
-        private bool _gmDataLoaded = false;
-        private bool _qaDataLoaded = false;
         private bool _auditDataLoaded = false;
         private bool _usersDataLoaded = false;
 
@@ -74,6 +70,9 @@ namespace DocumentIssuanceApp
             EnableDoubleBuffering();
             InitializeDynamicControls();
 
+            // --- AESTHETIC UPDATE ---
+            ApplyPharmaTheme();
+
             this.Text = "Document Issuance System";
             statusTimer = new Timer { Interval = 1000 };
             statusTimer.Tick += StatusTimer_Tick;
@@ -92,6 +91,7 @@ namespace DocumentIssuanceApp
 
             SetupTabs(); // Hides all tabs initially.
 
+            btnSignOut.Click += BtnSignOut_Click;
             this.WindowState = FormWindowState.Maximized;
         }
 
@@ -113,16 +113,16 @@ namespace DocumentIssuanceApp
             if (tabControlMain.SelectedTab == null) return;
             string selectedTabName = tabControlMain.SelectedTab.Name;
 
-            if (selectedTabName == nameof(tabPageGmOperations) && !_gmDataLoaded)
+            // Always reload GM and QA queues when the tab is selected for fresh data.
+            if (selectedTabName == nameof(tabPageGmOperations))
             {
                 LoadGmPendingQueue();
-                _gmDataLoaded = true;
             }
-            else if (selectedTabName == nameof(tabPageQa) && !_qaDataLoaded)
+            else if (selectedTabName == nameof(tabPageQa))
             {
                 LoadQaPendingQueue();
-                _qaDataLoaded = true;
             }
+            // Keep lazy-loading for tabs with heavy, filter-driven data.
             else if (selectedTabName == nameof(tabPageAuditTrail) && !_auditDataLoaded)
             {
                 LoadAuditTrailData();
@@ -135,7 +135,6 @@ namespace DocumentIssuanceApp
             }
         }
 
-        // Sets up controls that are not created in the designer, like the "Sign Out" button.
         private void InitializeDynamicControls()
         {
             allTabPages = new List<TabPage>();
@@ -143,30 +142,28 @@ namespace DocumentIssuanceApp
             {
                 allTabPages.Add(tp);
             }
-
-            this.toolStripDropDownButtonUserActions = new ToolStripDropDownButton();
-            this.signOutToolStripMenuItem = new ToolStripMenuItem();
-
-            this.signOutToolStripMenuItem.Name = "signOutToolStripMenuItem";
-            this.signOutToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.signOutToolStripMenuItem.Text = "Sign Out";
-            this.signOutToolStripMenuItem.Click += SignOutToolStripMenuItem_Click;
-
-            this.toolStripDropDownButtonUserActions.DisplayStyle = ToolStripItemDisplayStyle.Text;
-            this.toolStripDropDownButtonUserActions.DropDownItems.AddRange(new ToolStripItem[] { this.signOutToolStripMenuItem });
-            this.toolStripDropDownButtonUserActions.Name = "toolStripDropDownButtonUserActions";
-            this.toolStripDropDownButtonUserActions.Size = new System.Drawing.Size(90, 24);
-            this.toolStripDropDownButtonUserActions.Text = "User Actions";
-            this.toolStripDropDownButtonUserActions.Visible = false;
-
-            this.statusStripMain.Items.Insert(1, this.toolStripDropDownButtonUserActions);
         }
 
-        private void SignOutToolStripMenuItem_Click(object sender, EventArgs e)
+        private void BtnSignOut_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("Are you sure you want to sign out and exit the application?", "Confirm Sign Out", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            if (MessageBox.Show("Are you sure you want to sign out?", "Confirm Sign Out", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
-                Application.Exit();
+                // Reset state
+                loggedInRole = null;
+                lblLoginStatus.Text = "You have been signed out.";
+                lblLoginStatus.ForeColor = SystemColors.ControlText;
+                flpHeader.Visible = false; // Hide the header
+                SetupStatusBar(); // Reset status bar text
+
+                // Reset UI to login screen
+                EnableTabsBasedOnRole(null);
+
+                // Explicitly switch to the login tab if it exists
+                var loginTab = allTabPages.FirstOrDefault(t => t.Name == nameof(tabPageLogin));
+                if (loginTab != null)
+                {
+                    tabControlMain.SelectedTab = loginTab;
+                }
             }
         }
 
@@ -208,7 +205,17 @@ namespace DocumentIssuanceApp
                 // Call the repository to get roles from the database.
                 List<string> roleNames = _repository.GetRoleNames();
                 cmbRole.Items.AddRange(roleNames.ToArray());
-                if (cmbRole.Items.Count > 0) cmbRole.SelectedIndex = 0;
+
+                // Try to set "Requester" as the default.
+                if (cmbRole.Items.Contains("Requester"))
+                {
+                    cmbRole.SelectedItem = "Requester";
+                }
+                // If "Requester" isn't found, fall back to the first item in the list.
+                else if (cmbRole.Items.Count > 0)
+                {
+                    cmbRole.SelectedIndex = 0;
+                }
             }
             catch (Exception ex)
             {
@@ -241,20 +248,25 @@ namespace DocumentIssuanceApp
                 {
                     loggedInRole = selectedRole;
                     toolStripStatusLabelUser.Text = $"User: {loggedInUserName} ({loggedInRole})";
+
+                    lblCurrentUserHeader.Text = $"Logged in as: {loggedInUserName} ({loggedInRole})";
+                    flpHeader.Visible = true; // Show the new header
+
                     lblLoginStatus.Text = $"Login successful as {loggedInRole}.";
-                    lblLoginStatus.ForeColor = Color.Green;
+                    lblLoginStatus.ForeColor = _successColor;
                     txtPassword.Clear();
 
                     // Reset lazy-loading flags for the new session.
-                    _gmDataLoaded = _qaDataLoaded = _auditDataLoaded = _usersDataLoaded = false;
+                    _auditDataLoaded = _usersDataLoaded = false;
 
                     EnableTabsBasedOnRole(loggedInRole);
                     SwitchToDefaultTabForRole(loggedInRole);
                 }
                 else
                 {
+                    flpHeader.Visible = false;
                     lblLoginStatus.Text = "Invalid role or password.";
-                    lblLoginStatus.ForeColor = Color.Red;
+                    lblLoginStatus.ForeColor = _dangerColor;
                     loggedInRole = null;
                     SetupStatusBar();
                     EnableTabsBasedOnRole(null);
@@ -270,9 +282,6 @@ namespace DocumentIssuanceApp
         private void EnableTabsBasedOnRole(string role)
         {
             bool isLoggedIn = !string.IsNullOrEmpty(role);
-            if (toolStripDropDownButtonUserActions != null)
-                toolStripDropDownButtonUserActions.Visible = isLoggedIn;
-
             tabControlMain.TabPages.Clear();
 
             if (!isLoggedIn)
@@ -337,6 +346,121 @@ namespace DocumentIssuanceApp
             }
             base.OnFormClosing(e);
         }
+        #endregion
+
+        #region UI Theming and Styling
+
+        // Define a professional color palette for the application
+        private static readonly Color _primaryColor = Color.FromArgb(0, 123, 255); // Professional Blue
+        private static readonly Color _successColor = Color.FromArgb(40, 167, 69); // Calm Green
+        private static readonly Color _dangerColor = Color.FromArgb(220, 53, 69);  // Muted Red
+        private static readonly Color _secondaryColor = Color.FromArgb(108, 117, 125); // Gray
+        private static readonly Color _headerTextColor = Color.White;
+        private static readonly Color _formBackColor = Color.WhiteSmoke;
+        private static readonly Color _gridAlternatingRowColor = Color.FromArgb(242, 245, 250);
+
+        /// <summary>
+        /// Applies the consistent theme across the entire application.
+        /// Call this once from the constructor.
+        /// </summary>
+        private void ApplyPharmaTheme()
+        {
+            this.BackColor = _formBackColor;
+
+            // Style all tabs
+            foreach (TabPage tab in tabControlMain.TabPages)
+            {
+                tab.BackColor = _formBackColor;
+            }
+
+            // Style Headers
+            lblHeaderDI.ForeColor = _primaryColor;
+            lblGmQueueTitle.ForeColor = _primaryColor;
+            lblQaQueueTitle.ForeColor = _primaryColor;
+            lblApplicationRoles.ForeColor = _primaryColor;
+
+            // Style GroupBox Titles
+            var boldFont = new Font("Segoe UI", 9.75F, FontStyle.Bold);
+            foreach (var grp in this.Controls.OfType<Control>().SelectMany(c => c.Controls.OfType<GroupBox>()))
+            {
+                grp.ForeColor = _primaryColor;
+                grp.Font = boldFont;
+            }
+
+            // Style Primary Action Buttons
+            StylePrimaryButton(btnSubmitRequestDI);
+            StylePrimaryButton(btnGmAuthorize);
+            StylePrimaryButton(btnQaApprove);
+            StylePrimaryButton(btnApplyAuditFilter);
+            StylePrimaryButton(btnLogin);
+
+            // Style Destructive Action Buttons
+            StyleDangerButton(btnGmReject);
+            StyleDangerButton(btnQaReject);
+
+            // Style Secondary/Utility Buttons
+            StyleSecondaryButton(btnClearFormDI);
+            StyleSecondaryButton(btnRefreshAuditList);
+            StyleSecondaryButton(btnClearAuditFilters);
+            StyleSecondaryButton(btnGmRefreshList);
+            StyleSecondaryButton(btnQaRefreshList);
+            StyleSecondaryButton(btnRefreshUserRoles);
+
+            // Style the new Sign Out button
+            btnSignOut.ForeColor = _primaryColor;
+            btnSignOut.BackColor = Color.White;
+            btnSignOut.FlatAppearance.BorderColor = _primaryColor;
+
+            // Style all DataGridViews
+            StyleDataGridView(dgvGmQueue);
+            StyleDataGridView(dgvQaQueue);
+            StyleDataGridView(dgvAuditTrail);
+            StyleDataGridView(dgvUserRoles);
+        }
+
+        private void StylePrimaryButton(Button btn)
+        {
+            btn.BackColor = _primaryColor;
+            btn.ForeColor = _headerTextColor;
+            btn.FlatStyle = FlatStyle.Flat;
+            btn.FlatAppearance.BorderSize = 0;
+        }
+
+        private void StyleDangerButton(Button btn)
+        {
+            btn.BackColor = _dangerColor;
+            btn.ForeColor = _headerTextColor;
+            btn.FlatStyle = FlatStyle.Flat;
+            btn.FlatAppearance.BorderSize = 0;
+        }
+
+        private void StyleSecondaryButton(Button btn)
+        {
+            btn.BackColor = _secondaryColor;
+            btn.ForeColor = _headerTextColor;
+            btn.FlatStyle = FlatStyle.Flat;
+            btn.FlatAppearance.BorderSize = 0;
+        }
+
+        private void StyleDataGridView(DataGridView dgv)
+        {
+            dgv.EnableHeadersVisualStyles = false;
+            dgv.BorderStyle = BorderStyle.None;
+            dgv.BackgroundColor = _formBackColor;
+
+            // Header Style
+            dgv.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
+            dgv.ColumnHeadersDefaultCellStyle.BackColor = _primaryColor;
+            dgv.ColumnHeadersDefaultCellStyle.ForeColor = _headerTextColor;
+            dgv.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 10, FontStyle.Bold);
+
+            // Row Styles
+            dgv.DefaultCellStyle.Font = new Font("Segoe UI", 9.5f);
+            dgv.AlternatingRowsDefaultCellStyle.BackColor = _gridAlternatingRowColor;
+            dgv.RowsDefaultCellStyle.SelectionBackColor = SystemColors.Highlight;
+            dgv.RowsDefaultCellStyle.SelectionForeColor = SystemColors.HighlightText;
+        }
+
         #endregion
 
         #region Document Issuance Tab Logic
@@ -488,7 +612,7 @@ namespace DocumentIssuanceApp
                 // Pass the DTO to the repository to handle the database insertion.
                 _repository.CreateIssuanceRequest(issuanceData);
                 lblStatusValueDI.Text = $"Request '{issuanceData.RequestNo}' submitted successfully!";
-                lblStatusValueDI.ForeColor = Color.Green;
+                lblStatusValueDI.ForeColor = _successColor;
                 MessageBox.Show($"Request '{issuanceData.RequestNo}' submitted successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 ClearDocumentIssuanceForm();
                 LoadInitialDocumentIssuanceData();
@@ -496,7 +620,7 @@ namespace DocumentIssuanceApp
             catch (Exception ex)
             {
                 lblStatusValueDI.Text = "Error submitting request.";
-                lblStatusValueDI.ForeColor = Color.Red;
+                lblStatusValueDI.ForeColor = _dangerColor;
                 MessageBox.Show($"Error submitting request: {ex.Message}", "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -506,6 +630,7 @@ namespace DocumentIssuanceApp
             ClearDocumentIssuanceForm();
             lblStatusValueDI.Text = "Form cleared. Ready for new request.";
             lblStatusValueDI.ForeColor = SystemColors.ControlText;
+            // Also generate a new request number immediately.
             LoadInitialDocumentIssuanceData();
         }
 
@@ -574,6 +699,12 @@ namespace DocumentIssuanceApp
                 dgvGmQueue.DataSource = _repository.GetGmPendingQueue();
                 lblGmQueueTitle.Text = $"Pending GM Approval Queue ({dgvGmQueue.Rows.Count})";
                 ClearGmSelectedRequestDetails();
+
+                // If the grid has rows, select the first one to populate the details view.
+                if (dgvGmQueue.Rows.Count > 0)
+                {
+                    dgvGmQueue.Rows[0].Selected = true;
+                }
             }
             catch (Exception ex)
             {
@@ -707,6 +838,12 @@ namespace DocumentIssuanceApp
                 dgvQaQueue.DataSource = _repository.GetQaPendingQueue();
                 lblQaQueueTitle.Text = $"Pending QA Approval Queue ({dgvQaQueue.Rows.Count})";
                 ClearQaSelectedRequestDetails();
+
+                // If the grid has rows, select the first one to populate the details view.
+                if (dgvQaQueue.Rows.Count > 0)
+                {
+                    dgvQaQueue.Rows[0].Selected = true;
+                }
             }
             catch (Exception ex)
             {
@@ -1015,7 +1152,11 @@ namespace DocumentIssuanceApp
         {
             bool isRowSelected = dgvUserRoles.SelectedRows.Count > 0;
             btnResetPassword.Enabled = isRowSelected;
-            txtRoleNameManage.Text = isRowSelected ? (dgvUserRoles.SelectedRows[0].DataBoundItem as DataRowView)?["RoleName"].ToString() : string.Empty;
+
+            // Use Convert.ToString for null-safety.
+            txtRoleNameManage.Text = isRowSelected
+                ? Convert.ToString((dgvUserRoles.SelectedRows[0].DataBoundItem as DataRowView)?["RoleName"])
+                : string.Empty;
         }
 
         private void BtnResetPassword_Click(object sender, EventArgs e)
