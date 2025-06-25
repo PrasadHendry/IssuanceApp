@@ -350,14 +350,15 @@ namespace DocumentIssuanceApp
 
         #region UI Theming and Styling
 
-        // Define a professional color palette for the application
-        private static readonly Color _primaryColor = Color.FromArgb(0, 123, 255); // Professional Blue
+        // NEW: Define a professional, lighter, low-contrast color palette
+        private static readonly Color _primaryColor = Color.FromArgb(65, 84, 110); // Muted Slate Blue
         private static readonly Color _successColor = Color.FromArgb(40, 167, 69); // Calm Green
-        private static readonly Color _dangerColor = Color.FromArgb(220, 53, 69);  // Muted Red
-        private static readonly Color _secondaryColor = Color.FromArgb(108, 117, 125); // Gray
+        private static readonly Color _dangerColor = Color.IndianRed;  // Muted Red
+        private static readonly Color _secondaryColor = Color.FromArgb(130, 140, 150); // Lighter Gray
         private static readonly Color _headerTextColor = Color.White;
-        private static readonly Color _formBackColor = Color.WhiteSmoke;
-        private static readonly Color _gridAlternatingRowColor = Color.FromArgb(242, 245, 250);
+        private static readonly Color _formBackColor = Color.FromArgb(240, 242, 245); // CHANGED: Very light gray background
+        private static readonly Color _gridSelectionBackColor = Color.FromArgb(188, 220, 244); // CHANGED: Soft light blue for selection
+        private static readonly Color _gridSelectionForeColor = Color.Black;
 
         /// <summary>
         /// Applies the consistent theme across the entire application.
@@ -422,30 +423,30 @@ namespace DocumentIssuanceApp
         {
             btn.BackColor = _primaryColor;
             btn.ForeColor = _headerTextColor;
-            btn.FlatStyle = FlatStyle.Flat;
-            btn.FlatAppearance.BorderSize = 0;
+            btn.FlatStyle = FlatStyle.Standard;
+            btn.FlatAppearance.BorderSize = 1;
         }
 
         private void StyleDangerButton(Button btn)
         {
             btn.BackColor = _dangerColor;
             btn.ForeColor = _headerTextColor;
-            btn.FlatStyle = FlatStyle.Flat;
-            btn.FlatAppearance.BorderSize = 0;
+            btn.FlatStyle = FlatStyle.Standard;
+            btn.FlatAppearance.BorderSize = 1;
         }
 
         private void StyleSecondaryButton(Button btn)
         {
             btn.BackColor = _secondaryColor;
             btn.ForeColor = _headerTextColor;
-            btn.FlatStyle = FlatStyle.Flat;
-            btn.FlatAppearance.BorderSize = 0;
+            btn.FlatStyle = FlatStyle.Standard;
+            btn.FlatAppearance.BorderSize = 1;
         }
 
         private void StyleDataGridView(DataGridView dgv)
         {
             dgv.EnableHeadersVisualStyles = false;
-            dgv.BorderStyle = BorderStyle.None;
+            dgv.BorderStyle = BorderStyle.Fixed3D;
             dgv.BackgroundColor = _formBackColor;
 
             // Header Style
@@ -456,9 +457,17 @@ namespace DocumentIssuanceApp
 
             // Row Styles
             dgv.DefaultCellStyle.Font = new Font("Segoe UI", 9.5f);
-            dgv.AlternatingRowsDefaultCellStyle.BackColor = _gridAlternatingRowColor;
-            dgv.RowsDefaultCellStyle.SelectionBackColor = SystemColors.Highlight;
-            dgv.RowsDefaultCellStyle.SelectionForeColor = SystemColors.HighlightText;
+            dgv.DefaultCellStyle.BackColor = Color.White; // CHANGED: All cells are white by default
+            dgv.AlternatingRowsDefaultCellStyle.BackColor = Color.White; // CHANGED: No alternating color
+            dgv.RowsDefaultCellStyle.SelectionBackColor = _gridSelectionBackColor; // CHANGED
+            dgv.RowsDefaultCellStyle.SelectionForeColor = _gridSelectionForeColor; // CHANGED
+
+            // Special styling for Audit Trail to look like Excel
+            if (dgv.Name == nameof(dgvAuditTrail))
+            {
+                dgv.GridColor = Color.DarkGray; // Make grid lines visible
+                dgv.CellBorderStyle = DataGridViewCellBorderStyle.Single; // Show all cell borders
+            }
         }
 
         #endregion
