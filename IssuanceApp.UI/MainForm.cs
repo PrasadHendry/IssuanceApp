@@ -350,14 +350,14 @@ namespace DocumentIssuanceApp
 
         #region UI Theming and Styling
 
-        // NEW: Define a professional, lighter, low-contrast color palette
+        // Define a professional, lighter, low-contrast color palette
         private static readonly Color _primaryColor = Color.FromArgb(65, 84, 110); // Muted Slate Blue
         private static readonly Color _successColor = Color.FromArgb(40, 167, 69); // Calm Green
         private static readonly Color _dangerColor = Color.IndianRed;  // Muted Red
         private static readonly Color _secondaryColor = Color.FromArgb(130, 140, 150); // Lighter Gray
         private static readonly Color _headerTextColor = Color.White;
-        private static readonly Color _formBackColor = Color.FromArgb(240, 242, 245); // CHANGED: Very light gray background
-        private static readonly Color _gridSelectionBackColor = Color.FromArgb(188, 220, 244); // CHANGED: Soft light blue for selection
+        private static readonly Color _formBackColor = Color.FromArgb(240, 242, 245); // Very light gray background
+        private static readonly Color _gridSelectionBackColor = Color.FromArgb(188, 220, 244); // Soft light blue for selection
         private static readonly Color _gridSelectionForeColor = Color.Black;
 
         /// <summary>
@@ -406,11 +406,17 @@ namespace DocumentIssuanceApp
             StyleSecondaryButton(btnGmRefreshList);
             StyleSecondaryButton(btnQaRefreshList);
             StyleSecondaryButton(btnRefreshUserRoles);
+            StyleSecondaryButton(btnQaBrowseSelectDocument);
+            StyleSecondaryButton(btnExportToCsv);
+            StyleSecondaryButton(btnExportToExcel);
+            StyleSecondaryButton(btnResetPassword);
 
-            // Style the new Sign Out button
+            // Style the Sign Out button
             btnSignOut.ForeColor = _primaryColor;
             btnSignOut.BackColor = Color.White;
             btnSignOut.FlatAppearance.BorderColor = _primaryColor;
+            btnSignOut.FlatAppearance.MouseOverBackColor = Color.FromArgb(229, 229, 229); // ADDED hover effect
+            btnSignOut.Font = new Font(btnSignOut.Font, FontStyle.Bold); // ADDED bold font
 
             // Style all DataGridViews
             StyleDataGridView(dgvGmQueue);
@@ -425,6 +431,7 @@ namespace DocumentIssuanceApp
             btn.ForeColor = _headerTextColor;
             btn.FlatStyle = FlatStyle.Standard;
             btn.FlatAppearance.BorderSize = 1;
+            btn.Font = new Font(btn.Font, FontStyle.Bold); // ADDED
         }
 
         private void StyleDangerButton(Button btn)
@@ -433,6 +440,7 @@ namespace DocumentIssuanceApp
             btn.ForeColor = _headerTextColor;
             btn.FlatStyle = FlatStyle.Standard;
             btn.FlatAppearance.BorderSize = 1;
+            btn.Font = new Font(btn.Font, FontStyle.Bold); // ADDED
         }
 
         private void StyleSecondaryButton(Button btn)
@@ -441,6 +449,7 @@ namespace DocumentIssuanceApp
             btn.ForeColor = _headerTextColor;
             btn.FlatStyle = FlatStyle.Standard;
             btn.FlatAppearance.BorderSize = 1;
+            btn.Font = new Font(btn.Font, FontStyle.Bold); // ADDED
         }
 
         private void StyleDataGridView(DataGridView dgv)
@@ -457,16 +466,16 @@ namespace DocumentIssuanceApp
 
             // Row Styles
             dgv.DefaultCellStyle.Font = new Font("Segoe UI", 9.5f);
-            dgv.DefaultCellStyle.BackColor = Color.White; // CHANGED: All cells are white by default
-            dgv.AlternatingRowsDefaultCellStyle.BackColor = Color.White; // CHANGED: No alternating color
-            dgv.RowsDefaultCellStyle.SelectionBackColor = _gridSelectionBackColor; // CHANGED
-            dgv.RowsDefaultCellStyle.SelectionForeColor = _gridSelectionForeColor; // CHANGED
+            dgv.DefaultCellStyle.BackColor = Color.White;
+            dgv.AlternatingRowsDefaultCellStyle.BackColor = Color.White;
+            dgv.RowsDefaultCellStyle.SelectionBackColor = _gridSelectionBackColor;
+            dgv.RowsDefaultCellStyle.SelectionForeColor = _gridSelectionForeColor;
 
             // Special styling for Audit Trail to look like Excel
             if (dgv.Name == nameof(dgvAuditTrail))
             {
-                dgv.GridColor = Color.DarkGray; // Make grid lines visible
-                dgv.CellBorderStyle = DataGridViewCellBorderStyle.Single; // Show all cell borders
+                dgv.GridColor = Color.DarkGray;
+                dgv.CellBorderStyle = DataGridViewCellBorderStyle.Single;
             }
         }
 
