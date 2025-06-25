@@ -428,7 +428,7 @@ namespace DocumentIssuanceApp
         {
             btn.BackColor = _successColor;
             btn.ForeColor = _headerTextColor;
-            btn.FlatStyle = FlatStyle.Flat;
+            btn.FlatStyle = FlatStyle.Popup;
             btn.FlatAppearance.BorderSize = 0;
             btn.Font = new Font(btn.Font, FontStyle.Bold);
         }
@@ -437,7 +437,7 @@ namespace DocumentIssuanceApp
         {
             btn.BackColor = _dangerColor;
             btn.ForeColor = _headerTextColor;
-            btn.FlatStyle = FlatStyle.Flat;
+            btn.FlatStyle = FlatStyle.Popup;
             btn.FlatAppearance.BorderSize = 0;
             btn.Font = new Font(btn.Font, FontStyle.Bold);
         }
@@ -446,7 +446,7 @@ namespace DocumentIssuanceApp
         {
             btn.BackColor = _primaryColor;
             btn.ForeColor = _headerTextColor;
-            btn.FlatStyle = FlatStyle.Flat;
+            btn.FlatStyle = FlatStyle.Popup;
             btn.FlatAppearance.BorderSize = 0;
             btn.Font = new Font(btn.Font, FontStyle.Bold);
         }
@@ -455,7 +455,7 @@ namespace DocumentIssuanceApp
         {
             btn.BackColor = _secondaryColor;
             btn.ForeColor = _headerTextColor;
-            btn.FlatStyle = FlatStyle.Flat;
+            btn.FlatStyle = FlatStyle.Popup;
             btn.FlatAppearance.BorderSize = 0;
             btn.Font = new Font(btn.Font, FontStyle.Bold);
         }
