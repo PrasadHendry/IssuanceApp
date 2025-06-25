@@ -350,15 +350,16 @@ namespace DocumentIssuanceApp
 
         #region UI Theming and Styling
 
-        // Define a professional, lighter, low-contrast color palette
-        private static readonly Color _primaryColor = Color.FromArgb(65, 84, 110); // Muted Slate Blue
-        private static readonly Color _successColor = Color.FromArgb(40, 167, 69); // Calm Green
-        private static readonly Color _dangerColor = Color.IndianRed;  // Muted Red
-        private static readonly Color _secondaryColor = Color.FromArgb(130, 140, 150); // Lighter Gray
+        // Define a professional, BRIGHTER, high-contrast color palette
+        private static readonly Color _successColor = Color.FromArgb(28, 184, 65);   // Vibrant Green for success/go actions
+        private static readonly Color _dangerColor = Color.FromArgb(220, 53, 69);    // Strong Red for danger/stop actions
+        private static readonly Color _primaryColor = Color.FromArgb(0, 123, 255);   // Bright Blue for primary actions
+        private static readonly Color _secondaryColor = Color.FromArgb(108, 117, 125); // Standard Gray for secondary actions
         private static readonly Color _headerTextColor = Color.White;
         private static readonly Color _formBackColor = Color.FromArgb(240, 242, 245); // Very light gray background
         private static readonly Color _gridSelectionBackColor = Color.FromArgb(188, 220, 244); // Soft light blue for selection
         private static readonly Color _gridSelectionForeColor = Color.Black;
+        private static readonly Color _appHeaderColor = Color.FromArgb(65, 84, 110); // Muted Slate Blue (kept for non-interactive headers)
 
         /// <summary>
         /// Applies the consistent theme across the entire application.
@@ -374,49 +375,47 @@ namespace DocumentIssuanceApp
                 tab.BackColor = _formBackColor;
             }
 
-            // Style Headers
-            lblHeaderDI.ForeColor = _primaryColor;
-            lblGmQueueTitle.ForeColor = _primaryColor;
-            lblQaQueueTitle.ForeColor = _primaryColor;
-            lblApplicationRoles.ForeColor = _primaryColor;
+            // Style Headers (using the original muted color for a professional look)
+            lblHeaderDI.ForeColor = _appHeaderColor;
+            lblGmQueueTitle.ForeColor = _appHeaderColor;
+            lblQaQueueTitle.ForeColor = _appHeaderColor;
+            lblApplicationRoles.ForeColor = _appHeaderColor;
 
             // Style GroupBox Titles
             var boldFont = new Font("Segoe UI", 9.75F, FontStyle.Bold);
             foreach (var grp in this.Controls.OfType<Control>().SelectMany(c => c.Controls.OfType<GroupBox>()))
             {
-                grp.ForeColor = _primaryColor;
+                grp.ForeColor = _appHeaderColor;
                 grp.Font = boldFont;
             }
 
-            // Style Primary Action Buttons
-            StylePrimaryButton(btnSubmitRequestDI);
-            StylePrimaryButton(btnGmAuthorize);
-            StylePrimaryButton(btnQaApprove);
-            StylePrimaryButton(btnApplyAuditFilter);
-            StylePrimaryButton(btnLogin);
+            // --- Button Styling based on Functionality ---
 
-            // Style Destructive Action Buttons
-            StyleDangerButton(btnGmReject);
-            StyleDangerButton(btnQaReject);
+            // Style SUCCESS / POSITIVE Action Buttons (Green)
+            StyleSuccessButton(btnSubmitRequestDI); // Primary positive action for the Requester
+            StyleSuccessButton(btnGmAuthorize);     // Positive approval action
+            StyleSuccessButton(btnQaApprove);       // Final positive approval action
 
-            // Style Secondary/Utility Buttons
+            // Style DANGER / NEGATIVE Action Buttons (Red)
+            StyleDangerButton(btnGmReject);         // Negative action
+            StyleDangerButton(btnQaReject);         // Negative action
+            StyleDangerButton(btnSignOut);          // Session-ending action
+
+            // Style PRIMARY / NEUTRAL Action Buttons (Blue)
+            StylePrimaryButton(btnLogin);           // Primary action to enter the system
+            StylePrimaryButton(btnApplyAuditFilter);  // Main action for the filter group
+            StylePrimaryButton(btnResetPassword);     // Important management action
+            StylePrimaryButton(btnGmRefreshList);     // Refreshing data is a primary utility
+            StylePrimaryButton(btnQaRefreshList);     // "
+            StylePrimaryButton(btnRefreshAuditList);  // "
+            StylePrimaryButton(btnRefreshUserRoles);  // "
+
+            // Style SECONDARY / UTILITY Action Buttons (Gray)
             StyleSecondaryButton(btnClearFormDI);
-            StyleSecondaryButton(btnRefreshAuditList);
             StyleSecondaryButton(btnClearAuditFilters);
-            StyleSecondaryButton(btnGmRefreshList);
-            StyleSecondaryButton(btnQaRefreshList);
-            StyleSecondaryButton(btnRefreshUserRoles);
             StyleSecondaryButton(btnQaBrowseSelectDocument);
             StyleSecondaryButton(btnExportToCsv);
             StyleSecondaryButton(btnExportToExcel);
-            StyleSecondaryButton(btnResetPassword);
-
-            // Style the Sign Out button
-            btnSignOut.ForeColor = _primaryColor;
-            btnSignOut.BackColor = Color.White;
-            btnSignOut.FlatAppearance.BorderColor = _primaryColor;
-            btnSignOut.FlatAppearance.MouseOverBackColor = Color.FromArgb(229, 229, 229); // ADDED hover effect
-            btnSignOut.Font = new Font(btnSignOut.Font, FontStyle.Bold); // ADDED bold font
 
             // Style all DataGridViews
             StyleDataGridView(dgvGmQueue);
@@ -425,31 +424,40 @@ namespace DocumentIssuanceApp
             StyleDataGridView(dgvUserRoles);
         }
 
-        private void StylePrimaryButton(Button btn)
+        private void StyleSuccessButton(Button btn)
         {
-            btn.BackColor = _primaryColor;
+            btn.BackColor = _successColor;
             btn.ForeColor = _headerTextColor;
-            btn.FlatStyle = FlatStyle.Standard;
-            btn.FlatAppearance.BorderSize = 1;
-            btn.Font = new Font(btn.Font, FontStyle.Bold); // ADDED
+            btn.FlatStyle = FlatStyle.Flat;
+            btn.FlatAppearance.BorderSize = 0;
+            btn.Font = new Font(btn.Font, FontStyle.Bold);
         }
 
         private void StyleDangerButton(Button btn)
         {
             btn.BackColor = _dangerColor;
             btn.ForeColor = _headerTextColor;
-            btn.FlatStyle = FlatStyle.Standard;
-            btn.FlatAppearance.BorderSize = 1;
-            btn.Font = new Font(btn.Font, FontStyle.Bold); // ADDED
+            btn.FlatStyle = FlatStyle.Flat;
+            btn.FlatAppearance.BorderSize = 0;
+            btn.Font = new Font(btn.Font, FontStyle.Bold);
+        }
+
+        private void StylePrimaryButton(Button btn)
+        {
+            btn.BackColor = _primaryColor;
+            btn.ForeColor = _headerTextColor;
+            btn.FlatStyle = FlatStyle.Flat;
+            btn.FlatAppearance.BorderSize = 0;
+            btn.Font = new Font(btn.Font, FontStyle.Bold);
         }
 
         private void StyleSecondaryButton(Button btn)
         {
             btn.BackColor = _secondaryColor;
             btn.ForeColor = _headerTextColor;
-            btn.FlatStyle = FlatStyle.Standard;
-            btn.FlatAppearance.BorderSize = 1;
-            btn.Font = new Font(btn.Font, FontStyle.Bold); // ADDED
+            btn.FlatStyle = FlatStyle.Flat;
+            btn.FlatAppearance.BorderSize = 0;
+            btn.Font = new Font(btn.Font, FontStyle.Bold);
         }
 
         private void StyleDataGridView(DataGridView dgv)
@@ -458,9 +466,9 @@ namespace DocumentIssuanceApp
             dgv.BorderStyle = BorderStyle.Fixed3D;
             dgv.BackgroundColor = _formBackColor;
 
-            // Header Style
+            // Header Style (using the original muted color for a professional look)
             dgv.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
-            dgv.ColumnHeadersDefaultCellStyle.BackColor = _primaryColor;
+            dgv.ColumnHeadersDefaultCellStyle.BackColor = _appHeaderColor;
             dgv.ColumnHeadersDefaultCellStyle.ForeColor = _headerTextColor;
             dgv.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 10, FontStyle.Bold);
 
