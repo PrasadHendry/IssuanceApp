@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Configuration; // Required for App.config
 using System.Data;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Globalization;
 using System.Linq;
 using System.Security.Principal;
 using System.Windows.Forms;
-using System.Configuration; // Required for App.config
 using IssuanceApp.Data;     // Required to reference the Data project
 
 namespace DocumentIssuanceApp
@@ -52,6 +54,9 @@ namespace DocumentIssuanceApp
         {
             // This method is defined in MainForm.Designer.cs and creates all the UI controls.
             InitializeComponent();
+
+            // This is the recommended way to enable double buffering for a standard form.
+            this.DoubleBuffered = true;
 
             this.FormBorderStyle = FormBorderStyle.Sizable; // Ensures the standard OS border and shadow are applied.
 
@@ -390,14 +395,13 @@ namespace DocumentIssuanceApp
 
             // Style GroupBox Titles
             var boldFont = new Font("Segoe UI", 9.75F, FontStyle.Bold);
-            foreach (var grp in this.Controls.OfType<Control>().SelectMany(c => c.Controls.OfType<GroupBox>()))
+            foreach (var grp in this.pnlMainContainer.Controls.OfType<Control>().SelectMany(c => c.Controls.OfType<GroupBox>()))
             {
                 grp.ForeColor = _appHeaderColor;
                 grp.Font = boldFont;
             }
 
             // --- Button Styling based on Functionality (using the new Hybrid methods) ---
-
             StyleSuccessButton(btnSubmitRequestDI);
             StyleSuccessButton(btnGmAuthorize);
             StyleSuccessButton(btnQaApprove);
@@ -430,8 +434,14 @@ namespace DocumentIssuanceApp
 
         private void StyleButton(Button btn, Color backColor, Color hoverColor)
         {
+            // Cast the button to our custom type to access the new property
+            if (btn is RoundedButton roundedBtn)
+            {
+                roundedBtn.CornerRadius = 8; // Set the corner radius here!
+            }
+
             btn.FlatStyle = FlatStyle.Popup;
-            btn.FlatAppearance.BorderSize = 0; // No border for a cleaner look, hover provides feedback
+            btn.FlatAppearance.BorderSize = 0;
             btn.BackColor = backColor;
             btn.ForeColor = _headerTextColor;
             btn.FlatAppearance.MouseOverBackColor = hoverColor; // Set the hover color
@@ -1210,5 +1220,86 @@ namespace DocumentIssuanceApp
             }
         }
         #endregion
+    }
+
+    // --- CUSTOM ROUNDED BUTTON CONTROL ---
+    public class RoundedButton : Button
+    {
+        private int cornerRadius = 10; // Default radius
+
+        public RoundedButton()
+        {
+            // Ensure crisp rendering and reduce flicker
+            this.SetStyle(ControlStyles.AllPaintingInWmPaint |
+                         ControlStyles.UserPaint |
+                         ControlStyles.DoubleBuffer |
+                         ControlStyles.ResizeRedraw, true);
+        }
+
+        [Category("Appearance")]
+        [Description("The radius of the button's corners.")]
+        public int CornerRadius
+        {
+            get { return cornerRadius; }
+            set
+            {
+                cornerRadius = value;
+                this.Invalidate(); // Redraw the button when the radius changes
+            }
+        }
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            base.OnPaint(e); // Let the base class do its thing first
+
+            Graphics g = e.Graphics;
+            g.SmoothingMode = SmoothingMode.AntiAlias; // Make the corners smooth
+
+            // Define the rectangle for the button
+            Rectangle rect = new Rectangle(0, 0, this.Width, this.Height);
+            int radius = cornerRadius * 2;
+
+            // Prevent the radius from being too large for the button
+            if (radius > this.Width) radius = this.Width;
+            if (radius > this.Height) radius = this.Height;
+
+            // Create the path for the rounded rectangle
+            GraphicsPath path = new GraphicsPath();
+            if (radius > 0)
+            {
+                path.AddArc(rect.X, rect.Y, radius, radius, 180, 90); // Top-left
+                path.AddArc(rect.Right - radius, rect.Y, radius, radius, 270, 90); // Top-right
+                path.AddArc(rect.Right - radius, rect.Bottom - radius, radius, radius, 0, 90); // Bottom-right
+                path.AddArc(rect.X, rect.Bottom - radius, radius, radius, 90, 90); // Bottom-left
+            }
+            else
+            {
+                path.AddRectangle(rect); // If radius is 0, just a normal rectangle
+            }
+            path.CloseFigure();
+
+            // Set the button's visible region to the rounded shape
+            this.Region = new Region(path);
+
+            // --- Draw the button ---
+            // Determine the background color (handle hover effect)
+            Color backColor = this.ClientRectangle.Contains(this.PointToClient(Cursor.Position)) ?
+                              this.FlatAppearance.MouseOverBackColor : this.BackColor;
+
+            // Fill the background
+            using (SolidBrush brush = new SolidBrush(backColor))
+            {
+                g.FillPath(brush, path);
+            }
+
+            // Draw the border
+            using (Pen pen = new Pen(this.FlatAppearance.BorderColor, this.FlatAppearance.BorderSize))
+            {
+                g.DrawPath(pen, path);
+            }
+
+            // Draw the text in the center
+            TextRenderer.DrawText(g, this.Text, this.Font, this.ClientRectangle, this.ForeColor, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
+        }
     }
 }

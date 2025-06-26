@@ -43,7 +43,7 @@ namespace DocumentIssuanceApp
             this.tlpLoginMain = new System.Windows.Forms.TableLayoutPanel();
             this.panelLoginContainer = new System.Windows.Forms.Panel();
             this.lblLoginStatus = new System.Windows.Forms.Label();
-            this.btnLogin = new System.Windows.Forms.Button();
+            this.btnLogin = new DocumentIssuanceApp.RoundedButton();
             this.txtPassword = new System.Windows.Forms.TextBox();
             this.lblPassword = new System.Windows.Forms.Label();
             this.cmbRole = new System.Windows.Forms.ComboBox();
@@ -120,8 +120,8 @@ namespace DocumentIssuanceApp
             this.txtRemarksDI = new System.Windows.Forms.TextBox();
             this.pnlActionBottomDI = new System.Windows.Forms.Panel();
             this.flpActionButtonsDI = new System.Windows.Forms.FlowLayoutPanel();
-            this.btnSubmitRequestDI = new System.Windows.Forms.Button();
-            this.btnClearFormDI = new System.Windows.Forms.Button();
+            this.btnSubmitRequestDI = new DocumentIssuanceApp.RoundedButton();
+            this.btnClearFormDI = new DocumentIssuanceApp.RoundedButton();
             this.pnlStatusDI = new System.Windows.Forms.Panel();
             this.lblStatusValueDI = new System.Windows.Forms.Label();
             this.lblStatusLabelDI = new System.Windows.Forms.Label();
@@ -131,7 +131,7 @@ namespace DocumentIssuanceApp
             this.tlpGmTopControls = new System.Windows.Forms.TableLayoutPanel();
             this.pnlGmQueueHeader = new System.Windows.Forms.Panel();
             this.lblGmQueueTitle = new System.Windows.Forms.Label();
-            this.btnGmRefreshList = new System.Windows.Forms.Button();
+            this.btnGmRefreshList = new DocumentIssuanceApp.RoundedButton();
             this.dgvGmQueue = new System.Windows.Forms.DataGridView();
             this.colGmRequestNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colGmRequestDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -173,15 +173,15 @@ namespace DocumentIssuanceApp
             this.lblGmComment = new System.Windows.Forms.Label();
             this.txtGmComment = new System.Windows.Forms.TextBox();
             this.flpGmActionButtons = new System.Windows.Forms.FlowLayoutPanel();
-            this.btnGmAuthorize = new System.Windows.Forms.Button();
-            this.btnGmReject = new System.Windows.Forms.Button();
+            this.btnGmAuthorize = new DocumentIssuanceApp.RoundedButton();
+            this.btnGmReject = new DocumentIssuanceApp.RoundedButton();
             this.tabPageQa = new System.Windows.Forms.TabPage();
             this.tlpQaOperationsMain = new System.Windows.Forms.TableLayoutPanel();
             this.pnlQaTopSection = new System.Windows.Forms.Panel();
             this.tlpQaTopControls = new System.Windows.Forms.TableLayoutPanel();
             this.pnlQaQueueHeader = new System.Windows.Forms.Panel();
             this.lblQaQueueTitle = new System.Windows.Forms.Label();
-            this.btnQaRefreshList = new System.Windows.Forms.Button();
+            this.btnQaRefreshList = new DocumentIssuanceApp.RoundedButton();
             this.dgvQaQueue = new System.Windows.Forms.DataGridView();
             this.colQaRequestNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colQaRequestDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -228,12 +228,12 @@ namespace DocumentIssuanceApp
             this.flpQaOptionalControls = new System.Windows.Forms.FlowLayoutPanel();
             this.lblQaPrintCount = new System.Windows.Forms.Label();
             this.numQaPrintCount = new System.Windows.Forms.NumericUpDown();
-            this.btnQaBrowseSelectDocument = new System.Windows.Forms.Button();
+            this.btnQaBrowseSelectDocument = new DocumentIssuanceApp.RoundedButton();
             this.lblQaComment = new System.Windows.Forms.Label();
             this.txtQaComment = new System.Windows.Forms.TextBox();
             this.flpQaActionButtons = new System.Windows.Forms.FlowLayoutPanel();
-            this.btnQaApprove = new System.Windows.Forms.Button();
-            this.btnQaReject = new System.Windows.Forms.Button();
+            this.btnQaApprove = new DocumentIssuanceApp.RoundedButton();
+            this.btnQaReject = new DocumentIssuanceApp.RoundedButton();
             this.tabPageAuditTrail = new System.Windows.Forms.TabPage();
             this.tlpAuditTrailMain = new System.Windows.Forms.TableLayoutPanel();
             this.grpAuditFilters = new System.Windows.Forms.GroupBox();
@@ -248,13 +248,13 @@ namespace DocumentIssuanceApp
             this.txtAuditRequestNo = new System.Windows.Forms.TextBox();
             this.lblAuditProduct = new System.Windows.Forms.Label();
             this.txtAuditProduct = new System.Windows.Forms.TextBox();
-            this.btnApplyAuditFilter = new System.Windows.Forms.Button();
-            this.btnClearAuditFilters = new System.Windows.Forms.Button();
-            this.btnRefreshAuditList = new System.Windows.Forms.Button();
+            this.btnApplyAuditFilter = new DocumentIssuanceApp.RoundedButton();
+            this.btnClearAuditFilters = new DocumentIssuanceApp.RoundedButton();
+            this.btnRefreshAuditList = new DocumentIssuanceApp.RoundedButton();
             this.dgvAuditTrail = new System.Windows.Forms.DataGridView();
             this.flpAuditExportButtons = new System.Windows.Forms.FlowLayoutPanel();
-            this.btnExportToCsv = new System.Windows.Forms.Button();
-            this.btnExportToExcel = new System.Windows.Forms.Button();
+            this.btnExportToCsv = new DocumentIssuanceApp.RoundedButton();
+            this.btnExportToExcel = new DocumentIssuanceApp.RoundedButton();
             this.tabPageUsers = new System.Windows.Forms.TabPage();
             this.scUsersMain = new System.Windows.Forms.SplitContainer();
             this.dgvUserRoles = new System.Windows.Forms.DataGridView();
@@ -262,20 +262,20 @@ namespace DocumentIssuanceApp
             this.colUserRoleName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tlpUserRolesHeader = new System.Windows.Forms.TableLayoutPanel();
             this.lblApplicationRoles = new System.Windows.Forms.Label();
-            this.btnRefreshUserRoles = new System.Windows.Forms.Button();
+            this.btnRefreshUserRoles = new DocumentIssuanceApp.RoundedButton();
             this.grpManageRole = new System.Windows.Forms.GroupBox();
             this.tlpManageRole = new System.Windows.Forms.TableLayoutPanel();
             this.lblRoleNameManage = new System.Windows.Forms.Label();
             this.txtRoleNameManage = new System.Windows.Forms.TextBox();
             this.flpRoleManagementButtons = new System.Windows.Forms.FlowLayoutPanel();
-            this.btnResetPassword = new System.Windows.Forms.Button();
+            this.btnResetPassword = new DocumentIssuanceApp.RoundedButton();
             this.statusStripMain = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabelUser = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabelSpring = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabelDateTime = new System.Windows.Forms.ToolStripStatusLabel();
             this.tlpMasterContainer = new System.Windows.Forms.TableLayoutPanel();
             this.flpHeader = new System.Windows.Forms.FlowLayoutPanel();
-            this.btnSignOut = new System.Windows.Forms.Button();
+            this.btnSignOut = new DocumentIssuanceApp.RoundedButton();
             this.lblCurrentUserHeader = new System.Windows.Forms.Label();
             this.pnlMainContainer = new System.Windows.Forms.Panel();
             this.tlpMasterContainer.SuspendLayout();
@@ -365,7 +365,7 @@ namespace DocumentIssuanceApp
             this.tabControlMain.Location = new System.Drawing.Point(3, 46);
             this.tabControlMain.Name = "tabControlMain";
             this.tabControlMain.SelectedIndex = 0;
-            this.tabControlMain.Size = new System.Drawing.Size(1362, 645);
+            this.tabControlMain.Size = new System.Drawing.Size(1342, 625);
             this.tabControlMain.TabIndex = 0;
             // 
             // tabPageLogin
@@ -375,7 +375,7 @@ namespace DocumentIssuanceApp
             this.tabPageLogin.Location = new System.Drawing.Point(4, 26);
             this.tabPageLogin.Name = "tabPageLogin";
             this.tabPageLogin.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageLogin.Size = new System.Drawing.Size(1354, 615);
+            this.tabPageLogin.Size = new System.Drawing.Size(1334, 595);
             this.tabPageLogin.TabIndex = 0;
             this.tabPageLogin.Text = "Login";
             this.tabPageLogin.UseVisualStyleBackColor = true;
@@ -394,7 +394,7 @@ namespace DocumentIssuanceApp
             this.tlpLoginMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tlpLoginMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpLoginMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tlpLoginMain.Size = new System.Drawing.Size(1348, 609);
+            this.tlpLoginMain.Size = new System.Drawing.Size(1328, 589);
             this.tlpLoginMain.TabIndex = 1;
             // 
             // panelLoginContainer
@@ -409,7 +409,7 @@ namespace DocumentIssuanceApp
             this.panelLoginContainer.Controls.Add(this.cmbRole);
             this.panelLoginContainer.Controls.Add(this.lblRole);
             this.panelLoginContainer.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-            this.panelLoginContainer.Location = new System.Drawing.Point(429, 190);
+            this.panelLoginContainer.Location = new System.Drawing.Point(419, 180);
             this.panelLoginContainer.Name = "panelLoginContainer";
             this.panelLoginContainer.Padding = new System.Windows.Forms.Padding(20);
             this.panelLoginContainer.Size = new System.Drawing.Size(489, 228);
@@ -489,7 +489,7 @@ namespace DocumentIssuanceApp
             this.tabPageDocumentIssuance.Location = new System.Drawing.Point(4, 26);
             this.tabPageDocumentIssuance.Name = "tabPageDocumentIssuance";
             this.tabPageDocumentIssuance.Padding = new System.Windows.Forms.Padding(10);
-            this.tabPageDocumentIssuance.Size = new System.Drawing.Size(1354, 615);
+            this.tabPageDocumentIssuance.Size = new System.Drawing.Size(1334, 595);
             this.tabPageDocumentIssuance.TabIndex = 1;
             this.tabPageDocumentIssuance.Text = "Document Issuance";
             this.tabPageDocumentIssuance.UseVisualStyleBackColor = true;
@@ -520,7 +520,7 @@ namespace DocumentIssuanceApp
             this.tlpDocumentIssuanceMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tlpDocumentIssuanceMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpDocumentIssuanceMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpDocumentIssuanceMain.Size = new System.Drawing.Size(1313, 689);
+            this.tlpDocumentIssuanceMain.Size = new System.Drawing.Size(1293, 689);
             this.tlpDocumentIssuanceMain.TabIndex = 0;
             // 
             // lblHeaderDI
@@ -528,7 +528,7 @@ namespace DocumentIssuanceApp
             this.lblHeaderDI.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.lblHeaderDI.AutoSize = true;
             this.lblHeaderDI.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Bold);
-            this.lblHeaderDI.Location = new System.Drawing.Point(536, 0);
+            this.lblHeaderDI.Location = new System.Drawing.Point(526, 0);
             this.lblHeaderDI.Name = "lblHeaderDI";
             this.lblHeaderDI.Size = new System.Drawing.Size(240, 30);
             this.lblHeaderDI.TabIndex = 0;
@@ -547,7 +547,7 @@ namespace DocumentIssuanceApp
             this.tlpTopSectionDI.Name = "tlpTopSectionDI";
             this.tlpTopSectionDI.RowCount = 1;
             this.tlpTopSectionDI.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpTopSectionDI.Size = new System.Drawing.Size(1307, 149);
+            this.tlpTopSectionDI.Size = new System.Drawing.Size(1287, 149);
             this.tlpTopSectionDI.TabIndex = 1;
             // 
             // grpDocTypeDI
@@ -556,7 +556,7 @@ namespace DocumentIssuanceApp
             this.grpDocTypeDI.Dock = System.Windows.Forms.DockStyle.Fill;
             this.grpDocTypeDI.Location = new System.Drawing.Point(3, 3);
             this.grpDocTypeDI.Name = "grpDocTypeDI";
-            this.grpDocTypeDI.Size = new System.Drawing.Size(908, 143);
+            this.grpDocTypeDI.Size = new System.Drawing.Size(894, 143);
             this.grpDocTypeDI.TabIndex = 0;
             this.grpDocTypeDI.TabStop = false;
             this.grpDocTypeDI.Text = "Document Type";
@@ -587,7 +587,7 @@ namespace DocumentIssuanceApp
             this.tlpDocTypesAndNumbers.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.tlpDocTypesAndNumbers.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.tlpDocTypesAndNumbers.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.tlpDocTypesAndNumbers.Size = new System.Drawing.Size(902, 119);
+            this.tlpDocTypesAndNumbers.Size = new System.Drawing.Size(888, 119);
             this.tlpDocTypesAndNumbers.TabIndex = 0;
             // 
             // chkDocTypeBMRDI
@@ -617,7 +617,7 @@ namespace DocumentIssuanceApp
             this.txtBmrDocNoDI.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.txtBmrDocNoDI.Location = new System.Drawing.Point(283, 3);
             this.txtBmrDocNoDI.Name = "txtBmrDocNoDI";
-            this.txtBmrDocNoDI.Size = new System.Drawing.Size(616, 25);
+            this.txtBmrDocNoDI.Size = new System.Drawing.Size(602, 25);
             this.txtBmrDocNoDI.TabIndex = 2;
             this.txtBmrDocNoDI.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
             this.txtBmrDocNoDI.Visible = false;
@@ -638,7 +638,7 @@ namespace DocumentIssuanceApp
             this.txtBprDocNoDI.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.txtBprDocNoDI.Location = new System.Drawing.Point(283, 33);
             this.txtBprDocNoDI.Name = "txtBprDocNoDI";
-            this.txtBprDocNoDI.Size = new System.Drawing.Size(616, 25);
+            this.txtBprDocNoDI.Size = new System.Drawing.Size(602, 25);
             this.txtBprDocNoDI.TabIndex = 5;
             this.txtBprDocNoDI.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
             this.txtBprDocNoDI.Visible = false;
@@ -670,7 +670,7 @@ namespace DocumentIssuanceApp
             this.txtAppendixDocNoDI.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.txtAppendixDocNoDI.Location = new System.Drawing.Point(283, 63);
             this.txtAppendixDocNoDI.Name = "txtAppendixDocNoDI";
-            this.txtAppendixDocNoDI.Size = new System.Drawing.Size(616, 25);
+            this.txtAppendixDocNoDI.Size = new System.Drawing.Size(602, 25);
             this.txtAppendixDocNoDI.TabIndex = 8;
             this.txtAppendixDocNoDI.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
             this.txtAppendixDocNoDI.Visible = false;
@@ -702,7 +702,7 @@ namespace DocumentIssuanceApp
             this.txtAddendumDocNoDI.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.txtAddendumDocNoDI.Location = new System.Drawing.Point(283, 93);
             this.txtAddendumDocNoDI.Name = "txtAddendumDocNoDI";
-            this.txtAddendumDocNoDI.Size = new System.Drawing.Size(616, 25);
+            this.txtAddendumDocNoDI.Size = new System.Drawing.Size(602, 25);
             this.txtAddendumDocNoDI.TabIndex = 11;
             this.txtAddendumDocNoDI.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
             this.txtAddendumDocNoDI.Visible = false;
@@ -722,10 +722,10 @@ namespace DocumentIssuanceApp
             // 
             this.pnlTopRightDI.Controls.Add(this.tlpTopRightDetailsDI);
             this.pnlTopRightDI.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlTopRightDI.Location = new System.Drawing.Point(917, 3);
+            this.pnlTopRightDI.Location = new System.Drawing.Point(903, 3);
             this.pnlTopRightDI.Name = "pnlTopRightDI";
             this.pnlTopRightDI.Padding = new System.Windows.Forms.Padding(5, 10, 5, 5);
-            this.pnlTopRightDI.Size = new System.Drawing.Size(387, 143);
+            this.pnlTopRightDI.Size = new System.Drawing.Size(381, 143);
             this.pnlTopRightDI.TabIndex = 1;
             // 
             // tlpTopRightDetailsDI
@@ -740,7 +740,7 @@ namespace DocumentIssuanceApp
             this.tlpTopRightDetailsDI.Name = "tlpTopRightDetailsDI";
             this.tlpTopRightDetailsDI.RowCount = 1;
             this.tlpTopRightDetailsDI.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpTopRightDetailsDI.Size = new System.Drawing.Size(377, 128);
+            this.tlpTopRightDetailsDI.Size = new System.Drawing.Size(371, 128);
             this.tlpTopRightDetailsDI.TabIndex = 0;
             // 
             // lblRequestNoLabelDI
@@ -760,7 +760,7 @@ namespace DocumentIssuanceApp
             this.txtRequestNoValueDI.Margin = new System.Windows.Forms.Padding(3, 3, 10, 3);
             this.txtRequestNoValueDI.Name = "txtRequestNoValueDI";
             this.txtRequestNoValueDI.ReadOnly = true;
-            this.txtRequestNoValueDI.Size = new System.Drawing.Size(273, 25);
+            this.txtRequestNoValueDI.Size = new System.Drawing.Size(267, 25);
             this.txtRequestNoValueDI.TabIndex = 3;
             this.txtRequestNoValueDI.Text = "(placeholder)";
             // 
@@ -771,7 +771,7 @@ namespace DocumentIssuanceApp
             this.pnlRequestDetailsDI.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlRequestDetailsDI.Location = new System.Drawing.Point(3, 188);
             this.pnlRequestDetailsDI.Name = "pnlRequestDetailsDI";
-            this.pnlRequestDetailsDI.Size = new System.Drawing.Size(1307, 38);
+            this.pnlRequestDetailsDI.Size = new System.Drawing.Size(1287, 38);
             this.pnlRequestDetailsDI.TabIndex = 2;
             // 
             // tlpRequestDetails
@@ -793,7 +793,7 @@ namespace DocumentIssuanceApp
             this.tlpRequestDetails.Padding = new System.Windows.Forms.Padding(3);
             this.tlpRequestDetails.RowCount = 1;
             this.tlpRequestDetails.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpRequestDetails.Size = new System.Drawing.Size(1307, 38);
+            this.tlpRequestDetails.Size = new System.Drawing.Size(1287, 38);
             this.tlpRequestDetails.TabIndex = 0;
             // 
             // lblRequestDateDI
@@ -820,7 +820,7 @@ namespace DocumentIssuanceApp
             // 
             this.lblFromDepartmentDI.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.lblFromDepartmentDI.AutoSize = true;
-            this.lblFromDepartmentDI.Location = new System.Drawing.Point(914, 10);
+            this.lblFromDepartmentDI.Location = new System.Drawing.Point(894, 10);
             this.lblFromDepartmentDI.Margin = new System.Windows.Forms.Padding(3, 0, 10, 0);
             this.lblFromDepartmentDI.Name = "lblFromDepartmentDI";
             this.lblFromDepartmentDI.Size = new System.Drawing.Size(120, 17);
@@ -835,7 +835,7 @@ namespace DocumentIssuanceApp
             this.cmbFromDepartmentDI.Items.AddRange(new object[] {
             "PRD - Production Department",
             "PKG - Packaging Department"});
-            this.cmbFromDepartmentDI.Location = new System.Drawing.Point(1047, 6);
+            this.cmbFromDepartmentDI.Location = new System.Drawing.Point(1027, 6);
             this.cmbFromDepartmentDI.Name = "cmbFromDepartmentDI";
             this.cmbFromDepartmentDI.Size = new System.Drawing.Size(254, 25);
             this.cmbFromDepartmentDI.TabIndex = 3;
@@ -847,7 +847,7 @@ namespace DocumentIssuanceApp
             this.grpParentBatchInfoDI.Dock = System.Windows.Forms.DockStyle.Fill;
             this.grpParentBatchInfoDI.Location = new System.Drawing.Point(3, 232);
             this.grpParentBatchInfoDI.Name = "grpParentBatchInfoDI";
-            this.grpParentBatchInfoDI.Size = new System.Drawing.Size(1307, 108);
+            this.grpParentBatchInfoDI.Size = new System.Drawing.Size(1287, 108);
             this.grpParentBatchInfoDI.TabIndex = 3;
             this.grpParentBatchInfoDI.TabStop = false;
             this.grpParentBatchInfoDI.Text = "Parent Batch Information (If Applicable)";
@@ -875,7 +875,7 @@ namespace DocumentIssuanceApp
             this.tlpParentBatchInfo.RowCount = 2;
             this.tlpParentBatchInfo.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tlpParentBatchInfo.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tlpParentBatchInfo.Size = new System.Drawing.Size(1301, 84);
+            this.tlpParentBatchInfo.Size = new System.Drawing.Size(1281, 84);
             this.tlpParentBatchInfo.TabIndex = 0;
             // 
             // lblParentBatchNoDI
@@ -893,7 +893,7 @@ namespace DocumentIssuanceApp
             this.txtParentBatchNoDI.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.txtParentBatchNoDI.Location = new System.Drawing.Point(158, 11);
             this.txtParentBatchNoDI.Name = "txtParentBatchNoDI";
-            this.txtParentBatchNoDI.Size = new System.Drawing.Size(483, 25);
+            this.txtParentBatchNoDI.Size = new System.Drawing.Size(473, 25);
             this.txtParentBatchNoDI.TabIndex = 1;
             this.txtParentBatchNoDI.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
             // 
@@ -901,7 +901,7 @@ namespace DocumentIssuanceApp
             // 
             this.lblParentBatchSizeDI.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.lblParentBatchSizeDI.AutoSize = true;
-            this.lblParentBatchSizeDI.Location = new System.Drawing.Point(647, 15);
+            this.lblParentBatchSizeDI.Location = new System.Drawing.Point(637, 15);
             this.lblParentBatchSizeDI.Name = "lblParentBatchSizeDI";
             this.lblParentBatchSizeDI.Size = new System.Drawing.Size(116, 17);
             this.lblParentBatchSizeDI.TabIndex = 2;
@@ -913,9 +913,9 @@ namespace DocumentIssuanceApp
             this.flpParentBatchSize.AutoSize = true;
             this.flpParentBatchSize.Controls.Add(this.txtParentBatchSizeValueDI);
             this.flpParentBatchSize.Controls.Add(this.cmbParentBatchSizeUnitDI);
-            this.flpParentBatchSize.Location = new System.Drawing.Point(769, 8);
+            this.flpParentBatchSize.Location = new System.Drawing.Point(759, 8);
             this.flpParentBatchSize.Name = "flpParentBatchSize";
-            this.flpParentBatchSize.Size = new System.Drawing.Size(524, 31);
+            this.flpParentBatchSize.Size = new System.Drawing.Size(514, 31);
             this.flpParentBatchSize.TabIndex = 3;
             this.flpParentBatchSize.WrapContents = false;
             // 
@@ -954,7 +954,7 @@ namespace DocumentIssuanceApp
             this.flpParentMfgDate.Controls.Add(this.cmbParentMfgYearDI);
             this.flpParentMfgDate.Location = new System.Drawing.Point(158, 45);
             this.flpParentMfgDate.Name = "flpParentMfgDate";
-            this.flpParentMfgDate.Size = new System.Drawing.Size(483, 31);
+            this.flpParentMfgDate.Size = new System.Drawing.Size(473, 31);
             this.flpParentMfgDate.TabIndex = 5;
             this.flpParentMfgDate.WrapContents = false;
             // 
@@ -980,7 +980,7 @@ namespace DocumentIssuanceApp
             // 
             this.lblParentExpDateDI.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.lblParentExpDateDI.AutoSize = true;
-            this.lblParentExpDateDI.Location = new System.Drawing.Point(651, 52);
+            this.lblParentExpDateDI.Location = new System.Drawing.Point(641, 52);
             this.lblParentExpDateDI.Name = "lblParentExpDateDI";
             this.lblParentExpDateDI.Size = new System.Drawing.Size(112, 17);
             this.lblParentExpDateDI.TabIndex = 6;
@@ -992,9 +992,9 @@ namespace DocumentIssuanceApp
             this.flpParentExpDate.AutoSize = true;
             this.flpParentExpDate.Controls.Add(this.cmbParentExpMonthDI);
             this.flpParentExpDate.Controls.Add(this.cmbParentExpYearDI);
-            this.flpParentExpDate.Location = new System.Drawing.Point(769, 45);
+            this.flpParentExpDate.Location = new System.Drawing.Point(759, 45);
             this.flpParentExpDate.Name = "flpParentExpDate";
-            this.flpParentExpDate.Size = new System.Drawing.Size(524, 31);
+            this.flpParentExpDate.Size = new System.Drawing.Size(514, 31);
             this.flpParentExpDate.TabIndex = 7;
             this.flpParentExpDate.WrapContents = false;
             // 
@@ -1023,7 +1023,7 @@ namespace DocumentIssuanceApp
             this.grpItemDetailsDI.Dock = System.Windows.Forms.DockStyle.Fill;
             this.grpItemDetailsDI.Location = new System.Drawing.Point(3, 346);
             this.grpItemDetailsDI.Name = "grpItemDetailsDI";
-            this.grpItemDetailsDI.Size = new System.Drawing.Size(1307, 145);
+            this.grpItemDetailsDI.Size = new System.Drawing.Size(1287, 145);
             this.grpItemDetailsDI.TabIndex = 4;
             this.grpItemDetailsDI.TabStop = false;
             this.grpItemDetailsDI.Text = "Item/Product Details";
@@ -1062,7 +1062,7 @@ namespace DocumentIssuanceApp
             this.tlpItemDetails.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33F));
             this.tlpItemDetails.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33F));
             this.tlpItemDetails.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.34F));
-            this.tlpItemDetails.Size = new System.Drawing.Size(1301, 121);
+            this.tlpItemDetails.Size = new System.Drawing.Size(1281, 121);
             this.tlpItemDetails.TabIndex = 0;
             // 
             // lblProductDI
@@ -1080,7 +1080,7 @@ namespace DocumentIssuanceApp
             this.txtProductDI.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.txtProductDI.Location = new System.Drawing.Point(86, 10);
             this.txtProductDI.Name = "txtProductDI";
-            this.txtProductDI.Size = new System.Drawing.Size(325, 25);
+            this.txtProductDI.Size = new System.Drawing.Size(315, 25);
             this.txtProductDI.TabIndex = 1;
             this.txtProductDI.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
             // 
@@ -1088,7 +1088,7 @@ namespace DocumentIssuanceApp
             // 
             this.lblBatchNoDI.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.lblBatchNoDI.AutoSize = true;
-            this.lblBatchNoDI.Location = new System.Drawing.Point(855, 14);
+            this.lblBatchNoDI.Location = new System.Drawing.Point(845, 14);
             this.lblBatchNoDI.Name = "lblBatchNoDI";
             this.lblBatchNoDI.Size = new System.Drawing.Size(70, 17);
             this.lblBatchNoDI.TabIndex = 4;
@@ -1097,9 +1097,9 @@ namespace DocumentIssuanceApp
             // txtBatchNoDI
             // 
             this.txtBatchNoDI.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtBatchNoDI.Location = new System.Drawing.Point(931, 10);
+            this.txtBatchNoDI.Location = new System.Drawing.Point(921, 10);
             this.txtBatchNoDI.Name = "txtBatchNoDI";
-            this.txtBatchNoDI.Size = new System.Drawing.Size(362, 25);
+            this.txtBatchNoDI.Size = new System.Drawing.Size(352, 25);
             this.txtBatchNoDI.TabIndex = 5;
             this.txtBatchNoDI.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
             // 
@@ -1121,7 +1121,7 @@ namespace DocumentIssuanceApp
             this.flpItemBatchSize.Controls.Add(this.cmbItemBatchSizeUnitDI);
             this.flpItemBatchSize.Location = new System.Drawing.Point(86, 44);
             this.flpItemBatchSize.Name = "flpItemBatchSize";
-            this.flpItemBatchSize.Size = new System.Drawing.Size(325, 30);
+            this.flpItemBatchSize.Size = new System.Drawing.Size(315, 30);
             this.flpItemBatchSize.TabIndex = 7;
             this.flpItemBatchSize.WrapContents = false;
             // 
@@ -1146,7 +1146,7 @@ namespace DocumentIssuanceApp
             // 
             this.lblItemMfgDateDI.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.lblItemMfgDateDI.AutoSize = true;
-            this.lblItemMfgDateDI.Location = new System.Drawing.Point(417, 50);
+            this.lblItemMfgDateDI.Location = new System.Drawing.Point(407, 50);
             this.lblItemMfgDateDI.Name = "lblItemMfgDateDI";
             this.lblItemMfgDateDI.Size = new System.Drawing.Size(70, 17);
             this.lblItemMfgDateDI.TabIndex = 8;
@@ -1158,9 +1158,9 @@ namespace DocumentIssuanceApp
             this.flpItemMfgDate.AutoSize = true;
             this.flpItemMfgDate.Controls.Add(this.cmbItemMfgMonthDI);
             this.flpItemMfgDate.Controls.Add(this.cmbItemMfgYearDI);
-            this.flpItemMfgDate.Location = new System.Drawing.Point(493, 44);
+            this.flpItemMfgDate.Location = new System.Drawing.Point(483, 44);
             this.flpItemMfgDate.Name = "flpItemMfgDate";
-            this.flpItemMfgDate.Size = new System.Drawing.Size(325, 30);
+            this.flpItemMfgDate.Size = new System.Drawing.Size(315, 30);
             this.flpItemMfgDate.TabIndex = 9;
             this.flpItemMfgDate.WrapContents = false;
             // 
@@ -1186,7 +1186,7 @@ namespace DocumentIssuanceApp
             // 
             this.lblItemExpDateDI.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.lblItemExpDateDI.AutoSize = true;
-            this.lblItemExpDateDI.Location = new System.Drawing.Point(857, 50);
+            this.lblItemExpDateDI.Location = new System.Drawing.Point(847, 50);
             this.lblItemExpDateDI.Name = "lblItemExpDateDI";
             this.lblItemExpDateDI.Size = new System.Drawing.Size(68, 17);
             this.lblItemExpDateDI.TabIndex = 10;
@@ -1198,9 +1198,9 @@ namespace DocumentIssuanceApp
             this.flpItemExpDate.AutoSize = true;
             this.flpItemExpDate.Controls.Add(this.cmbItemExpMonthDI);
             this.flpItemExpDate.Controls.Add(this.cmbItemExpYearDI);
-            this.flpItemExpDate.Location = new System.Drawing.Point(931, 44);
+            this.flpItemExpDate.Location = new System.Drawing.Point(921, 44);
             this.flpItemExpDate.Name = "flpItemExpDate";
-            this.flpItemExpDate.Size = new System.Drawing.Size(362, 30);
+            this.flpItemExpDate.Size = new System.Drawing.Size(352, 30);
             this.flpItemExpDate.TabIndex = 11;
             this.flpItemExpDate.WrapContents = false;
             // 
@@ -1237,7 +1237,7 @@ namespace DocumentIssuanceApp
             this.txtMarketDI.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.txtMarketDI.Location = new System.Drawing.Point(86, 84);
             this.txtMarketDI.Name = "txtMarketDI";
-            this.txtMarketDI.Size = new System.Drawing.Size(325, 25);
+            this.txtMarketDI.Size = new System.Drawing.Size(315, 25);
             this.txtMarketDI.TabIndex = 13;
             this.txtMarketDI.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
             // 
@@ -1245,7 +1245,7 @@ namespace DocumentIssuanceApp
             // 
             this.lblPackSizeDI.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.lblPackSizeDI.AutoSize = true;
-            this.lblPackSizeDI.Location = new System.Drawing.Point(421, 88);
+            this.lblPackSizeDI.Location = new System.Drawing.Point(411, 88);
             this.lblPackSizeDI.Name = "lblPackSizeDI";
             this.lblPackSizeDI.Size = new System.Drawing.Size(66, 17);
             this.lblPackSizeDI.TabIndex = 14;
@@ -1254,9 +1254,9 @@ namespace DocumentIssuanceApp
             // txtPackSizeDI
             // 
             this.txtPackSizeDI.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtPackSizeDI.Location = new System.Drawing.Point(493, 84);
+            this.txtPackSizeDI.Location = new System.Drawing.Point(483, 84);
             this.txtPackSizeDI.Name = "txtPackSizeDI";
-            this.txtPackSizeDI.Size = new System.Drawing.Size(325, 25);
+            this.txtPackSizeDI.Size = new System.Drawing.Size(315, 25);
             this.txtPackSizeDI.TabIndex = 15;
             this.txtPackSizeDI.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
             // 
@@ -1264,7 +1264,7 @@ namespace DocumentIssuanceApp
             // 
             this.lblExportOrderNoDI.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.lblExportOrderNoDI.AutoSize = true;
-            this.lblExportOrderNoDI.Location = new System.Drawing.Point(844, 88);
+            this.lblExportOrderNoDI.Location = new System.Drawing.Point(834, 88);
             this.lblExportOrderNoDI.Name = "lblExportOrderNoDI";
             this.lblExportOrderNoDI.Size = new System.Drawing.Size(81, 17);
             this.lblExportOrderNoDI.TabIndex = 16;
@@ -1273,9 +1273,9 @@ namespace DocumentIssuanceApp
             // txtExportOrderNoDI
             // 
             this.txtExportOrderNoDI.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtExportOrderNoDI.Location = new System.Drawing.Point(931, 84);
+            this.txtExportOrderNoDI.Location = new System.Drawing.Point(921, 84);
             this.txtExportOrderNoDI.Name = "txtExportOrderNoDI";
-            this.txtExportOrderNoDI.Size = new System.Drawing.Size(362, 25);
+            this.txtExportOrderNoDI.Size = new System.Drawing.Size(352, 25);
             this.txtExportOrderNoDI.TabIndex = 17;
             this.txtExportOrderNoDI.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
             // 
@@ -1286,7 +1286,7 @@ namespace DocumentIssuanceApp
             this.grpRemarksDI.Location = new System.Drawing.Point(3, 497);
             this.grpRemarksDI.Name = "grpRemarksDI";
             this.grpRemarksDI.Padding = new System.Windows.Forms.Padding(10);
-            this.grpRemarksDI.Size = new System.Drawing.Size(1307, 94);
+            this.grpRemarksDI.Size = new System.Drawing.Size(1287, 94);
             this.grpRemarksDI.TabIndex = 5;
             this.grpRemarksDI.TabStop = false;
             this.grpRemarksDI.Text = "Remarks";
@@ -1298,7 +1298,7 @@ namespace DocumentIssuanceApp
             this.txtRemarksDI.Multiline = true;
             this.txtRemarksDI.Name = "txtRemarksDI";
             this.txtRemarksDI.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtRemarksDI.Size = new System.Drawing.Size(1287, 56);
+            this.txtRemarksDI.Size = new System.Drawing.Size(1267, 56);
             this.txtRemarksDI.TabIndex = 0;
             // 
             // pnlActionBottomDI
@@ -1307,7 +1307,7 @@ namespace DocumentIssuanceApp
             this.pnlActionBottomDI.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlActionBottomDI.Location = new System.Drawing.Point(3, 597);
             this.pnlActionBottomDI.Name = "pnlActionBottomDI";
-            this.pnlActionBottomDI.Size = new System.Drawing.Size(1307, 49);
+            this.pnlActionBottomDI.Size = new System.Drawing.Size(1287, 49);
             this.pnlActionBottomDI.TabIndex = 6;
             // 
             // flpActionButtonsDI
@@ -1352,7 +1352,7 @@ namespace DocumentIssuanceApp
             this.pnlStatusDI.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlStatusDI.Location = new System.Drawing.Point(3, 652);
             this.pnlStatusDI.Name = "pnlStatusDI";
-            this.pnlStatusDI.Size = new System.Drawing.Size(1307, 34);
+            this.pnlStatusDI.Size = new System.Drawing.Size(1287, 34);
             this.pnlStatusDI.TabIndex = 7;
             // 
             // lblStatusValueDI
@@ -1383,7 +1383,7 @@ namespace DocumentIssuanceApp
             this.tabPageGmOperations.Location = new System.Drawing.Point(4, 26);
             this.tabPageGmOperations.Name = "tabPageGmOperations";
             this.tabPageGmOperations.Padding = new System.Windows.Forms.Padding(10);
-            this.tabPageGmOperations.Size = new System.Drawing.Size(1354, 615);
+            this.tabPageGmOperations.Size = new System.Drawing.Size(1334, 595);
             this.tabPageGmOperations.TabIndex = 2;
             this.tabPageGmOperations.Text = "GM Operations";
             this.tabPageGmOperations.UseVisualStyleBackColor = true;
@@ -1402,7 +1402,7 @@ namespace DocumentIssuanceApp
             this.tlpGmOperationsMain.RowCount = 2;
             this.tlpGmOperationsMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 250F));
             this.tlpGmOperationsMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpGmOperationsMain.Size = new System.Drawing.Size(1313, 676);
+            this.tlpGmOperationsMain.Size = new System.Drawing.Size(1293, 676);
             this.tlpGmOperationsMain.TabIndex = 0;
             // 
             // pnlGmTopSection
@@ -1411,7 +1411,7 @@ namespace DocumentIssuanceApp
             this.pnlGmTopSection.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlGmTopSection.Location = new System.Drawing.Point(3, 3);
             this.pnlGmTopSection.Name = "pnlGmTopSection";
-            this.pnlGmTopSection.Size = new System.Drawing.Size(1307, 244);
+            this.pnlGmTopSection.Size = new System.Drawing.Size(1287, 244);
             this.pnlGmTopSection.TabIndex = 0;
             // 
             // tlpGmTopControls
@@ -1426,7 +1426,7 @@ namespace DocumentIssuanceApp
             this.tlpGmTopControls.RowCount = 2;
             this.tlpGmTopControls.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
             this.tlpGmTopControls.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpGmTopControls.Size = new System.Drawing.Size(1307, 244);
+            this.tlpGmTopControls.Size = new System.Drawing.Size(1287, 244);
             this.tlpGmTopControls.TabIndex = 0;
             // 
             // pnlGmQueueHeader
@@ -1436,7 +1436,7 @@ namespace DocumentIssuanceApp
             this.pnlGmQueueHeader.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlGmQueueHeader.Location = new System.Drawing.Point(3, 3);
             this.pnlGmQueueHeader.Name = "pnlGmQueueHeader";
-            this.pnlGmQueueHeader.Size = new System.Drawing.Size(1301, 34);
+            this.pnlGmQueueHeader.Size = new System.Drawing.Size(1281, 34);
             this.pnlGmQueueHeader.TabIndex = 0;
             // 
             // lblGmQueueTitle
@@ -1456,7 +1456,7 @@ namespace DocumentIssuanceApp
             this.btnGmRefreshList.FlatAppearance.BorderSize = 0;
             this.btnGmRefreshList.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnGmRefreshList.Font = new System.Drawing.Font("Segoe UI Semibold", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnGmRefreshList.Location = new System.Drawing.Point(1176, 2);
+            this.btnGmRefreshList.Location = new System.Drawing.Point(1156, 2);
             this.btnGmRefreshList.Name = "btnGmRefreshList";
             this.btnGmRefreshList.Size = new System.Drawing.Size(120, 30);
             this.btnGmRefreshList.TabIndex = 1;
@@ -1492,7 +1492,7 @@ namespace DocumentIssuanceApp
             this.dgvGmQueue.ReadOnly = true;
             this.dgvGmQueue.RowHeadersWidth = 51;
             this.dgvGmQueue.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvGmQueue.Size = new System.Drawing.Size(1301, 198);
+            this.dgvGmQueue.Size = new System.Drawing.Size(1281, 198);
             this.dgvGmQueue.TabIndex = 1;
             // 
             // colGmRequestNo
@@ -1551,7 +1551,7 @@ namespace DocumentIssuanceApp
             this.tlpGmBottomSection.RowCount = 2;
             this.tlpGmBottomSection.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpGmBottomSection.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 140F));
-            this.tlpGmBottomSection.Size = new System.Drawing.Size(1307, 420);
+            this.tlpGmBottomSection.Size = new System.Drawing.Size(1287, 420);
             this.tlpGmBottomSection.TabIndex = 1;
             // 
             // grpGmSelectedRequest
@@ -1562,7 +1562,7 @@ namespace DocumentIssuanceApp
             this.grpGmSelectedRequest.Location = new System.Drawing.Point(3, 3);
             this.grpGmSelectedRequest.Name = "grpGmSelectedRequest";
             this.grpGmSelectedRequest.Padding = new System.Windows.Forms.Padding(10);
-            this.grpGmSelectedRequest.Size = new System.Drawing.Size(1301, 274);
+            this.grpGmSelectedRequest.Size = new System.Drawing.Size(1281, 274);
             this.grpGmSelectedRequest.TabIndex = 0;
             this.grpGmSelectedRequest.TabStop = false;
             this.grpGmSelectedRequest.Text = "Selected Request Details";
@@ -1613,7 +1613,7 @@ namespace DocumentIssuanceApp
             this.tlpGmRequestDetails.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpGmRequestDetails.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpGmRequestDetails.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 50F));
-            this.tlpGmRequestDetails.Size = new System.Drawing.Size(1281, 236);
+            this.tlpGmRequestDetails.Size = new System.Drawing.Size(1261, 236);
             this.tlpGmRequestDetails.TabIndex = 0;
             // 
             // lblGmDetailRequestNoLabel
@@ -1632,14 +1632,14 @@ namespace DocumentIssuanceApp
             this.txtGmDetailRequestNo.Location = new System.Drawing.Point(153, 3);
             this.txtGmDetailRequestNo.Name = "txtGmDetailRequestNo";
             this.txtGmDetailRequestNo.ReadOnly = true;
-            this.txtGmDetailRequestNo.Size = new System.Drawing.Size(484, 25);
+            this.txtGmDetailRequestNo.Size = new System.Drawing.Size(474, 25);
             this.txtGmDetailRequestNo.TabIndex = 1;
             // 
             // lblGmDetailRequestDateLabel
             // 
             this.lblGmDetailRequestDateLabel.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.lblGmDetailRequestDateLabel.AutoSize = true;
-            this.lblGmDetailRequestDateLabel.Location = new System.Drawing.Point(695, 7);
+            this.lblGmDetailRequestDateLabel.Location = new System.Drawing.Point(685, 7);
             this.lblGmDetailRequestDateLabel.Name = "lblGmDetailRequestDateLabel";
             this.lblGmDetailRequestDateLabel.Size = new System.Drawing.Size(92, 17);
             this.lblGmDetailRequestDateLabel.TabIndex = 2;
@@ -1648,10 +1648,10 @@ namespace DocumentIssuanceApp
             // txtGmDetailRequestDate
             // 
             this.txtGmDetailRequestDate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtGmDetailRequestDate.Location = new System.Drawing.Point(793, 3);
+            this.txtGmDetailRequestDate.Location = new System.Drawing.Point(783, 3);
             this.txtGmDetailRequestDate.Name = "txtGmDetailRequestDate";
             this.txtGmDetailRequestDate.ReadOnly = true;
-            this.txtGmDetailRequestDate.Size = new System.Drawing.Size(485, 25);
+            this.txtGmDetailRequestDate.Size = new System.Drawing.Size(475, 25);
             this.txtGmDetailRequestDate.TabIndex = 3;
             // 
             // lblGmDetailFromDeptLabel
@@ -1670,14 +1670,14 @@ namespace DocumentIssuanceApp
             this.txtGmDetailFromDept.Location = new System.Drawing.Point(153, 34);
             this.txtGmDetailFromDept.Name = "txtGmDetailFromDept";
             this.txtGmDetailFromDept.ReadOnly = true;
-            this.txtGmDetailFromDept.Size = new System.Drawing.Size(484, 25);
+            this.txtGmDetailFromDept.Size = new System.Drawing.Size(474, 25);
             this.txtGmDetailFromDept.TabIndex = 5;
             // 
             // lblGmDetailDocTypesLabel
             // 
             this.lblGmDetailDocTypesLabel.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.lblGmDetailDocTypesLabel.AutoSize = true;
-            this.lblGmDetailDocTypesLabel.Location = new System.Drawing.Point(675, 38);
+            this.lblGmDetailDocTypesLabel.Location = new System.Drawing.Point(665, 38);
             this.lblGmDetailDocTypesLabel.Name = "lblGmDetailDocTypesLabel";
             this.lblGmDetailDocTypesLabel.Size = new System.Drawing.Size(112, 17);
             this.lblGmDetailDocTypesLabel.TabIndex = 6;
@@ -1686,10 +1686,10 @@ namespace DocumentIssuanceApp
             // txtGmDetailDocTypes
             // 
             this.txtGmDetailDocTypes.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtGmDetailDocTypes.Location = new System.Drawing.Point(793, 34);
+            this.txtGmDetailDocTypes.Location = new System.Drawing.Point(783, 34);
             this.txtGmDetailDocTypes.Name = "txtGmDetailDocTypes";
             this.txtGmDetailDocTypes.ReadOnly = true;
-            this.txtGmDetailDocTypes.Size = new System.Drawing.Size(485, 25);
+            this.txtGmDetailDocTypes.Size = new System.Drawing.Size(475, 25);
             this.txtGmDetailDocTypes.TabIndex = 7;
             // 
             // lblGmDetailProductLabel
@@ -1708,14 +1708,14 @@ namespace DocumentIssuanceApp
             this.txtGmDetailProduct.Location = new System.Drawing.Point(153, 65);
             this.txtGmDetailProduct.Name = "txtGmDetailProduct";
             this.txtGmDetailProduct.ReadOnly = true;
-            this.txtGmDetailProduct.Size = new System.Drawing.Size(484, 25);
+            this.txtGmDetailProduct.Size = new System.Drawing.Size(474, 25);
             this.txtGmDetailProduct.TabIndex = 9;
             // 
             // lblGmDetailBatchNoLabel
             // 
             this.lblGmDetailBatchNoLabel.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.lblGmDetailBatchNoLabel.AutoSize = true;
-            this.lblGmDetailBatchNoLabel.Location = new System.Drawing.Point(717, 69);
+            this.lblGmDetailBatchNoLabel.Location = new System.Drawing.Point(707, 69);
             this.lblGmDetailBatchNoLabel.Name = "lblGmDetailBatchNoLabel";
             this.lblGmDetailBatchNoLabel.Size = new System.Drawing.Size(70, 17);
             this.lblGmDetailBatchNoLabel.TabIndex = 10;
@@ -1724,10 +1724,10 @@ namespace DocumentIssuanceApp
             // txtGmDetailBatchNo
             // 
             this.txtGmDetailBatchNo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtGmDetailBatchNo.Location = new System.Drawing.Point(793, 65);
+            this.txtGmDetailBatchNo.Location = new System.Drawing.Point(783, 65);
             this.txtGmDetailBatchNo.Name = "txtGmDetailBatchNo";
             this.txtGmDetailBatchNo.ReadOnly = true;
-            this.txtGmDetailBatchNo.Size = new System.Drawing.Size(485, 25);
+            this.txtGmDetailBatchNo.Size = new System.Drawing.Size(475, 25);
             this.txtGmDetailBatchNo.TabIndex = 11;
             // 
             // lblGmDetailMfgDateLabel
@@ -1746,14 +1746,14 @@ namespace DocumentIssuanceApp
             this.txtGmDetailMfgDate.Location = new System.Drawing.Point(153, 96);
             this.txtGmDetailMfgDate.Name = "txtGmDetailMfgDate";
             this.txtGmDetailMfgDate.ReadOnly = true;
-            this.txtGmDetailMfgDate.Size = new System.Drawing.Size(484, 25);
+            this.txtGmDetailMfgDate.Size = new System.Drawing.Size(474, 25);
             this.txtGmDetailMfgDate.TabIndex = 13;
             // 
             // lblGmDetailExpDateLabel
             // 
             this.lblGmDetailExpDateLabel.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.lblGmDetailExpDateLabel.AutoSize = true;
-            this.lblGmDetailExpDateLabel.Location = new System.Drawing.Point(719, 100);
+            this.lblGmDetailExpDateLabel.Location = new System.Drawing.Point(709, 100);
             this.lblGmDetailExpDateLabel.Name = "lblGmDetailExpDateLabel";
             this.lblGmDetailExpDateLabel.Size = new System.Drawing.Size(68, 17);
             this.lblGmDetailExpDateLabel.TabIndex = 14;
@@ -1762,10 +1762,10 @@ namespace DocumentIssuanceApp
             // txtGmDetailExpDate
             // 
             this.txtGmDetailExpDate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtGmDetailExpDate.Location = new System.Drawing.Point(793, 96);
+            this.txtGmDetailExpDate.Location = new System.Drawing.Point(783, 96);
             this.txtGmDetailExpDate.Name = "txtGmDetailExpDate";
             this.txtGmDetailExpDate.ReadOnly = true;
-            this.txtGmDetailExpDate.Size = new System.Drawing.Size(485, 25);
+            this.txtGmDetailExpDate.Size = new System.Drawing.Size(475, 25);
             this.txtGmDetailExpDate.TabIndex = 15;
             // 
             // lblGmDetailMarketLabel
@@ -1784,14 +1784,14 @@ namespace DocumentIssuanceApp
             this.txtGmDetailMarket.Location = new System.Drawing.Point(153, 127);
             this.txtGmDetailMarket.Name = "txtGmDetailMarket";
             this.txtGmDetailMarket.ReadOnly = true;
-            this.txtGmDetailMarket.Size = new System.Drawing.Size(484, 25);
+            this.txtGmDetailMarket.Size = new System.Drawing.Size(474, 25);
             this.txtGmDetailMarket.TabIndex = 17;
             // 
             // lblGmDetailPackSizeLabel
             // 
             this.lblGmDetailPackSizeLabel.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.lblGmDetailPackSizeLabel.AutoSize = true;
-            this.lblGmDetailPackSizeLabel.Location = new System.Drawing.Point(721, 131);
+            this.lblGmDetailPackSizeLabel.Location = new System.Drawing.Point(711, 131);
             this.lblGmDetailPackSizeLabel.Name = "lblGmDetailPackSizeLabel";
             this.lblGmDetailPackSizeLabel.Size = new System.Drawing.Size(66, 17);
             this.lblGmDetailPackSizeLabel.TabIndex = 18;
@@ -1800,10 +1800,10 @@ namespace DocumentIssuanceApp
             // txtGmDetailPackSize
             // 
             this.txtGmDetailPackSize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtGmDetailPackSize.Location = new System.Drawing.Point(793, 127);
+            this.txtGmDetailPackSize.Location = new System.Drawing.Point(783, 127);
             this.txtGmDetailPackSize.Name = "txtGmDetailPackSize";
             this.txtGmDetailPackSize.ReadOnly = true;
-            this.txtGmDetailPackSize.Size = new System.Drawing.Size(485, 25);
+            this.txtGmDetailPackSize.Size = new System.Drawing.Size(475, 25);
             this.txtGmDetailPackSize.TabIndex = 19;
             // 
             // lblGmDetailPreparedByLabel
@@ -1822,14 +1822,14 @@ namespace DocumentIssuanceApp
             this.txtGmDetailPreparedBy.Location = new System.Drawing.Point(153, 158);
             this.txtGmDetailPreparedBy.Name = "txtGmDetailPreparedBy";
             this.txtGmDetailPreparedBy.ReadOnly = true;
-            this.txtGmDetailPreparedBy.Size = new System.Drawing.Size(484, 25);
+            this.txtGmDetailPreparedBy.Size = new System.Drawing.Size(474, 25);
             this.txtGmDetailPreparedBy.TabIndex = 21;
             // 
             // lblGmDetailRequestedAtLabel
             // 
             this.lblGmDetailRequestedAtLabel.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.lblGmDetailRequestedAtLabel.AutoSize = true;
-            this.lblGmDetailRequestedAtLabel.Location = new System.Drawing.Point(694, 162);
+            this.lblGmDetailRequestedAtLabel.Location = new System.Drawing.Point(684, 162);
             this.lblGmDetailRequestedAtLabel.Name = "lblGmDetailRequestedAtLabel";
             this.lblGmDetailRequestedAtLabel.Size = new System.Drawing.Size(93, 17);
             this.lblGmDetailRequestedAtLabel.TabIndex = 22;
@@ -1838,10 +1838,10 @@ namespace DocumentIssuanceApp
             // txtGmDetailRequestedAt
             // 
             this.txtGmDetailRequestedAt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtGmDetailRequestedAt.Location = new System.Drawing.Point(793, 158);
+            this.txtGmDetailRequestedAt.Location = new System.Drawing.Point(783, 158);
             this.txtGmDetailRequestedAt.Name = "txtGmDetailRequestedAt";
             this.txtGmDetailRequestedAt.ReadOnly = true;
-            this.txtGmDetailRequestedAt.Size = new System.Drawing.Size(485, 25);
+            this.txtGmDetailRequestedAt.Size = new System.Drawing.Size(475, 25);
             this.txtGmDetailRequestedAt.TabIndex = 23;
             // 
             // lblGmDetailRequesterCommentsLabel
@@ -1864,7 +1864,7 @@ namespace DocumentIssuanceApp
             this.txtGmDetailRequesterComments.Name = "txtGmDetailRequesterComments";
             this.txtGmDetailRequesterComments.ReadOnly = true;
             this.txtGmDetailRequesterComments.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtGmDetailRequesterComments.Size = new System.Drawing.Size(1125, 44);
+            this.txtGmDetailRequesterComments.Size = new System.Drawing.Size(1105, 44);
             this.txtGmDetailRequesterComments.TabIndex = 25;
             // 
             // grpGmAction
@@ -1874,7 +1874,7 @@ namespace DocumentIssuanceApp
             this.grpGmAction.Location = new System.Drawing.Point(3, 283);
             this.grpGmAction.Name = "grpGmAction";
             this.grpGmAction.Padding = new System.Windows.Forms.Padding(10);
-            this.grpGmAction.Size = new System.Drawing.Size(1301, 134);
+            this.grpGmAction.Size = new System.Drawing.Size(1281, 134);
             this.grpGmAction.TabIndex = 1;
             this.grpGmAction.TabStop = false;
             this.grpGmAction.Text = "GM Action";
@@ -1893,7 +1893,7 @@ namespace DocumentIssuanceApp
             this.tlpGmActionControls.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpGmActionControls.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tlpGmActionControls.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 45F));
-            this.tlpGmActionControls.Size = new System.Drawing.Size(1281, 96);
+            this.tlpGmActionControls.Size = new System.Drawing.Size(1261, 96);
             this.tlpGmActionControls.TabIndex = 0;
             // 
             // lblGmComment
@@ -1912,7 +1912,7 @@ namespace DocumentIssuanceApp
             this.txtGmComment.Multiline = true;
             this.txtGmComment.Name = "txtGmComment";
             this.txtGmComment.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtGmComment.Size = new System.Drawing.Size(1275, 28);
+            this.txtGmComment.Size = new System.Drawing.Size(1255, 28);
             this.txtGmComment.TabIndex = 1;
             // 
             // flpGmActionButtons
@@ -1923,7 +1923,7 @@ namespace DocumentIssuanceApp
             this.flpGmActionButtons.Location = new System.Drawing.Point(3, 54);
             this.flpGmActionButtons.Name = "flpGmActionButtons";
             this.flpGmActionButtons.Padding = new System.Windows.Forms.Padding(0, 5, 0, 0);
-            this.flpGmActionButtons.Size = new System.Drawing.Size(1275, 39);
+            this.flpGmActionButtons.Size = new System.Drawing.Size(1255, 39);
             this.flpGmActionButtons.TabIndex = 2;
             // 
             // btnGmAuthorize
@@ -1959,7 +1959,7 @@ namespace DocumentIssuanceApp
             this.tabPageQa.Location = new System.Drawing.Point(4, 26);
             this.tabPageQa.Name = "tabPageQa";
             this.tabPageQa.Padding = new System.Windows.Forms.Padding(10);
-            this.tabPageQa.Size = new System.Drawing.Size(1354, 615);
+            this.tabPageQa.Size = new System.Drawing.Size(1334, 595);
             this.tabPageQa.TabIndex = 3;
             this.tabPageQa.Text = "QA";
             this.tabPageQa.UseVisualStyleBackColor = true;
@@ -1978,7 +1978,7 @@ namespace DocumentIssuanceApp
             this.tlpQaOperationsMain.RowCount = 2;
             this.tlpQaOperationsMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 250F));
             this.tlpQaOperationsMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpQaOperationsMain.Size = new System.Drawing.Size(1313, 797);
+            this.tlpQaOperationsMain.Size = new System.Drawing.Size(1293, 797);
             this.tlpQaOperationsMain.TabIndex = 0;
             // 
             // pnlQaTopSection
@@ -1987,7 +1987,7 @@ namespace DocumentIssuanceApp
             this.pnlQaTopSection.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlQaTopSection.Location = new System.Drawing.Point(3, 3);
             this.pnlQaTopSection.Name = "pnlQaTopSection";
-            this.pnlQaTopSection.Size = new System.Drawing.Size(1307, 244);
+            this.pnlQaTopSection.Size = new System.Drawing.Size(1287, 244);
             this.pnlQaTopSection.TabIndex = 0;
             // 
             // tlpQaTopControls
@@ -2002,7 +2002,7 @@ namespace DocumentIssuanceApp
             this.tlpQaTopControls.RowCount = 2;
             this.tlpQaTopControls.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
             this.tlpQaTopControls.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpQaTopControls.Size = new System.Drawing.Size(1307, 244);
+            this.tlpQaTopControls.Size = new System.Drawing.Size(1287, 244);
             this.tlpQaTopControls.TabIndex = 0;
             // 
             // pnlQaQueueHeader
@@ -2012,7 +2012,7 @@ namespace DocumentIssuanceApp
             this.pnlQaQueueHeader.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlQaQueueHeader.Location = new System.Drawing.Point(3, 3);
             this.pnlQaQueueHeader.Name = "pnlQaQueueHeader";
-            this.pnlQaQueueHeader.Size = new System.Drawing.Size(1301, 29);
+            this.pnlQaQueueHeader.Size = new System.Drawing.Size(1281, 29);
             this.pnlQaQueueHeader.TabIndex = 0;
             // 
             // lblQaQueueTitle
@@ -2032,7 +2032,7 @@ namespace DocumentIssuanceApp
             this.btnQaRefreshList.FlatAppearance.BorderSize = 0;
             this.btnQaRefreshList.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnQaRefreshList.Font = new System.Drawing.Font("Segoe UI Semibold", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnQaRefreshList.Location = new System.Drawing.Point(1176, -1);
+            this.btnQaRefreshList.Location = new System.Drawing.Point(1156, -1);
             this.btnQaRefreshList.Name = "btnQaRefreshList";
             this.btnQaRefreshList.Size = new System.Drawing.Size(120, 30);
             this.btnQaRefreshList.TabIndex = 1;
@@ -2070,7 +2070,7 @@ namespace DocumentIssuanceApp
             this.dgvQaQueue.ReadOnly = true;
             this.dgvQaQueue.RowHeadersWidth = 51;
             this.dgvQaQueue.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvQaQueue.Size = new System.Drawing.Size(1301, 203);
+            this.dgvQaQueue.Size = new System.Drawing.Size(1281, 203);
             this.dgvQaQueue.TabIndex = 1;
             // 
             // colQaRequestNo
@@ -2136,7 +2136,7 @@ namespace DocumentIssuanceApp
             this.tlpQaBottomSection.RowCount = 2;
             this.tlpQaBottomSection.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpQaBottomSection.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 180F));
-            this.tlpQaBottomSection.Size = new System.Drawing.Size(1307, 541);
+            this.tlpQaBottomSection.Size = new System.Drawing.Size(1287, 541);
             this.tlpQaBottomSection.TabIndex = 1;
             // 
             // grpQaSelectedRequest
@@ -2147,7 +2147,7 @@ namespace DocumentIssuanceApp
             this.grpQaSelectedRequest.Location = new System.Drawing.Point(3, 3);
             this.grpQaSelectedRequest.Name = "grpQaSelectedRequest";
             this.grpQaSelectedRequest.Padding = new System.Windows.Forms.Padding(10);
-            this.grpQaSelectedRequest.Size = new System.Drawing.Size(1301, 355);
+            this.grpQaSelectedRequest.Size = new System.Drawing.Size(1281, 355);
             this.grpQaSelectedRequest.TabIndex = 0;
             this.grpQaSelectedRequest.TabStop = false;
             this.grpQaSelectedRequest.Text = "Selected Request Details";
@@ -2204,7 +2204,7 @@ namespace DocumentIssuanceApp
             this.tlpQaRequestDetails.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 50F));
             this.tlpQaRequestDetails.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 50F));
             this.tlpQaRequestDetails.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpQaRequestDetails.Size = new System.Drawing.Size(1281, 317);
+            this.tlpQaRequestDetails.Size = new System.Drawing.Size(1261, 317);
             this.tlpQaRequestDetails.TabIndex = 0;
             // 
             // lblQaDetailRequestNoLabel
@@ -2223,14 +2223,14 @@ namespace DocumentIssuanceApp
             this.txtQaDetailRequestNo.Location = new System.Drawing.Point(163, 3);
             this.txtQaDetailRequestNo.Name = "txtQaDetailRequestNo";
             this.txtQaDetailRequestNo.ReadOnly = true;
-            this.txtQaDetailRequestNo.Size = new System.Drawing.Size(474, 25);
+            this.txtQaDetailRequestNo.Size = new System.Drawing.Size(464, 25);
             this.txtQaDetailRequestNo.TabIndex = 1;
             // 
             // lblQaDetailRequestDateLabel
             // 
             this.lblQaDetailRequestDateLabel.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.lblQaDetailRequestDateLabel.AutoSize = true;
-            this.lblQaDetailRequestDateLabel.Location = new System.Drawing.Point(702, 7);
+            this.lblQaDetailRequestDateLabel.Location = new System.Drawing.Point(692, 7);
             this.lblQaDetailRequestDateLabel.Name = "lblQaDetailRequestDateLabel";
             this.lblQaDetailRequestDateLabel.Size = new System.Drawing.Size(92, 17);
             this.lblQaDetailRequestDateLabel.TabIndex = 2;
@@ -2239,10 +2239,10 @@ namespace DocumentIssuanceApp
             // txtQaDetailRequestDate
             // 
             this.txtQaDetailRequestDate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtQaDetailRequestDate.Location = new System.Drawing.Point(800, 3);
+            this.txtQaDetailRequestDate.Location = new System.Drawing.Point(790, 3);
             this.txtQaDetailRequestDate.Name = "txtQaDetailRequestDate";
             this.txtQaDetailRequestDate.ReadOnly = true;
-            this.txtQaDetailRequestDate.Size = new System.Drawing.Size(478, 25);
+            this.txtQaDetailRequestDate.Size = new System.Drawing.Size(468, 25);
             this.txtQaDetailRequestDate.TabIndex = 3;
             // 
             // lblQaDetailFromDeptLabel
@@ -2261,14 +2261,14 @@ namespace DocumentIssuanceApp
             this.txtQaDetailFromDept.Location = new System.Drawing.Point(163, 34);
             this.txtQaDetailFromDept.Name = "txtQaDetailFromDept";
             this.txtQaDetailFromDept.ReadOnly = true;
-            this.txtQaDetailFromDept.Size = new System.Drawing.Size(474, 25);
+            this.txtQaDetailFromDept.Size = new System.Drawing.Size(464, 25);
             this.txtQaDetailFromDept.TabIndex = 5;
             // 
             // lblQaDetailDocTypesLabel
             // 
             this.lblQaDetailDocTypesLabel.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.lblQaDetailDocTypesLabel.AutoSize = true;
-            this.lblQaDetailDocTypesLabel.Location = new System.Drawing.Point(682, 38);
+            this.lblQaDetailDocTypesLabel.Location = new System.Drawing.Point(672, 38);
             this.lblQaDetailDocTypesLabel.Name = "lblQaDetailDocTypesLabel";
             this.lblQaDetailDocTypesLabel.Size = new System.Drawing.Size(112, 17);
             this.lblQaDetailDocTypesLabel.TabIndex = 6;
@@ -2277,10 +2277,10 @@ namespace DocumentIssuanceApp
             // txtQaDetailDocTypes
             // 
             this.txtQaDetailDocTypes.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtQaDetailDocTypes.Location = new System.Drawing.Point(800, 34);
+            this.txtQaDetailDocTypes.Location = new System.Drawing.Point(790, 34);
             this.txtQaDetailDocTypes.Name = "txtQaDetailDocTypes";
             this.txtQaDetailDocTypes.ReadOnly = true;
-            this.txtQaDetailDocTypes.Size = new System.Drawing.Size(478, 25);
+            this.txtQaDetailDocTypes.Size = new System.Drawing.Size(468, 25);
             this.txtQaDetailDocTypes.TabIndex = 7;
             // 
             // lblQaDetailProductLabel
@@ -2299,14 +2299,14 @@ namespace DocumentIssuanceApp
             this.txtQaDetailProduct.Location = new System.Drawing.Point(163, 65);
             this.txtQaDetailProduct.Name = "txtQaDetailProduct";
             this.txtQaDetailProduct.ReadOnly = true;
-            this.txtQaDetailProduct.Size = new System.Drawing.Size(474, 25);
+            this.txtQaDetailProduct.Size = new System.Drawing.Size(464, 25);
             this.txtQaDetailProduct.TabIndex = 9;
             // 
             // lblQaDetailBatchNoLabel
             // 
             this.lblQaDetailBatchNoLabel.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.lblQaDetailBatchNoLabel.AutoSize = true;
-            this.lblQaDetailBatchNoLabel.Location = new System.Drawing.Point(724, 69);
+            this.lblQaDetailBatchNoLabel.Location = new System.Drawing.Point(714, 69);
             this.lblQaDetailBatchNoLabel.Name = "lblQaDetailBatchNoLabel";
             this.lblQaDetailBatchNoLabel.Size = new System.Drawing.Size(70, 17);
             this.lblQaDetailBatchNoLabel.TabIndex = 10;
@@ -2315,10 +2315,10 @@ namespace DocumentIssuanceApp
             // txtQaDetailBatchNo
             // 
             this.txtQaDetailBatchNo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtQaDetailBatchNo.Location = new System.Drawing.Point(800, 65);
+            this.txtQaDetailBatchNo.Location = new System.Drawing.Point(790, 65);
             this.txtQaDetailBatchNo.Name = "txtQaDetailBatchNo";
             this.txtQaDetailBatchNo.ReadOnly = true;
-            this.txtQaDetailBatchNo.Size = new System.Drawing.Size(478, 25);
+            this.txtQaDetailBatchNo.Size = new System.Drawing.Size(468, 25);
             this.txtQaDetailBatchNo.TabIndex = 11;
             // 
             // lblQaDetailMfgDateLabel
@@ -2337,14 +2337,14 @@ namespace DocumentIssuanceApp
             this.txtQaDetailMfgDate.Location = new System.Drawing.Point(163, 96);
             this.txtQaDetailMfgDate.Name = "txtQaDetailMfgDate";
             this.txtQaDetailMfgDate.ReadOnly = true;
-            this.txtQaDetailMfgDate.Size = new System.Drawing.Size(474, 25);
+            this.txtQaDetailMfgDate.Size = new System.Drawing.Size(464, 25);
             this.txtQaDetailMfgDate.TabIndex = 13;
             // 
             // lblQaDetailExpDateLabel
             // 
             this.lblQaDetailExpDateLabel.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.lblQaDetailExpDateLabel.AutoSize = true;
-            this.lblQaDetailExpDateLabel.Location = new System.Drawing.Point(726, 100);
+            this.lblQaDetailExpDateLabel.Location = new System.Drawing.Point(716, 100);
             this.lblQaDetailExpDateLabel.Name = "lblQaDetailExpDateLabel";
             this.lblQaDetailExpDateLabel.Size = new System.Drawing.Size(68, 17);
             this.lblQaDetailExpDateLabel.TabIndex = 14;
@@ -2353,10 +2353,10 @@ namespace DocumentIssuanceApp
             // txtQaDetailExpDate
             // 
             this.txtQaDetailExpDate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtQaDetailExpDate.Location = new System.Drawing.Point(800, 96);
+            this.txtQaDetailExpDate.Location = new System.Drawing.Point(790, 96);
             this.txtQaDetailExpDate.Name = "txtQaDetailExpDate";
             this.txtQaDetailExpDate.ReadOnly = true;
-            this.txtQaDetailExpDate.Size = new System.Drawing.Size(478, 25);
+            this.txtQaDetailExpDate.Size = new System.Drawing.Size(468, 25);
             this.txtQaDetailExpDate.TabIndex = 15;
             // 
             // lblQaDetailMarketLabel
@@ -2375,14 +2375,14 @@ namespace DocumentIssuanceApp
             this.txtQaDetailMarket.Location = new System.Drawing.Point(163, 127);
             this.txtQaDetailMarket.Name = "txtQaDetailMarket";
             this.txtQaDetailMarket.ReadOnly = true;
-            this.txtQaDetailMarket.Size = new System.Drawing.Size(474, 25);
+            this.txtQaDetailMarket.Size = new System.Drawing.Size(464, 25);
             this.txtQaDetailMarket.TabIndex = 17;
             // 
             // lblQaDetailPackSizeLabel
             // 
             this.lblQaDetailPackSizeLabel.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.lblQaDetailPackSizeLabel.AutoSize = true;
-            this.lblQaDetailPackSizeLabel.Location = new System.Drawing.Point(728, 131);
+            this.lblQaDetailPackSizeLabel.Location = new System.Drawing.Point(718, 131);
             this.lblQaDetailPackSizeLabel.Name = "lblQaDetailPackSizeLabel";
             this.lblQaDetailPackSizeLabel.Size = new System.Drawing.Size(66, 17);
             this.lblQaDetailPackSizeLabel.TabIndex = 18;
@@ -2391,10 +2391,10 @@ namespace DocumentIssuanceApp
             // txtQaDetailPackSize
             // 
             this.txtQaDetailPackSize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtQaDetailPackSize.Location = new System.Drawing.Point(800, 127);
+            this.txtQaDetailPackSize.Location = new System.Drawing.Point(790, 127);
             this.txtQaDetailPackSize.Name = "txtQaDetailPackSize";
             this.txtQaDetailPackSize.ReadOnly = true;
-            this.txtQaDetailPackSize.Size = new System.Drawing.Size(478, 25);
+            this.txtQaDetailPackSize.Size = new System.Drawing.Size(468, 25);
             this.txtQaDetailPackSize.TabIndex = 19;
             // 
             // lblQaDetailPreparedByLabel
@@ -2413,14 +2413,14 @@ namespace DocumentIssuanceApp
             this.txtQaDetailPreparedBy.Location = new System.Drawing.Point(163, 158);
             this.txtQaDetailPreparedBy.Name = "txtQaDetailPreparedBy";
             this.txtQaDetailPreparedBy.ReadOnly = true;
-            this.txtQaDetailPreparedBy.Size = new System.Drawing.Size(474, 25);
+            this.txtQaDetailPreparedBy.Size = new System.Drawing.Size(464, 25);
             this.txtQaDetailPreparedBy.TabIndex = 21;
             // 
             // lblQaDetailRequestedAtLabel
             // 
             this.lblQaDetailRequestedAtLabel.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.lblQaDetailRequestedAtLabel.AutoSize = true;
-            this.lblQaDetailRequestedAtLabel.Location = new System.Drawing.Point(701, 162);
+            this.lblQaDetailRequestedAtLabel.Location = new System.Drawing.Point(691, 162);
             this.lblQaDetailRequestedAtLabel.Name = "lblQaDetailRequestedAtLabel";
             this.lblQaDetailRequestedAtLabel.Size = new System.Drawing.Size(93, 17);
             this.lblQaDetailRequestedAtLabel.TabIndex = 22;
@@ -2429,10 +2429,10 @@ namespace DocumentIssuanceApp
             // txtQaDetailRequestedAt
             // 
             this.txtQaDetailRequestedAt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtQaDetailRequestedAt.Location = new System.Drawing.Point(800, 158);
+            this.txtQaDetailRequestedAt.Location = new System.Drawing.Point(790, 158);
             this.txtQaDetailRequestedAt.Name = "txtQaDetailRequestedAt";
             this.txtQaDetailRequestedAt.ReadOnly = true;
-            this.txtQaDetailRequestedAt.Size = new System.Drawing.Size(478, 25);
+            this.txtQaDetailRequestedAt.Size = new System.Drawing.Size(468, 25);
             this.txtQaDetailRequestedAt.TabIndex = 23;
             // 
             // lblQaDetailRequesterCommentsLabel
@@ -2455,7 +2455,7 @@ namespace DocumentIssuanceApp
             this.txtQaDetailRequesterComments.Name = "txtQaDetailRequesterComments";
             this.txtQaDetailRequesterComments.ReadOnly = true;
             this.txtQaDetailRequesterComments.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtQaDetailRequesterComments.Size = new System.Drawing.Size(1115, 44);
+            this.txtQaDetailRequesterComments.Size = new System.Drawing.Size(1095, 44);
             this.txtQaDetailRequesterComments.TabIndex = 25;
             // 
             // lblQaDetailGmCommentLabel
@@ -2478,7 +2478,7 @@ namespace DocumentIssuanceApp
             this.txtQaDetailGmComment.Name = "txtQaDetailGmComment";
             this.txtQaDetailGmComment.ReadOnly = true;
             this.txtQaDetailGmComment.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtQaDetailGmComment.Size = new System.Drawing.Size(1115, 44);
+            this.txtQaDetailGmComment.Size = new System.Drawing.Size(1095, 44);
             this.txtQaDetailGmComment.TabIndex = 27;
             // 
             // lblQaDetailGmActionTimeLabel
@@ -2498,7 +2498,7 @@ namespace DocumentIssuanceApp
             this.txtQaDetailGmActionTime.Location = new System.Drawing.Point(163, 289);
             this.txtQaDetailGmActionTime.Name = "txtQaDetailGmActionTime";
             this.txtQaDetailGmActionTime.ReadOnly = true;
-            this.txtQaDetailGmActionTime.Size = new System.Drawing.Size(1115, 25);
+            this.txtQaDetailGmActionTime.Size = new System.Drawing.Size(1095, 25);
             this.txtQaDetailGmActionTime.TabIndex = 29;
             // 
             // grpQaAction
@@ -2508,7 +2508,7 @@ namespace DocumentIssuanceApp
             this.grpQaAction.Location = new System.Drawing.Point(3, 364);
             this.grpQaAction.Name = "grpQaAction";
             this.grpQaAction.Padding = new System.Windows.Forms.Padding(10);
-            this.grpQaAction.Size = new System.Drawing.Size(1301, 174);
+            this.grpQaAction.Size = new System.Drawing.Size(1281, 174);
             this.grpQaAction.TabIndex = 1;
             this.grpQaAction.TabStop = false;
             this.grpQaAction.Text = "QA Action & Verification";
@@ -2529,7 +2529,7 @@ namespace DocumentIssuanceApp
             this.tlpQaActionControls.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpQaActionControls.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tlpQaActionControls.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 47F));
-            this.tlpQaActionControls.Size = new System.Drawing.Size(1281, 136);
+            this.tlpQaActionControls.Size = new System.Drawing.Size(1261, 136);
             this.tlpQaActionControls.TabIndex = 0;
             // 
             // flpQaOptionalControls
@@ -2540,7 +2540,7 @@ namespace DocumentIssuanceApp
             this.flpQaOptionalControls.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flpQaOptionalControls.Location = new System.Drawing.Point(3, 3);
             this.flpQaOptionalControls.Name = "flpQaOptionalControls";
-            this.flpQaOptionalControls.Size = new System.Drawing.Size(1275, 34);
+            this.flpQaOptionalControls.Size = new System.Drawing.Size(1255, 34);
             this.flpQaOptionalControls.TabIndex = 0;
             this.flpQaOptionalControls.WrapContents = false;
             // 
@@ -2599,7 +2599,7 @@ namespace DocumentIssuanceApp
             this.txtQaComment.Multiline = true;
             this.txtQaComment.Name = "txtQaComment";
             this.txtQaComment.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtQaComment.Size = new System.Drawing.Size(1275, 26);
+            this.txtQaComment.Size = new System.Drawing.Size(1255, 26);
             this.txtQaComment.TabIndex = 2;
             // 
             // flpQaActionButtons
@@ -2610,7 +2610,7 @@ namespace DocumentIssuanceApp
             this.flpQaActionButtons.Location = new System.Drawing.Point(3, 92);
             this.flpQaActionButtons.Name = "flpQaActionButtons";
             this.flpQaActionButtons.Padding = new System.Windows.Forms.Padding(0, 5, 0, 0);
-            this.flpQaActionButtons.Size = new System.Drawing.Size(1275, 41);
+            this.flpQaActionButtons.Size = new System.Drawing.Size(1255, 41);
             this.flpQaActionButtons.TabIndex = 3;
             // 
             // btnQaApprove
@@ -2646,7 +2646,7 @@ namespace DocumentIssuanceApp
             this.tabPageAuditTrail.Location = new System.Drawing.Point(4, 26);
             this.tabPageAuditTrail.Name = "tabPageAuditTrail";
             this.tabPageAuditTrail.Padding = new System.Windows.Forms.Padding(10);
-            this.tabPageAuditTrail.Size = new System.Drawing.Size(1354, 615);
+            this.tabPageAuditTrail.Size = new System.Drawing.Size(1334, 595);
             this.tabPageAuditTrail.TabIndex = 4;
             this.tabPageAuditTrail.Text = "Audit Trail";
             this.tabPageAuditTrail.UseVisualStyleBackColor = true;
@@ -2665,7 +2665,7 @@ namespace DocumentIssuanceApp
             this.tlpAuditTrailMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpAuditTrailMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tlpAuditTrailMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 45F));
-            this.tlpAuditTrailMain.Size = new System.Drawing.Size(1313, 591);
+            this.tlpAuditTrailMain.Size = new System.Drawing.Size(1293, 571);
             this.tlpAuditTrailMain.TabIndex = 0;
             // 
             // grpAuditFilters
@@ -2676,7 +2676,7 @@ namespace DocumentIssuanceApp
             this.grpAuditFilters.Location = new System.Drawing.Point(3, 3);
             this.grpAuditFilters.Name = "grpAuditFilters";
             this.grpAuditFilters.Padding = new System.Windows.Forms.Padding(10);
-            this.grpAuditFilters.Size = new System.Drawing.Size(1307, 108);
+            this.grpAuditFilters.Size = new System.Drawing.Size(1287, 108);
             this.grpAuditFilters.TabIndex = 0;
             this.grpAuditFilters.TabStop = false;
             this.grpAuditFilters.Text = "Filter Audit Trail";
@@ -2712,7 +2712,7 @@ namespace DocumentIssuanceApp
             this.tlpAuditFilters.RowCount = 2;
             this.tlpAuditFilters.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
             this.tlpAuditFilters.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
-            this.tlpAuditFilters.Size = new System.Drawing.Size(1287, 70);
+            this.tlpAuditFilters.Size = new System.Drawing.Size(1267, 70);
             this.tlpAuditFilters.TabIndex = 0;
             // 
             // lblAuditFromDate
@@ -2870,7 +2870,7 @@ namespace DocumentIssuanceApp
             this.dgvAuditTrail.ReadOnly = true;
             this.dgvAuditTrail.RowHeadersWidth = 51;
             this.dgvAuditTrail.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvAuditTrail.Size = new System.Drawing.Size(1307, 426);
+            this.dgvAuditTrail.Size = new System.Drawing.Size(1287, 406);
             this.dgvAuditTrail.TabIndex = 1;
             this.dgvAuditTrail.VirtualMode = true;
             // 
@@ -2879,10 +2879,10 @@ namespace DocumentIssuanceApp
             this.flpAuditExportButtons.Controls.Add(this.btnExportToCsv);
             this.flpAuditExportButtons.Controls.Add(this.btnExportToExcel);
             this.flpAuditExportButtons.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flpAuditExportButtons.Location = new System.Drawing.Point(3, 549);
+            this.flpAuditExportButtons.Location = new System.Drawing.Point(3, 529);
             this.flpAuditExportButtons.Name = "flpAuditExportButtons";
             this.flpAuditExportButtons.Padding = new System.Windows.Forms.Padding(5, 0, 0, 0);
-            this.flpAuditExportButtons.Size = new System.Drawing.Size(1307, 39);
+            this.flpAuditExportButtons.Size = new System.Drawing.Size(1287, 39);
             this.flpAuditExportButtons.TabIndex = 2;
             // 
             // btnExportToCsv
@@ -2918,7 +2918,7 @@ namespace DocumentIssuanceApp
             this.tabPageUsers.Location = new System.Drawing.Point(4, 26);
             this.tabPageUsers.Name = "tabPageUsers";
             this.tabPageUsers.Padding = new System.Windows.Forms.Padding(10);
-            this.tabPageUsers.Size = new System.Drawing.Size(1354, 615);
+            this.tabPageUsers.Size = new System.Drawing.Size(1334, 595);
             this.tabPageUsers.TabIndex = 5;
             this.tabPageUsers.Text = "Users";
             this.tabPageUsers.UseVisualStyleBackColor = true;
@@ -2940,7 +2940,7 @@ namespace DocumentIssuanceApp
             // 
             this.scUsersMain.Panel2.Controls.Add(this.grpManageRole);
             this.scUsersMain.Panel2.Padding = new System.Windows.Forms.Padding(5);
-            this.scUsersMain.Size = new System.Drawing.Size(1313, 591);
+            this.scUsersMain.Size = new System.Drawing.Size(1293, 571);
             this.scUsersMain.SplitterDistance = 450;
             this.scUsersMain.SplitterWidth = 1;
             this.scUsersMain.TabIndex = 0;
@@ -2970,7 +2970,7 @@ namespace DocumentIssuanceApp
             this.dgvUserRoles.ReadOnly = true;
             this.dgvUserRoles.RowHeadersWidth = 51;
             this.dgvUserRoles.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvUserRoles.Size = new System.Drawing.Size(440, 546);
+            this.dgvUserRoles.Size = new System.Drawing.Size(440, 526);
             this.dgvUserRoles.TabIndex = 0;
             // 
             // colUserRoleId
@@ -3037,7 +3037,7 @@ namespace DocumentIssuanceApp
             this.grpManageRole.Location = new System.Drawing.Point(5, 5);
             this.grpManageRole.Name = "grpManageRole";
             this.grpManageRole.Padding = new System.Windows.Forms.Padding(10);
-            this.grpManageRole.Size = new System.Drawing.Size(849, 581);
+            this.grpManageRole.Size = new System.Drawing.Size(829, 561);
             this.grpManageRole.TabIndex = 0;
             this.grpManageRole.TabStop = false;
             this.grpManageRole.Text = "Manage Role";
@@ -3056,7 +3056,7 @@ namespace DocumentIssuanceApp
             this.tlpManageRole.RowCount = 2;
             this.tlpManageRole.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
             this.tlpManageRole.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpManageRole.Size = new System.Drawing.Size(829, 543);
+            this.tlpManageRole.Size = new System.Drawing.Size(809, 523);
             this.tlpManageRole.TabIndex = 0;
             // 
             // lblRoleNameManage
@@ -3075,7 +3075,7 @@ namespace DocumentIssuanceApp
             this.txtRoleNameManage.Location = new System.Drawing.Point(86, 5);
             this.txtRoleNameManage.Name = "txtRoleNameManage";
             this.txtRoleNameManage.ReadOnly = true;
-            this.txtRoleNameManage.Size = new System.Drawing.Size(740, 25);
+            this.txtRoleNameManage.Size = new System.Drawing.Size(720, 25);
             this.txtRoleNameManage.TabIndex = 1;
             // 
             // flpRoleManagementButtons
@@ -3086,7 +3086,7 @@ namespace DocumentIssuanceApp
             this.flpRoleManagementButtons.Location = new System.Drawing.Point(3, 38);
             this.flpRoleManagementButtons.Name = "flpRoleManagementButtons";
             this.flpRoleManagementButtons.Padding = new System.Windows.Forms.Padding(0, 5, 0, 0);
-            this.flpRoleManagementButtons.Size = new System.Drawing.Size(823, 502);
+            this.flpRoleManagementButtons.Size = new System.Drawing.Size(803, 482);
             this.flpRoleManagementButtons.TabIndex = 2;
             // 
             // btnResetPassword
@@ -3107,7 +3107,7 @@ namespace DocumentIssuanceApp
             this.toolStripStatusLabelUser,
             this.toolStripStatusLabelSpring,
             this.toolStripStatusLabelDateTime});
-            this.statusStripMain.Location = new System.Drawing.Point(0, 720);
+            this.statusStripMain.Location = new System.Drawing.Point(0, 694);
             this.statusStripMain.Name = "statusStripMain";
             this.statusStripMain.Size = new System.Drawing.Size(1368, 26);
             this.statusStripMain.TabIndex = 1;
@@ -3204,7 +3204,7 @@ namespace DocumentIssuanceApp
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(223)))), ((int)(((byte)(226)))));
-            this.ClientSize = new System.Drawing.Size(1368, 746);
+            this.ClientSize = new System.Drawing.Size(1368, 720);
             this.Controls.Add(this.pnlMainContainer);
             this.Controls.Add(this.statusStripMain);
             this.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -3334,7 +3334,7 @@ namespace DocumentIssuanceApp
         private System.Windows.Forms.TabPage tabPageLogin;
         private System.Windows.Forms.Panel panelLoginContainer;
         private System.Windows.Forms.Label lblLoginStatus;
-        private System.Windows.Forms.Button btnLogin;
+        private DocumentIssuanceApp.RoundedButton btnLogin;
         private System.Windows.Forms.TextBox txtPassword;
         private System.Windows.Forms.Label lblPassword;
         private System.Windows.Forms.ComboBox cmbRole;
@@ -3382,8 +3382,8 @@ namespace DocumentIssuanceApp
         private System.Windows.Forms.GroupBox grpRemarksDI;
         private System.Windows.Forms.TextBox txtRemarksDI;
         private System.Windows.Forms.Panel pnlActionBottomDI;
-        private System.Windows.Forms.Button btnClearFormDI;
-        private System.Windows.Forms.Button btnSubmitRequestDI;
+        private DocumentIssuanceApp.RoundedButton btnClearFormDI;
+        private DocumentIssuanceApp.RoundedButton btnSubmitRequestDI;
         private System.Windows.Forms.Panel pnlStatusDI;
         private System.Windows.Forms.Label lblStatusValueDI;
         private System.Windows.Forms.Label lblStatusLabelDI;
@@ -3400,7 +3400,7 @@ namespace DocumentIssuanceApp
         private System.Windows.Forms.TableLayoutPanel tlpGmTopControls;
         private System.Windows.Forms.Panel pnlGmQueueHeader;
         private System.Windows.Forms.Label lblGmQueueTitle;
-        private System.Windows.Forms.Button btnGmRefreshList;
+        private DocumentIssuanceApp.RoundedButton btnGmRefreshList;
         private System.Windows.Forms.DataGridView dgvGmQueue;
         private System.Windows.Forms.DataGridViewTextBoxColumn colGmRequestNo;
         private System.Windows.Forms.DataGridViewTextBoxColumn colGmRequestDate;
@@ -3442,14 +3442,14 @@ namespace DocumentIssuanceApp
         private System.Windows.Forms.Label lblGmComment;
         private System.Windows.Forms.TextBox txtGmComment;
         private System.Windows.Forms.FlowLayoutPanel flpGmActionButtons;
-        private System.Windows.Forms.Button btnGmAuthorize;
-        private System.Windows.Forms.Button btnGmReject;
+        private DocumentIssuanceApp.RoundedButton btnGmAuthorize;
+        private DocumentIssuanceApp.RoundedButton btnGmReject;
         private System.Windows.Forms.TableLayoutPanel tlpQaOperationsMain;
         private System.Windows.Forms.Panel pnlQaTopSection;
         private System.Windows.Forms.TableLayoutPanel tlpQaTopControls;
         private System.Windows.Forms.Panel pnlQaQueueHeader;
         private System.Windows.Forms.Label lblQaQueueTitle;
-        private System.Windows.Forms.Button btnQaRefreshList;
+        private DocumentIssuanceApp.RoundedButton btnQaRefreshList;
         private System.Windows.Forms.DataGridView dgvQaQueue;
         private System.Windows.Forms.DataGridViewTextBoxColumn colQaRequestNo;
         private System.Windows.Forms.DataGridViewTextBoxColumn colQaRequestDate;
@@ -3496,12 +3496,12 @@ namespace DocumentIssuanceApp
         private System.Windows.Forms.FlowLayoutPanel flpQaOptionalControls;
         private System.Windows.Forms.Label lblQaPrintCount;
         private System.Windows.Forms.NumericUpDown numQaPrintCount;
-        private System.Windows.Forms.Button btnQaBrowseSelectDocument;
+        private DocumentIssuanceApp.RoundedButton btnQaBrowseSelectDocument;
         private System.Windows.Forms.Label lblQaComment;
         private System.Windows.Forms.TextBox txtQaComment;
         private System.Windows.Forms.FlowLayoutPanel flpQaActionButtons;
-        private System.Windows.Forms.Button btnQaApprove;
-        private System.Windows.Forms.Button btnQaReject;
+        private DocumentIssuanceApp.RoundedButton btnQaApprove;
+        private DocumentIssuanceApp.RoundedButton btnQaReject;
         private System.Windows.Forms.TableLayoutPanel tlpAuditTrailMain;
         private System.Windows.Forms.GroupBox grpAuditFilters;
         private System.Windows.Forms.TableLayoutPanel tlpAuditFilters;
@@ -3515,17 +3515,17 @@ namespace DocumentIssuanceApp
         private System.Windows.Forms.TextBox txtAuditRequestNo;
         private System.Windows.Forms.Label lblAuditProduct;
         private System.Windows.Forms.TextBox txtAuditProduct;
-        private System.Windows.Forms.Button btnApplyAuditFilter;
-        private System.Windows.Forms.Button btnClearAuditFilters;
+        private DocumentIssuanceApp.RoundedButton btnApplyAuditFilter;
+        private DocumentIssuanceApp.RoundedButton btnClearAuditFilters;
         private System.Windows.Forms.DataGridView dgvAuditTrail;
         private System.Windows.Forms.FlowLayoutPanel flpAuditExportButtons;
-        private System.Windows.Forms.Button btnExportToCsv;
-        private System.Windows.Forms.Button btnExportToExcel;
-        private System.Windows.Forms.Button btnRefreshAuditList;
+        private DocumentIssuanceApp.RoundedButton btnExportToCsv;
+        private DocumentIssuanceApp.RoundedButton btnExportToExcel;
+        private DocumentIssuanceApp.RoundedButton btnRefreshAuditList;
         private System.Windows.Forms.SplitContainer scUsersMain;
         private System.Windows.Forms.TableLayoutPanel tlpUserRolesHeader;
         private System.Windows.Forms.Label lblApplicationRoles;
-        private System.Windows.Forms.Button btnRefreshUserRoles;
+        private DocumentIssuanceApp.RoundedButton btnRefreshUserRoles;
         private System.Windows.Forms.DataGridView dgvUserRoles;
         private System.Windows.Forms.DataGridViewTextBoxColumn colUserRoleId;
         private System.Windows.Forms.DataGridViewTextBoxColumn colUserRoleName;
@@ -3534,7 +3534,7 @@ namespace DocumentIssuanceApp
         private System.Windows.Forms.Label lblRoleNameManage;
         private System.Windows.Forms.TextBox txtRoleNameManage;
         private System.Windows.Forms.FlowLayoutPanel flpRoleManagementButtons;
-        private System.Windows.Forms.Button btnResetPassword;
+        private DocumentIssuanceApp.RoundedButton btnResetPassword;
         private System.Windows.Forms.TableLayoutPanel tlpDocTypesAndNumbers;
         private System.Windows.Forms.Label lblBmrDocNo;
         private System.Windows.Forms.TextBox txtBmrDocNoDI;
@@ -3566,7 +3566,7 @@ namespace DocumentIssuanceApp
         private System.Windows.Forms.FlowLayoutPanel flpActionButtonsDI;
         private TableLayoutPanel tlpMasterContainer;
         private FlowLayoutPanel flpHeader;
-        private Button btnSignOut;
+        private DocumentIssuanceApp.RoundedButton btnSignOut;
         private Label lblCurrentUserHeader;
         private Panel pnlMainContainer;
     }
