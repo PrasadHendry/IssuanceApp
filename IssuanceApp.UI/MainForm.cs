@@ -53,6 +53,8 @@ namespace DocumentIssuanceApp
             // This method is defined in MainForm.Designer.cs and creates all the UI controls.
             InitializeComponent();
 
+            this.FormBorderStyle = FormBorderStyle.Sizable; // Ensures the standard OS border and shadow are applied.
+
             // Read connection string from App.config and create the repository.
             // This is the ONLY place the connection string is read.
             try
@@ -348,18 +350,25 @@ namespace DocumentIssuanceApp
         }
         #endregion
 
-        #region UI Theming and Styling
+        #region UI Theming and Styling (Modern Hybrid)
 
         // Define a professional, BRIGHTER, high-contrast color palette
-        private static readonly Color _successColor = Color.FromArgb(28, 184, 65);   // Vibrant Green for success/go actions
-        private static readonly Color _dangerColor = Color.FromArgb(220, 53, 69);    // Strong Red for danger/stop actions
-        private static readonly Color _primaryColor = Color.FromArgb(0, 123, 255);   // Bright Blue for primary actions
-        private static readonly Color _secondaryColor = Color.FromArgb(108, 117, 125); // Standard Gray for secondary actions
+        private static readonly Color _successColor = Color.FromArgb(28, 184, 65);   // Vibrant Green
+        private static readonly Color _dangerColor = Color.FromArgb(220, 53, 69);    // Strong Red
+        private static readonly Color _primaryColor = Color.FromArgb(0, 123, 255);   // Bright Blue
+        private static readonly Color _secondaryColor = Color.FromArgb(108, 117, 125); // Standard Gray
+
+        // Define lighter shades for the hover effect
+        private static readonly Color _successHoverColor = Color.FromArgb(33, 205, 74);
+        private static readonly Color _dangerHoverColor = Color.FromArgb(225, 66, 82);
+        private static readonly Color _primaryHoverColor = Color.FromArgb(10, 136, 255);
+        private static readonly Color _secondaryHoverColor = Color.FromArgb(124, 132, 140);
+
         private static readonly Color _headerTextColor = Color.White;
-        private static readonly Color _formBackColor = Color.FromArgb(240, 242, 245); // Very light gray background
-        private static readonly Color _gridSelectionBackColor = Color.FromArgb(188, 220, 244); // Soft light blue for selection
+        private static readonly Color _formBackColor = Color.FromArgb(240, 242, 245);
+        private static readonly Color _gridSelectionBackColor = Color.FromArgb(188, 220, 244);
         private static readonly Color _gridSelectionForeColor = Color.Black;
-        private static readonly Color _appHeaderColor = Color.FromArgb(65, 84, 110); // Muted Slate Blue (kept for non-interactive headers)
+        private static readonly Color _appHeaderColor = Color.FromArgb(65, 84, 110);
 
         /// <summary>
         /// Applies the consistent theme across the entire application.
@@ -367,8 +376,6 @@ namespace DocumentIssuanceApp
         /// </summary>
         private void ApplyPharmaTheme()
         {
-            this.BackColor = _formBackColor;
-
             // Style all tabs
             foreach (TabPage tab in tabControlMain.TabPages)
             {
@@ -389,75 +396,66 @@ namespace DocumentIssuanceApp
                 grp.Font = boldFont;
             }
 
-            // --- Button Styling based on Functionality ---
+            // --- Button Styling based on Functionality (using the new Hybrid methods) ---
 
-            // Style SUCCESS / POSITIVE Action Buttons (Green)
-            StyleSuccessButton(btnSubmitRequestDI); // Primary positive action for the Requester
-            StyleSuccessButton(btnGmAuthorize);     // Positive approval action
-            StyleSuccessButton(btnQaApprove);       // Final positive approval action
+            StyleSuccessButton(btnSubmitRequestDI);
+            StyleSuccessButton(btnGmAuthorize);
+            StyleSuccessButton(btnQaApprove);
 
-            // Style DANGER / NEGATIVE Action Buttons (Red)
-            StyleDangerButton(btnGmReject);         // Negative action
-            StyleDangerButton(btnQaReject);         // Negative action
-            StyleDangerButton(btnSignOut);          // Session-ending action
+            StyleDangerButton(btnGmReject);
+            StyleDangerButton(btnQaReject);
+            StyleDangerButton(btnSignOut);
 
-            // Style PRIMARY / NEUTRAL Action Buttons (Blue)
-            StylePrimaryButton(btnLogin);           // Primary action to enter the system
-            StylePrimaryButton(btnApplyAuditFilter);  // Main action for the filter group
-            StylePrimaryButton(btnResetPassword);     // Important management action
-            StylePrimaryButton(btnGmRefreshList);     // Refreshing data is a primary utility
-            StylePrimaryButton(btnQaRefreshList);     // "
-            StylePrimaryButton(btnRefreshAuditList);  // "
-            StylePrimaryButton(btnRefreshUserRoles);  // "
+            StylePrimaryButton(btnLogin);
+            StylePrimaryButton(btnApplyAuditFilter);
+            StylePrimaryButton(btnResetPassword);
+            StylePrimaryButton(btnGmRefreshList);
+            StylePrimaryButton(btnQaRefreshList);
+            StylePrimaryButton(btnRefreshAuditList);
+            StylePrimaryButton(btnRefreshUserRoles);
 
-            // Style SECONDARY / UTILITY Action Buttons (Gray)
             StyleSecondaryButton(btnClearFormDI);
             StyleSecondaryButton(btnClearAuditFilters);
             StyleSecondaryButton(btnQaBrowseSelectDocument);
             StyleSecondaryButton(btnExportToCsv);
             StyleSecondaryButton(btnExportToExcel);
 
-            // Style all DataGridViews
             StyleDataGridView(dgvGmQueue);
             StyleDataGridView(dgvQaQueue);
             StyleDataGridView(dgvAuditTrail);
             StyleDataGridView(dgvUserRoles);
         }
 
+        // --- NEW HYBRID STYLING METHODS ---
+
+        private void StyleButton(Button btn, Color backColor, Color hoverColor)
+        {
+            btn.FlatStyle = FlatStyle.Popup;
+            btn.FlatAppearance.BorderSize = 0; // No border for a cleaner look, hover provides feedback
+            btn.BackColor = backColor;
+            btn.ForeColor = _headerTextColor;
+            btn.FlatAppearance.MouseOverBackColor = hoverColor; // Set the hover color
+            btn.Font = new Font(btn.Font, FontStyle.Bold);
+        }
+
         private void StyleSuccessButton(Button btn)
         {
-            btn.BackColor = _successColor;
-            btn.ForeColor = _headerTextColor;
-            btn.FlatStyle = FlatStyle.Popup;
-            btn.FlatAppearance.BorderSize = 0;
-            btn.Font = new Font(btn.Font, FontStyle.Bold);
+            StyleButton(btn, _successColor, _successHoverColor);
         }
 
         private void StyleDangerButton(Button btn)
         {
-            btn.BackColor = _dangerColor;
-            btn.ForeColor = _headerTextColor;
-            btn.FlatStyle = FlatStyle.Popup;
-            btn.FlatAppearance.BorderSize = 0;
-            btn.Font = new Font(btn.Font, FontStyle.Bold);
+            StyleButton(btn, _dangerColor, _dangerHoverColor);
         }
 
         private void StylePrimaryButton(Button btn)
         {
-            btn.BackColor = _primaryColor;
-            btn.ForeColor = _headerTextColor;
-            btn.FlatStyle = FlatStyle.Popup;
-            btn.FlatAppearance.BorderSize = 0;
-            btn.Font = new Font(btn.Font, FontStyle.Bold);
+            StyleButton(btn, _primaryColor, _primaryHoverColor);
         }
 
         private void StyleSecondaryButton(Button btn)
         {
-            btn.BackColor = _secondaryColor;
-            btn.ForeColor = _headerTextColor;
-            btn.FlatStyle = FlatStyle.Popup;
-            btn.FlatAppearance.BorderSize = 0;
-            btn.Font = new Font(btn.Font, FontStyle.Bold);
+            StyleButton(btn, _secondaryColor, _secondaryHoverColor);
         }
 
         private void StyleDataGridView(DataGridView dgv)

@@ -277,6 +277,7 @@ namespace DocumentIssuanceApp
             this.flpHeader = new System.Windows.Forms.FlowLayoutPanel();
             this.btnSignOut = new System.Windows.Forms.Button();
             this.lblCurrentUserHeader = new System.Windows.Forms.Label();
+            this.pnlMainContainer = new System.Windows.Forms.Panel();
             this.tlpMasterContainer.SuspendLayout();
             this.flpHeader.SuspendLayout();
             this.tabControlMain.SuspendLayout();
@@ -349,6 +350,7 @@ namespace DocumentIssuanceApp
             this.tlpManageRole.SuspendLayout();
             this.flpRoleManagementButtons.SuspendLayout();
             this.statusStripMain.SuspendLayout();
+            this.pnlMainContainer.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControlMain
@@ -3105,7 +3107,7 @@ namespace DocumentIssuanceApp
             this.toolStripStatusLabelUser,
             this.toolStripStatusLabelSpring,
             this.toolStripStatusLabelDateTime});
-            this.statusStripMain.Location = new System.Drawing.Point(0, 694);
+            this.statusStripMain.Location = new System.Drawing.Point(0, 720);
             this.statusStripMain.Name = "statusStripMain";
             this.statusStripMain.Size = new System.Drawing.Size(1368, 26);
             this.statusStripMain.TabIndex = 1;
@@ -3144,7 +3146,7 @@ namespace DocumentIssuanceApp
             this.tlpMasterContainer.RowCount = 2;
             this.tlpMasterContainer.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpMasterContainer.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpMasterContainer.Size = new System.Drawing.Size(1368, 694);
+            this.tlpMasterContainer.Size = new System.Drawing.Size(1348, 674);
             this.tlpMasterContainer.TabIndex = 2;
             // 
             // flpHeader
@@ -3157,7 +3159,7 @@ namespace DocumentIssuanceApp
             this.flpHeader.Location = new System.Drawing.Point(3, 3);
             this.flpHeader.Name = "flpHeader";
             this.flpHeader.Padding = new System.Windows.Forms.Padding(0, 5, 10, 5);
-            this.flpHeader.Size = new System.Drawing.Size(1362, 37);
+            this.flpHeader.Size = new System.Drawing.Size(1342, 37);
             this.flpHeader.TabIndex = 0;
             this.flpHeader.Visible = false;
             // 
@@ -3166,7 +3168,7 @@ namespace DocumentIssuanceApp
             this.btnSignOut.FlatAppearance.BorderSize = 1;
             this.btnSignOut.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSignOut.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSignOut.Location = new System.Drawing.Point(1264, 8);
+            this.btnSignOut.Location = new System.Drawing.Point(1244, 8);
             this.btnSignOut.Name = "btnSignOut";
             this.btnSignOut.Size = new System.Drawing.Size(85, 30);
             this.btnSignOut.TabIndex = 100;
@@ -3178,7 +3180,7 @@ namespace DocumentIssuanceApp
             this.lblCurrentUserHeader.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.lblCurrentUserHeader.AutoSize = true;
             this.lblCurrentUserHeader.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
-            this.lblCurrentUserHeader.Location = new System.Drawing.Point(1108, 13);
+            this.lblCurrentUserHeader.Location = new System.Drawing.Point(1088, 13);
             this.lblCurrentUserHeader.Margin = new System.Windows.Forms.Padding(3, 0, 10, 0);
             this.lblCurrentUserHeader.Name = "lblCurrentUserHeader";
             this.lblCurrentUserHeader.Size = new System.Drawing.Size(143, 19);
@@ -3186,12 +3188,24 @@ namespace DocumentIssuanceApp
             this.lblCurrentUserHeader.Text = "User: [Name] ([Role])";
             this.lblCurrentUserHeader.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
+            // pnlMainContainer
+            // 
+            this.pnlMainContainer.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(242)))), ((int)(((byte)(245)))));
+            this.pnlMainContainer.Controls.Add(this.tlpMasterContainer);
+            this.pnlMainContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlMainContainer.Location = new System.Drawing.Point(0, 0);
+            this.pnlMainContainer.Name = "pnlMainContainer";
+            this.pnlMainContainer.Padding = new System.Windows.Forms.Padding(10);
+            this.pnlMainContainer.Size = new System.Drawing.Size(1368, 694);
+            this.pnlMainContainer.TabIndex = 3;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1368, 720);
-            this.Controls.Add(this.tlpMasterContainer);
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(223)))), ((int)(((byte)(226)))));
+            this.ClientSize = new System.Drawing.Size(1368, 746);
+            this.Controls.Add(this.pnlMainContainer);
             this.Controls.Add(this.statusStripMain);
             this.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Name = "MainForm";
@@ -3307,6 +3321,7 @@ namespace DocumentIssuanceApp
             this.flpRoleManagementButtons.ResumeLayout(false);
             this.statusStripMain.ResumeLayout(false);
             this.statusStripMain.PerformLayout();
+            this.pnlMainContainer.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -3553,5 +3568,6 @@ namespace DocumentIssuanceApp
         private FlowLayoutPanel flpHeader;
         private Button btnSignOut;
         private Label lblCurrentUserHeader;
+        private Panel pnlMainContainer;
     }
 }
