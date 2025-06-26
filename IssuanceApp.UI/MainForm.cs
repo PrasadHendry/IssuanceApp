@@ -8,25 +8,15 @@ using System.Drawing.Drawing2D;
 using System.Globalization;
 using System.Linq;
 using System.Security.Principal;
+using System.Threading.Tasks; // Required for async
 using System.Windows.Forms;
 using IssuanceApp.Data;     // Required to reference the Data project
 
 namespace DocumentIssuanceApp
 {
-    /// <summary>
-    /// This is the main UI form class, also known as the "Code-Behind".
-    /// Its responsibility is to manage the user interface, handle user events (like button clicks),
-    /// and orchestrate calls to the data layer (IssuanceRepository).
-    ///
-    /// CORRELATION:
-    /// - It inherits from System.Windows.Forms.Form.
-    /// - It is a "partial" class, meaning its definition is split. The other part is in MainForm.Designer.cs,
-    ///   which contains the declarations for all the UI controls (e.g., this.btnLogin).
-    /// - It holds an instance of the IssuanceRepository to perform all database operations.
-    /// - It knows nothing about SQL; it only calls methods on the repository.
-    /// </summary>
     public partial class MainForm : Form
     {
+        #region Fields
         // A single, private instance of the repository for the entire form's lifetime.
         private readonly IssuanceRepository _repository;
         private Timer statusTimer;
@@ -42,26 +32,22 @@ namespace DocumentIssuanceApp
         private bool _auditDataLoaded = false;
         private bool _usersDataLoaded = false;
 
-        // --- Fields for Audit Trail Virtual Mode ---
-        private List<int> _auditTrailKeyCache;
-        private AuditTrailEntry _currentAuditRowCache;
-        private int _currentAuditRowCacheIndex = -1;
+        // --- Fields for HIGH-PERFORMANCE Audit Trail Virtual Mode ---
+        private List<int> _auditTrailKeyCache; // The master list of all primary keys for the current filter
+        private Dictionary<int, AuditTrailEntry> _auditTrailPageCache; // Caches pages of full AuditTrailEntry objects
+        private HashSet<int> _pagesBeingFetched; // Tracks which pages are currently being fetched to prevent duplicate calls
+        private const int AuditPageSize = 50; // How many rows to fetch in a single background database call
         private SortOrder _auditSortOrder = SortOrder.None;
         private string _auditSortColumn = string.Empty;
+        #endregion
 
-
+        #region Constructor and Form Load
         public MainForm()
         {
-            // This method is defined in MainForm.Designer.cs and creates all the UI controls.
             InitializeComponent();
-
-            // This is the recommended way to enable double buffering for a standard form.
             this.DoubleBuffered = true;
+            this.FormBorderStyle = FormBorderStyle.Sizable;
 
-            this.FormBorderStyle = FormBorderStyle.Sizable; // Ensures the standard OS border and shadow are applied.
-
-            // Read connection string from App.config and create the repository.
-            // This is the ONLY place the connection string is read.
             try
             {
                 string connStr = ConfigurationManager.ConnectionStrings["IssuanceAppDB"].ConnectionString;
@@ -70,14 +56,12 @@ namespace DocumentIssuanceApp
             catch (Exception ex)
             {
                 MessageBox.Show("Could not read database configuration. The application will now close.\n\nError: " + ex.Message, "Configuration Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                Load += (s, e) => Close(); // Schedule form to close after it's shown.
+                Load += (s, e) => Close();
                 return;
             }
 
             EnableDoubleBuffering();
             InitializeDynamicControls();
-
-            // --- AESTHETIC UPDATE ---
             ApplyPharmaTheme();
 
             this.Text = "Document Issuance System";
@@ -87,7 +71,6 @@ namespace DocumentIssuanceApp
 
             this.tabControlMain.SelectedIndexChanged += TabControlMain_SelectedIndexChanged;
 
-            // Initialize all UI components and states.
             SetupStatusBar();
             InitializeLoginTab();
             InitializeDocumentIssuanceTab();
@@ -96,13 +79,12 @@ namespace DocumentIssuanceApp
             InitializeAuditTrailTab();
             InitializeUsersTab();
 
-            SetupTabs(); // Hides all tabs initially.
+            SetupTabs();
 
             btnSignOut.Click += BtnSignOut_Click;
             this.WindowState = FormWindowState.Maximized;
         }
 
-        // A performance enhancement for smoother rendering of DataGridViews.
         private void EnableDoubleBuffering()
         {
             if (dgvGmQueue != null)
@@ -113,31 +95,27 @@ namespace DocumentIssuanceApp
                 typeof(DataGridView).InvokeMember("DoubleBuffered", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.SetProperty, null, dgvAuditTrail, new object[] { true });
         }
 
-        // This event handler implements "lazy loading" for improved startup performance.
-        // Data for a tab is only fetched from the database the first time the user clicks on it.
-        private void TabControlMain_SelectedIndexChanged(object sender, EventArgs e)
+        private async void TabControlMain_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (tabControlMain.SelectedTab == null) return;
             string selectedTabName = tabControlMain.SelectedTab.Name;
 
-            // Always reload GM and QA queues when the tab is selected for fresh data.
             if (selectedTabName == nameof(tabPageGmOperations))
             {
-                LoadGmPendingQueue();
+                await LoadGmPendingQueueAsync();
             }
             else if (selectedTabName == nameof(tabPageQa))
             {
-                LoadQaPendingQueue();
+                await LoadQaPendingQueueAsync();
             }
-            // Keep lazy-loading for tabs with heavy, filter-driven data.
             else if (selectedTabName == nameof(tabPageAuditTrail) && !_auditDataLoaded)
             {
-                LoadAuditTrailData();
+                await LoadAuditTrailDataAsync();
                 _auditDataLoaded = true;
             }
             else if (selectedTabName == nameof(tabPageUsers) && !_usersDataLoaded)
             {
-                LoadUserRoles();
+                await LoadUserRolesAsync();
                 _usersDataLoaded = true;
             }
         }
@@ -155,17 +133,13 @@ namespace DocumentIssuanceApp
         {
             if (MessageBox.Show("Are you sure you want to sign out?", "Confirm Sign Out", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
-                // Reset state
                 loggedInRole = null;
                 lblLoginStatus.Text = "You have been signed out.";
                 lblLoginStatus.ForeColor = SystemColors.ControlText;
-                pnlAppHeader.Visible = false; // Hide the header
-                SetupStatusBar(); // Reset status bar text
+                pnlAppHeader.Visible = false;
+                SetupStatusBar();
 
-                // Reset UI to login screen
                 EnableTabsBasedOnRole(null);
-
-                // Explicitly switch to the login tab if it exists
                 var loginTab = allTabPages.FirstOrDefault(t => t.Name == nameof(tabPageLogin));
                 if (loginTab != null)
                 {
@@ -189,7 +163,6 @@ namespace DocumentIssuanceApp
             catch (Exception ex)
             {
                 Console.WriteLine("Error getting OS username: " + ex.Message);
-                osUserDisplay = "N/A (Error)";
             }
             this.loggedInUserName = osUserDisplay;
             toolStripStatusLabelUser.Text = $"User: {osUserDisplay} (Not Logged In)";
@@ -201,45 +174,49 @@ namespace DocumentIssuanceApp
             toolStripStatusLabelDateTime.Text = DateTime.Now.ToString("dd-MMM-yyyy hh:mm tt");
         }
 
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            if (statusTimer != null)
+            {
+                statusTimer.Stop();
+                statusTimer.Dispose();
+            }
+            base.OnFormClosing(e);
+        }
+        #endregion
+
         #region Login and Role Management
-        private void InitializeLoginTab()
+        private async void InitializeLoginTab()
         {
             if (cmbRole == null || txtPassword == null || btnLogin == null) return;
-
             cmbRole.Items.Clear();
+            btnLogin.Enabled = false;
+            this.Cursor = Cursors.WaitCursor;
             try
             {
-                // Call the repository to get roles from the database.
-                List<string> roleNames = _repository.GetRoleNames();
+                List<string> roleNames = await _repository.GetRoleNamesAsync();
                 cmbRole.Items.AddRange(roleNames.ToArray());
-
-                // Try to set "Requester" as the default.
-                if (cmbRole.Items.Contains("Requester"))
-                {
-                    cmbRole.SelectedItem = "Requester";
-                }
-                // If "Requester" isn't found, fall back to the first item in the list.
-                else if (cmbRole.Items.Count > 0)
-                {
-                    cmbRole.SelectedIndex = 0;
-                }
+                if (cmbRole.Items.Contains("Requester")) cmbRole.SelectedItem = "Requester";
+                else if (cmbRole.Items.Count > 0) cmbRole.SelectedIndex = 0;
+                btnLogin.Enabled = true;
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Could not load user roles from the database. Please check the connection.\n" + ex.Message, "Fatal Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-                btnLogin.Enabled = false;
+                MessageBox.Show("Could not load user roles from the database.\n" + ex.Message, "Fatal Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
             }
-
+            finally
+            {
+                this.Cursor = Cursors.Default;
+            }
             txtPassword.PasswordChar = '*';
             btnLogin.Click += BtnLogin_Click;
             EnableTabsBasedOnRole(null);
         }
 
-        private void BtnLogin_Click(object sender, EventArgs e)
+        private async void BtnLogin_Click(object sender, EventArgs e)
         {
             string selectedRole = cmbRole.SelectedItem?.ToString();
             string password = txtPassword.Text;
-
             if (string.IsNullOrEmpty(selectedRole) || string.IsNullOrEmpty(password))
             {
                 lblLoginStatus.Text = "Please select a role and enter the password.";
@@ -247,26 +224,25 @@ namespace DocumentIssuanceApp
                 return;
             }
 
+            btnLogin.Enabled = false;
+            this.Cursor = Cursors.WaitCursor;
+            lblLoginStatus.Text = "Authenticating...";
+            lblLoginStatus.ForeColor = SystemColors.ControlText;
+
             try
             {
-                // Call the repository to check credentials against the database.
-                bool isAuthenticated = _repository.AuthenticateUser(selectedRole, password);
+                bool isAuthenticated = await _repository.AuthenticateUserAsync(selectedRole, password);
                 if (isAuthenticated)
                 {
                     loggedInRole = selectedRole;
                     toolStripStatusLabelUser.Text = $"User: {loggedInUserName} ({loggedInRole})";
-
                     lblCurrentUserHeader.Text = $"Logged in as: {loggedInUserName} ({loggedInRole})";
                     lblCurrentUserHeader.ForeColor = _headerTextColor;
-                    pnlAppHeader.Visible = true; // Show the new header
-
+                    pnlAppHeader.Visible = true;
                     lblLoginStatus.Text = $"Login successful as {loggedInRole}.";
                     lblLoginStatus.ForeColor = _successColor;
                     txtPassword.Clear();
-
-                    // Reset lazy-loading flags for the new session.
                     _auditDataLoaded = _usersDataLoaded = false;
-
                     EnableTabsBasedOnRole(loggedInRole);
                     SwitchToDefaultTabForRole(loggedInRole);
                 }
@@ -284,9 +260,13 @@ namespace DocumentIssuanceApp
             {
                 MessageBox.Show("An error occurred during authentication: " + ex.Message, "Login Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            finally
+            {
+                btnLogin.Enabled = true;
+                this.Cursor = Cursors.Default;
+            }
         }
 
-        // This method controls which tabs are visible based on the logged-in user's role.
         private void EnableTabsBasedOnRole(string role)
         {
             bool isLoggedIn = !string.IsNullOrEmpty(role);
@@ -311,7 +291,7 @@ namespace DocumentIssuanceApp
                     (tab.Name == nameof(tabPageGmOperations) && (isGm || isAdmin)) ||
                     (tab.Name == nameof(tabPageQa) && (isQa || isAdmin)) ||
                     (tab.Name == nameof(tabPageUsers) && isAdmin) ||
-                    (tab.Name == nameof(tabPageAuditTrail)); // Always show audit for any logged-in user
+                    (tab.Name == nameof(tabPageAuditTrail));
 
                 if (shouldShowTab)
                 {
@@ -320,7 +300,6 @@ namespace DocumentIssuanceApp
             }
         }
 
-        // After login, this method selects the most relevant tab for the user's role.
         private void SwitchToDefaultTabForRole(string role)
         {
             TabPage targetTab = null;
@@ -341,35 +320,19 @@ namespace DocumentIssuanceApp
 
         private void SetupTabs()
         {
-            // Initially, only the login tab should be visible.
             EnableTabsBasedOnRole(null);
-        }
-
-        protected override void OnFormClosing(FormClosingEventArgs e)
-        {
-            if (statusTimer != null)
-            {
-                statusTimer.Stop();
-                statusTimer.Dispose();
-            }
-            base.OnFormClosing(e);
         }
         #endregion
 
-        #region UI Theming and Styling (Modern Hybrid)
-
-        // Define a professional, BRIGHTER, high-contrast color palette
-        private static readonly Color _successColor = Color.FromArgb(28, 184, 65);   // Vibrant Green
-        private static readonly Color _dangerColor = Color.FromArgb(220, 53, 69);    // Strong Red
-        private static readonly Color _primaryColor = Color.FromArgb(0, 123, 255);   // Bright Blue
-        private static readonly Color _secondaryColor = Color.FromArgb(108, 117, 125); // Standard Gray
-
-        // Define lighter shades for the hover effect
+        #region UI Theming and Styling
+        private static readonly Color _successColor = Color.FromArgb(28, 184, 65);
+        private static readonly Color _dangerColor = Color.FromArgb(220, 53, 69);
+        private static readonly Color _primaryColor = Color.FromArgb(0, 123, 255);
+        private static readonly Color _secondaryColor = Color.FromArgb(108, 117, 125);
         private static readonly Color _successHoverColor = Color.FromArgb(33, 205, 74);
         private static readonly Color _dangerHoverColor = Color.FromArgb(225, 66, 82);
         private static readonly Color _primaryHoverColor = Color.FromArgb(10, 136, 255);
         private static readonly Color _secondaryHoverColor = Color.FromArgb(124, 132, 140);
-
         private static readonly Color _headerTextColor = Color.White;
         private static readonly Color _formBackColor = Color.FromArgb(240, 242, 245);
         private static readonly Color _gridSelectionBackColor = Color.FromArgb(188, 220, 244);
@@ -377,45 +340,30 @@ namespace DocumentIssuanceApp
         private static readonly Color _appHeaderColor = Color.FromArgb(65, 84, 110);
         private static readonly Color _gridAltRowColor = Color.FromArgb(248, 249, 250);
 
-        /// <summary>
-        /// Applies the consistent theme across the entire application.
-        /// Call this once from the constructor.
-        /// </summary>
         private void ApplyPharmaTheme()
         {
-            // Style the main application header
             pnlAppHeader.BackColor = _appHeaderColor;
-            pnlAppHeader.Visible = false; // Initially hidden, shown on login
-
-            // Style all tabs
+            pnlAppHeader.Visible = false;
             foreach (TabPage tab in tabControlMain.TabPages)
             {
                 tab.BackColor = _formBackColor;
             }
-
-            // Style Headers (using the original muted color for a professional look)
             lblHeaderDI.ForeColor = _appHeaderColor;
             lblGmQueueTitle.ForeColor = _appHeaderColor;
             lblQaQueueTitle.ForeColor = _appHeaderColor;
             lblApplicationRoles.ForeColor = _appHeaderColor;
-
-            // Style GroupBox Titles
             var boldFont = new Font("Segoe UI", 9.75F, FontStyle.Bold);
             foreach (var grp in this.pnlMainContainer.Controls.OfType<Control>().SelectMany(c => c.Controls.OfType<GroupBox>()))
             {
                 grp.ForeColor = _appHeaderColor;
                 grp.Font = boldFont;
             }
-
-            // --- Button Styling based on Functionality (using the new Hybrid methods) ---
             StyleSuccessButton(btnSubmitRequestDI);
             StyleSuccessButton(btnGmAuthorize);
             StyleSuccessButton(btnQaApprove);
-
             StyleDangerButton(btnGmReject);
             StyleDangerButton(btnQaReject);
             StyleDangerButton(btnSignOut);
-
             StylePrimaryButton(btnLogin);
             StylePrimaryButton(btnApplyAuditFilter);
             StylePrimaryButton(btnResetPassword);
@@ -423,45 +371,34 @@ namespace DocumentIssuanceApp
             StylePrimaryButton(btnQaRefreshList);
             StylePrimaryButton(btnRefreshAuditList);
             StylePrimaryButton(btnRefreshUserRoles);
-
             StyleSecondaryButton(btnClearFormDI);
             StyleSecondaryButton(btnClearAuditFilters);
             StyleSecondaryButton(btnQaBrowseSelectDocument);
             StyleSecondaryButton(btnExportToCsv);
             StyleSecondaryButton(btnExportToExcel);
-
-            // Assign Icons to Buttons
-            // NOTE: You must add images to the 'imageList1' control in the designer for these to appear.
-            // Give them Key names like "Approve", "Reject", "Refresh", etc.
             btnGmAuthorize.ImageList = imageList1;
             btnGmAuthorize.ImageKey = "Approve";
             btnGmReject.ImageList = imageList1;
             btnGmReject.ImageKey = "Reject";
             btnGmRefreshList.ImageList = imageList1;
             btnGmRefreshList.ImageKey = "Refresh";
-            // ... repeat for other buttons as desired ...
-
             StyleDataGridView(dgvGmQueue);
             StyleDataGridView(dgvQaQueue);
             StyleDataGridView(dgvAuditTrail);
             StyleDataGridView(dgvUserRoles);
         }
 
-        // --- NEW HYBRID STYLING METHODS ---
-
         private void StyleButton(Button btn, Color backColor, Color hoverColor)
         {
-            // Cast the button to our custom type to access the new property
             if (btn is RoundedButton roundedBtn)
             {
-                roundedBtn.CornerRadius = 8; // Set the corner radius here!
+                roundedBtn.CornerRadius = 8;
             }
-
-            btn.FlatStyle = FlatStyle.Popup;
+            btn.FlatStyle = FlatStyle.Flat;
             btn.FlatAppearance.BorderSize = 0;
             btn.BackColor = backColor;
             btn.ForeColor = _headerTextColor;
-            btn.FlatAppearance.MouseOverBackColor = hoverColor; // Set the hover color
+            btn.FlatAppearance.MouseOverBackColor = hoverColor;
             btn.Font = new Font(btn.Font, FontStyle.Bold);
             btn.ImageAlign = ContentAlignment.MiddleLeft;
             btn.TextAlign = ContentAlignment.MiddleCenter;
@@ -469,25 +406,10 @@ namespace DocumentIssuanceApp
             btn.Padding = new Padding(5, 0, 5, 0);
         }
 
-        private void StyleSuccessButton(Button btn)
-        {
-            StyleButton(btn, _successColor, _successHoverColor);
-        }
-
-        private void StyleDangerButton(Button btn)
-        {
-            StyleButton(btn, _dangerColor, _dangerHoverColor);
-        }
-
-        private void StylePrimaryButton(Button btn)
-        {
-            StyleButton(btn, _primaryColor, _primaryHoverColor);
-        }
-
-        private void StyleSecondaryButton(Button btn)
-        {
-            StyleButton(btn, _secondaryColor, _secondaryHoverColor);
-        }
+        private void StyleSuccessButton(Button btn) { StyleButton(btn, _successColor, _successHoverColor); }
+        private void StyleDangerButton(Button btn) { StyleButton(btn, _dangerColor, _dangerHoverColor); }
+        private void StylePrimaryButton(Button btn) { StyleButton(btn, _primaryColor, _primaryHoverColor); }
+        private void StyleSecondaryButton(Button btn) { StyleButton(btn, _secondaryColor, _secondaryHoverColor); }
 
         private void StyleDataGridView(DataGridView dgv)
         {
@@ -495,15 +417,11 @@ namespace DocumentIssuanceApp
             dgv.BorderStyle = BorderStyle.None;
             dgv.BackgroundColor = _formBackColor;
             dgv.RowHeadersVisible = false;
-
-            // Header Style (using the original muted color for a professional look)
             dgv.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
             dgv.ColumnHeadersDefaultCellStyle.BackColor = _appHeaderColor;
             dgv.ColumnHeadersDefaultCellStyle.ForeColor = _headerTextColor;
             dgv.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 10, FontStyle.Bold);
             dgv.ColumnHeadersDefaultCellStyle.Padding = new Padding(5);
-
-            // Row Styles
             dgv.DefaultCellStyle.Font = new Font("Segoe UI", 9.5f);
             dgv.DefaultCellStyle.BackColor = Color.White;
             dgv.DefaultCellStyle.Padding = new Padding(5);
@@ -512,18 +430,16 @@ namespace DocumentIssuanceApp
             dgv.RowsDefaultCellStyle.SelectionBackColor = _gridSelectionBackColor;
             dgv.RowsDefaultCellStyle.SelectionForeColor = _gridSelectionForeColor;
         }
-
         #endregion
 
         #region Document Issuance Tab Logic
-        private void InitializeDocumentIssuanceTab()
+        private async void InitializeDocumentIssuanceTab()
         {
             chkDocTypeBMRDI.CheckedChanged += DocTypeCheckbox_CheckedChanged;
             chkDocTypeBPRDI.CheckedChanged += DocTypeCheckbox_CheckedChanged;
             chkDocTypeAppendixDI.CheckedChanged += DocTypeCheckbox_CheckedChanged;
             chkDocTypeAddendumDI.CheckedChanged += DocTypeCheckbox_CheckedChanged;
             UpdateDocumentNumberFieldsVisibility();
-
             string[] monthNames = CultureInfo.CurrentCulture.DateTimeFormat.AbbreviatedMonthNames.Where(m => !string.IsNullOrEmpty(m)).ToArray();
             int currentYear = DateTime.Now.Year;
             List<string> years = Enumerable.Range(currentYear - 10, 21).Select(y => y.ToString()).ToList();
@@ -531,24 +447,19 @@ namespace DocumentIssuanceApp
             PopulateMonthYearComboBox(cmbParentExpMonthDI, cmbParentExpYearDI, monthNames, years, true);
             PopulateMonthYearComboBox(cmbItemMfgMonthDI, cmbItemMfgYearDI, monthNames, years, false);
             PopulateMonthYearComboBox(cmbItemExpMonthDI, cmbItemExpYearDI, monthNames, years, false);
-
             string[] batchUnits = { "KGS", "TAB", "ML", "GM", "LTR", "MG", "CAPS", "VIALS", "AMPOULES", "BTL" };
             PopulateUnitComboBox(cmbParentBatchSizeUnitDI, batchUnits, true);
             PopulateUnitComboBox(cmbItemBatchSizeUnitDI, batchUnits, false);
-
             txtParentBatchSizeValueDI.KeyPress += NumericTextBox_KeyPress;
             txtItemBatchSizeValueDI.KeyPress += NumericTextBox_KeyPress;
-
             cmbFromDepartmentDI.Items.Clear();
             cmbFromDepartmentDI.Items.AddRange(new string[] { "Production Department", "Quality Assurance", "Research & Development", "Regulatory Affairs", "Manufacturing", "Packaging Department" });
             if (cmbFromDepartmentDI.Items.Count > 0) cmbFromDepartmentDI.SelectedIndex = 0;
-
             dtpRequestDateDI.Value = DateTime.Now;
             lblStatusValueDI.Text = "Ready to create a new request.";
             btnSubmitRequestDI.Click += BtnSubmitRequestDI_Click;
             btnClearFormDI.Click += BtnClearFormDI_Click;
-
-            LoadInitialDocumentIssuanceData();
+            await LoadInitialDocumentIssuanceDataAsync();
         }
 
         private void DocTypeCheckbox_CheckedChanged(object sender, EventArgs e) => UpdateDocumentNumberFieldsVisibility();
@@ -556,13 +467,10 @@ namespace DocumentIssuanceApp
         {
             lblBmrDocNoDI.Visible = txtBmrDocNoDI.Visible = chkDocTypeBMRDI.Checked;
             if (!chkDocTypeBMRDI.Checked) txtBmrDocNoDI.Clear();
-
             lblBprDocNoDI.Visible = txtBprDocNoDI.Visible = chkDocTypeBPRDI.Checked;
             if (!chkDocTypeBPRDI.Checked) txtBprDocNoDI.Clear();
-
             lblAppendixDocNoDI.Visible = txtAppendixDocNoDI.Visible = chkDocTypeAppendixDI.Checked;
             if (!chkDocTypeAppendixDI.Checked) txtAppendixDocNoDI.Clear();
-
             lblAddendumDocNoDI.Visible = txtAddendumDocNoDI.Visible = chkDocTypeAddendumDI.Checked;
             if (!chkDocTypeAddendumDI.Checked) txtAddendumDocNoDI.Clear();
         }
@@ -573,7 +481,6 @@ namespace DocumentIssuanceApp
             if (allowNotApplicable) cmbMonth.Items.Add("N/A");
             cmbMonth.Items.AddRange(months);
             cmbMonth.SelectedIndex = allowNotApplicable ? 0 : (DateTime.Now.Month - 1);
-
             cmbYear.Items.Clear();
             if (allowNotApplicable) cmbYear.Items.Add("N/A");
             cmbYear.Items.AddRange(years.ToArray());
@@ -594,35 +501,36 @@ namespace DocumentIssuanceApp
             if ((e.KeyChar == '.') && ((sender as TextBox).Text.IndexOf('.') > -1)) e.Handled = true;
         }
 
-        private void LoadInitialDocumentIssuanceData()
+        private async Task LoadInitialDocumentIssuanceDataAsync()
         {
+            this.Cursor = Cursors.WaitCursor;
             try
             {
-                txtRequestNoValueDI.Text = _repository.GenerateNewRequestNumber();
+                txtRequestNoValueDI.Text = await _repository.GenerateNewRequestNumberAsync();
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Error generating new request number: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 txtRequestNoValueDI.Text = "ERROR";
             }
+            finally
+            {
+                this.Cursor = Cursors.Default;
+            }
         }
 
-        private void BtnSubmitRequestDI_Click(object sender, EventArgs e)
+        private async void BtnSubmitRequestDI_Click(object sender, EventArgs e)
         {
-            // --- Input Validation ---
             if (cmbFromDepartmentDI.SelectedItem == null || string.IsNullOrWhiteSpace(cmbFromDepartmentDI.SelectedItem.ToString()))
             { MessageBox.Show("Please select a 'From Department'.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning); cmbFromDepartmentDI.Focus(); return; }
             if (string.IsNullOrWhiteSpace(txtProductDI.Text))
             { MessageBox.Show("Please enter the 'Product'.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning); txtProductDI.Focus(); return; }
-
             var docNumbersList = new List<string>();
             if (chkDocTypeBMRDI.Checked) { if (string.IsNullOrWhiteSpace(txtBmrDocNoDI.Text)) { MessageBox.Show("BMR is checked, please enter BMR Document No.", "Validation Error"); txtBmrDocNoDI.Focus(); return; } docNumbersList.Add(txtBmrDocNoDI.Text.Trim()); }
             if (chkDocTypeBPRDI.Checked) { if (string.IsNullOrWhiteSpace(txtBprDocNoDI.Text)) { MessageBox.Show("BPR is checked, please enter BPR Document No.", "Validation Error"); txtBprDocNoDI.Focus(); return; } docNumbersList.Add(txtBprDocNoDI.Text.Trim()); }
             if (chkDocTypeAppendixDI.Checked) { if (string.IsNullOrWhiteSpace(txtAppendixDocNoDI.Text)) { MessageBox.Show("Appendix is checked, please enter Appendix Document No.", "Validation Error"); txtAppendixDocNoDI.Focus(); return; } docNumbersList.Add(txtAppendixDocNoDI.Text.Trim()); }
             if (chkDocTypeAddendumDI.Checked) { if (string.IsNullOrWhiteSpace(txtAddendumDocNoDI.Text)) { MessageBox.Show("Addendum is checked, please enter Addendum Document No.", "Validation Error"); txtAddendumDocNoDI.Focus(); return; } docNumbersList.Add(txtAddendumDocNoDI.Text.Trim()); }
             if (!docNumbersList.Any()) { MessageBox.Show("Please select at least one 'Document Type' and provide its number.", "Validation Error"); grpDocTypeDI.Focus(); return; }
-
-            // --- Batch Size Validation ---
             string parentBatchSizeStr = null;
             if (!string.IsNullOrWhiteSpace(txtParentBatchSizeValueDI.Text))
             {
@@ -630,13 +538,10 @@ namespace DocumentIssuanceApp
                 if (cmbParentBatchSizeUnitDI.SelectedItem == null || cmbParentBatchSizeUnitDI.SelectedItem.ToString() == "N/A") { MessageBox.Show("Please select a Unit for the Parent Batch Size.", "Validation Error"); cmbParentBatchSizeUnitDI.Focus(); return; }
                 parentBatchSizeStr = $"{txtParentBatchSizeValueDI.Text.Trim()} {cmbParentBatchSizeUnitDI.SelectedItem}";
             }
-
             if (string.IsNullOrWhiteSpace(txtItemBatchSizeValueDI.Text)) { MessageBox.Show("Item Batch Size value is required.", "Validation Error"); txtItemBatchSizeValueDI.Focus(); return; }
             if (!decimal.TryParse(txtItemBatchSizeValueDI.Text, out _)) { MessageBox.Show("Item Batch Size must be a valid number.", "Validation Error"); txtItemBatchSizeValueDI.Focus(); return; }
             if (cmbItemBatchSizeUnitDI.SelectedItem == null || cmbItemBatchSizeUnitDI.SelectedItem.ToString() == "N/A") { MessageBox.Show("Please select a Unit for the Item Batch Size.", "Validation Error"); cmbItemBatchSizeUnitDI.Focus(); return; }
 
-            // --- Data Collection into DTO ---
-            // Create an instance of the DTO from DataAccessModels.cs to hold the form data.
             var issuanceData = new IssuanceRequestData
             {
                 RequestNo = txtRequestNoValueDI.Text,
@@ -659,15 +564,20 @@ namespace DocumentIssuanceApp
                 PreparedBy = loggedInUserName
             };
 
+            btnSubmitRequestDI.Enabled = false;
+            btnClearFormDI.Enabled = false;
+            this.Cursor = Cursors.WaitCursor;
+            lblStatusValueDI.Text = "Submitting request...";
+            lblStatusValueDI.ForeColor = SystemColors.ControlText;
+
             try
             {
-                // Pass the DTO to the repository to handle the database insertion.
-                _repository.CreateIssuanceRequest(issuanceData);
+                await _repository.CreateIssuanceRequestAsync(issuanceData);
                 lblStatusValueDI.Text = $"Request '{issuanceData.RequestNo}' submitted successfully!";
                 lblStatusValueDI.ForeColor = _successColor;
                 MessageBox.Show($"Request '{issuanceData.RequestNo}' submitted successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 ClearDocumentIssuanceForm();
-                LoadInitialDocumentIssuanceData();
+                await LoadInitialDocumentIssuanceDataAsync();
             }
             catch (Exception ex)
             {
@@ -675,15 +585,20 @@ namespace DocumentIssuanceApp
                 lblStatusValueDI.ForeColor = _dangerColor;
                 MessageBox.Show($"Error submitting request: {ex.Message}", "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            finally
+            {
+                btnSubmitRequestDI.Enabled = true;
+                btnClearFormDI.Enabled = true;
+                this.Cursor = Cursors.Default;
+            }
         }
 
-        private void BtnClearFormDI_Click(object sender, EventArgs e)
+        private async void BtnClearFormDI_Click(object sender, EventArgs e)
         {
             ClearDocumentIssuanceForm();
             lblStatusValueDI.Text = "Form cleared. Ready for new request.";
             lblStatusValueDI.ForeColor = SystemColors.ControlText;
-            // Also generate a new request number immediately.
-            LoadInitialDocumentIssuanceData();
+            await LoadInitialDocumentIssuanceDataAsync();
         }
 
         private void ClearDocumentIssuanceForm()
@@ -732,7 +647,7 @@ namespace DocumentIssuanceApp
             dgvGmQueue.Columns["colGmRequestedAt"].DataPropertyName = "RequestedAt";
 
             dgvGmQueue.SelectionChanged += DgvGmQueue_SelectionChanged;
-            btnGmRefreshList.Click += (s, e) => LoadGmPendingQueue();
+            btnGmRefreshList.Click += async (s, e) => await LoadGmPendingQueueAsync();
             btnGmAuthorize.Click += BtnGmAuthorize_Click;
             btnGmReject.Click += BtnGmReject_Click;
 
@@ -740,18 +655,17 @@ namespace DocumentIssuanceApp
             lblGmQueueTitle.Text = "Pending GM Approval Queue (0)";
         }
 
-        private void LoadGmPendingQueue()
+        private async Task LoadGmPendingQueueAsync()
         {
             this.Cursor = Cursors.WaitCursor;
+            btnGmRefreshList.Enabled = false;
             try
             {
                 dgvGmQueue.DataSource = null;
-                // Call the repository to get the data for the queue.
-                dgvGmQueue.DataSource = _repository.GetGmPendingQueue();
+                dgvGmQueue.DataSource = await _repository.GetGmPendingQueueAsync();
                 lblGmQueueTitle.Text = $"Pending GM Approval Queue ({dgvGmQueue.Rows.Count})";
                 ClearGmSelectedRequestDetails();
 
-                // If the grid has rows, select the first one to populate the details view.
                 if (dgvGmQueue.Rows.Count > 0)
                 {
                     dgvGmQueue.Rows[0].Selected = true;
@@ -761,18 +675,22 @@ namespace DocumentIssuanceApp
             {
                 MessageBox.Show("Failed to load GM queue: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            finally { this.Cursor = Cursors.Default; }
+            finally
+            {
+                this.Cursor = Cursors.Default;
+                btnGmRefreshList.Enabled = true;
+            }
         }
 
-        private void DgvGmQueue_SelectionChanged(object sender, EventArgs e)
+        private async void DgvGmQueue_SelectionChanged(object sender, EventArgs e)
         {
             if (dgvGmQueue.SelectedRows.Count > 0)
-                DisplayGmSelectedRequestDetails(dgvGmQueue.SelectedRows[0]);
+                await DisplayGmSelectedRequestDetailsAsync(dgvGmQueue.SelectedRows[0]);
             else
                 ClearGmSelectedRequestDetails();
         }
 
-        private void DisplayGmSelectedRequestDetails(DataGridViewRow selectedRow)
+        private async Task DisplayGmSelectedRequestDetailsAsync(DataGridViewRow selectedRow)
         {
             if (!(selectedRow.DataBoundItem is DataRowView rowView))
             {
@@ -787,10 +705,10 @@ namespace DocumentIssuanceApp
             txtGmDetailPreparedBy.Text = rowView["PreparedBy"].ToString();
             txtGmDetailRequestedAt.Text = ((DateTime)rowView["RequestedAt"]).ToString("dd-MMM-yyyy HH:mm");
 
+            this.Cursor = Cursors.WaitCursor;
             try
             {
-                // Call the repository to get all the other details for the selected request.
-                DataTable dt = _repository.GetFullRequestDetails(requestNo);
+                DataTable dt = await _repository.GetFullRequestDetailsAsync(requestNo);
                 if (dt.Rows.Count > 0)
                 {
                     DataRow detailRow = dt.Rows[0];
@@ -807,6 +725,10 @@ namespace DocumentIssuanceApp
             {
                 MessageBox.Show("Failed to load full details for request: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            finally
+            {
+                this.Cursor = Cursors.Default;
+            }
         }
 
         private void ClearGmSelectedRequestDetails()
@@ -816,14 +738,14 @@ namespace DocumentIssuanceApp
             txtGmComment.Clear();
         }
 
-        private void BtnGmAuthorize_Click(object sender, EventArgs e) => ProcessGmAction("Authorized", false);
-        private void BtnGmReject_Click(object sender, EventArgs e) => ProcessGmAction("Rejected", true);
+        private void BtnGmAuthorize_Click(object sender, EventArgs e) => ProcessGmActionAsync("Authorized", false);
+        private void BtnGmReject_Click(object sender, EventArgs e) => ProcessGmActionAsync("Rejected", true);
 
-        private void ProcessGmAction(string action, bool commentsMandatory)
+        private async void ProcessGmActionAsync(string action, bool commentsMandatory)
         {
             if (dgvGmQueue.SelectedRows.Count == 0 || string.IsNullOrEmpty(txtGmDetailRequestNo.Text))
             {
-                MessageBox.Show($"Please select a request from the queue to {action.ToLower()}.", "No Request Selected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show($"Please select a request to {action.ToLower()}.", "No Request Selected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
             if (commentsMandatory && string.IsNullOrWhiteSpace(txtGmComment.Text))
@@ -835,24 +757,30 @@ namespace DocumentIssuanceApp
             string requestNo = txtGmDetailRequestNo.Text;
             if (MessageBox.Show($"Are you sure you want to {action.ToLower()} request '{requestNo}'?", $"Confirm {action}", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
+                btnGmAuthorize.Enabled = btnGmReject.Enabled = false;
+                this.Cursor = Cursors.WaitCursor;
                 try
                 {
-                    // Call the repository to update the database.
-                    bool success = _repository.UpdateGmAction(requestNo, action, txtGmComment.Text, loggedInUserName);
+                    bool success = await _repository.UpdateGmActionAsync(requestNo, action, txtGmComment.Text, loggedInUserName);
                     if (success)
                     {
                         MessageBox.Show($"Request '{requestNo}' has been {action.ToLower()}.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        LoadGmPendingQueue();
+                        await LoadGmPendingQueueAsync();
                     }
                     else
                     {
-                        MessageBox.Show("Could not update the request. It may have been processed by another user.", "Data Stale", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        LoadGmPendingQueue();
+                        MessageBox.Show("Could not update request. It may have been processed by another user.", "Data Stale", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        await LoadGmPendingQueueAsync();
                     }
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show("Failed to update request: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                finally
+                {
+                    btnGmAuthorize.Enabled = btnGmReject.Enabled = true;
+                    this.Cursor = Cursors.Default;
                 }
             }
         }
@@ -871,7 +799,7 @@ namespace DocumentIssuanceApp
             dgvQaQueue.Columns["colQaGmActionAt"].DataPropertyName = "GmActionAt";
 
             dgvQaQueue.SelectionChanged += DgvQaQueue_SelectionChanged;
-            btnQaRefreshList.Click += (s, e) => LoadQaPendingQueue();
+            btnQaRefreshList.Click += async (s, e) => await LoadQaPendingQueueAsync();
             btnQaApprove.Click += BtnQaApprove_Click;
             btnQaReject.Click += BtnQaReject_Click;
             btnQaBrowseSelectDocument.Click += (s, e) => MessageBox.Show("Functionality to open document location is not yet implemented.", "TODO", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -880,17 +808,16 @@ namespace DocumentIssuanceApp
             lblQaQueueTitle.Text = "Pending QA Approval Queue (0)";
         }
 
-        private void LoadQaPendingQueue()
+        private async Task LoadQaPendingQueueAsync()
         {
             this.Cursor = Cursors.WaitCursor;
+            btnQaRefreshList.Enabled = false;
             try
             {
                 dgvQaQueue.DataSource = null;
-                dgvQaQueue.DataSource = _repository.GetQaPendingQueue();
+                dgvQaQueue.DataSource = await _repository.GetQaPendingQueueAsync();
                 lblQaQueueTitle.Text = $"Pending QA Approval Queue ({dgvQaQueue.Rows.Count})";
                 ClearQaSelectedRequestDetails();
-
-                // If the grid has rows, select the first one to populate the details view.
                 if (dgvQaQueue.Rows.Count > 0)
                 {
                     dgvQaQueue.Rows[0].Selected = true;
@@ -900,18 +827,22 @@ namespace DocumentIssuanceApp
             {
                 MessageBox.Show("Failed to load QA queue: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            finally { this.Cursor = Cursors.Default; }
+            finally
+            {
+                this.Cursor = Cursors.Default;
+                btnQaRefreshList.Enabled = true;
+            }
         }
 
-        private void DgvQaQueue_SelectionChanged(object sender, EventArgs e)
+        private async void DgvQaQueue_SelectionChanged(object sender, EventArgs e)
         {
             if (dgvQaQueue.SelectedRows.Count > 0)
-                DisplayQaSelectedRequestDetails(dgvQaQueue.SelectedRows[0]);
+                await DisplayQaSelectedRequestDetailsAsync(dgvQaQueue.SelectedRows[0]);
             else
                 ClearQaSelectedRequestDetails();
         }
 
-        private void DisplayQaSelectedRequestDetails(DataGridViewRow selectedRow)
+        private async Task DisplayQaSelectedRequestDetailsAsync(DataGridViewRow selectedRow)
         {
             if (!(selectedRow.DataBoundItem is DataRowView rowView))
             {
@@ -927,9 +858,10 @@ namespace DocumentIssuanceApp
             if (rowView["GmActionAt"] != DBNull.Value)
                 txtQaDetailGmActionTime.Text = ((DateTime)rowView["GmActionAt"]).ToString("dd-MMM-yyyy HH:mm");
 
+            this.Cursor = Cursors.WaitCursor;
             try
             {
-                DataTable dt = _repository.GetFullRequestDetails(requestNo);
+                DataTable dt = await _repository.GetFullRequestDetailsAsync(requestNo);
                 if (dt.Rows.Count > 0)
                 {
                     DataRow detailRow = dt.Rows[0];
@@ -947,6 +879,10 @@ namespace DocumentIssuanceApp
             {
                 MessageBox.Show("Failed to load full details for request: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            finally
+            {
+                this.Cursor = Cursors.Default;
+            }
         }
 
         private void ClearQaSelectedRequestDetails()
@@ -957,14 +893,14 @@ namespace DocumentIssuanceApp
             numQaPrintCount.Value = 1;
         }
 
-        private void BtnQaApprove_Click(object sender, EventArgs e) => ProcessQaAction("Approved", false);
-        private void BtnQaReject_Click(object sender, EventArgs e) => ProcessQaAction("Rejected", true);
+        private void BtnQaApprove_Click(object sender, EventArgs e) => ProcessQaActionAsync("Approved", false);
+        private void BtnQaReject_Click(object sender, EventArgs e) => ProcessQaActionAsync("Rejected", true);
 
-        private void ProcessQaAction(string action, bool commentsMandatory)
+        private async void ProcessQaActionAsync(string action, bool commentsMandatory)
         {
             if (dgvQaQueue.SelectedRows.Count == 0 || string.IsNullOrEmpty(txtQaDetailRequestNo.Text))
             {
-                MessageBox.Show($"Please select a request from the queue to {action.ToLower()}.", "No Request Selected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show($"Please select a request to {action.ToLower()}.", "No Request Selected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
             if (commentsMandatory && string.IsNullOrWhiteSpace(txtQaComment.Text))
@@ -981,26 +917,33 @@ namespace DocumentIssuanceApp
 
             if (MessageBox.Show(message, $"Confirm {action}", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
+                btnQaApprove.Enabled = btnQaReject.Enabled = false;
+                this.Cursor = Cursors.WaitCursor;
                 try
                 {
-                    bool success = _repository.UpdateQaAction(requestNo, action, txtQaComment.Text, loggedInUserName);
+                    bool success = await _repository.UpdateQaActionAsync(requestNo, action, txtQaComment.Text, loggedInUserName);
                     if (success)
                     {
                         string successMessage = action == "Approved"
                             ? $"Request '{requestNo}' approved successfully. Printed {printCount} copies."
                             : $"Request '{requestNo}' rejected successfully.";
                         MessageBox.Show(successMessage, "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        LoadQaPendingQueue();
+                        await LoadQaPendingQueueAsync();
                     }
                     else
                     {
-                        MessageBox.Show("Could not update the request. It may have been processed by another user.", "Data Stale", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        LoadQaPendingQueue();
+                        MessageBox.Show("Could not update request. It may have been processed by another user.", "Data Stale", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        await LoadQaPendingQueueAsync();
                     }
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show("Failed to update request: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                finally
+                {
+                    btnQaApprove.Enabled = btnQaReject.Enabled = true;
+                    this.Cursor = Cursors.Default;
                 }
             }
         }
@@ -1009,21 +952,22 @@ namespace DocumentIssuanceApp
         #region Audit Trail Tab Logic
         private void InitializeAuditTrailTab()
         {
+            _auditTrailPageCache = new Dictionary<int, AuditTrailEntry>();
+            _pagesBeingFetched = new HashSet<int>();
+
             cmbAuditStatus.Items.Clear();
             cmbAuditStatus.Items.AddRange(new object[] { "All", "Pending GM Approval", "Pending QA Approval", "Approved (Issued)", "Rejected by GM", "Rejected by QA" });
             cmbAuditStatus.SelectedIndex = 0;
             dtpAuditFrom.Value = DateTime.Now.Date.AddDays(-30);
             dtpAuditTo.Value = DateTime.Now.Date;
-
             dgvAuditTrail.AutoGenerateColumns = false;
             dgvAuditTrail.VirtualMode = true;
             SetupAuditTrailColumns();
             dgvAuditTrail.CellValueNeeded += DgvAuditTrail_CellValueNeeded;
             dgvAuditTrail.ColumnHeaderMouseClick += DgvAuditTrail_ColumnHeaderMouseClick;
-
-            btnApplyAuditFilter.Click += (s, e) => LoadAuditTrailData();
+            btnApplyAuditFilter.Click += async (s, e) => await LoadAuditTrailDataAsync();
             btnClearAuditFilters.Click += BtnClearAuditFilters_Click;
-            btnRefreshAuditList.Click += (s, e) => LoadAuditTrailData();
+            btnRefreshAuditList.Click += async (s, e) => await LoadAuditTrailDataAsync();
             btnExportToCsv.Click += (s, e) => MessageBox.Show("CSV export not implemented.", "TODO", MessageBoxButtons.OK, MessageBoxIcon.Information);
             btnExportToExcel.Click += (s, e) => MessageBox.Show("Excel export not implemented.", "TODO", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
@@ -1049,12 +993,15 @@ namespace DocumentIssuanceApp
             dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditQaComment", HeaderText = "QA Comment", DataPropertyName = "QAComment", Width = 200, DefaultCellStyle = wrapTextStyle });
         }
 
-        private void LoadAuditTrailData()
+        private async Task LoadAuditTrailDataAsync()
         {
             this.Cursor = Cursors.WaitCursor;
+            btnApplyAuditFilter.Enabled = btnClearAuditFilters.Enabled = btnRefreshAuditList.Enabled = false;
             try
             {
-                // Map the UI column name to the database column name for safe sorting.
+                _auditTrailPageCache.Clear();
+                _pagesBeingFetched.Clear();
+
                 var columnMap = new Dictionary<string, string>
                 {
                     { "colAuditRequestNo", "RequestNo" }, { "colAuditRequestDate", "RequestDate" },
@@ -1063,13 +1010,10 @@ namespace DocumentIssuanceApp
                 };
                 columnMap.TryGetValue(_auditSortColumn, out string dbSortColumn);
 
-                // Call the repository to get only the primary keys for the filtered/sorted data.
-                _auditTrailKeyCache = _repository.GetAuditTrailKeys(
+                _auditTrailKeyCache = await _repository.GetAuditTrailKeysAsync(
                     dtpAuditFrom.Value, dtpAuditTo.Value, cmbAuditStatus.SelectedItem.ToString(),
                     txtAuditRequestNo.Text, txtAuditProduct.Text, dbSortColumn, _auditSortOrder);
 
-                // Invalidate the single-row cache and tell the grid how many rows to expect.
-                _currentAuditRowCacheIndex = -1;
                 dgvAuditTrail.RowCount = 0;
                 dgvAuditTrail.RowCount = _auditTrailKeyCache.Count;
             }
@@ -1077,74 +1021,102 @@ namespace DocumentIssuanceApp
             {
                 MessageBox.Show("Failed to load audit trail: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            finally { this.Cursor = Cursors.Default; }
+            finally
+            {
+                this.Cursor = Cursors.Default;
+                btnApplyAuditFilter.Enabled = btnClearAuditFilters.Enabled = btnRefreshAuditList.Enabled = true;
+            }
         }
 
-        // This event is the core of Virtual Mode. It fires for every cell that becomes visible.
         private void DgvAuditTrail_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
         {
-            if (_auditTrailKeyCache == null || e.RowIndex >= _auditTrailKeyCache.Count) return;
+            if (e.RowIndex < 0 || _auditTrailKeyCache == null || e.RowIndex >= _auditTrailKeyCache.Count) return;
 
-            // To optimize, we only fetch the full data for a row once, and cache it.
-            if (e.RowIndex != _currentAuditRowCacheIndex)
+            if (_auditTrailPageCache.ContainsKey(e.RowIndex))
             {
-                int recordKey = _auditTrailKeyCache[e.RowIndex];
-                _currentAuditRowCache = _repository.GetAuditTrailEntry(recordKey);
-                _currentAuditRowCacheIndex = e.RowIndex;
+                var entry = _auditTrailPageCache[e.RowIndex];
+                if (entry == null) return;
+
+                string colName = dgvAuditTrail.Columns[e.ColumnIndex].Name;
+                switch (colName)
+                {
+                    case "colAuditRequestNo": e.Value = entry.RequestNo; break;
+                    case "colAuditRequestDate": e.Value = entry.RequestDate; break;
+                    case "colAuditProduct": e.Value = entry.Product; break;
+                    case "colAuditDocumentNumbers": e.Value = entry.DocumentNumbers; break;
+                    case "colAuditStatusDerived": e.Value = entry.DerivedStatus; break;
+                    case "colAuditPreparedBy": e.Value = entry.PreparedBy; break;
+                    case "colAuditRequestedAt": e.Value = entry.RequestedAt; break;
+                    case "colAuditGmAction": e.Value = entry.GmOperationsAction; break;
+                    case "colAuditAuthorizedBy": e.Value = entry.AuthorizedBy; break;
+                    case "colAuditGmActionAt": e.Value = entry.GmOperationsAt; break;
+                    case "colAuditGmComment": e.Value = entry.GmOperationsComment; break;
+                    case "colAuditQaAction": e.Value = entry.QAAction; break;
+                    case "colAuditApprovedBy": e.Value = entry.ApprovedBy; break;
+                    case "colAuditQaActionAt": e.Value = entry.QAAt; break;
+                    case "colAuditQaComment": e.Value = entry.QAComment; break;
+                }
             }
-
-            if (_currentAuditRowCache == null) return;
-
-            // Provide the value for the specific cell being requested.
-            string colName = dgvAuditTrail.Columns[e.ColumnIndex].Name;
-            switch (colName)
+            else
             {
-                case "colAuditRequestNo": e.Value = _currentAuditRowCache.RequestNo; break;
-                case "colAuditRequestDate": e.Value = _currentAuditRowCache.RequestDate; break;
-                case "colAuditProduct": e.Value = _currentAuditRowCache.Product; break;
-                case "colAuditDocumentNumbers": e.Value = _currentAuditRowCache.DocumentNumbers; break;
-                case "colAuditStatusDerived": e.Value = _currentAuditRowCache.DerivedStatus; break;
-                case "colAuditPreparedBy": e.Value = _currentAuditRowCache.PreparedBy; break;
-                case "colAuditRequestedAt": e.Value = _currentAuditRowCache.RequestedAt; break;
-                case "colAuditGmAction": e.Value = _currentAuditRowCache.GmOperationsAction; break;
-                case "colAuditAuthorizedBy": e.Value = _currentAuditRowCache.AuthorizedBy; break;
-                case "colAuditGmActionAt": e.Value = _currentAuditRowCache.GmOperationsAt; break;
-                case "colAuditGmComment": e.Value = _currentAuditRowCache.GmOperationsComment; break;
-                case "colAuditQaAction": e.Value = _currentAuditRowCache.QAAction; break;
-                case "colAuditApprovedBy": e.Value = _currentAuditRowCache.ApprovedBy; break;
-                case "colAuditQaActionAt": e.Value = _currentAuditRowCache.QAAt; break;
-                case "colAuditQaComment": e.Value = _currentAuditRowCache.QAComment; break;
+                e.Value = "Loading...";
+                FetchAuditPage(e.RowIndex);
             }
         }
 
-        private void DgvAuditTrail_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        private async void FetchAuditPage(int rowIndex)
+        {
+            int pageNumber = rowIndex / AuditPageSize;
+            if (_pagesBeingFetched.Contains(pageNumber)) return;
+
+            try
+            {
+                _pagesBeingFetched.Add(pageNumber);
+
+                int start = pageNumber * AuditPageSize;
+                int end = Math.Min(start + AuditPageSize, _auditTrailKeyCache.Count);
+                if (start >= end) return;
+                var keysToFetch = _auditTrailKeyCache.GetRange(start, end - start);
+
+                var entries = await _repository.GetAuditTrailEntriesAsync(keysToFetch);
+                var entryDict = entries.ToDictionary(entry => entry.IssuanceID);
+
+                if (dgvAuditTrail.IsDisposed) return;
+                dgvAuditTrail.BeginInvoke(new Action(() =>
+                {
+                    for (int i = start; i < end; i++)
+                    {
+                        var key = _auditTrailKeyCache[i];
+                        if (entryDict.ContainsKey(key))
+                        {
+                            _auditTrailPageCache[i] = entryDict[key];
+                        }
+                    }
+                    for (int i = start; i < end; i++)
+                    {
+                        if (i < dgvAuditTrail.RowCount) dgvAuditTrail.InvalidateRow(i);
+                    }
+                }));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error fetching audit page {pageNumber}: {ex.Message}");
+            }
+            finally
+            {
+                _pagesBeingFetched.Remove(pageNumber);
+            }
+        }
+
+        private async void DgvAuditTrail_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             string newSortColumn = dgvAuditTrail.Columns[e.ColumnIndex].Name;
             _auditSortOrder = (_auditSortColumn == newSortColumn && _auditSortOrder == SortOrder.Ascending) ? SortOrder.Descending : SortOrder.Ascending;
             _auditSortColumn = newSortColumn;
-            LoadAuditTrailData();
+            await LoadAuditTrailDataAsync();
         }
 
-        private void DgvAuditTrail_DataError(object sender, DataGridViewDataErrorEventArgs e)
-        {
-            Console.WriteLine($"DataGridView DataError: Row {e.RowIndex}, Column {e.ColumnIndex} ('{dgvAuditTrail.Columns[e.ColumnIndex].Name}'). Exception: {e.Exception.Message}");
-            e.ThrowException = false;
-        }
-
-        private void DgvAuditTrail_SelectionChanged(object sender, EventArgs e)
-        {
-            if (dgvAuditTrail.SelectedRows.Count > 0)
-            {
-                int selectedIndex = dgvAuditTrail.SelectedRows[0].Index;
-                if (_auditTrailKeyCache != null && selectedIndex < _auditTrailKeyCache.Count)
-                {
-                    int selectedKey = _auditTrailKeyCache[selectedIndex];
-                    Console.WriteLine($"Selected audit trail record key: {selectedKey}");
-                }
-            }
-        }
-
-        private void BtnClearAuditFilters_Click(object sender, EventArgs e)
+        private async void BtnClearAuditFilters_Click(object sender, EventArgs e)
         {
             dtpAuditFrom.Value = DateTime.Now.Date.AddDays(-30);
             dtpAuditTo.Value = DateTime.Now.Date;
@@ -1153,7 +1125,7 @@ namespace DocumentIssuanceApp
             txtAuditProduct.Clear();
             _auditSortColumn = string.Empty;
             _auditSortOrder = SortOrder.None;
-            LoadAuditTrailData();
+            await LoadAuditTrailDataAsync();
         }
         #endregion
 
@@ -1166,38 +1138,40 @@ namespace DocumentIssuanceApp
             dgvUserRoles.Columns["colUserRoleName"].DataPropertyName = "RoleName";
             dgvUserRoles.DataSource = this.userRolesBindingSource;
             dgvUserRoles.SelectionChanged += DgvUserRoles_SelectionChanged;
-
-            btnRefreshUserRoles.Click += (s, e) => LoadUserRoles();
+            btnRefreshUserRoles.Click += async (s, e) => await LoadUserRolesAsync();
             btnResetPassword.Click += BtnResetPassword_Click;
         }
 
-        private void LoadUserRoles()
+        private async Task LoadUserRolesAsync()
         {
             this.Cursor = Cursors.WaitCursor;
+            btnRefreshUserRoles.Enabled = false;
             try
             {
-                this.userRolesBindingSource.DataSource = _repository.GetUserRolesForGrid();
+                this.userRolesBindingSource.DataSource = await _repository.GetUserRolesForGridAsync();
                 dgvUserRoles.ClearSelection();
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Failed to load user roles: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            finally { this.Cursor = Cursors.Default; }
+            finally
+            {
+                this.Cursor = Cursors.Default;
+                btnRefreshUserRoles.Enabled = true;
+            }
         }
 
         private void DgvUserRoles_SelectionChanged(object sender, EventArgs e)
         {
             bool isRowSelected = dgvUserRoles.SelectedRows.Count > 0;
             btnResetPassword.Enabled = isRowSelected;
-
-            // Use Convert.ToString for null-safety.
             txtRoleNameManage.Text = isRowSelected
                 ? Convert.ToString((dgvUserRoles.SelectedRows[0].DataBoundItem as DataRowView)?["RoleName"])
                 : string.Empty;
         }
 
-        private void BtnResetPassword_Click(object sender, EventArgs e)
+        private async void BtnResetPassword_Click(object sender, EventArgs e)
         {
             if (dgvUserRoles.SelectedRows.Count == 0)
             {
@@ -1208,11 +1182,13 @@ namespace DocumentIssuanceApp
             if (MessageBox.Show($"Are you sure you want to reset the password for the '{roleName}' role?", "Confirm Password Reset", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 string newPassword = "Password123";
-                // In production, prompt for a new password and hash it securely.
                 string newPasswordHash = newPassword;
+
+                btnResetPassword.Enabled = false;
+                this.Cursor = Cursors.WaitCursor;
                 try
                 {
-                    if (_repository.ResetUserPassword(roleName, newPasswordHash))
+                    if (await _repository.ResetUserPasswordAsync(roleName, newPasswordHash))
                         MessageBox.Show($"Password for role '{roleName}' has been reset to '{newPassword}'.", "Password Reset", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     else
                         MessageBox.Show("Failed to reset password. The role may no longer exist.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -1220,6 +1196,11 @@ namespace DocumentIssuanceApp
                 catch (Exception ex)
                 {
                     MessageBox.Show("An error occurred while resetting the password: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                finally
+                {
+                    btnResetPassword.Enabled = true;
+                    this.Cursor = Cursors.Default;
                 }
             }
         }

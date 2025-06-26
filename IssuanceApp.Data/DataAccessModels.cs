@@ -23,6 +23,7 @@ namespace IssuanceApp.Data
     // The IssuanceRepository populates this object, and the MainForm's CellValueNeeded event reads from it.
     public class AuditTrailEntry
     {
+        public int IssuanceID { get; set; }
         public string RequestNo { get; set; }
         public DateTime RequestDate { get; set; }
         public string Product { get; set; }

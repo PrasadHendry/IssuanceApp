@@ -3,27 +3,18 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
-using System.Windows.Forms; // Required for the SortOrder enum used in a method signature.
+using System.Threading.Tasks;
+using System.Windows.Forms;
 using Microsoft.Data.SqlClient;
 
 namespace IssuanceApp.Data
 {
-    /// <summary>
-    /// This is the Repository class, which acts as the application's Data Access Layer (DAL).
-    /// Its sole responsibility is to handle all communication with the SQL Server database.
-    /// It encapsulates all SQL queries and commands.
-    ///
-    /// CORRELATION:
-    /// - It is instantiated and used by the UI Layer (MainForm.cs).
-    /// - It uses the classes defined in DataAccessModels.cs to return structured data.
-    /// - It knows nothing about the UI (e.g., it never references a TextBox or a Button).
-    /// </summary>
     public class IssuanceRepository
     {
+        // ... (All existing code from the previous async version remains the same up to the Audit Trail region) ...
+        #region Previous Async Code
         private readonly string _connectionString;
 
-        // The constructor receives the database connection string.
-        // This is passed from MainForm, which reads it from App.config.
         public IssuanceRepository(string connectionString)
         {
             if (string.IsNullOrEmpty(connectionString))
@@ -32,73 +23,64 @@ namespace IssuanceApp.Data
             _connectionString = connectionString;
         }
 
-        #region Generic Data Access Helpers
-        // These private methods are internal tools to avoid repeating code for database operations.
-        private DataTable GetDataTable(string sql, List<SqlParameter> parameters = null)
+        private async Task<DataTable> GetDataTableAsync(string sql, List<SqlParameter> parameters = null)
         {
-            DataTable dt = new DataTable();
+            var dt = new DataTable();
             using (var conn = new SqlConnection(_connectionString))
             {
-                conn.Open();
+                await conn.OpenAsync();
                 using (var cmd = new SqlCommand(sql, conn))
                 {
                     if (parameters != null)
                     {
                         cmd.Parameters.AddRange(parameters.ToArray());
                     }
-                    using (var da = new SqlDataAdapter(cmd))
+                    using (var reader = await cmd.ExecuteReaderAsync())
                     {
-                        da.Fill(dt);
+                        dt.Load(reader);
                     }
                 }
             }
             return dt;
         }
 
-        private int ExecuteNonQuery(string sql, List<SqlParameter> parameters)
+        private async Task<int> ExecuteNonQueryAsync(string sql, List<SqlParameter> parameters)
         {
-            int rowsAffected;
             using (var conn = new SqlConnection(_connectionString))
             {
-                conn.Open();
+                await conn.OpenAsync();
                 using (var cmd = new SqlCommand(sql, conn))
                 {
                     if (parameters != null)
                     {
                         cmd.Parameters.AddRange(parameters.ToArray());
                     }
-                    rowsAffected = cmd.ExecuteNonQuery();
+                    return await cmd.ExecuteNonQueryAsync();
                 }
             }
-            return rowsAffected;
         }
 
-        private object ExecuteScalar(string sql, List<SqlParameter> parameters = null)
+        private async Task<object> ExecuteScalarAsync(string sql, List<SqlParameter> parameters = null)
         {
-            object result;
             using (var conn = new SqlConnection(_connectionString))
             {
-                conn.Open();
+                await conn.OpenAsync();
                 using (var cmd = new SqlCommand(sql, conn))
                 {
                     if (parameters != null)
                     {
                         cmd.Parameters.AddRange(parameters.ToArray());
                     }
-                    result = cmd.ExecuteScalar();
+                    return await cmd.ExecuteScalarAsync();
                 }
             }
-            return result;
         }
-        #endregion
 
-        #region Login and User Management
-        // Called by MainForm to populate the login dropdown.
-        public List<string> GetRoleNames()
+        public async Task<List<string>> GetRoleNamesAsync()
         {
             var roles = new List<string>();
             string sql = "SELECT RoleName FROM dbo.User_Roles ORDER BY RoleName;";
-            DataTable dt = GetDataTable(sql);
+            DataTable dt = await GetDataTableAsync(sql);
             foreach (DataRow row in dt.Rows)
             {
                 roles.Add(row["RoleName"].ToString());
@@ -106,30 +88,25 @@ namespace IssuanceApp.Data
             return roles;
         }
 
-        // Called by MainForm when the user clicks the Login button.
-        public bool AuthenticateUser(string roleName, string password)
+        public async Task<bool> AuthenticateUserAsync(string roleName, string password)
         {
             string sql = "SELECT PasswordHash FROM dbo.User_Roles WHERE RoleName = @roleName;";
             var parameters = new List<SqlParameter> { new SqlParameter("@roleName", roleName) };
-            object result = ExecuteScalar(sql, parameters);
-            if (result != null)
+            object result = await ExecuteScalarAsync(sql, parameters);
+            if (result != null && result != DBNull.Value)
             {
-                // In production, this should use a secure hashing library like BCrypt.Net
-                // e.g., return BCrypt.Net.BCrypt.Verify(password, result.ToString());
                 return password == result.ToString();
             }
             return false;
         }
 
-        // Called by MainForm to populate the grid in the Users tab.
-        public DataTable GetUserRolesForGrid()
+        public Task<DataTable> GetUserRolesForGridAsync()
         {
             string sql = "SELECT RoleID, RoleName FROM dbo.User_Roles ORDER BY RoleName;";
-            return GetDataTable(sql);
+            return GetDataTableAsync(sql);
         }
 
-        // Called by MainForm when an admin resets a password.
-        public bool ResetUserPassword(string roleName, string newPasswordHash)
+        public async Task<bool> ResetUserPasswordAsync(string roleName, string newPasswordHash)
         {
             string sql = "UPDATE dbo.User_Roles SET PasswordHash = @NewPasswordHash WHERE RoleName = @RoleName;";
             var parameters = new List<SqlParameter>
@@ -137,18 +114,16 @@ namespace IssuanceApp.Data
                 new SqlParameter("@NewPasswordHash", newPasswordHash),
                 new SqlParameter("@RoleName", roleName)
             };
-            return ExecuteNonQuery(sql, parameters) > 0;
+            int rowsAffected = await ExecuteNonQueryAsync(sql, parameters);
+            return rowsAffected > 0;
         }
-        #endregion
 
-        #region Document Issuance
-        // Called by MainForm to get a new, unique request number when the form loads.
-        public string GenerateNewRequestNumber()
+        public async Task<string> GenerateNewRequestNumberAsync()
         {
             string prefix = $"REQ-{DateTime.Now:yyyyMMdd}-";
             string sql = "SELECT ISNULL(MAX(CAST(SUBSTRING(RequestNo, 14, 3) AS INT)), 0) FROM dbo.Doc_Issuance WHERE RequestNo LIKE @prefix + '%';";
             var parameters = new List<SqlParameter> { new SqlParameter("@prefix", prefix) };
-            object result = ExecuteScalar(sql, parameters);
+            object result = await ExecuteScalarAsync(sql, parameters);
             int nextSequence = 1;
             if (result != null && result != DBNull.Value)
             {
@@ -157,9 +132,7 @@ namespace IssuanceApp.Data
             return $"{prefix}{nextSequence:D3}";
         }
 
-        // Called by MainForm when the "Submit Request" button is clicked.
-        // It takes the DTO from DataAccessModels.cs as its parameter.
-        public void CreateIssuanceRequest(IssuanceRequestData data)
+        public async Task CreateIssuanceRequestAsync(IssuanceRequestData data)
         {
             using (var conn = new SqlConnection(_connectionString))
             {
@@ -184,16 +157,14 @@ namespace IssuanceApp.Data
                     cmd.Parameters.AddWithValue("@ExportOrderNo", (object)data.ExportOrderNo ?? DBNull.Value);
                     cmd.Parameters.AddWithValue("@PreparedBy", data.PreparedBy);
                     cmd.Parameters.AddWithValue("@RequestComment", (object)data.RequestComment ?? DBNull.Value);
-                    conn.Open();
-                    cmd.ExecuteNonQuery();
+
+                    await conn.OpenAsync();
+                    await cmd.ExecuteNonQueryAsync();
                 }
             }
         }
-        #endregion
 
-        #region GM & QA Operations
-        // Called by MainForm to populate the grid on the GM Operations tab.
-        public DataTable GetGmPendingQueue()
+        public Task<DataTable> GetGmPendingQueueAsync()
         {
             string sql = @"
                 SELECT i.RequestNo, i.RequestDate, i.Product, i.DocumentNo, t.PreparedBy, t.RequestedAt
@@ -201,11 +172,10 @@ namespace IssuanceApp.Data
                 JOIN dbo.Issuance_Tracker AS t ON i.IssuanceID = t.IssuanceID
                 WHERE t.GmOperationsAction IS NULL
                 ORDER BY t.RequestedAt ASC;";
-            return GetDataTable(sql);
+            return GetDataTableAsync(sql);
         }
 
-        // Called by MainForm to populate the grid on the QA tab.
-        public DataTable GetQaPendingQueue()
+        public Task<DataTable> GetQaPendingQueueAsync()
         {
             string sql = @"
                 SELECT i.RequestNo, i.RequestDate, i.Product, i.DocumentNo, t.PreparedBy, t.AuthorizedBy, t.GmOperationsAt AS GmActionAt
@@ -213,22 +183,20 @@ namespace IssuanceApp.Data
                 JOIN dbo.Issuance_Tracker AS t ON i.IssuanceID = t.IssuanceID
                 WHERE t.GmOperationsAction = 'Authorized' AND t.QAAction IS NULL
                 ORDER BY t.GmOperationsAt ASC;";
-            return GetDataTable(sql);
+            return GetDataTableAsync(sql);
         }
 
-        // Called by MainForm to populate the detailed view when a request is selected in a grid.
-        public DataTable GetFullRequestDetails(string requestNo)
+        public Task<DataTable> GetFullRequestDetailsAsync(string requestNo)
         {
             string sql = @"
                 SELECT i.*, t.RequestComment, t.GmOperationsComment
                 FROM dbo.Doc_Issuance AS i
                 JOIN dbo.Issuance_Tracker AS t ON i.IssuanceID = t.IssuanceID
                 WHERE i.RequestNo = @RequestNo;";
-            return GetDataTable(sql, new List<SqlParameter> { new SqlParameter("@RequestNo", requestNo) });
+            return GetDataTableAsync(sql, new List<SqlParameter> { new SqlParameter("@RequestNo", requestNo) });
         }
 
-        // Called by MainForm when the GM Authorize or Reject button is clicked.
-        public bool UpdateGmAction(string requestNo, string action, string comment, string userName)
+        public async Task<bool> UpdateGmActionAsync(string requestNo, string action, string comment, string userName)
         {
             string sql = @"
                 UPDATE dbo.Issuance_Tracker SET
@@ -241,11 +209,11 @@ namespace IssuanceApp.Data
                 new SqlParameter("@Comment", (object)comment ?? DBNull.Value),
                 new SqlParameter("@RequestNo", requestNo)
             };
-            return ExecuteNonQuery(sql, parameters) > 0;
+            int rowsAffected = await ExecuteNonQueryAsync(sql, parameters);
+            return rowsAffected > 0;
         }
 
-        // Called by MainForm when the QA Approve or Reject button is clicked.
-        public bool UpdateQaAction(string requestNo, string action, string comment, string userName)
+        public async Task<bool> UpdateQaActionAsync(string requestNo, string action, string comment, string userName)
         {
             string sql = @"
                 UPDATE dbo.Issuance_Tracker SET
@@ -258,15 +226,15 @@ namespace IssuanceApp.Data
                 new SqlParameter("@Comment", (object)comment ?? DBNull.Value),
                 new SqlParameter("@RequestNo", requestNo)
             };
-            return ExecuteNonQuery(sql, parameters) > 0;
+            int rowsAffected = await ExecuteNonQueryAsync(sql, parameters);
+            return rowsAffected > 0;
         }
         #endregion
 
         #region Audit Trail
-        // Called by MainForm to get a list of primary keys for the virtual grid.
-        // This is the first step of the Virtual Mode process.
-        public List<int> GetAuditTrailKeys(DateTime from, DateTime to, string status, string requestNo, string product, string sortColumn, System.Windows.Forms.SortOrder sortOrder)
+        public async Task<List<int>> GetAuditTrailKeysAsync(DateTime from, DateTime to, string status, string requestNo, string product, string sortColumn, System.Windows.Forms.SortOrder sortOrder)
         {
+            // ... (This method remains unchanged) ...
             var sqlBuilder = new StringBuilder(@"
                 WITH AuditData AS (
                     SELECT i.IssuanceID, i.RequestNo, i.RequestDate, i.Product, t.PreparedBy, t.RequestedAt,
@@ -306,9 +274,7 @@ namespace IssuanceApp.Data
                 parameters.Add(new SqlParameter("@Product", $"%{product.Trim()}%"));
             }
 
-            // ** SECURITY FIX: Whitelist validation for ORDER BY clause **
-            // This prevents SQL injection by ensuring only valid, safe column names can be used for sorting.
-            string safeSortColumn = "RequestDate"; // Default sort column
+            string safeSortColumn = "RequestDate";
             var validSortColumns = new List<string> { "RequestNo", "RequestDate", "Product", "DerivedStatus", "PreparedBy", "RequestedAt" };
             if (!string.IsNullOrEmpty(sortColumn) && validSortColumns.Contains(sortColumn))
             {
@@ -318,16 +284,21 @@ namespace IssuanceApp.Data
             string sortDirection = (sortOrder == System.Windows.Forms.SortOrder.Ascending) ? "ASC" : "DESC";
             sqlBuilder.Append($" ORDER BY {safeSortColumn} {sortDirection}");
 
-            DataTable keysTable = GetDataTable(sqlBuilder.ToString(), parameters);
+            DataTable keysTable = await GetDataTableAsync(sqlBuilder.ToString(), parameters);
             return keysTable.AsEnumerable().Select(row => row.Field<int>("IssuanceID")).ToList();
         }
 
-        // Called by MainForm's CellValueNeeded event to get the data for a single row.
-        // This is the second step of the Virtual Mode process. It's called on-demand as the user scrolls.
-        public AuditTrailEntry GetAuditTrailEntry(int key)
+        // --- NEW METHOD FOR EFFICIENT PAGE FETCHING ---
+        public async Task<List<AuditTrailEntry>> GetAuditTrailEntriesAsync(List<int> keys)
         {
-            string sql = @"
-                SELECT i.RequestNo, i.RequestDate, i.Product, i.DocumentNo, t.PreparedBy, t.RequestedAt, t.RequestComment,
+            if (keys == null || !keys.Any())
+            {
+                return new List<AuditTrailEntry>();
+            }
+
+            var results = new List<AuditTrailEntry>();
+            var sqlBuilder = new StringBuilder(@"
+                SELECT i.IssuanceID, i.RequestNo, i.RequestDate, i.Product, i.DocumentNo, t.PreparedBy, t.RequestedAt, t.RequestComment,
                        t.GmOperationsAction, t.AuthorizedBy, t.GmOperationsAt, t.GmOperationsComment,
                        t.QAAction, t.ApprovedBy, t.QAAt, t.QAComment,
                     CASE 
@@ -339,14 +310,28 @@ namespace IssuanceApp.Data
                     END AS DerivedStatus
                 FROM dbo.Doc_Issuance i
                 JOIN dbo.Issuance_Tracker t ON i.IssuanceID = t.IssuanceID
-                WHERE i.IssuanceID = @Key";
-            var parameters = new List<SqlParameter> { new SqlParameter("@Key", key) };
-            DataTable dt = GetDataTable(sql, parameters);
-            if (dt.Rows.Count > 0)
+                WHERE i.IssuanceID IN (");
+
+            var parameters = new List<SqlParameter>();
+            for (int i = 0; i < keys.Count; i++)
             {
-                DataRow row = dt.Rows[0];
-                return new AuditTrailEntry
+                string paramName = $"@key{i}";
+                sqlBuilder.Append(paramName);
+                if (i < keys.Count - 1)
                 {
+                    sqlBuilder.Append(", ");
+                }
+                parameters.Add(new SqlParameter(paramName, keys[i]));
+            }
+            sqlBuilder.Append(");");
+
+            DataTable dt = await GetDataTableAsync(sqlBuilder.ToString(), parameters);
+
+            foreach (DataRow row in dt.Rows)
+            {
+                results.Add(new AuditTrailEntry
+                {
+                    IssuanceID = (int)row["IssuanceID"], // Add IssuanceID to the DTO
                     RequestNo = row["RequestNo"].ToString(),
                     RequestDate = (DateTime)row["RequestDate"],
                     Product = row["Product"].ToString(),
@@ -362,9 +347,9 @@ namespace IssuanceApp.Data
                     ApprovedBy = row["ApprovedBy"].ToString(),
                     QAAt = row["QAAt"] != DBNull.Value ? (DateTime?)row["QAAt"] : null,
                     QAComment = row["QAComment"].ToString()
-                };
+                });
             }
-            return null;
+            return results;
         }
         #endregion
     }
