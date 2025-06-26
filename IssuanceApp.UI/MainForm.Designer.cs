@@ -56,17 +56,17 @@ namespace DocumentIssuanceApp
             this.grpDocTypeDI = new System.Windows.Forms.GroupBox();
             this.tlpDocTypesAndNumbers = new System.Windows.Forms.TableLayoutPanel();
             this.chkDocTypeBMRDI = new System.Windows.Forms.CheckBox();
-            this.lblBmrDocNo = new System.Windows.Forms.Label();
+            this.lblBmrDocNoDI = new System.Windows.Forms.Label();
             this.txtBmrDocNoDI = new System.Windows.Forms.TextBox();
             this.chkDocTypeBPRDI = new System.Windows.Forms.CheckBox();
             this.txtBprDocNoDI = new System.Windows.Forms.TextBox();
             this.chkDocTypeAppendixDI = new System.Windows.Forms.CheckBox();
-            this.lblAppendixDocNo = new System.Windows.Forms.Label();
+            this.lblAppendixDocNoDI = new System.Windows.Forms.Label();
             this.txtAppendixDocNoDI = new System.Windows.Forms.TextBox();
             this.chkDocTypeAddendumDI = new System.Windows.Forms.CheckBox();
-            this.lblAddendumDocNo = new System.Windows.Forms.Label();
+            this.lblAddendumDocNoDI = new System.Windows.Forms.Label();
             this.txtAddendumDocNoDI = new System.Windows.Forms.TextBox();
-            this.lblBprDocNo = new System.Windows.Forms.Label();
+            this.lblBprDocNoDI = new System.Windows.Forms.Label();
             this.pnlTopRightDI = new System.Windows.Forms.Panel();
             this.tlpTopRightDetailsDI = new System.Windows.Forms.TableLayoutPanel();
             this.lblRequestNoLabelDI = new System.Windows.Forms.Label();
@@ -573,17 +573,17 @@ namespace DocumentIssuanceApp
             this.tlpDocTypesAndNumbers.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 160F));
             this.tlpDocTypesAndNumbers.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tlpDocTypesAndNumbers.Controls.Add(this.chkDocTypeBMRDI, 0, 0);
-            this.tlpDocTypesAndNumbers.Controls.Add(this.lblBmrDocNo, 1, 0);
+            this.tlpDocTypesAndNumbers.Controls.Add(this.lblBmrDocNoDI, 1, 0);
             this.tlpDocTypesAndNumbers.Controls.Add(this.txtBmrDocNoDI, 2, 0);
             this.tlpDocTypesAndNumbers.Controls.Add(this.chkDocTypeBPRDI, 0, 1);
             this.tlpDocTypesAndNumbers.Controls.Add(this.txtBprDocNoDI, 2, 1);
             this.tlpDocTypesAndNumbers.Controls.Add(this.chkDocTypeAppendixDI, 0, 2);
-            this.tlpDocTypesAndNumbers.Controls.Add(this.lblAppendixDocNo, 1, 2);
+            this.tlpDocTypesAndNumbers.Controls.Add(this.lblAppendixDocNoDI, 1, 2);
             this.tlpDocTypesAndNumbers.Controls.Add(this.txtAppendixDocNoDI, 2, 2);
             this.tlpDocTypesAndNumbers.Controls.Add(this.chkDocTypeAddendumDI, 0, 3);
-            this.tlpDocTypesAndNumbers.Controls.Add(this.lblAddendumDocNo, 1, 3);
+            this.tlpDocTypesAndNumbers.Controls.Add(this.lblAddendumDocNoDI, 1, 3);
             this.tlpDocTypesAndNumbers.Controls.Add(this.txtAddendumDocNoDI, 2, 3);
-            this.tlpDocTypesAndNumbers.Controls.Add(this.lblBprDocNo, 1, 1);
+            this.tlpDocTypesAndNumbers.Controls.Add(this.lblBprDocNoDI, 1, 1);
             this.tlpDocTypesAndNumbers.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tlpDocTypesAndNumbers.Location = new System.Drawing.Point(3, 21);
             this.tlpDocTypesAndNumbers.Name = "tlpDocTypesAndNumbers";
@@ -606,16 +606,16 @@ namespace DocumentIssuanceApp
             this.chkDocTypeBMRDI.Text = "BMR";
             this.chkDocTypeBMRDI.UseVisualStyleBackColor = true;
             // 
-            // lblBmrDocNo
+            // lblBmrDocNoDI
             // 
-            this.lblBmrDocNo.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.lblBmrDocNo.AutoSize = true;
-            this.lblBmrDocNo.Location = new System.Drawing.Point(146, 6);
-            this.lblBmrDocNo.Name = "lblBmrDocNo";
-            this.lblBmrDocNo.Size = new System.Drawing.Size(131, 17);
-            this.lblBmrDocNo.TabIndex = 1;
-            this.lblBmrDocNo.Text = "BMR Document No.:";
-            this.lblBmrDocNo.Visible = false;
+            this.lblBmrDocNoDI.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblBmrDocNoDI.AutoSize = true;
+            this.lblBmrDocNoDI.Location = new System.Drawing.Point(146, 6);
+            this.lblBmrDocNoDI.Name = "lblBmrDocNoDI";
+            this.lblBmrDocNoDI.Size = new System.Drawing.Size(131, 17);
+            this.lblBmrDocNoDI.TabIndex = 1;
+            this.lblBmrDocNoDI.Text = "BMR Document No.:";
+            this.lblBmrDocNoDI.Visible = false;
             // 
             // txtBmrDocNoDI
             // 
@@ -659,16 +659,16 @@ namespace DocumentIssuanceApp
             this.chkDocTypeAppendixDI.Text = "Appendix";
             this.chkDocTypeAppendixDI.UseVisualStyleBackColor = true;
             // 
-            // lblAppendixDocNo
+            // lblAppendixDocNoDI
             // 
-            this.lblAppendixDocNo.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.lblAppendixDocNo.AutoSize = true;
-            this.lblAppendixDocNo.Location = new System.Drawing.Point(156, 66);
-            this.lblAppendixDocNo.Name = "lblAppendixDocNo";
-            this.lblAppendixDocNo.Size = new System.Drawing.Size(121, 17);
-            this.lblAppendixDocNo.TabIndex = 7;
-            this.lblAppendixDocNo.Text = "Appendix Doc No.:";
-            this.lblAppendixDocNo.Visible = false;
+            this.lblAppendixDocNoDI.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblAppendixDocNoDI.AutoSize = true;
+            this.lblAppendixDocNoDI.Location = new System.Drawing.Point(156, 66);
+            this.lblAppendixDocNoDI.Name = "lblAppendixDocNoDI";
+            this.lblAppendixDocNoDI.Size = new System.Drawing.Size(121, 17);
+            this.lblAppendixDocNoDI.TabIndex = 7;
+            this.lblAppendixDocNoDI.Text = "Appendix Doc No.:";
+            this.lblAppendixDocNoDI.Visible = false;
             // 
             // txtAppendixDocNoDI
             // 
@@ -691,16 +691,16 @@ namespace DocumentIssuanceApp
             this.chkDocTypeAddendumDI.Text = "Addendum";
             this.chkDocTypeAddendumDI.UseVisualStyleBackColor = true;
             // 
-            // lblAddendumDocNo
+            // lblAddendumDocNoDI
             // 
-            this.lblAddendumDocNo.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.lblAddendumDocNo.AutoSize = true;
-            this.lblAddendumDocNo.Location = new System.Drawing.Point(146, 96);
-            this.lblAddendumDocNo.Name = "lblAddendumDocNo";
-            this.lblAddendumDocNo.Size = new System.Drawing.Size(131, 17);
-            this.lblAddendumDocNo.TabIndex = 10;
-            this.lblAddendumDocNo.Text = "Addendum Doc No.:";
-            this.lblAddendumDocNo.Visible = false;
+            this.lblAddendumDocNoDI.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblAddendumDocNoDI.AutoSize = true;
+            this.lblAddendumDocNoDI.Location = new System.Drawing.Point(146, 96);
+            this.lblAddendumDocNoDI.Name = "lblAddendumDocNoDI";
+            this.lblAddendumDocNoDI.Size = new System.Drawing.Size(131, 17);
+            this.lblAddendumDocNoDI.TabIndex = 10;
+            this.lblAddendumDocNoDI.Text = "Addendum Doc No.:";
+            this.lblAddendumDocNoDI.Visible = false;
             // 
             // txtAddendumDocNoDI
             // 
@@ -712,16 +712,16 @@ namespace DocumentIssuanceApp
             this.txtAddendumDocNoDI.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
             this.txtAddendumDocNoDI.Visible = false;
             // 
-            // lblBprDocNo
+            // lblBprDocNoDI
             // 
-            this.lblBprDocNo.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.lblBprDocNo.AutoSize = true;
-            this.lblBprDocNo.Location = new System.Drawing.Point(150, 36);
-            this.lblBprDocNo.Name = "lblBprDocNo";
-            this.lblBprDocNo.Size = new System.Drawing.Size(127, 17);
-            this.lblBprDocNo.TabIndex = 4;
-            this.lblBprDocNo.Text = "BPR Document No.:";
-            this.lblBprDocNo.Visible = false;
+            this.lblBprDocNoDI.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblBprDocNoDI.AutoSize = true;
+            this.lblBprDocNoDI.Location = new System.Drawing.Point(150, 36);
+            this.lblBprDocNoDI.Name = "lblBprDocNoDI";
+            this.lblBprDocNoDI.Size = new System.Drawing.Size(127, 17);
+            this.lblBprDocNoDI.TabIndex = 4;
+            this.lblBprDocNoDI.Text = "BPR Document No.:";
+            this.lblBprDocNoDI.Visible = false;
             // 
             // pnlTopRightDI
             // 
@@ -2005,7 +2005,7 @@ namespace DocumentIssuanceApp
             this.tlpQaTopControls.Location = new System.Drawing.Point(0, 0);
             this.tlpQaTopControls.Name = "tlpQaTopControls";
             this.tlpQaTopControls.RowCount = 2;
-            this.tlpQaTopControls.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
+            this.tlpQaTopControls.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
             this.tlpQaTopControls.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tlpQaTopControls.Size = new System.Drawing.Size(1287, 244);
             this.tlpQaTopControls.TabIndex = 0;
@@ -2017,7 +2017,7 @@ namespace DocumentIssuanceApp
             this.pnlQaQueueHeader.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlQaQueueHeader.Location = new System.Drawing.Point(3, 3);
             this.pnlQaQueueHeader.Name = "pnlQaQueueHeader";
-            this.pnlQaQueueHeader.Size = new System.Drawing.Size(1281, 29);
+            this.pnlQaQueueHeader.Size = new System.Drawing.Size(1281, 34);
             this.pnlQaQueueHeader.TabIndex = 0;
             // 
             // lblQaQueueTitle
@@ -2025,7 +2025,7 @@ namespace DocumentIssuanceApp
             this.lblQaQueueTitle.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.lblQaQueueTitle.AutoSize = true;
             this.lblQaQueueTitle.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-            this.lblQaQueueTitle.Location = new System.Drawing.Point(5, 4);
+            this.lblQaQueueTitle.Location = new System.Drawing.Point(5, 6);
             this.lblQaQueueTitle.Name = "lblQaQueueTitle";
             this.lblQaQueueTitle.Size = new System.Drawing.Size(229, 21);
             this.lblQaQueueTitle.TabIndex = 0;
@@ -2037,7 +2037,7 @@ namespace DocumentIssuanceApp
             this.btnQaRefreshList.FlatAppearance.BorderSize = 0;
             this.btnQaRefreshList.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnQaRefreshList.Font = new System.Drawing.Font("Segoe UI Semibold", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnQaRefreshList.Location = new System.Drawing.Point(1156, -1);
+            this.btnQaRefreshList.Location = new System.Drawing.Point(1156, 2);
             this.btnQaRefreshList.Name = "btnQaRefreshList";
             this.btnQaRefreshList.Size = new System.Drawing.Size(120, 30);
             this.btnQaRefreshList.TabIndex = 1;
@@ -2069,13 +2069,13 @@ namespace DocumentIssuanceApp
             dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.dgvQaQueue.DefaultCellStyle = dataGridViewCellStyle2;
             this.dgvQaQueue.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgvQaQueue.Location = new System.Drawing.Point(3, 38);
+            this.dgvQaQueue.Location = new System.Drawing.Point(3, 43);
             this.dgvQaQueue.MultiSelect = false;
             this.dgvQaQueue.Name = "dgvQaQueue";
             this.dgvQaQueue.ReadOnly = true;
             this.dgvQaQueue.RowHeadersWidth = 51;
             this.dgvQaQueue.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvQaQueue.Size = new System.Drawing.Size(1281, 203);
+            this.dgvQaQueue.Size = new System.Drawing.Size(1281, 198);
             this.dgvQaQueue.TabIndex = 1;
             // 
             // colQaRequestNo
@@ -3188,7 +3188,6 @@ namespace DocumentIssuanceApp
             this.flpHeader.Padding = new System.Windows.Forms.Padding(0, 5, 10, 5);
             this.flpHeader.Size = new System.Drawing.Size(410, 41);
             this.flpHeader.TabIndex = 0;
-            this.flpHeader.Visible = false;
             // 
             // btnSignOut
             // 
@@ -3571,13 +3570,13 @@ namespace DocumentIssuanceApp
         private System.Windows.Forms.FlowLayoutPanel flpRoleManagementButtons;
         private DocumentIssuanceApp.RoundedButton btnResetPassword;
         private System.Windows.Forms.TableLayoutPanel tlpDocTypesAndNumbers;
-        private System.Windows.Forms.Label lblBmrDocNo;
+        private System.Windows.Forms.Label lblBmrDocNoDI;
         private System.Windows.Forms.TextBox txtBmrDocNoDI;
-        private System.Windows.Forms.Label lblBprDocNo;
+        private System.Windows.Forms.Label lblBprDocNoDI;
         private System.Windows.Forms.TextBox txtBprDocNoDI;
-        private System.Windows.Forms.Label lblAppendixDocNo;
+        private System.Windows.Forms.Label lblAppendixDocNoDI;
         private System.Windows.Forms.TextBox txtAppendixDocNoDI;
-        private System.Windows.Forms.Label lblAddendumDocNo;
+        private System.Windows.Forms.Label lblAddendumDocNoDI;
         private System.Windows.Forms.TextBox txtAddendumDocNoDI;
         private System.Windows.Forms.FlowLayoutPanel flpParentMfgDate;
         private System.Windows.Forms.ComboBox cmbParentMfgMonthDI;
