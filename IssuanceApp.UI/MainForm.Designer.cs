@@ -34,6 +34,7 @@ namespace DocumentIssuanceApp
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -274,11 +275,15 @@ namespace DocumentIssuanceApp
             this.toolStripStatusLabelSpring = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabelDateTime = new System.Windows.Forms.ToolStripStatusLabel();
             this.tlpMasterContainer = new System.Windows.Forms.TableLayoutPanel();
+            this.pnlAppHeader = new System.Windows.Forms.Panel();
+            this.lblAppTitle = new System.Windows.Forms.Label();
             this.flpHeader = new System.Windows.Forms.FlowLayoutPanel();
             this.btnSignOut = new DocumentIssuanceApp.RoundedButton();
             this.lblCurrentUserHeader = new System.Windows.Forms.Label();
             this.pnlMainContainer = new System.Windows.Forms.Panel();
+            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.tlpMasterContainer.SuspendLayout();
+            this.pnlAppHeader.SuspendLayout();
             this.flpHeader.SuspendLayout();
             this.tabControlMain.SuspendLayout();
             this.tabPageLogin.SuspendLayout();
@@ -362,10 +367,10 @@ namespace DocumentIssuanceApp
             this.tabControlMain.Controls.Add(this.tabPageAuditTrail);
             this.tabControlMain.Controls.Add(this.tabPageUsers);
             this.tabControlMain.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControlMain.Location = new System.Drawing.Point(3, 46);
+            this.tabControlMain.Location = new System.Drawing.Point(3, 56);
             this.tabControlMain.Name = "tabControlMain";
             this.tabControlMain.SelectedIndex = 0;
-            this.tabControlMain.Size = new System.Drawing.Size(1342, 625);
+            this.tabControlMain.Size = new System.Drawing.Size(1342, 615);
             this.tabControlMain.TabIndex = 0;
             // 
             // tabPageLogin
@@ -375,7 +380,7 @@ namespace DocumentIssuanceApp
             this.tabPageLogin.Location = new System.Drawing.Point(4, 26);
             this.tabPageLogin.Name = "tabPageLogin";
             this.tabPageLogin.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageLogin.Size = new System.Drawing.Size(1334, 595);
+            this.tabPageLogin.Size = new System.Drawing.Size(1334, 585);
             this.tabPageLogin.TabIndex = 0;
             this.tabPageLogin.Text = "Login";
             this.tabPageLogin.UseVisualStyleBackColor = true;
@@ -394,7 +399,7 @@ namespace DocumentIssuanceApp
             this.tlpLoginMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tlpLoginMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpLoginMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tlpLoginMain.Size = new System.Drawing.Size(1328, 589);
+            this.tlpLoginMain.Size = new System.Drawing.Size(1328, 579);
             this.tlpLoginMain.TabIndex = 1;
             // 
             // panelLoginContainer
@@ -409,7 +414,7 @@ namespace DocumentIssuanceApp
             this.panelLoginContainer.Controls.Add(this.cmbRole);
             this.panelLoginContainer.Controls.Add(this.lblRole);
             this.panelLoginContainer.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-            this.panelLoginContainer.Location = new System.Drawing.Point(419, 180);
+            this.panelLoginContainer.Location = new System.Drawing.Point(419, 175);
             this.panelLoginContainer.Name = "panelLoginContainer";
             this.panelLoginContainer.Padding = new System.Windows.Forms.Padding(20);
             this.panelLoginContainer.Size = new System.Drawing.Size(489, 228);
@@ -489,7 +494,7 @@ namespace DocumentIssuanceApp
             this.tabPageDocumentIssuance.Location = new System.Drawing.Point(4, 26);
             this.tabPageDocumentIssuance.Name = "tabPageDocumentIssuance";
             this.tabPageDocumentIssuance.Padding = new System.Windows.Forms.Padding(10);
-            this.tabPageDocumentIssuance.Size = new System.Drawing.Size(1334, 595);
+            this.tabPageDocumentIssuance.Size = new System.Drawing.Size(1334, 585);
             this.tabPageDocumentIssuance.TabIndex = 1;
             this.tabPageDocumentIssuance.Text = "Document Issuance";
             this.tabPageDocumentIssuance.UseVisualStyleBackColor = true;
@@ -1383,7 +1388,7 @@ namespace DocumentIssuanceApp
             this.tabPageGmOperations.Location = new System.Drawing.Point(4, 26);
             this.tabPageGmOperations.Name = "tabPageGmOperations";
             this.tabPageGmOperations.Padding = new System.Windows.Forms.Padding(10);
-            this.tabPageGmOperations.Size = new System.Drawing.Size(1334, 595);
+            this.tabPageGmOperations.Size = new System.Drawing.Size(1334, 585);
             this.tabPageGmOperations.TabIndex = 2;
             this.tabPageGmOperations.Text = "GM Operations";
             this.tabPageGmOperations.UseVisualStyleBackColor = true;
@@ -1959,7 +1964,7 @@ namespace DocumentIssuanceApp
             this.tabPageQa.Location = new System.Drawing.Point(4, 26);
             this.tabPageQa.Name = "tabPageQa";
             this.tabPageQa.Padding = new System.Windows.Forms.Padding(10);
-            this.tabPageQa.Size = new System.Drawing.Size(1334, 595);
+            this.tabPageQa.Size = new System.Drawing.Size(1334, 585);
             this.tabPageQa.TabIndex = 3;
             this.tabPageQa.Text = "QA";
             this.tabPageQa.UseVisualStyleBackColor = true;
@@ -2646,7 +2651,7 @@ namespace DocumentIssuanceApp
             this.tabPageAuditTrail.Location = new System.Drawing.Point(4, 26);
             this.tabPageAuditTrail.Name = "tabPageAuditTrail";
             this.tabPageAuditTrail.Padding = new System.Windows.Forms.Padding(10);
-            this.tabPageAuditTrail.Size = new System.Drawing.Size(1334, 595);
+            this.tabPageAuditTrail.Size = new System.Drawing.Size(1334, 585);
             this.tabPageAuditTrail.TabIndex = 4;
             this.tabPageAuditTrail.Text = "Audit Trail";
             this.tabPageAuditTrail.UseVisualStyleBackColor = true;
@@ -2665,7 +2670,7 @@ namespace DocumentIssuanceApp
             this.tlpAuditTrailMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpAuditTrailMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tlpAuditTrailMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 45F));
-            this.tlpAuditTrailMain.Size = new System.Drawing.Size(1293, 571);
+            this.tlpAuditTrailMain.Size = new System.Drawing.Size(1293, 561);
             this.tlpAuditTrailMain.TabIndex = 0;
             // 
             // grpAuditFilters
@@ -2854,7 +2859,7 @@ namespace DocumentIssuanceApp
             // 
             this.dgvAuditTrail.AllowUserToAddRows = false;
             this.dgvAuditTrail.AllowUserToDeleteRows = false;
-            this.dgvAuditTrail.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.DisplayedCells;
+            this.dgvAuditTrail.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.dgvAuditTrail.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
@@ -2870,7 +2875,7 @@ namespace DocumentIssuanceApp
             this.dgvAuditTrail.ReadOnly = true;
             this.dgvAuditTrail.RowHeadersWidth = 51;
             this.dgvAuditTrail.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvAuditTrail.Size = new System.Drawing.Size(1287, 406);
+            this.dgvAuditTrail.Size = new System.Drawing.Size(1287, 396);
             this.dgvAuditTrail.TabIndex = 1;
             this.dgvAuditTrail.VirtualMode = true;
             // 
@@ -2879,7 +2884,7 @@ namespace DocumentIssuanceApp
             this.flpAuditExportButtons.Controls.Add(this.btnExportToCsv);
             this.flpAuditExportButtons.Controls.Add(this.btnExportToExcel);
             this.flpAuditExportButtons.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flpAuditExportButtons.Location = new System.Drawing.Point(3, 529);
+            this.flpAuditExportButtons.Location = new System.Drawing.Point(3, 519);
             this.flpAuditExportButtons.Name = "flpAuditExportButtons";
             this.flpAuditExportButtons.Padding = new System.Windows.Forms.Padding(5, 0, 0, 0);
             this.flpAuditExportButtons.Size = new System.Drawing.Size(1287, 39);
@@ -2918,7 +2923,7 @@ namespace DocumentIssuanceApp
             this.tabPageUsers.Location = new System.Drawing.Point(4, 26);
             this.tabPageUsers.Name = "tabPageUsers";
             this.tabPageUsers.Padding = new System.Windows.Forms.Padding(10);
-            this.tabPageUsers.Size = new System.Drawing.Size(1334, 595);
+            this.tabPageUsers.Size = new System.Drawing.Size(1334, 585);
             this.tabPageUsers.TabIndex = 5;
             this.tabPageUsers.Text = "Users";
             this.tabPageUsers.UseVisualStyleBackColor = true;
@@ -2940,7 +2945,7 @@ namespace DocumentIssuanceApp
             // 
             this.scUsersMain.Panel2.Controls.Add(this.grpManageRole);
             this.scUsersMain.Panel2.Padding = new System.Windows.Forms.Padding(5);
-            this.scUsersMain.Size = new System.Drawing.Size(1293, 571);
+            this.scUsersMain.Size = new System.Drawing.Size(1293, 561);
             this.scUsersMain.SplitterDistance = 450;
             this.scUsersMain.SplitterWidth = 1;
             this.scUsersMain.TabIndex = 0;
@@ -2970,7 +2975,7 @@ namespace DocumentIssuanceApp
             this.dgvUserRoles.ReadOnly = true;
             this.dgvUserRoles.RowHeadersWidth = 51;
             this.dgvUserRoles.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvUserRoles.Size = new System.Drawing.Size(440, 526);
+            this.dgvUserRoles.Size = new System.Drawing.Size(440, 516);
             this.dgvUserRoles.TabIndex = 0;
             // 
             // colUserRoleId
@@ -3037,7 +3042,7 @@ namespace DocumentIssuanceApp
             this.grpManageRole.Location = new System.Drawing.Point(5, 5);
             this.grpManageRole.Name = "grpManageRole";
             this.grpManageRole.Padding = new System.Windows.Forms.Padding(10);
-            this.grpManageRole.Size = new System.Drawing.Size(829, 561);
+            this.grpManageRole.Size = new System.Drawing.Size(829, 551);
             this.grpManageRole.TabIndex = 0;
             this.grpManageRole.TabStop = false;
             this.grpManageRole.Text = "Manage Role";
@@ -3056,7 +3061,7 @@ namespace DocumentIssuanceApp
             this.tlpManageRole.RowCount = 2;
             this.tlpManageRole.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
             this.tlpManageRole.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpManageRole.Size = new System.Drawing.Size(809, 523);
+            this.tlpManageRole.Size = new System.Drawing.Size(809, 513);
             this.tlpManageRole.TabIndex = 0;
             // 
             // lblRoleNameManage
@@ -3086,7 +3091,7 @@ namespace DocumentIssuanceApp
             this.flpRoleManagementButtons.Location = new System.Drawing.Point(3, 38);
             this.flpRoleManagementButtons.Name = "flpRoleManagementButtons";
             this.flpRoleManagementButtons.Padding = new System.Windows.Forms.Padding(0, 5, 0, 0);
-            this.flpRoleManagementButtons.Size = new System.Drawing.Size(803, 482);
+            this.flpRoleManagementButtons.Size = new System.Drawing.Size(803, 472);
             this.flpRoleManagementButtons.TabIndex = 2;
             // 
             // btnResetPassword
@@ -3138,7 +3143,7 @@ namespace DocumentIssuanceApp
             // 
             this.tlpMasterContainer.ColumnCount = 1;
             this.tlpMasterContainer.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpMasterContainer.Controls.Add(this.flpHeader, 0, 0);
+            this.tlpMasterContainer.Controls.Add(this.pnlAppHeader, 0, 0);
             this.tlpMasterContainer.Controls.Add(this.tabControlMain, 0, 1);
             this.tlpMasterContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tlpMasterContainer.Location = new System.Drawing.Point(0, 0);
@@ -3149,17 +3154,39 @@ namespace DocumentIssuanceApp
             this.tlpMasterContainer.Size = new System.Drawing.Size(1348, 674);
             this.tlpMasterContainer.TabIndex = 2;
             // 
+            // pnlAppHeader
+            // 
+            this.pnlAppHeader.AutoSize = true;
+            this.pnlAppHeader.Controls.Add(this.lblAppTitle);
+            this.pnlAppHeader.Controls.Add(this.flpHeader);
+            this.pnlAppHeader.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlAppHeader.Location = new System.Drawing.Point(3, 3);
+            this.pnlAppHeader.Name = "pnlAppHeader";
+            this.pnlAppHeader.Size = new System.Drawing.Size(1342, 47);
+            this.pnlAppHeader.TabIndex = 1;
+            // 
+            // lblAppTitle
+            // 
+            this.lblAppTitle.AutoSize = true;
+            this.lblAppTitle.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblAppTitle.ForeColor = System.Drawing.Color.White;
+            this.lblAppTitle.Location = new System.Drawing.Point(12, 11);
+            this.lblAppTitle.Name = "lblAppTitle";
+            this.lblAppTitle.Size = new System.Drawing.Size(254, 25);
+            this.lblAppTitle.TabIndex = 102;
+            this.lblAppTitle.Text = "Document Issuance System";
+            // 
             // flpHeader
             // 
+            this.flpHeader.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.flpHeader.AutoSize = true;
             this.flpHeader.Controls.Add(this.btnSignOut);
             this.flpHeader.Controls.Add(this.lblCurrentUserHeader);
-            this.flpHeader.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flpHeader.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
-            this.flpHeader.Location = new System.Drawing.Point(3, 3);
+            this.flpHeader.Location = new System.Drawing.Point(929, 3);
             this.flpHeader.Name = "flpHeader";
             this.flpHeader.Padding = new System.Windows.Forms.Padding(0, 5, 10, 5);
-            this.flpHeader.Size = new System.Drawing.Size(1342, 37);
+            this.flpHeader.Size = new System.Drawing.Size(410, 41);
             this.flpHeader.TabIndex = 0;
             this.flpHeader.Visible = false;
             // 
@@ -3199,6 +3226,12 @@ namespace DocumentIssuanceApp
             this.pnlMainContainer.Size = new System.Drawing.Size(1368, 694);
             this.pnlMainContainer.TabIndex = 3;
             // 
+            // imageList1
+            // 
+            this.imageList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
+            this.imageList1.ImageSize = new System.Drawing.Size(16, 16);
+            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
@@ -3213,6 +3246,8 @@ namespace DocumentIssuanceApp
             this.Text = "Document Issuance App (BMR/BPR - Requests)";
             this.tlpMasterContainer.ResumeLayout(false);
             this.tlpMasterContainer.PerformLayout();
+            this.pnlAppHeader.ResumeLayout(false);
+            this.pnlAppHeader.PerformLayout();
             this.flpHeader.ResumeLayout(false);
             this.flpHeader.PerformLayout();
             this.tabControlMain.ResumeLayout(false);
@@ -3565,9 +3600,12 @@ namespace DocumentIssuanceApp
         private System.Windows.Forms.TableLayoutPanel tlpTopRightDetailsDI;
         private System.Windows.Forms.FlowLayoutPanel flpActionButtonsDI;
         private TableLayoutPanel tlpMasterContainer;
+        private Panel pnlAppHeader;
+        private Label lblAppTitle;
         private FlowLayoutPanel flpHeader;
         private DocumentIssuanceApp.RoundedButton btnSignOut;
         private Label lblCurrentUserHeader;
         private Panel pnlMainContainer;
+        private ImageList imageList1;
     }
 }

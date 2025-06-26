@@ -159,7 +159,7 @@ namespace DocumentIssuanceApp
                 loggedInRole = null;
                 lblLoginStatus.Text = "You have been signed out.";
                 lblLoginStatus.ForeColor = SystemColors.ControlText;
-                flpHeader.Visible = false; // Hide the header
+                pnlAppHeader.Visible = false; // Hide the header
                 SetupStatusBar(); // Reset status bar text
 
                 // Reset UI to login screen
@@ -257,7 +257,9 @@ namespace DocumentIssuanceApp
                     toolStripStatusLabelUser.Text = $"User: {loggedInUserName} ({loggedInRole})";
 
                     lblCurrentUserHeader.Text = $"Logged in as: {loggedInUserName} ({loggedInRole})";
-                    flpHeader.Visible = true; // Show the new header
+                    lblCurrentUserHeader.ForeColor = _headerTextColor;
+                    pnlAppHeader.Visible = true; // Show the new header
+                    flpHeader.Visible = true;    // This makes the controls INSIDE the blue bar visible
 
                     lblLoginStatus.Text = $"Login successful as {loggedInRole}.";
                     lblLoginStatus.ForeColor = _successColor;
@@ -271,7 +273,7 @@ namespace DocumentIssuanceApp
                 }
                 else
                 {
-                    flpHeader.Visible = false;
+                    pnlAppHeader.Visible = false;
                     lblLoginStatus.Text = "Invalid role or password.";
                     lblLoginStatus.ForeColor = _dangerColor;
                     loggedInRole = null;
@@ -374,6 +376,7 @@ namespace DocumentIssuanceApp
         private static readonly Color _gridSelectionBackColor = Color.FromArgb(188, 220, 244);
         private static readonly Color _gridSelectionForeColor = Color.Black;
         private static readonly Color _appHeaderColor = Color.FromArgb(65, 84, 110);
+        private static readonly Color _gridAltRowColor = Color.FromArgb(248, 249, 250);
 
         /// <summary>
         /// Applies the consistent theme across the entire application.
@@ -381,6 +384,10 @@ namespace DocumentIssuanceApp
         /// </summary>
         private void ApplyPharmaTheme()
         {
+            // Style the main application header
+            pnlAppHeader.BackColor = _appHeaderColor;
+            pnlAppHeader.Visible = false; // Initially hidden, shown on login
+
             // Style all tabs
             foreach (TabPage tab in tabControlMain.TabPages)
             {
@@ -424,6 +431,17 @@ namespace DocumentIssuanceApp
             StyleSecondaryButton(btnExportToCsv);
             StyleSecondaryButton(btnExportToExcel);
 
+            // Assign Icons to Buttons
+            // NOTE: You must add images to the 'imageList1' control in the designer for these to appear.
+            // Give them Key names like "Approve", "Reject", "Refresh", etc.
+            btnGmAuthorize.ImageList = imageList1;
+            btnGmAuthorize.ImageKey = "Approve";
+            btnGmReject.ImageList = imageList1;
+            btnGmReject.ImageKey = "Reject";
+            btnGmRefreshList.ImageList = imageList1;
+            btnGmRefreshList.ImageKey = "Refresh";
+            // ... repeat for other buttons as desired ...
+
             StyleDataGridView(dgvGmQueue);
             StyleDataGridView(dgvQaQueue);
             StyleDataGridView(dgvAuditTrail);
@@ -446,6 +464,10 @@ namespace DocumentIssuanceApp
             btn.ForeColor = _headerTextColor;
             btn.FlatAppearance.MouseOverBackColor = hoverColor; // Set the hover color
             btn.Font = new Font(btn.Font, FontStyle.Bold);
+            btn.ImageAlign = ContentAlignment.MiddleLeft;
+            btn.TextAlign = ContentAlignment.MiddleCenter;
+            btn.TextImageRelation = TextImageRelation.ImageBeforeText;
+            btn.Padding = new Padding(5, 0, 5, 0);
         }
 
         private void StyleSuccessButton(Button btn)
@@ -471,28 +493,25 @@ namespace DocumentIssuanceApp
         private void StyleDataGridView(DataGridView dgv)
         {
             dgv.EnableHeadersVisualStyles = false;
-            dgv.BorderStyle = BorderStyle.Fixed3D;
+            dgv.BorderStyle = BorderStyle.None;
             dgv.BackgroundColor = _formBackColor;
+            dgv.RowHeadersVisible = false;
 
             // Header Style (using the original muted color for a professional look)
             dgv.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
             dgv.ColumnHeadersDefaultCellStyle.BackColor = _appHeaderColor;
             dgv.ColumnHeadersDefaultCellStyle.ForeColor = _headerTextColor;
             dgv.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 10, FontStyle.Bold);
+            dgv.ColumnHeadersDefaultCellStyle.Padding = new Padding(5);
 
             // Row Styles
             dgv.DefaultCellStyle.Font = new Font("Segoe UI", 9.5f);
             dgv.DefaultCellStyle.BackColor = Color.White;
-            dgv.AlternatingRowsDefaultCellStyle.BackColor = Color.White;
+            dgv.DefaultCellStyle.Padding = new Padding(5);
+            dgv.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
+            dgv.AlternatingRowsDefaultCellStyle.BackColor = _gridAltRowColor;
             dgv.RowsDefaultCellStyle.SelectionBackColor = _gridSelectionBackColor;
             dgv.RowsDefaultCellStyle.SelectionForeColor = _gridSelectionForeColor;
-
-            // Special styling for Audit Trail to look like Excel
-            if (dgv.Name == nameof(dgvAuditTrail))
-            {
-                dgv.GridColor = Color.DarkGray;
-                dgv.CellBorderStyle = DataGridViewCellBorderStyle.Single;
-            }
         }
 
         #endregion
