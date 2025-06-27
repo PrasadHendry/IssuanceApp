@@ -1,47 +1,46 @@
-﻿using System;
+﻿// MainForm.cs
+
+using IssuanceApp.Data;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Configuration; // Required for App.config
+using System.Configuration;
 using System.Data;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Globalization;
 using System.Linq;
 using System.Security.Principal;
-using System.Threading.Tasks; // Required for async
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
-using IssuanceApp.Data;     // Required to reference the Data project
+using UiTimer = System.Windows.Forms.Timer;
 
 namespace DocumentIssuanceApp
 {
     public partial class MainForm : Form
     {
         #region Fields
-        // A single, private instance of the repository for the entire form's lifetime.
         private readonly IssuanceRepository _repository;
-        private Timer statusTimer;
+        private UiTimer statusTimer;
         private string loggedInRole = null;
         private string loggedInUserName = null;
-
         private BindingSource userRolesBindingSource;
-
-        // --- UI State Management ---
         private List<TabPage> allTabPages;
-
-        // Flags for lazy loading tab data to improve performance.
         private bool _auditDataLoaded = false;
         private bool _usersDataLoaded = false;
 
         // --- Fields for HIGH-PERFORMANCE Audit Trail Virtual Mode ---
-        private List<int> _auditTrailKeyCache; // The master list of all primary keys for the current filter
-        private Dictionary<int, AuditTrailEntry> _auditTrailPageCache; // Caches pages of full AuditTrailEntry objects
-        private HashSet<int> _pagesBeingFetched; // Tracks which pages are currently being fetched to prevent duplicate calls
-        private const int AuditPageSize = 50; // How many rows to fetch in a single background database call
+        private List<int> _auditTrailKeyCache;
+        private Dictionary<int, AuditTrailEntry> _auditTrailPageCache;
+        private HashSet<int> _pagesBeingFetched;
+        private const int AuditPageSize = 50;
         private SortOrder _auditSortOrder = SortOrder.None;
         private string _auditSortColumn = string.Empty;
+
+        // --- CancellationTokenSource for robust async operations ---
+        private CancellationTokenSource _dataLoadCts = new CancellationTokenSource();
         #endregion
 
-        #region Constructor and Form Load
+        #region Constructor and Form Lifecycle
         public MainForm()
         {
             InitializeComponent();
@@ -65,7 +64,7 @@ namespace DocumentIssuanceApp
             ApplyPharmaTheme();
 
             this.Text = "Document Issuance System";
-            statusTimer = new Timer { Interval = 1000 };
+            statusTimer = new UiTimer { Interval = 1000 };
             statusTimer.Tick += StatusTimer_Tick;
             statusTimer.Start();
 
@@ -85,6 +84,17 @@ namespace DocumentIssuanceApp
             this.WindowState = FormWindowState.Maximized;
         }
 
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            _dataLoadCts.Cancel();
+            if (statusTimer != null)
+            {
+                statusTimer.Stop();
+                statusTimer.Dispose();
+            }
+            base.OnFormClosing(e);
+        }
+
         private void EnableDoubleBuffering()
         {
             if (dgvGmQueue != null)
@@ -94,26 +104,28 @@ namespace DocumentIssuanceApp
             if (dgvAuditTrail != null)
                 typeof(DataGridView).InvokeMember("DoubleBuffered", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.SetProperty, null, dgvAuditTrail, new object[] { true });
         }
+        #endregion
 
+        #region Tab and State Management
         private async void TabControlMain_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (tabControlMain.SelectedTab == null) return;
             string selectedTabName = tabControlMain.SelectedTab.Name;
 
-            if (selectedTabName == nameof(tabPageGmOperations))
+            if (selectedTabName == ControlNames.TabPageGmOperations)
             {
                 await LoadGmPendingQueueAsync();
             }
-            else if (selectedTabName == nameof(tabPageQa))
+            else if (selectedTabName == ControlNames.TabPageQA)
             {
                 await LoadQaPendingQueueAsync();
             }
-            else if (selectedTabName == nameof(tabPageAuditTrail) && !_auditDataLoaded)
+            else if (selectedTabName == ControlNames.TabPageAuditTrail && !_auditDataLoaded)
             {
                 await LoadAuditTrailDataAsync();
                 _auditDataLoaded = true;
             }
-            else if (selectedTabName == nameof(tabPageUsers) && !_usersDataLoaded)
+            else if (selectedTabName == ControlNames.TabPageUsers && !_usersDataLoaded)
             {
                 await LoadUserRolesAsync();
                 _usersDataLoaded = true;
@@ -129,32 +141,12 @@ namespace DocumentIssuanceApp
             }
         }
 
-        private void BtnSignOut_Click(object sender, EventArgs e)
-        {
-            if (MessageBox.Show("Are you sure you want to sign out?", "Confirm Sign Out", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-            {
-                loggedInRole = null;
-                lblLoginStatus.Text = "You have been signed out.";
-                lblLoginStatus.ForeColor = SystemColors.ControlText;
-                pnlAppHeader.Visible = false;
-                SetupStatusBar();
-
-                EnableTabsBasedOnRole(null);
-                var loginTab = allTabPages.FirstOrDefault(t => t.Name == nameof(tabPageLogin));
-                if (loginTab != null)
-                {
-                    tabControlMain.SelectedTab = loginTab;
-                }
-            }
-        }
-
         private void SetupStatusBar()
         {
             string osUserDisplay = "Unknown User";
             try
             {
-                WindowsIdentity currentUser = WindowsIdentity.GetCurrent();
-                if (currentUser != null && !string.IsNullOrEmpty(currentUser.Name))
+                using (var currentUser = WindowsIdentity.GetCurrent())
                 {
                     string fullUserName = currentUser.Name;
                     osUserDisplay = fullUserName.Split('\\').LastOrDefault() ?? fullUserName;
@@ -173,19 +165,30 @@ namespace DocumentIssuanceApp
         {
             toolStripStatusLabelDateTime.Text = DateTime.Now.ToString("dd-MMM-yyyy hh:mm tt");
         }
-
-        protected override void OnFormClosing(FormClosingEventArgs e)
-        {
-            if (statusTimer != null)
-            {
-                statusTimer.Stop();
-                statusTimer.Dispose();
-            }
-            base.OnFormClosing(e);
-        }
         #endregion
 
         #region Login and Role Management
+        private void BtnSignOut_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Are you sure you want to sign out?", "Confirm Sign Out", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                loggedInRole = null;
+                lblLoginStatus.Text = "You have been signed out.";
+                lblLoginStatus.ForeColor = SystemColors.ControlText;
+                pnlAppHeader.Visible = false;
+                SetupStatusBar();
+                _auditDataLoaded = false;
+                _usersDataLoaded = false;
+
+                EnableTabsBasedOnRole(null);
+                var loginTab = allTabPages.FirstOrDefault(t => t.Name == ControlNames.TabPageLogin);
+                if (loginTab != null)
+                {
+                    tabControlMain.SelectedTab = loginTab;
+                }
+            }
+        }
+
         private async void InitializeLoginTab()
         {
             if (cmbRole == null || txtPassword == null || btnLogin == null) return;
@@ -196,7 +199,7 @@ namespace DocumentIssuanceApp
             {
                 List<string> roleNames = await _repository.GetRoleNamesAsync();
                 cmbRole.Items.AddRange(roleNames.ToArray());
-                if (cmbRole.Items.Contains("Requester")) cmbRole.SelectedItem = "Requester";
+                if (cmbRole.Items.Contains(AppConstants.RoleRequester)) cmbRole.SelectedItem = AppConstants.RoleRequester;
                 else if (cmbRole.Items.Count > 0) cmbRole.SelectedIndex = 0;
                 btnLogin.Enabled = true;
             }
@@ -274,24 +277,24 @@ namespace DocumentIssuanceApp
 
             if (!isLoggedIn)
             {
-                var loginTab = allTabPages.FirstOrDefault(t => t.Name == nameof(tabPageLogin));
+                var loginTab = allTabPages.FirstOrDefault(t => t.Name == ControlNames.TabPageLogin);
                 if (loginTab != null) tabControlMain.TabPages.Add(loginTab);
                 return;
             }
 
-            bool isRequester = (role == "Requester");
-            bool isGm = (role == "GM_Operations");
-            bool isQa = (role == "QA");
-            bool isAdmin = (role == "Admin");
+            bool isRequester = (role == AppConstants.RoleRequester);
+            bool isGm = (role == AppConstants.RoleGmOperations);
+            bool isQa = (role == AppConstants.RoleQA);
+            bool isAdmin = (role == AppConstants.RoleAdmin);
 
             foreach (var tab in allTabPages)
             {
                 bool shouldShowTab =
-                    (tab.Name == nameof(tabPageDocumentIssuance) && (isRequester || isAdmin)) ||
-                    (tab.Name == nameof(tabPageGmOperations) && (isGm || isAdmin)) ||
-                    (tab.Name == nameof(tabPageQa) && (isQa || isAdmin)) ||
-                    (tab.Name == nameof(tabPageUsers) && isAdmin) ||
-                    (tab.Name == nameof(tabPageAuditTrail));
+                    (tab.Name == ControlNames.TabPageDocumentIssuance && (isRequester || isAdmin)) ||
+                    (tab.Name == ControlNames.TabPageGmOperations && (isGm || isAdmin)) ||
+                    (tab.Name == ControlNames.TabPageQA && (isQa || isAdmin)) ||
+                    (tab.Name == ControlNames.TabPageUsers && isAdmin) ||
+                    (tab.Name == ControlNames.TabPageAuditTrail);
 
                 if (shouldShowTab)
                 {
@@ -305,11 +308,11 @@ namespace DocumentIssuanceApp
             TabPage targetTab = null;
             switch (role)
             {
-                case "Requester": targetTab = allTabPages.FirstOrDefault(t => t.Name == nameof(tabPageDocumentIssuance)); break;
-                case "GM_Operations": targetTab = allTabPages.FirstOrDefault(t => t.Name == nameof(tabPageGmOperations)); break;
-                case "QA": targetTab = allTabPages.FirstOrDefault(t => t.Name == nameof(tabPageQa)); break;
-                case "Admin": targetTab = allTabPages.FirstOrDefault(t => t.Name == nameof(tabPageUsers)); break;
-                default: targetTab = allTabPages.FirstOrDefault(t => t.Name == nameof(tabPageLogin)); break;
+                case AppConstants.RoleRequester: targetTab = allTabPages.FirstOrDefault(t => t.Name == ControlNames.TabPageDocumentIssuance); break;
+                case AppConstants.RoleGmOperations: targetTab = allTabPages.FirstOrDefault(t => t.Name == ControlNames.TabPageGmOperations); break;
+                case AppConstants.RoleQA: targetTab = allTabPages.FirstOrDefault(t => t.Name == ControlNames.TabPageQA); break;
+                case AppConstants.RoleAdmin: targetTab = allTabPages.FirstOrDefault(t => t.Name == ControlNames.TabPageUsers); break;
+                default: targetTab = allTabPages.FirstOrDefault(t => t.Name == ControlNames.TabPageLogin); break;
             }
 
             if (targetTab != null && tabControlMain.TabPages.Contains(targetTab))
@@ -394,7 +397,7 @@ namespace DocumentIssuanceApp
             {
                 roundedBtn.CornerRadius = 8;
             }
-            btn.FlatStyle = FlatStyle.Flat;
+            btn.FlatStyle = FlatStyle.Popup;
             btn.FlatAppearance.BorderSize = 0;
             btn.BackColor = backColor;
             btn.ForeColor = _headerTextColor;
@@ -738,8 +741,8 @@ namespace DocumentIssuanceApp
             txtGmComment.Clear();
         }
 
-        private void BtnGmAuthorize_Click(object sender, EventArgs e) => ProcessGmActionAsync("Authorized", false);
-        private void BtnGmReject_Click(object sender, EventArgs e) => ProcessGmActionAsync("Rejected", true);
+        private void BtnGmAuthorize_Click(object sender, EventArgs e) => ProcessGmActionAsync(AppConstants.ActionAuthorized, false);
+        private void BtnGmReject_Click(object sender, EventArgs e) => ProcessGmActionAsync(AppConstants.ActionRejected, true);
 
         private async void ProcessGmActionAsync(string action, bool commentsMandatory)
         {
@@ -893,8 +896,8 @@ namespace DocumentIssuanceApp
             numQaPrintCount.Value = 1;
         }
 
-        private void BtnQaApprove_Click(object sender, EventArgs e) => ProcessQaActionAsync("Approved", false);
-        private void BtnQaReject_Click(object sender, EventArgs e) => ProcessQaActionAsync("Rejected", true);
+        private void BtnQaApprove_Click(object sender, EventArgs e) => ProcessQaActionAsync(AppConstants.ActionApproved, false);
+        private void BtnQaReject_Click(object sender, EventArgs e) => ProcessQaActionAsync(AppConstants.ActionRejected, true);
 
         private async void ProcessQaActionAsync(string action, bool commentsMandatory)
         {
@@ -911,7 +914,7 @@ namespace DocumentIssuanceApp
             }
             string requestNo = txtQaDetailRequestNo.Text;
             int printCount = (int)numQaPrintCount.Value;
-            string message = action == "Approved"
+            string message = action == AppConstants.ActionApproved
                 ? $"Are you sure you want to approve request '{requestNo}'?\nPrint Count: {printCount}"
                 : $"Are you sure you want to reject request '{requestNo}'?";
 
@@ -924,7 +927,7 @@ namespace DocumentIssuanceApp
                     bool success = await _repository.UpdateQaActionAsync(requestNo, action, txtQaComment.Text, loggedInUserName);
                     if (success)
                     {
-                        string successMessage = action == "Approved"
+                        string successMessage = action == AppConstants.ActionApproved
                             ? $"Request '{requestNo}' approved successfully. Printed {printCount} copies."
                             : $"Request '{requestNo}' rejected successfully.";
                         MessageBox.Show(successMessage, "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -995,6 +998,10 @@ namespace DocumentIssuanceApp
 
         private async Task LoadAuditTrailDataAsync()
         {
+            _dataLoadCts.Cancel();
+            _dataLoadCts = new CancellationTokenSource();
+            var token = _dataLoadCts.Token;
+
             this.Cursor = Cursors.WaitCursor;
             btnApplyAuditFilter.Enabled = btnClearAuditFilters.Enabled = btnRefreshAuditList.Enabled = false;
             try
@@ -1012,14 +1019,23 @@ namespace DocumentIssuanceApp
 
                 _auditTrailKeyCache = await _repository.GetAuditTrailKeysAsync(
                     dtpAuditFrom.Value, dtpAuditTo.Value, cmbAuditStatus.SelectedItem.ToString(),
-                    txtAuditRequestNo.Text, txtAuditProduct.Text, dbSortColumn, _auditSortOrder);
+                    txtAuditRequestNo.Text, txtAuditProduct.Text, dbSortColumn, _auditSortOrder, token);
+
+                token.ThrowIfCancellationRequested();
 
                 dgvAuditTrail.RowCount = 0;
                 dgvAuditTrail.RowCount = _auditTrailKeyCache.Count;
             }
+            catch (OperationCanceledException)
+            {
+                Console.WriteLine("Audit trail load was cancelled by a new request.");
+            }
             catch (Exception ex)
             {
-                MessageBox.Show("Failed to load audit trail: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                if (!token.IsCancellationRequested)
+                {
+                    MessageBox.Show("Failed to load audit trail: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
             finally
             {
@@ -1060,12 +1076,15 @@ namespace DocumentIssuanceApp
             else
             {
                 e.Value = "Loading...";
-                FetchAuditPage(e.RowIndex);
+                FetchAuditPage(e.RowIndex, _dataLoadCts.Token);
             }
         }
 
-        private async void FetchAuditPage(int rowIndex)
+        private async void FetchAuditPage(int rowIndex, CancellationToken token)
         {
+            // Early exit if the operation has already been cancelled.
+            if (token.IsCancellationRequested) return;
+
             int pageNumber = rowIndex / AuditPageSize;
             if (_pagesBeingFetched.Contains(pageNumber)) return;
 
@@ -1073,34 +1092,64 @@ namespace DocumentIssuanceApp
             {
                 _pagesBeingFetched.Add(pageNumber);
 
+                // Check for cancellation again before accessing the collection.
+                if (token.IsCancellationRequested) return;
+
                 int start = pageNumber * AuditPageSize;
-                int end = Math.Min(start + AuditPageSize, _auditTrailKeyCache.Count);
-                if (start >= end) return;
+                // Use a local variable for count to prevent changes during calculation.
+                int currentCacheCount = _auditTrailKeyCache.Count;
+                int end = Math.Min(start + AuditPageSize, currentCacheCount);
+
+                // This check is crucial to prevent the GetRange exception if the collection was cleared.
+                if (start >= currentCacheCount) return;
+
                 var keysToFetch = _auditTrailKeyCache.GetRange(start, end - start);
 
-                var entries = await _repository.GetAuditTrailEntriesAsync(keysToFetch);
+                var entries = await _repository.GetAuditTrailEntriesAsync(keysToFetch, token);
+                token.ThrowIfCancellationRequested();
+
                 var entryDict = entries.ToDictionary(entry => entry.IssuanceID);
 
-                if (dgvAuditTrail.IsDisposed) return;
+                if (dgvAuditTrail.IsDisposed || token.IsCancellationRequested) return;
+
                 dgvAuditTrail.BeginInvoke(new Action(() =>
                 {
+                    // Final check before updating the UI. The state could have changed
+                    // between the await and this delegate running.
+                    if (token.IsCancellationRequested) return;
+
                     for (int i = start; i < end; i++)
                     {
-                        var key = _auditTrailKeyCache[i];
-                        if (entryDict.ContainsKey(key))
+                        // THE CRITICAL FIX: Ensure the index is still valid for the *current* cache.
+                        if (i < _auditTrailKeyCache.Count)
                         {
-                            _auditTrailPageCache[i] = entryDict[key];
+                            var key = _auditTrailKeyCache[i];
+                            if (entryDict.ContainsKey(key))
+                            {
+                                _auditTrailPageCache[i] = entryDict[key];
+                            }
                         }
                     }
+                    // Invalidate the visible rows within the fetched page.
                     for (int i = start; i < end; i++)
                     {
                         if (i < dgvAuditTrail.RowCount) dgvAuditTrail.InvalidateRow(i);
                     }
                 }));
             }
+            catch (OperationCanceledException)
+            {
+                Console.WriteLine($"Fetch for audit page {pageNumber} was cancelled.");
+            }
+            catch (ArgumentOutOfRangeException ex)
+            {
+                // This will gracefully handle the race condition if it still occurs, preventing a crash.
+                Console.WriteLine($"Handled race condition in FetchAuditPage for page {pageNumber}: {ex.Message}");
+            }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error fetching audit page {pageNumber}: {ex.Message}");
+                if (!token.IsCancellationRequested)
+                    Console.WriteLine($"Error fetching audit page {pageNumber}: {ex.Message}");
             }
             finally
             {
@@ -1181,15 +1230,16 @@ namespace DocumentIssuanceApp
             string roleName = txtRoleNameManage.Text;
             if (MessageBox.Show($"Are you sure you want to reset the password for the '{roleName}' role?", "Confirm Password Reset", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
+                // This should prompt for a new password and use a secure hashing library.
                 string newPassword = "Password123";
-                string newPasswordHash = newPassword;
+                string newPasswordHash = newPassword; // Replace with: BCrypt.Net.BCrypt.HashPassword(newPassword);
 
                 btnResetPassword.Enabled = false;
                 this.Cursor = Cursors.WaitCursor;
                 try
                 {
                     if (await _repository.ResetUserPasswordAsync(roleName, newPasswordHash))
-                        MessageBox.Show($"Password for role '{roleName}' has been reset to '{newPassword}'.", "Password Reset", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show($"Password for role '{roleName}' has been reset to '{newPassword}'.\nThis is a temporary password.", "Password Reset", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     else
                         MessageBox.Show("Failed to reset password. The role may no longer exist.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
