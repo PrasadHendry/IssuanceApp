@@ -1039,9 +1039,14 @@ namespace DocumentIssuanceApp
             }
             finally
             {
-                this.Cursor = Cursors.Default;
-                btnApplyAuditFilter.Enabled = btnClearAuditFilters.Enabled = btnRefreshAuditList.Enabled = true;
+
+                if (!token.IsCancellationRequested)
+                {
+                    this.Cursor = Cursors.Default;
+                    btnApplyAuditFilter.Enabled = btnClearAuditFilters.Enabled = btnRefreshAuditList.Enabled = true;
+                }
             }
+
         }
 
         private void DgvAuditTrail_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
