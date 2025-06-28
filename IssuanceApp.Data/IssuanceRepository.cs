@@ -174,7 +174,7 @@ namespace IssuanceApp.Data
             string sql = @"
                 SELECT i.RequestNo, i.RequestDate, i.Product, i.DocumentNo, t.PreparedBy, t.RequestedAt
                 FROM dbo.Doc_Issuance AS i JOIN dbo.Issuance_Tracker AS t ON i.IssuanceID = t.IssuanceID
-                WHERE t.GmOperationsAction IS NULL ORDER BY i.RequestDate ASC;";
+                WHERE t.GmOperationsAction IS NULL ORDER BY i.RequestNo DESC;";
             return GetDataTableAsync(sql);
         }
 
@@ -183,7 +183,7 @@ namespace IssuanceApp.Data
             string sql = @"
                 SELECT i.RequestNo, i.RequestDate, i.Product, i.DocumentNo, t.PreparedBy, t.AuthorizedBy, t.GmOperationsAt AS GmActionAt
                 FROM dbo.Doc_Issuance AS i JOIN dbo.Issuance_Tracker AS t ON i.IssuanceID = t.IssuanceID
-                WHERE t.GmOperationsAction = @Action AND t.QAAction IS NULL ORDER BY i.RequestDate ASC;";
+                WHERE t.GmOperationsAction = @Action AND t.QAAction IS NULL ORDER BY i.RequestNo DESC;";
             var parameters = new List<SqlParameter> { new SqlParameter("@Action", AppConstants.ActionAuthorized) };
             return GetDataTableAsync(sql, parameters);
         }
@@ -275,14 +275,15 @@ namespace IssuanceApp.Data
                 parameters.Add(new SqlParameter("@Product", $"%{product.Trim()}%"));
             }
 
-            string safeSortColumn = "RequestDate";
+            string safeSortColumn = "RequestNo"; // Default sort column is now RequestNo
             var validSortColumns = new List<string> { "RequestNo", "RequestDate", "Product", "DerivedStatus", "PreparedBy", "RequestedAt" };
             if (!string.IsNullOrEmpty(sortColumn) && validSortColumns.Contains(sortColumn))
             {
                 safeSortColumn = sortColumn;
             }
 
-            string sortDirection = (sortOrder == System.Windows.Forms.SortOrder.Descending) ? "DESC" : "ASC";
+            // Default sort is now DESC unless explicitly set to ASC
+            string sortDirection = (sortOrder == System.Windows.Forms.SortOrder.Ascending) ? "ASC" : "DESC";
             sqlBuilder.Append($" ORDER BY {safeSortColumn} {sortDirection}");
 
             DataTable keysTable = await GetDataTableAsync(sqlBuilder.ToString(), parameters, token);
