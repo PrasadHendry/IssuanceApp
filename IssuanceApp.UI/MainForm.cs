@@ -665,13 +665,16 @@ namespace DocumentIssuanceApp
             try
             {
                 dgvGmQueue.DataSource = null;
-                dgvGmQueue.DataSource = await _repository.GetGmPendingQueueAsync();
+                var data = await _repository.GetGmPendingQueueAsync(); // Store data in a variable
+                dgvGmQueue.DataSource = data;
                 lblGmQueueTitle.Text = $"Pending GM Approval Queue ({dgvGmQueue.Rows.Count})";
                 ClearGmSelectedRequestDetails();
 
                 if (dgvGmQueue.Rows.Count > 0)
                 {
                     dgvGmQueue.Rows[0].Selected = true;
+                    // EXPLICITLY load details for the first row. This is the key fix.
+                    await DisplayGmSelectedRequestDetailsAsync(dgvGmQueue.Rows[0]);
                 }
             }
             catch (Exception ex)
@@ -818,12 +821,15 @@ namespace DocumentIssuanceApp
             try
             {
                 dgvQaQueue.DataSource = null;
-                dgvQaQueue.DataSource = await _repository.GetQaPendingQueueAsync();
+                var data = await _repository.GetQaPendingQueueAsync(); // Store data in a variable
+                dgvQaQueue.DataSource = data;
                 lblQaQueueTitle.Text = $"Pending QA Approval Queue ({dgvQaQueue.Rows.Count})";
                 ClearQaSelectedRequestDetails();
                 if (dgvQaQueue.Rows.Count > 0)
                 {
                     dgvQaQueue.Rows[0].Selected = true;
+                    // EXPLICITLY load details for the first row. This is the key fix.
+                    await DisplayQaSelectedRequestDetailsAsync(dgvQaQueue.Rows[0]);
                 }
             }
             catch (Exception ex)
@@ -1006,8 +1012,10 @@ namespace DocumentIssuanceApp
             btnApplyAuditFilter.Enabled = btnClearAuditFilters.Enabled = btnRefreshAuditList.Enabled = false;
             try
             {
+                // 1. Reset everything
                 _auditTrailPageCache.Clear();
                 _pagesBeingFetched.Clear();
+                dgvAuditTrail.RowCount = 0;
 
                 var columnMap = new Dictionary<string, string>
                 {
@@ -1017,14 +1025,19 @@ namespace DocumentIssuanceApp
                 };
                 columnMap.TryGetValue(_auditSortColumn, out string dbSortColumn);
 
+                // 2. Get ALL keys for the current filter, but don't touch the grid yet
                 _auditTrailKeyCache = await _repository.GetAuditTrailKeysAsync(
                     dtpAuditFrom.Value, dtpAuditTo.Value, cmbAuditStatus.SelectedItem.ToString(),
                     txtAuditRequestNo.Text, txtAuditProduct.Text, dbSortColumn, _auditSortOrder, token);
 
                 token.ThrowIfCancellationRequested();
 
-                dgvAuditTrail.RowCount = 0;
-                dgvAuditTrail.RowCount = _auditTrailKeyCache.Count;
+                // 3. Trigger the fetch for ONLY the first page.
+                //    The FetchAuditPage method will now be responsible for setting the RowCount.
+                if (_auditTrailKeyCache.Any())
+                {
+                    FetchAuditPage(0, token);
+                }
             }
             catch (OperationCanceledException)
             {
@@ -1039,19 +1052,30 @@ namespace DocumentIssuanceApp
             }
             finally
             {
-
                 if (!token.IsCancellationRequested)
                 {
                     this.Cursor = Cursors.Default;
                     btnApplyAuditFilter.Enabled = btnClearAuditFilters.Enabled = btnRefreshAuditList.Enabled = true;
                 }
             }
-
         }
 
         private void DgvAuditTrail_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
         {
-            if (e.RowIndex < 0 || _auditTrailKeyCache == null || e.RowIndex >= _auditTrailKeyCache.Count) return;
+            // Safety check
+            if (e.RowIndex < 0 || _auditTrailKeyCache == null) return;
+
+            // --- FIX: Trigger fetch for the next page when user scrolls near the end ---
+            // Check if the requested row is near the end of what's currently displayed AND
+            // if there are more keys in the cache than rows currently in the grid.
+            if (e.RowIndex >= dgvAuditTrail.RowCount - 5 && dgvAuditTrail.RowCount < _auditTrailKeyCache.Count)
+            {
+                // The row index we need to fetch is the current row count
+                FetchAuditPage(dgvAuditTrail.RowCount, _dataLoadCts.Token);
+            }
+            // -------------------------------------------------------------------------
+
+            if (e.RowIndex >= _auditTrailKeyCache.Count) return;
 
             if (_auditTrailPageCache.ContainsKey(e.RowIndex))
             {
@@ -1080,14 +1104,13 @@ namespace DocumentIssuanceApp
             }
             else
             {
+                // This part should now only be hit if a page is being fetched.
                 e.Value = "Loading...";
-                FetchAuditPage(e.RowIndex, _dataLoadCts.Token);
             }
         }
 
         private async void FetchAuditPage(int rowIndex, CancellationToken token)
         {
-            // Early exit if the operation has already been cancelled.
             if (token.IsCancellationRequested) return;
 
             int pageNumber = rowIndex / AuditPageSize;
@@ -1097,19 +1120,13 @@ namespace DocumentIssuanceApp
             {
                 _pagesBeingFetched.Add(pageNumber);
 
-                // Check for cancellation again before accessing the collection.
                 if (token.IsCancellationRequested) return;
 
                 int start = pageNumber * AuditPageSize;
-                // Use a local variable for count to prevent changes during calculation.
-                int currentCacheCount = _auditTrailKeyCache.Count;
-                int end = Math.Min(start + AuditPageSize, currentCacheCount);
-
-                // This check is crucial to prevent the GetRange exception if the collection was cleared.
-                if (start >= currentCacheCount) return;
+                int end = Math.Min(start + AuditPageSize, _auditTrailKeyCache.Count);
+                if (start >= end) return;
 
                 var keysToFetch = _auditTrailKeyCache.GetRange(start, end - start);
-
                 var entries = await _repository.GetAuditTrailEntriesAsync(keysToFetch, token);
                 token.ThrowIfCancellationRequested();
 
@@ -1117,39 +1134,35 @@ namespace DocumentIssuanceApp
 
                 if (dgvAuditTrail.IsDisposed || token.IsCancellationRequested) return;
 
+                // --- THE DEFINITIVE FIX ---
                 dgvAuditTrail.BeginInvoke(new Action(() =>
                 {
-                    // Final check before updating the UI. The state could have changed
-                    // between the await and this delegate running.
                     if (token.IsCancellationRequested) return;
 
+                    // 1. Populate the cache for the new page
                     for (int i = start; i < end; i++)
                     {
-                        // THE CRITICAL FIX: Ensure the index is still valid for the *current* cache.
-                        if (i < _auditTrailKeyCache.Count)
+                        var key = _auditTrailKeyCache[i];
+                        if (entryDict.ContainsKey(key))
                         {
-                            var key = _auditTrailKeyCache[i];
-                            if (entryDict.ContainsKey(key))
-                            {
-                                _auditTrailPageCache[i] = entryDict[key];
-                            }
+                            _auditTrailPageCache[i] = entryDict[key];
                         }
                     }
-                    // Invalidate the visible rows within the fetched page.
+
+                    // 2. INCREMENT the RowCount. This is the key to preventing the freeze.
+                    //    We only add one page of rows at a time.
+                    dgvAuditTrail.RowCount += (end - start);
+
+                    // 3. Now that the new rows exist, resize them.
                     for (int i = start; i < end; i++)
                     {
-                        if (i < dgvAuditTrail.RowCount) dgvAuditTrail.InvalidateRow(i);
+                        dgvAuditTrail.AutoResizeRow(i, DataGridViewAutoSizeRowMode.AllCells);
                     }
                 }));
             }
             catch (OperationCanceledException)
             {
                 Console.WriteLine($"Fetch for audit page {pageNumber} was cancelled.");
-            }
-            catch (ArgumentOutOfRangeException ex)
-            {
-                // This will gracefully handle the race condition if it still occurs, preventing a crash.
-                Console.WriteLine($"Handled race condition in FetchAuditPage for page {pageNumber}: {ex.Message}");
             }
             catch (Exception ex)
             {
@@ -1244,7 +1257,10 @@ namespace DocumentIssuanceApp
                 try
                 {
                     if (await _repository.ResetUserPasswordAsync(roleName, newPasswordHash))
-                        MessageBox.Show($"Password for role '{roleName}' has been reset to '{newPassword}'.\nThis is a temporary password.", "Password Reset", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    {
+                        MessageBox.Show($"Password for role '{roleName}' has been reset.", "Password Reset", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        dgvUserRoles.ClearSelection();
+                    }
                     else
                         MessageBox.Show("Failed to reset password. The role may no longer exist.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }

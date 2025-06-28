@@ -268,7 +268,6 @@ namespace DocumentIssuanceApp
             this.tlpManageRole = new System.Windows.Forms.TableLayoutPanel();
             this.lblRoleNameManage = new System.Windows.Forms.Label();
             this.txtRoleNameManage = new System.Windows.Forms.TextBox();
-            this.flpRoleManagementButtons = new System.Windows.Forms.FlowLayoutPanel();
             this.btnResetPassword = new DocumentIssuanceApp.RoundedButton();
             this.statusStripMain = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabelUser = new System.Windows.Forms.ToolStripStatusLabel();
@@ -353,7 +352,6 @@ namespace DocumentIssuanceApp
             this.tlpUserRolesHeader.SuspendLayout();
             this.grpManageRole.SuspendLayout();
             this.tlpManageRole.SuspendLayout();
-            this.flpRoleManagementButtons.SuspendLayout();
             this.statusStripMain.SuspendLayout();
             this.pnlMainContainer.SuspendLayout();
             this.SuspendLayout();
@@ -2859,7 +2857,8 @@ namespace DocumentIssuanceApp
             // 
             this.dgvAuditTrail.AllowUserToAddRows = false;
             this.dgvAuditTrail.AllowUserToDeleteRows = false;
-            this.dgvAuditTrail.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
+            this.dgvAuditTrail.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.None;
+            this.dgvAuditTrail.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.None;
             this.dgvAuditTrail.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
@@ -3054,7 +3053,7 @@ namespace DocumentIssuanceApp
             this.tlpManageRole.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tlpManageRole.Controls.Add(this.lblRoleNameManage, 0, 0);
             this.tlpManageRole.Controls.Add(this.txtRoleNameManage, 1, 0);
-            this.tlpManageRole.Controls.Add(this.flpRoleManagementButtons, 0, 1);
+            this.tlpManageRole.Controls.Add(this.btnResetPassword, 0, 1);
             this.tlpManageRole.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tlpManageRole.Location = new System.Drawing.Point(10, 28);
             this.tlpManageRole.Name = "tlpManageRole";
@@ -3083,27 +3082,17 @@ namespace DocumentIssuanceApp
             this.txtRoleNameManage.Size = new System.Drawing.Size(720, 25);
             this.txtRoleNameManage.TabIndex = 1;
             // 
-            // flpRoleManagementButtons
-            // 
-            this.tlpManageRole.SetColumnSpan(this.flpRoleManagementButtons, 2);
-            this.flpRoleManagementButtons.Controls.Add(this.btnResetPassword);
-            this.flpRoleManagementButtons.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flpRoleManagementButtons.Location = new System.Drawing.Point(3, 38);
-            this.flpRoleManagementButtons.Name = "flpRoleManagementButtons";
-            this.flpRoleManagementButtons.Padding = new System.Windows.Forms.Padding(0, 5, 0, 0);
-            this.flpRoleManagementButtons.Size = new System.Drawing.Size(803, 472);
-            this.flpRoleManagementButtons.TabIndex = 2;
-            // 
             // btnResetPassword
             // 
+            this.btnResetPassword.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)));
             this.btnResetPassword.Enabled = false;
             this.btnResetPassword.Font = new System.Drawing.Font("Segoe UI Semibold", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnResetPassword.Location = new System.Drawing.Point(3, 8);
+            this.btnResetPassword.Location = new System.Drawing.Point(3, 38);
             this.btnResetPassword.Name = "btnResetPassword";
             this.btnResetPassword.Size = new System.Drawing.Size(140, 35);
             this.btnResetPassword.TabIndex = 1;
             this.btnResetPassword.Text = "Reset Password";
-            this.btnResetPassword.UseVisualStyleBackColor = true;
+            this.btnResetPassword.UseVisualStyleBackColor = true; ;
             // 
             // statusStripMain
             // 
@@ -3352,7 +3341,6 @@ namespace DocumentIssuanceApp
             this.grpManageRole.ResumeLayout(false);
             this.tlpManageRole.ResumeLayout(false);
             this.tlpManageRole.PerformLayout();
-            this.flpRoleManagementButtons.ResumeLayout(false);
             this.statusStripMain.ResumeLayout(false);
             this.statusStripMain.PerformLayout();
             this.pnlMainContainer.ResumeLayout(false);
@@ -3567,7 +3555,6 @@ namespace DocumentIssuanceApp
         private System.Windows.Forms.TableLayoutPanel tlpManageRole;
         private System.Windows.Forms.Label lblRoleNameManage;
         private System.Windows.Forms.TextBox txtRoleNameManage;
-        private System.Windows.Forms.FlowLayoutPanel flpRoleManagementButtons;
         private DocumentIssuanceApp.RoundedButton btnResetPassword;
         private System.Windows.Forms.TableLayoutPanel tlpDocTypesAndNumbers;
         private System.Windows.Forms.Label lblBmrDocNoDI;

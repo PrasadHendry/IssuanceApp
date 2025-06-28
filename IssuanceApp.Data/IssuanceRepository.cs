@@ -116,13 +116,22 @@ namespace IssuanceApp.Data
         #endregion
 
         #region Document Issuance
+
         public async Task<string> GenerateNewRequestNumberAsync()
         {
             string prefix = $"REQ-{DateTime.Now:yyyyMMdd}-";
-            string sql = "SELECT ISNULL(MAX(CAST(SUBSTRING(RequestNo, 14, 3) AS INT)), 0) FROM dbo.Doc_Issuance WHERE RequestNo LIKE @prefix + '%';";
-            var parameters = new List<SqlParameter> { new SqlParameter("@prefix", prefix) };
-            object result = await ExecuteScalarAsync(sql, parameters);
-            int nextSequence = (result != DBNull.Value ? Convert.ToInt32(result) : 0) + 1;
+            int nextSequence;
+
+            using (var conn = new SqlConnection(_connectionString))
+            {
+                await conn.OpenAsync();
+                using (var cmd = new SqlCommand("dbo.sp_GetNextRequestNumber", conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    object result = await cmd.ExecuteScalarAsync();
+                    nextSequence = (int)result;
+                }
+            }
             return $"{prefix}{nextSequence:D3}";
         }
 

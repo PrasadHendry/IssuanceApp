@@ -42,6 +42,7 @@ namespace DocumentIssuanceApp
 
         protected override void OnPaint(PaintEventArgs e)
         {
+            base.OnPaintBackground(e);
             Graphics g = e.Graphics;
             g.SmoothingMode = SmoothingMode.AntiAlias;
 
@@ -73,8 +74,8 @@ namespace DocumentIssuanceApp
 
                 if (!this.Enabled)
                 {
-                    backColor = SystemColors.ControlDark;
-                    foreColor = SystemColors.GrayText;
+                    backColor = Color.FromArgb(150, this.BackColor); // 150 alpha makes it look faded
+                    foreColor = Color.FromArgb(180, this.ForeColor);
                 }
                 else if (isPressed)
                 {
