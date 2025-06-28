@@ -99,7 +99,7 @@ namespace IssuanceApp.Data
 
         public Task<DataTable> GetUserRolesForGridAsync()
         {
-            string sql = "SELECT RoleID, RoleName FROM dbo.User_Roles ORDER BY RoleName;";
+            string sql = "SELECT RoleID, RoleName FROM dbo.User_Roles ORDER BY RoleID;";
             return GetDataTableAsync(sql);
         }
 
@@ -174,7 +174,7 @@ namespace IssuanceApp.Data
             string sql = @"
                 SELECT i.RequestNo, i.RequestDate, i.Product, i.DocumentNo, t.PreparedBy, t.RequestedAt
                 FROM dbo.Doc_Issuance AS i JOIN dbo.Issuance_Tracker AS t ON i.IssuanceID = t.IssuanceID
-                WHERE t.GmOperationsAction IS NULL ORDER BY t.RequestedAt ASC;";
+                WHERE t.GmOperationsAction IS NULL ORDER BY i.RequestDate ASC;";
             return GetDataTableAsync(sql);
         }
 
@@ -183,7 +183,7 @@ namespace IssuanceApp.Data
             string sql = @"
                 SELECT i.RequestNo, i.RequestDate, i.Product, i.DocumentNo, t.PreparedBy, t.AuthorizedBy, t.GmOperationsAt AS GmActionAt
                 FROM dbo.Doc_Issuance AS i JOIN dbo.Issuance_Tracker AS t ON i.IssuanceID = t.IssuanceID
-                WHERE t.GmOperationsAction = @Action AND t.QAAction IS NULL ORDER BY t.GmOperationsAt ASC;";
+                WHERE t.GmOperationsAction = @Action AND t.QAAction IS NULL ORDER BY i.RequestDate ASC;";
             var parameters = new List<SqlParameter> { new SqlParameter("@Action", AppConstants.ActionAuthorized) };
             return GetDataTableAsync(sql, parameters);
         }
@@ -282,7 +282,7 @@ namespace IssuanceApp.Data
                 safeSortColumn = sortColumn;
             }
 
-            string sortDirection = (sortOrder == System.Windows.Forms.SortOrder.Ascending) ? "ASC" : "DESC";
+            string sortDirection = (sortOrder == System.Windows.Forms.SortOrder.Descending) ? "DESC" : "ASC";
             sqlBuilder.Append($" ORDER BY {safeSortColumn} {sortDirection}");
 
             DataTable keysTable = await GetDataTableAsync(sqlBuilder.ToString(), parameters, token);
