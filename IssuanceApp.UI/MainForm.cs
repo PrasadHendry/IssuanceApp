@@ -429,7 +429,16 @@ namespace DocumentIssuanceApp
             dgv.DefaultCellStyle.BackColor = Color.White;
             dgv.DefaultCellStyle.Padding = new Padding(5);
             dgv.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
+
+            // *** FIX: Align text to the top-left for better readability in multi-line rows. ***
+            dgv.DefaultCellStyle.Alignment = DataGridViewContentAlignment.TopLeft;
+
             dgv.AlternatingRowsDefaultCellStyle.BackColor = _gridAltRowColor;
+            dgv.AlternatingRowsDefaultCellStyle.WrapMode = DataGridViewTriState.True;
+
+            // *** FIX: Also apply the alignment to alternating rows. ***
+            dgv.AlternatingRowsDefaultCellStyle.Alignment = DataGridViewContentAlignment.TopLeft;
+
             dgv.RowsDefaultCellStyle.SelectionBackColor = _gridSelectionBackColor;
             dgv.RowsDefaultCellStyle.SelectionForeColor = _gridSelectionForeColor;
         }
@@ -984,11 +993,28 @@ namespace DocumentIssuanceApp
         private void SetupAuditTrailColumns()
         {
             dgvAuditTrail.Columns.Clear();
+
+            // Style for columns that should wrap their text (like comments)
             var wrapTextStyle = new DataGridViewCellStyle { WrapMode = DataGridViewTriState.True, Alignment = DataGridViewContentAlignment.TopLeft };
+
+            // Style for columns that should NOT wrap their text
+            var noWrapStyle = new DataGridViewCellStyle { WrapMode = DataGridViewTriState.False, Alignment = DataGridViewContentAlignment.TopLeft };
+
             dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditRequestNo", HeaderText = "Request No.", DataPropertyName = "RequestNo", Width = 120, Frozen = true });
             dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditRequestDate", HeaderText = "Request Date", DataPropertyName = "RequestDate", DefaultCellStyle = new DataGridViewCellStyle { Format = "dd-MMM-yyyy" }, Width = 100 });
             dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditProduct", HeaderText = "Product", DataPropertyName = "Product", Width = 150 });
-            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditDocumentNumbers", HeaderText = "Document No(s).", DataPropertyName = "DocumentNumbers", Width = 180, DefaultCellStyle = wrapTextStyle });
+
+            // *** FIX APPLIED HERE ***
+            // This column now uses the no-wrap style and will auto-size its width to fit the content.
+            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "colAuditDocumentNumbers",
+                HeaderText = "Document No(s).",
+                DataPropertyName = "DocumentNumbers",
+                DefaultCellStyle = noWrapStyle,
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+            });
+
             dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditStatusDerived", HeaderText = "Status", DataPropertyName = "DerivedStatus", Width = 150 });
             dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditPreparedBy", HeaderText = "Prepared By", DataPropertyName = "PreparedBy", Width = 120 });
             dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditRequestedAt", HeaderText = "Requested At", DataPropertyName = "RequestedAt", DefaultCellStyle = new DataGridViewCellStyle { Format = "dd-MMM-yyyy HH:mm" }, Width = 130 });
@@ -1134,12 +1160,12 @@ namespace DocumentIssuanceApp
 
                 if (dgvAuditTrail.IsDisposed || token.IsCancellationRequested) return;
 
-                // --- THE DEFINITIVE FIX ---
+                // ### FIX 2 of 2: The correct sequence for updating and resizing rows in Virtual Mode. ###
                 dgvAuditTrail.BeginInvoke(new Action(() =>
                 {
                     if (token.IsCancellationRequested) return;
 
-                    // 1. Populate the cache for the new page
+                    // Step 1: Populate the cache for the new page.
                     for (int i = start; i < end; i++)
                     {
                         var key = _auditTrailKeyCache[i];
@@ -1149,11 +1175,11 @@ namespace DocumentIssuanceApp
                         }
                     }
 
-                    // 2. INCREMENT the RowCount. This is the key to preventing the freeze.
-                    //    We only add one page of rows at a time.
+                    // Step 2: Increment the RowCount. This adds the new row 'slots' to the grid.
                     dgvAuditTrail.RowCount += (end - start);
 
-                    // 3. Now that the new rows exist, resize them.
+                    // Step 3: Now, explicitly resize each new row. This call will trigger CellValueNeeded,
+                    // which will now find the data in our cache and allow for correct measurement.
                     for (int i = start; i < end; i++)
                     {
                         dgvAuditTrail.AutoResizeRow(i, DataGridViewAutoSizeRowMode.AllCells);
@@ -1174,6 +1200,7 @@ namespace DocumentIssuanceApp
                 _pagesBeingFetched.Remove(pageNumber);
             }
         }
+
 
         private async void DgvAuditTrail_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
