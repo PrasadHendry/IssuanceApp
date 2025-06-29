@@ -1,4 +1,6 @@
-﻿using DocumentIssuanceApp.Controls;
+﻿// IssuanceApp.UI/MainForm.cs
+
+using DocumentIssuanceApp.Controls;
 using IssuanceApp.Data;
 using System;
 using System.Collections.Generic;
@@ -20,13 +22,13 @@ namespace DocumentIssuanceApp
         private string loggedInRole = null;
         private string loggedInUserName = null;
         private List<TabPage> allTabPages;
-        
+
         // Flags to prevent redundant data loading on tab switching
         private bool _gmDataLoaded = false;
         private bool _qaDataLoaded = false;
         private bool _auditDataLoaded = false;
         private bool _usersDataLoaded = false;
-        
+
         // CancellationTokenSource for robust async operations
         private readonly CancellationTokenSource _dataLoadCts = new CancellationTokenSource();
         #endregion
@@ -61,11 +63,11 @@ namespace DocumentIssuanceApp
 
             this.tabControlMain.SelectedIndexChanged += TabControlMain_SelectedIndexChanged;
             btnSignOut.Click += BtnSignOut_Click;
-            
+
             SetupTabs();
             this.WindowState = FormWindowState.Maximized;
         }
-        
+
         private void InitializeUserControls()
         {
             // --- Login Control ---
@@ -136,7 +138,7 @@ namespace DocumentIssuanceApp
         {
             toolStripStatusLabelDateTime.Text = DateTime.Now.ToString("dd-MMM-yyyy hh:mm tt");
         }
-        
+
         private void SetupTabs()
         {
             EnableTabsBasedOnRole(null); // Start with only login tab visible
@@ -172,9 +174,9 @@ namespace DocumentIssuanceApp
                 // Update UI with logged-in user info
                 toolStripStatusLabelUser.Text = $"User: {loggedInUserName} ({loggedInRole})";
                 lblCurrentUserHeader.Text = $"Logged in as: {loggedInUserName} ({loggedInRole})";
-                lblCurrentUserHeader.ForeColor = _headerTextColor;
+                lblCurrentUserHeader.ForeColor = ThemeManager.HeaderTextColor;
                 pnlAppHeader.Visible = true;
-                
+
                 // Initialize all the other user controls now that we have a valid user context
                 documentIssuanceControl1.InitializeControl(_repository, loggedInUserName);
                 gmOperationsControl1.InitializeControl(_repository, loggedInUserName);
@@ -257,87 +259,16 @@ namespace DocumentIssuanceApp
         #endregion
 
         #region UI Theming and Styling
-        private static readonly Color _successColor = Color.FromArgb(28, 184, 65);
-        private static readonly Color _dangerColor = Color.FromArgb(220, 53, 69);
-        private static readonly Color _primaryColor = Color.FromArgb(0, 123, 255);
-        private static readonly Color _secondaryColor = Color.FromArgb(108, 117, 125);
-        private static readonly Color _successHoverColor = Color.FromArgb(33, 205, 74);
-        private static readonly Color _dangerHoverColor = Color.FromArgb(225, 66, 82);
-        private static readonly Color _primaryHoverColor = Color.FromArgb(10, 136, 255);
-        private static readonly Color _secondaryHoverColor = Color.FromArgb(124, 132, 140);
-        private static readonly Color _headerTextColor = Color.White;
-        private static readonly Color _formBackColor = Color.FromArgb(240, 242, 245);
-        private static readonly Color _gridSelectionBackColor = Color.FromArgb(188, 220, 244);
-        private static readonly Color _gridSelectionForeColor = Color.Black;
-        private static readonly Color _appHeaderColor = Color.FromArgb(65, 84, 110);
-        private static readonly Color _gridAltRowColor = Color.FromArgb(248, 249, 250);
-
         private void ApplyPharmaTheme()
         {
-            pnlAppHeader.BackColor = _appHeaderColor;
+            pnlAppHeader.BackColor = ThemeManager.AppHeaderColor;
             pnlAppHeader.Visible = false;
             foreach (TabPage tab in tabControlMain.TabPages)
             {
-                tab.BackColor = _formBackColor;
+                tab.BackColor = ThemeManager.FormBackColor;
             }
 
-            // This is the correct way, using the pre-defined hover colors
-            StyleDangerButton(btnSignOut);
-
-            // Note: The styling for all buttons *inside* the UserControls should be handled
-            // within those controls. The MainForm is only responsible for its own controls.
-        }
-
-        private void StyleButton(Button btn, Color backColor, Color hoverColor)
-        {
-            if (btn is RoundedButton roundedBtn)
-            {
-                roundedBtn.CornerRadius = 8;
-            }
-            btn.FlatStyle = FlatStyle.Popup;
-            btn.FlatAppearance.BorderSize = 0;
-            btn.BackColor = backColor;
-            btn.ForeColor = _headerTextColor;
-            // CORRECTED: Use the passed-in hoverColor parameter
-            btn.FlatAppearance.MouseOverBackColor = hoverColor;
-            btn.Font = new Font(btn.Font, FontStyle.Bold);
-            btn.ImageAlign = ContentAlignment.MiddleLeft;
-            btn.TextAlign = ContentAlignment.MiddleCenter;
-            btn.TextImageRelation = TextImageRelation.ImageBeforeText;
-            btn.Padding = new Padding(5, 0, 5, 0);
-        }
-
-        private void StyleSuccessButton(Button btn) { StyleButton(btn, _successColor, _successHoverColor); }
-        private void StyleDangerButton(Button btn) { StyleButton(btn, _dangerColor, _dangerHoverColor); }
-        private void StylePrimaryButton(Button btn) { StyleButton(btn, _primaryColor, _primaryHoverColor); }
-        private void StyleSecondaryButton(Button btn) { StyleButton(btn, _secondaryColor, _secondaryHoverColor); }
-
-        // This method is now only needed if the MainForm directly styles any DataGridViews.
-        // Since all grids are in UserControls, this can be moved or removed from MainForm.
-        // For now, we will leave it in case it's needed for future MainForm elements.
-        private void StyleDataGridView(DataGridView dgv)
-        {
-            dgv.EnableHeadersVisualStyles = false;
-            dgv.BorderStyle = BorderStyle.None;
-            dgv.BackgroundColor = _formBackColor;
-            dgv.RowHeadersVisible = false;
-            dgv.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
-            dgv.ColumnHeadersDefaultCellStyle.BackColor = _appHeaderColor;
-            dgv.ColumnHeadersDefaultCellStyle.ForeColor = _headerTextColor;
-            dgv.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 10, FontStyle.Bold);
-            dgv.ColumnHeadersDefaultCellStyle.Padding = new Padding(5);
-            dgv.DefaultCellStyle.Font = new Font("Segoe UI", 9.5f);
-            dgv.DefaultCellStyle.BackColor = Color.White;
-            dgv.DefaultCellStyle.Padding = new Padding(5);
-            dgv.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
-            dgv.DefaultCellStyle.Alignment = DataGridViewContentAlignment.TopLeft;
-
-            dgv.AlternatingRowsDefaultCellStyle.BackColor = _gridAltRowColor;
-            dgv.AlternatingRowsDefaultCellStyle.WrapMode = DataGridViewTriState.True;
-            dgv.AlternatingRowsDefaultCellStyle.Alignment = DataGridViewContentAlignment.TopLeft;
-
-            dgv.RowsDefaultCellStyle.SelectionBackColor = _gridSelectionBackColor;
-            dgv.RowsDefaultCellStyle.SelectionForeColor = _gridSelectionForeColor;
+            ThemeManager.StyleDangerButton(btnSignOut);
         }
         #endregion
     }

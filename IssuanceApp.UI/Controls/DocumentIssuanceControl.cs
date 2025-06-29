@@ -1,4 +1,6 @@
-﻿using IssuanceApp.Data;
+﻿// IssuanceApp.UI/Controls/DocumentIssuanceControl.cs
+
+using IssuanceApp.Data;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -14,13 +16,11 @@ namespace DocumentIssuanceApp.Controls
         private IssuanceRepository _repository;
         private string _loggedInUserName;
 
-        // UI Theming constants
-        private static readonly Color _successColor = Color.FromArgb(28, 184, 65);
-        private static readonly Color _dangerColor = Color.FromArgb(220, 53, 69);
-
         public DocumentIssuanceControl()
         {
             InitializeComponent();
+            ThemeManager.StyleSuccessButton(btnSubmitRequestDI);
+            ThemeManager.StyleSecondaryButton(btnClearFormDI);
         }
 
         public void InitializeControl(IssuanceRepository repository, string loggedInUserName)
@@ -58,12 +58,15 @@ namespace DocumentIssuanceApp.Controls
         // This public method will be called by MainForm when the tab becomes visible
         public async Task LoadInitialDataAsync()
         {
+            if (_repository == null) return;
+
             this.Cursor = Cursors.WaitCursor;
             try
             {
                 txtRequestNoValueDI.Text = await _repository.GenerateNewRequestNumberAsync();
                 ClearDocumentIssuanceForm();
                 lblStatusValueDI.Text = "Ready to create a new request.";
+                lblStatusValueDI.ForeColor = SystemColors.ControlText;
             }
             catch (Exception ex)
             {
@@ -171,14 +174,14 @@ namespace DocumentIssuanceApp.Controls
             {
                 await _repository.CreateIssuanceRequestAsync(issuanceData);
                 lblStatusValueDI.Text = $"Request '{issuanceData.RequestNo}' submitted successfully!";
-                lblStatusValueDI.ForeColor = _successColor;
+                lblStatusValueDI.ForeColor = ThemeManager.SuccessColor;
                 MessageBox.Show($"Request '{issuanceData.RequestNo}' submitted successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 await LoadInitialDataAsync();
             }
             catch (Exception ex)
             {
                 lblStatusValueDI.Text = "Error submitting request.";
-                lblStatusValueDI.ForeColor = _dangerColor;
+                lblStatusValueDI.ForeColor = ThemeManager.DangerColor;
                 MessageBox.Show($"Error submitting request: {ex.Message}", "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally

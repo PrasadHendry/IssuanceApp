@@ -1,4 +1,6 @@
-﻿using IssuanceApp.Data;
+﻿// IssuanceApp.UI/Controls/QaControl.cs
+
+using IssuanceApp.Data;
 using System;
 using System.Data;
 using System.Threading.Tasks;
@@ -14,6 +16,11 @@ namespace DocumentIssuanceApp.Controls
         public QaControl()
         {
             InitializeComponent();
+            ThemeManager.StylePrimaryButton(btnQaRefreshList);
+            ThemeManager.StyleSuccessButton(btnQaApprove);
+            ThemeManager.StyleDangerButton(btnQaReject);
+            ThemeManager.StyleSecondaryButton(btnQaBrowseSelectDocument);
+            ThemeManager.StyleDataGridView(dgvQaQueue);
         }
 
         public void InitializeControl(IssuanceRepository repository, string loggedInUserName)

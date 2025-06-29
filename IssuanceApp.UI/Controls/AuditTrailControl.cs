@@ -1,4 +1,6 @@
-﻿using IssuanceApp.Data;
+﻿// IssuanceApp.UI/Controls/AuditTrailControl.cs
+
+using IssuanceApp.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -28,6 +30,12 @@ namespace DocumentIssuanceApp.Controls
         public AuditTrailControl()
         {
             InitializeComponent();
+            ThemeManager.StylePrimaryButton(btnApplyAuditFilter);
+            ThemeManager.StylePrimaryButton(btnRefreshAuditList);
+            ThemeManager.StyleSecondaryButton(btnClearAuditFilters);
+            ThemeManager.StyleSecondaryButton(btnExportToCsv);
+            ThemeManager.StyleSecondaryButton(btnExportToExcel);
+            ThemeManager.StyleDataGridView(dgvAuditTrail);
         }
 
         public void InitializeControl(IssuanceRepository repository)

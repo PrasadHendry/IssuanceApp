@@ -1,4 +1,6 @@
-﻿using IssuanceApp.Data;
+﻿// IssuanceApp.UI/Controls/GmOperationsControl.cs
+
+using IssuanceApp.Data;
 using System;
 using System.Data;
 using System.Threading.Tasks;
@@ -14,6 +16,10 @@ namespace DocumentIssuanceApp.Controls
         public GmOperationsControl()
         {
             InitializeComponent();
+            ThemeManager.StylePrimaryButton(btnGmRefreshList);
+            ThemeManager.StyleSuccessButton(btnGmAuthorize);
+            ThemeManager.StyleDangerButton(btnGmReject);
+            ThemeManager.StyleDataGridView(dgvGmQueue);
         }
 
         public void InitializeControl(IssuanceRepository repository, string loggedInUserName)

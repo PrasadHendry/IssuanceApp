@@ -1,4 +1,6 @@
-﻿using IssuanceApp.Data;
+﻿// IssuanceApp.UI/Controls/LoginControl.cs
+
+using IssuanceApp.Data;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -19,6 +21,7 @@ namespace DocumentIssuanceApp.Controls
         public LoginControl()
         {
             InitializeComponent();
+            ThemeManager.StylePrimaryButton(btnLogin);
         }
 
         public async void InitializeControl(IssuanceRepository repository)
@@ -92,13 +95,13 @@ namespace DocumentIssuanceApp.Controls
                 if (isAuthenticated)
                 {
                     lblLoginStatus.Text = $"Login successful as {selectedRole}.";
-                    lblLoginStatus.ForeColor = Color.FromArgb(28, 184, 65); // Success color
+                    lblLoginStatus.ForeColor = ThemeManager.SuccessColor;
                     txtPassword.Clear();
                 }
                 else
                 {
                     lblLoginStatus.Text = "Invalid role or password.";
-                    lblLoginStatus.ForeColor = Color.FromArgb(220, 53, 69); // Danger color
+                    lblLoginStatus.ForeColor = ThemeManager.DangerColor;
                 }
             }
             catch (Exception ex)
@@ -121,13 +124,16 @@ namespace DocumentIssuanceApp.Controls
             lblLoginStatus.Text = "*Please login to continue.";
             lblLoginStatus.ForeColor = SystemColors.ControlText;
             txtPassword.Clear();
-            if (cmbRole.Items.Contains(AppConstants.RoleRequester))
+            if (cmbRole.Items.Count > 0)
             {
-                cmbRole.SelectedItem = AppConstants.RoleRequester;
-            }
-            else if (cmbRole.Items.Count > 0)
-            {
-                cmbRole.SelectedIndex = 0;
+                if (cmbRole.Items.Contains(AppConstants.RoleRequester))
+                {
+                    cmbRole.SelectedItem = AppConstants.RoleRequester;
+                }
+                else
+                {
+                    cmbRole.SelectedIndex = 0;
+                }
             }
         }
     }

@@ -1,6 +1,9 @@
-﻿using IssuanceApp.Data;
+﻿// IssuanceApp.UI/Controls/UsersControl.cs
+
+using IssuanceApp.Data;
 using System;
 using System.Data;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace DocumentIssuanceApp.Controls
@@ -13,6 +16,9 @@ namespace DocumentIssuanceApp.Controls
         public UsersControl()
         {
             InitializeComponent();
+            ThemeManager.StylePrimaryButton(btnRefreshUserRoles);
+            ThemeManager.StylePrimaryButton(btnResetPassword);
+            ThemeManager.StyleDataGridView(dgvUserRoles);
         }
 
         public void InitializeControl(IssuanceRepository repository)
@@ -35,7 +41,7 @@ namespace DocumentIssuanceApp.Controls
         }
 
         // Public method for MainForm to call when the tab is selected
-        public async void LoadUserRolesAsync()
+        public async Task LoadUserRolesAsync()
         {
             if (_repository == null) return; // Guard against loading before initialization
 
