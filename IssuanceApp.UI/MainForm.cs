@@ -120,7 +120,7 @@ namespace DocumentIssuanceApp
             }
             else if (selectedTabName == ControlNames.TabPageUsers && !_usersDataLoaded)
             {
-                usersControl1.LoadUserRolesAsync();
+                await usersControl1.LoadUserRolesAsync();
                 _usersDataLoaded = true;
             }
         }
