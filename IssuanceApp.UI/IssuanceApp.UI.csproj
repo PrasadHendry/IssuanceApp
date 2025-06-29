@@ -108,6 +108,24 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ControlNames.cs" />
+    <Compile Include="Controls\AuditTrailControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\AuditTrailControl.Designer.cs">
+      <DependentUpon>AuditTrailControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\DocumentIssuanceControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\DocumentIssuanceControl.Designer.cs">
+      <DependentUpon>DocumentIssuanceControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\GmOperationsControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\GmOperationsControl.Designer.cs">
+      <DependentUpon>GmOperationsControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\LoginControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -115,8 +133,20 @@
       <DependentUpon>LoginControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\LoginEventArgs.cs" />
+    <Compile Include="Controls\QaControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\QaControl.Designer.cs">
+      <DependentUpon>QaControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\RoundedButton.cs">
       <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\UsersControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\UsersControl.Designer.cs">
+      <DependentUpon>UsersControl.cs</DependentUpon>
     </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
