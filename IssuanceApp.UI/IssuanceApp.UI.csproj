@@ -108,6 +108,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ControlNames.cs" />
+    <Compile Include="Controls\LoginControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\LoginControl.Designer.cs">
+      <DependentUpon>LoginControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\LoginEventArgs.cs" />
     <Compile Include="Controls\RoundedButton.cs">
       <SubType>Component</SubType>
     </Compile>
