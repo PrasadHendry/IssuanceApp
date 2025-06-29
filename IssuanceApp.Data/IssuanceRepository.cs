@@ -97,10 +97,23 @@ namespace IssuanceApp.Data
             return false;
         }
 
-        public Task<DataTable> GetUserRolesForGridAsync()
+        public async Task<List<UserRole>> GetUserRolesForGridAsync()
         {
+            var roles = new List<UserRole>();
             string sql = "SELECT RoleID, RoleName FROM dbo.User_Roles ORDER BY RoleID;";
-            return GetDataTableAsync(sql);
+
+            DataTable dt = await GetDataTableAsync(sql);
+
+            // Convert the DataTable to a strongly-typed List<UserRole>
+            foreach (DataRow row in dt.Rows)
+            {
+                roles.Add(new UserRole
+                {
+                    RoleID = Convert.ToInt32(row["RoleID"]),
+                    RoleName = row["RoleName"].ToString()
+                });
+            }
+            return roles;
         }
 
         public async Task<bool> ResetUserPasswordAsync(string roleName, string newPasswordHash)
@@ -169,23 +182,58 @@ namespace IssuanceApp.Data
         #endregion
 
         #region GM & QA Operations
-        public Task<DataTable> GetGmPendingQueueAsync()
+        public async Task<List<PendingRequestSummary>> GetGmPendingQueueAsync()
         {
+            var queue = new List<PendingRequestSummary>();
             string sql = @"
-                SELECT i.RequestNo, i.RequestDate, i.Product, i.DocumentNo, t.PreparedBy, t.RequestedAt
-                FROM dbo.Doc_Issuance AS i JOIN dbo.Issuance_Tracker AS t ON i.IssuanceID = t.IssuanceID
-                WHERE t.GmOperationsAction IS NULL ORDER BY i.RequestNo DESC;";
-            return GetDataTableAsync(sql);
+        SELECT i.RequestNo, i.RequestDate, i.Product, i.DocumentNo, t.PreparedBy, t.RequestedAt
+        FROM dbo.Doc_Issuance AS i JOIN dbo.Issuance_Tracker AS t ON i.IssuanceID = t.IssuanceID
+        WHERE t.GmOperationsAction IS NULL ORDER BY i.RequestNo DESC;";
+
+            DataTable dt = await GetDataTableAsync(sql);
+
+            // Convert DataTable to a strongly-typed List
+            foreach (DataRow row in dt.Rows)
+            {
+                queue.Add(new PendingRequestSummary
+                {
+                    RequestNo = row["RequestNo"].ToString(),
+                    RequestDate = (DateTime)row["RequestDate"],
+                    Product = row["Product"].ToString(),
+                    DocumentNo = row["DocumentNo"].ToString(),
+                    PreparedBy = row["PreparedBy"].ToString(),
+                    RequestedAt = (DateTime)row["RequestedAt"]
+                });
+            }
+            return queue;
         }
 
-        public Task<DataTable> GetQaPendingQueueAsync()
+        public async Task<List<PendingRequestSummary>> GetQaPendingQueueAsync()
         {
+            var queue = new List<PendingRequestSummary>();
             string sql = @"
-                SELECT i.RequestNo, i.RequestDate, i.Product, i.DocumentNo, t.PreparedBy, t.AuthorizedBy, t.GmOperationsAt AS GmActionAt
-                FROM dbo.Doc_Issuance AS i JOIN dbo.Issuance_Tracker AS t ON i.IssuanceID = t.IssuanceID
-                WHERE t.GmOperationsAction = @Action AND t.QAAction IS NULL ORDER BY i.RequestNo DESC;";
+        SELECT i.RequestNo, i.RequestDate, i.Product, i.DocumentNo, t.PreparedBy, t.AuthorizedBy, t.GmOperationsAt AS GmActionAt
+        FROM dbo.Doc_Issuance AS i JOIN dbo.Issuance_Tracker AS t ON i.IssuanceID = t.IssuanceID
+        WHERE t.GmOperationsAction = @Action AND t.QAAction IS NULL ORDER BY i.RequestNo DESC;";
             var parameters = new List<SqlParameter> { new SqlParameter("@Action", AppConstants.ActionAuthorized) };
-            return GetDataTableAsync(sql, parameters);
+
+            DataTable dt = await GetDataTableAsync(sql, parameters);
+
+            // Convert DataTable to a strongly-typed List
+            foreach (DataRow row in dt.Rows)
+            {
+                queue.Add(new PendingRequestSummary
+                {
+                    RequestNo = row["RequestNo"].ToString(),
+                    RequestDate = (DateTime)row["RequestDate"],
+                    Product = row["Product"].ToString(),
+                    DocumentNo = row["DocumentNo"].ToString(),
+                    PreparedBy = row["PreparedBy"].ToString(),
+                    AuthorizedBy = row["AuthorizedBy"].ToString(),
+                    GmActionAt = row["GmActionAt"] != DBNull.Value ? (DateTime?)row["GmActionAt"] : null
+                });
+            }
+            return queue;
         }
 
         public Task<DataTable> GetFullRequestDetailsAsync(string requestNo)

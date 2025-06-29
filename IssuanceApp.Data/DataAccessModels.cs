@@ -65,4 +65,17 @@ namespace IssuanceApp.Data
         public string ExportOrderNo { get; set; }
         public string RequestComment { get; set; }
     }
+    public class PendingRequestSummary
+    {
+        public string RequestNo { get; set; }
+        public DateTime RequestDate { get; set; }
+        public string Product { get; set; }
+        public string DocumentNo { get; set; }
+        public string PreparedBy { get; set; }
+        public DateTime RequestedAt { get; set; }
+
+        // QA-specific fields (will be null for GM queue)
+        public string AuthorizedBy { get; set; }
+        public DateTime? GmActionAt { get; set; }
+    }
 }

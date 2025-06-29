@@ -28,13 +28,12 @@ namespace DocumentIssuanceApp.Controls
             _loggedInUserName = loggedInUserName;
 
             // Setup DataGridView
-            dgvGmQueue.AutoGenerateColumns = false;
-            dgvGmQueue.Columns["colGmRequestNo"].DataPropertyName = "RequestNo";
-            dgvGmQueue.Columns["colGmRequestDate"].DataPropertyName = "RequestDate";
-            dgvGmQueue.Columns["colGmProduct"].DataPropertyName = "Product";
-            dgvGmQueue.Columns["colGmDocTypes"].DataPropertyName = "DocumentNo";
-            dgvGmQueue.Columns["colGmPreparedBy"].DataPropertyName = "PreparedBy";
-            dgvGmQueue.Columns["colGmRequestedAt"].DataPropertyName = "RequestedAt";
+            dgvGmQueue.Columns["colGmRequestNo"].DataPropertyName = nameof(PendingRequestSummary.RequestNo);
+            dgvGmQueue.Columns["colGmRequestDate"].DataPropertyName = nameof(PendingRequestSummary.RequestDate);
+            dgvGmQueue.Columns["colGmProduct"].DataPropertyName = nameof(PendingRequestSummary.Product);
+            dgvGmQueue.Columns["colGmDocTypes"].DataPropertyName = nameof(PendingRequestSummary.DocumentNo);
+            dgvGmQueue.Columns["colGmPreparedBy"].DataPropertyName = nameof(PendingRequestSummary.PreparedBy);
+            dgvGmQueue.Columns["colGmRequestedAt"].DataPropertyName = nameof(PendingRequestSummary.RequestedAt);
 
             // Wire up events
             dgvGmQueue.SelectionChanged += DgvGmQueue_SelectionChanged;
@@ -89,22 +88,27 @@ namespace DocumentIssuanceApp.Controls
 
         private async Task DisplaySelectedRequestDetailsAsync(DataGridViewRow selectedRow)
         {
-            if (!(selectedRow.DataBoundItem is DataRowView rowView))
+            // BEFORE: if (!(selectedRow.DataBoundItem is DataRowView rowView))
+            // AFTER: Cast to our new DTO
+            if (!(selectedRow.DataBoundItem is PendingRequestSummary request))
             {
                 ClearGmSelectedRequestDetails();
                 return;
             }
-            string requestNo = rowView["RequestNo"].ToString();
-            txtGmDetailRequestNo.Text = requestNo;
-            txtGmDetailRequestDate.Text = ((DateTime)rowView["RequestDate"]).ToString("dd-MMM-yyyy");
-            txtGmDetailProduct.Text = rowView["Product"].ToString();
-            txtGmDetailDocTypes.Text = rowView["DocumentNo"].ToString();
-            txtGmDetailPreparedBy.Text = rowView["PreparedBy"].ToString();
-            txtGmDetailRequestedAt.Text = ((DateTime)rowView["RequestedAt"]).ToString("dd-MMM-yyyy HH:mm");
+
+            // Access data via properties (compile-time safe) instead of strings
+            string requestNo = request.RequestNo;
+            txtGmDetailRequestNo.Text = request.RequestNo;
+            txtGmDetailRequestDate.Text = request.RequestDate.ToString("dd-MMM-yyyy");
+            txtGmDetailProduct.Text = request.Product;
+            txtGmDetailDocTypes.Text = request.DocumentNo;
+            txtGmDetailPreparedBy.Text = request.PreparedBy;
+            txtGmDetailRequestedAt.Text = request.RequestedAt.ToString("dd-MMM-yyyy HH:mm");
 
             this.Cursor = Cursors.WaitCursor;
             try
             {
+                // The rest of this method (fetching full details) remains the same
                 DataTable dt = await _repository.GetFullRequestDetailsAsync(requestNo);
                 if (dt.Rows.Count > 0)
                 {

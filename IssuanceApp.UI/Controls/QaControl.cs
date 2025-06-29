@@ -29,14 +29,13 @@ namespace DocumentIssuanceApp.Controls
             _loggedInUserName = loggedInUserName;
 
             // Setup DataGridView
-            dgvQaQueue.AutoGenerateColumns = false;
-            dgvQaQueue.Columns["colQaRequestNo"].DataPropertyName = "RequestNo";
-            dgvQaQueue.Columns["colQaRequestDate"].DataPropertyName = "RequestDate";
-            dgvQaQueue.Columns["colQaProduct"].DataPropertyName = "Product";
-            dgvQaQueue.Columns["colQaDocTypes"].DataPropertyName = "DocumentNo";
-            dgvQaQueue.Columns["colQaPreparedBy"].DataPropertyName = "PreparedBy";
-            dgvQaQueue.Columns["colQaAuthorizedBy"].DataPropertyName = "AuthorizedBy";
-            dgvQaQueue.Columns["colQaGmActionAt"].DataPropertyName = "GmActionAt";
+            dgvQaQueue.Columns["colQaRequestNo"].DataPropertyName = nameof(PendingRequestSummary.RequestNo);
+            dgvQaQueue.Columns["colQaRequestDate"].DataPropertyName = nameof(PendingRequestSummary.RequestDate);
+            dgvQaQueue.Columns["colQaProduct"].DataPropertyName = nameof(PendingRequestSummary.Product);
+            dgvQaQueue.Columns["colQaDocTypes"].DataPropertyName = nameof(PendingRequestSummary.DocumentNo);
+            dgvQaQueue.Columns["colQaPreparedBy"].DataPropertyName = nameof(PendingRequestSummary.PreparedBy);
+            dgvQaQueue.Columns["colQaAuthorizedBy"].DataPropertyName = nameof(PendingRequestSummary.AuthorizedBy);
+            dgvQaQueue.Columns["colQaGmActionAt"].DataPropertyName = nameof(PendingRequestSummary.GmActionAt);
 
             // Wire up events
             dgvQaQueue.SelectionChanged += DgvQaQueue_SelectionChanged;
@@ -91,20 +90,24 @@ namespace DocumentIssuanceApp.Controls
 
         private async Task DisplaySelectedRequestDetailsAsync(DataGridViewRow selectedRow)
         {
-            if (!(selectedRow.DataBoundItem is DataRowView rowView))
+            // Cast to our new DTO
+            if (!(selectedRow.DataBoundItem is PendingRequestSummary request))
             {
                 ClearQaSelectedRequestDetails();
                 return;
             }
-            string requestNo = rowView["RequestNo"].ToString();
-            txtQaDetailRequestNo.Text = requestNo;
-            txtQaDetailRequestDate.Text = ((DateTime)rowView["RequestDate"]).ToString("dd-MMM-yyyy");
-            txtQaDetailProduct.Text = rowView["Product"].ToString();
-            txtQaDetailDocTypes.Text = rowView["DocumentNo"].ToString();
-            txtQaDetailPreparedBy.Text = rowView["PreparedBy"].ToString();
-            if (rowView["GmActionAt"] != DBNull.Value)
-                txtQaDetailGmActionTime.Text = ((DateTime)rowView["GmActionAt"]).ToString("dd-MMM-yyyy HH:mm");
 
+            // Access data via properties
+            string requestNo = request.RequestNo;
+            txtQaDetailRequestNo.Text = request.RequestNo;
+            txtQaDetailRequestDate.Text = request.RequestDate.ToString("dd-MMM-yyyy");
+            txtQaDetailProduct.Text = request.Product;
+            txtQaDetailDocTypes.Text = request.DocumentNo;
+            txtQaDetailPreparedBy.Text = request.PreparedBy;
+            if (request.GmActionAt.HasValue)
+                txtQaDetailGmActionTime.Text = request.GmActionAt.Value.ToString("dd-MMM-yyyy HH:mm");
+
+            // The rest of this method remains the same
             this.Cursor = Cursors.WaitCursor;
             try
             {

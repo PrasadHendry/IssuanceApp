@@ -27,8 +27,8 @@ namespace DocumentIssuanceApp.Controls
             _repository = repository;
             _userRolesBindingSource = new BindingSource();
             dgvUserRoles.AutoGenerateColumns = false;
-            dgvUserRoles.Columns["colUserRoleId"].DataPropertyName = "RoleID";
-            dgvUserRoles.Columns["colUserRoleName"].DataPropertyName = "RoleName";
+            dgvUserRoles.Columns["colUserRoleId"].DataPropertyName = nameof(UserRole.RoleID);
+            dgvUserRoles.Columns["colUserRoleName"].DataPropertyName = nameof(UserRole.RoleName);
             dgvUserRoles.DataSource = _userRolesBindingSource;
             dgvUserRoles.SelectionChanged += DgvUserRoles_SelectionChanged;
             btnRefreshUserRoles.Click += async (s, e) => await LoadUserRolesAsync();
@@ -61,9 +61,18 @@ namespace DocumentIssuanceApp.Controls
         {
             bool isRowSelected = dgvUserRoles.SelectedRows.Count > 0;
             btnResetPassword.Enabled = isRowSelected;
-            txtRoleNameManage.Text = isRowSelected
-                ? Convert.ToString((dgvUserRoles.SelectedRows[0].DataBoundItem as DataRowView)?["RoleName"])
-                : string.Empty;
+
+            if (isRowSelected)
+            {
+                // Cast the DataBoundItem to our DTO
+                var selectedRole = dgvUserRoles.SelectedRows[0].DataBoundItem as UserRole;
+                // Access the property directly - no more magic strings!
+                txtRoleNameManage.Text = selectedRole?.RoleName ?? string.Empty;
+            }
+            else
+            {
+                txtRoleNameManage.Text = string.Empty;
+            }
         }
 
         private async void BtnResetPassword_Click(object sender, EventArgs e)
