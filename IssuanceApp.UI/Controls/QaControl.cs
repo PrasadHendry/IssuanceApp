@@ -52,7 +52,7 @@ namespace DocumentIssuanceApp.Controls
         // Public method for MainForm to call when the tab is selected
         public async Task LoadPendingQueueAsync()
         {
-            if (_repository == null) return; // Guard against loading before initialization
+            if (_repository == null) return;
 
             this.Cursor = Cursors.WaitCursor;
             btnQaRefreshList.Enabled = false;
@@ -66,7 +66,8 @@ namespace DocumentIssuanceApp.Controls
                 if (dgvQaQueue.Rows.Count > 0)
                 {
                     dgvQaQueue.Rows[0].Selected = true;
-                    // The SelectionChanged event will handle loading details
+                    // *** THIS IS THE FIX: Explicitly call the detail display method ***
+                    await DisplaySelectedRequestDetailsAsync(dgvQaQueue.Rows[0]);
                 }
             }
             catch (Exception ex)
