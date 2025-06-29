@@ -1,5 +1,6 @@
 ﻿// IssuanceApp.UI/Controls/LoginControl.cs
 
+using DocumentIssuanceApp; // THIS IS THE CRUCIAL FIX
 using IssuanceApp.Data;
 using System;
 using System.Collections.Generic;
@@ -15,7 +16,6 @@ namespace DocumentIssuanceApp.Controls
         private IssuanceRepository _repository;
         private string _osUserName;
 
-        // Event to notify MainForm about login completion
         public event EventHandler<LoginEventArgs> LoginAttemptCompleted;
 
         public LoginControl()
@@ -28,11 +28,8 @@ namespace DocumentIssuanceApp.Controls
         {
             _repository = repository;
             _osUserName = GetOsUser();
-
-            // Set initial state
             Reset();
 
-            // Load roles
             cmbRole.Items.Clear();
             btnLogin.Enabled = false;
             this.Cursor = Cursors.WaitCursor;
@@ -114,7 +111,6 @@ namespace DocumentIssuanceApp.Controls
             {
                 btnLogin.Enabled = true;
                 this.Cursor = Cursors.Default;
-                // Raise the event regardless of success or failure
                 LoginAttemptCompleted?.Invoke(this, new LoginEventArgs(isAuthenticated, selectedRole, _osUserName));
             }
         }

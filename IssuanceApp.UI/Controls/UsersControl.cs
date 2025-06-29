@@ -1,9 +1,10 @@
 ﻿// IssuanceApp.UI/Controls/UsersControl.cs
 
+using DocumentIssuanceApp; // Add this using statement
 using IssuanceApp.Data;
 using System;
 using System.Data;
-using System.Threading.Tasks;
+using System.Threading.Tasks; // Add this for Task
 using System.Windows.Forms;
 
 namespace DocumentIssuanceApp.Controls
@@ -24,26 +25,20 @@ namespace DocumentIssuanceApp.Controls
         public void InitializeControl(IssuanceRepository repository)
         {
             _repository = repository;
-
-            // Initialize BindingSource
             _userRolesBindingSource = new BindingSource();
-
-            // Setup DataGridView
             dgvUserRoles.AutoGenerateColumns = false;
             dgvUserRoles.Columns["colUserRoleId"].DataPropertyName = "RoleID";
             dgvUserRoles.Columns["colUserRoleName"].DataPropertyName = "RoleName";
             dgvUserRoles.DataSource = _userRolesBindingSource;
-
-            // Wire up events
             dgvUserRoles.SelectionChanged += DgvUserRoles_SelectionChanged;
             btnRefreshUserRoles.Click += async (s, e) => await LoadUserRolesAsync();
             btnResetPassword.Click += BtnResetPassword_Click;
         }
 
-        // Public method for MainForm to call when the tab is selected
+        // CORRECTED: Changed from async void to async Task
         public async Task LoadUserRolesAsync()
         {
-            if (_repository == null) return; // Guard against loading before initialization
+            if (_repository == null) return;
 
             this.Cursor = Cursors.WaitCursor;
             btnRefreshUserRoles.Enabled = false;
@@ -82,8 +77,6 @@ namespace DocumentIssuanceApp.Controls
             string roleName = txtRoleNameManage.Text;
             if (MessageBox.Show($"Are you sure you want to reset the password for the '{roleName}' role?", "Confirm Password Reset", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
-                // This should prompt for a new password and use a secure hashing library.
-                // For this example, we'll keep the placeholder.
                 string newPassword = "Password123";
                 string newPasswordHash = newPassword; // Replace with: BCrypt.Net.BCrypt.HashPassword(newPassword);
 

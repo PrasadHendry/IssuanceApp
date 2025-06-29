@@ -3,7 +3,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace DocumentIssuanceApp
+namespace DocumentIssuanceApp.Controls
 {
     /// <summary>
     /// Centralizes UI styling, colors, and fonts for the entire application.
