@@ -1,6 +1,6 @@
 ﻿// IssuanceApp.UI/MainForm.cs
 
-using DocumentIssuanceApp.Controls;
+using DocumentIssuanceApp.Controls; // THIS IS THE FIX FOR MAINFORM
 using IssuanceApp.Data;
 using System;
 using System.Collections.Generic;
@@ -29,7 +29,6 @@ namespace DocumentIssuanceApp
         private bool _auditDataLoaded = false;
         private bool _usersDataLoaded = false;
 
-        // CancellationTokenSource for robust async operations
         private readonly CancellationTokenSource _dataLoadCts = new CancellationTokenSource();
         #endregion
 
@@ -70,18 +69,14 @@ namespace DocumentIssuanceApp
 
         private void InitializeUserControls()
         {
-            // --- Login Control ---
             this.loginControl1.LoginAttemptCompleted += LoginControl_LoginAttemptCompleted;
             this.loginControl1.InitializeControl(_repository);
-
-            // The other controls will be initialized with their context (repository, username)
-            // after a successful login event is received.
         }
 
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
             _dataLoadCts.Cancel();
-            auditTrailControl1.CancelAllOperations(); // Ensure audit trail tasks are stopped
+            auditTrailControl1.CancelAllOperations();
             if (statusTimer != null)
             {
                 statusTimer.Stop();
@@ -100,7 +95,6 @@ namespace DocumentIssuanceApp
 
             if (selectedTabName == ControlNames.TabPageDocumentIssuance)
             {
-                // This tab loads its data every time it's shown to get a new request #
                 await documentIssuanceControl1.LoadInitialDataAsync();
             }
             else if (selectedTabName == ControlNames.TabPageGmOperations && !_gmDataLoaded)
@@ -141,7 +135,7 @@ namespace DocumentIssuanceApp
 
         private void SetupTabs()
         {
-            EnableTabsBasedOnRole(null); // Start with only login tab visible
+            EnableTabsBasedOnRole(null);
         }
 
         private void SwitchToDefaultTabForRole(string role)
@@ -171,20 +165,17 @@ namespace DocumentIssuanceApp
                 loggedInRole = e.Role;
                 loggedInUserName = e.UserName;
 
-                // Update UI with logged-in user info
                 toolStripStatusLabelUser.Text = $"User: {loggedInUserName} ({loggedInRole})";
                 lblCurrentUserHeader.Text = $"Logged in as: {loggedInUserName} ({loggedInRole})";
                 lblCurrentUserHeader.ForeColor = ThemeManager.HeaderTextColor;
                 pnlAppHeader.Visible = true;
 
-                // Initialize all the other user controls now that we have a valid user context
                 documentIssuanceControl1.InitializeControl(_repository, loggedInUserName);
                 gmOperationsControl1.InitializeControl(_repository, loggedInUserName);
                 qaControl1.InitializeControl(_repository, loggedInUserName);
                 auditTrailControl1.InitializeControl(_repository);
                 usersControl1.InitializeControl(_repository);
 
-                // Reset flags and show appropriate tabs
                 _gmDataLoaded = _qaDataLoaded = _auditDataLoaded = _usersDataLoaded = false;
                 EnableTabsBasedOnRole(loggedInRole);
                 SwitchToDefaultTabForRole(loggedInRole);
@@ -219,7 +210,6 @@ namespace DocumentIssuanceApp
 
         private void UpdateStatusBarForSignOut()
         {
-            // loggedInUserName is the OS user, which doesn't change on sign out
             toolStripStatusLabelUser.Text = $"User: {loggedInUserName} (Not Logged In)";
             toolStripStatusLabelDateTime.Text = DateTime.Now.ToString("dd-MMM-yyyy hh:mm tt");
         }
@@ -248,7 +238,7 @@ namespace DocumentIssuanceApp
                     (tab.Name == ControlNames.TabPageGmOperations && (isGm || isAdmin)) ||
                     (tab.Name == ControlNames.TabPageQA && (isQa || isAdmin)) ||
                     (tab.Name == ControlNames.TabPageUsers && isAdmin) ||
-                    (tab.Name == ControlNames.TabPageAuditTrail); // Everyone can see Audit Trail
+                    (tab.Name == ControlNames.TabPageAuditTrail);
 
                 if (shouldShowTab)
                 {

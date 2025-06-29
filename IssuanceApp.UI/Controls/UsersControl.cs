@@ -1,10 +1,10 @@
 ﻿// IssuanceApp.UI/Controls/UsersControl.cs
 
-using DocumentIssuanceApp; // Add this using statement
+using DocumentIssuanceApp.Controls; // Namespace for ThemeManager
 using IssuanceApp.Data;
 using System;
 using System.Data;
-using System.Threading.Tasks; // Add this for Task
+using System.Threading.Tasks; // For Task
 using System.Windows.Forms;
 
 namespace DocumentIssuanceApp.Controls
@@ -35,7 +35,6 @@ namespace DocumentIssuanceApp.Controls
             btnResetPassword.Click += BtnResetPassword_Click;
         }
 
-        // CORRECTED: Changed from async void to async Task
         public async Task LoadUserRolesAsync()
         {
             if (_repository == null) return;
@@ -78,7 +77,7 @@ namespace DocumentIssuanceApp.Controls
             if (MessageBox.Show($"Are you sure you want to reset the password for the '{roleName}' role?", "Confirm Password Reset", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 string newPassword = "Password123";
-                string newPasswordHash = newPassword; // Replace with: BCrypt.Net.BCrypt.HashPassword(newPassword);
+                string newPasswordHash = newPassword;
 
                 btnResetPassword.Enabled = false;
                 this.Cursor = Cursors.WaitCursor;
