@@ -6,11 +6,13 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 
-namespace DocumentIssuanceApp
+namespace IssuanceApp.UI
 {
     public class RoundedButton : Button
     {
         private int cornerRadius = 10;
+        private bool isHovered = false;
+        private bool isPressed = false;
 
         public RoundedButton()
         {
@@ -40,9 +42,38 @@ namespace DocumentIssuanceApp
             return Color.FromArgb(baseColor.A, r, g, b);
         }
 
+        // Using event-driven state management for better performance
+        protected override void OnMouseEnter(EventArgs e)
+        {
+            base.OnMouseEnter(e);
+            isHovered = true;
+            this.Invalidate();
+        }
+
+        protected override void OnMouseLeave(EventArgs e)
+        {
+            base.OnMouseLeave(e);
+            isHovered = false;
+            this.Invalidate();
+        }
+
+        protected override void OnMouseDown(MouseEventArgs mevent)
+        {
+            base.OnMouseDown(mevent);
+            isPressed = true;
+            this.Invalidate();
+        }
+
+        protected override void OnMouseUp(MouseEventArgs mevent)
+        {
+            base.OnMouseUp(mevent);
+            isPressed = false;
+            this.Invalidate();
+        }
+
         protected override void OnPaint(PaintEventArgs e)
         {
-            base.OnPaintBackground(e);
+            // Do not call base.OnPaintBackground(e) as we are doing all the painting.
             Graphics g = e.Graphics;
             g.SmoothingMode = SmoothingMode.AntiAlias;
 
@@ -69,17 +100,15 @@ namespace DocumentIssuanceApp
 
                 Color backColor;
                 Color foreColor = this.ForeColor;
-                bool isPressed = this.Capture && this.ClientRectangle.Contains(this.PointToClient(Cursor.Position));
-                bool isHovered = this.ClientRectangle.Contains(this.PointToClient(Cursor.Position));
 
                 if (!this.Enabled)
                 {
-                    backColor = Color.FromArgb(150, this.BackColor); // 150 alpha makes it look faded
+                    backColor = Color.FromArgb(150, this.BackColor);
                     foreColor = Color.FromArgb(180, this.ForeColor);
                 }
                 else if (isPressed)
                 {
-                    backColor = GetPressedColor(this.FlatAppearance.MouseOverBackColor != Color.Empty ? this.FlatAppearance.MouseOverBackColor : this.BackColor);
+                    backColor = GetPressedColor(this.FlatAppearance.MouseDownBackColor != Color.Empty && this.FlatAppearance.MouseDownBackColor != Color.Transparent ? this.FlatAppearance.MouseDownBackColor : this.BackColor);
                 }
                 else if (isHovered && this.FlatAppearance.MouseOverBackColor != Color.Empty && this.FlatAppearance.MouseOverBackColor != Color.Transparent)
                 {

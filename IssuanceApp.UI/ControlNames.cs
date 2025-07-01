@@ -1,5 +1,6 @@
-﻿// --- Place this class in a new file "ControlNames.cs" inside the IssuanceApp.UI project ---
-namespace DocumentIssuanceApp
+﻿// ControlNames.cs
+
+namespace IssuanceApp.UI
 {
     /// <summary>
     /// Centralizes UI-specific constant string values to prevent "magic string" errors.

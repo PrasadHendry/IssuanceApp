@@ -1,6 +1,8 @@
-﻿using System;
+﻿// LoginEventArgs.cs
 
-namespace DocumentIssuanceApp.Controls
+using System;
+
+namespace IssuanceApp.UI.Controls
 {
     public class LoginEventArgs : EventArgs
     {

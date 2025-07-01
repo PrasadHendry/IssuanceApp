@@ -1,26 +1,22 @@
-﻿using System;
+﻿// DataAccessModels.cs
+
+using System;
 
 namespace IssuanceApp.Data
 {
     /// <summary>
     /// This file contains the Plain Old C# Objects (POCOs) or Data Transfer Objects (DTOs).
     /// Their purpose is to define a clear, strongly-typed structure for data that is passed
-    /// between the UI layer (MainForm.cs) and the Data layer (IssuanceRepository.cs).
+    /// between the UI layer and the Data layer.
     /// They do not contain any logic, only properties.
     /// </summary>
 
-    // Represents a user role from the database.
-    // Used by IssuanceRepository to fetch roles and by MainForm to display them in the Users tab grid.
     public class UserRole
     {
         public int RoleID { get; set; }
         public string RoleName { get; set; }
     }
 
-    // Represents a single, complete record for the Audit Trail.
-    // This class combines data from both the Doc_Issuance and Issuance_Tracker tables.
-    // It's used by the Virtual Mode of the Audit Trail grid in MainForm.
-    // The IssuanceRepository populates this object, and the MainForm's CellValueNeeded event reads from it.
     public class AuditTrailEntry
     {
         public int IssuanceID { get; set; }
@@ -41,9 +37,6 @@ namespace IssuanceApp.Data
         public string QAComment { get; set; }
     }
 
-    // A Data Transfer Object (DTO) used to pass all the necessary information
-    // for creating a new issuance request from the UI (MainForm) to the Data Layer (IssuanceRepository).
-    // This avoids having a method with a very long list of parameters.
     public class IssuanceRequestData
     {
         public string RequestNo { get; set; }
@@ -65,7 +58,11 @@ namespace IssuanceApp.Data
         public string ExportOrderNo { get; set; }
         public string RequestComment { get; set; }
     }
-    // 1. DTO for the GM Operations Queue
+
+    /// <summary>
+    /// DTO for the items displayed in the GM Operations Queue.
+    /// Contains all necessary details to avoid follow-up database calls.
+    /// </summary>
     public class GmQueueItemDto
     {
         public string RequestNo { get; set; }
@@ -74,8 +71,6 @@ namespace IssuanceApp.Data
         public string DocumentNo { get; set; }
         public string PreparedBy { get; set; }
         public DateTime RequestedAt { get; set; }
-
-        // Full details for instant display
         public string FromDepartment { get; set; }
         public string BatchNo { get; set; }
         public string ItemMfgDate { get; set; }
@@ -85,7 +80,10 @@ namespace IssuanceApp.Data
         public string RequestComment { get; set; }
     }
 
-    // 2. DTO for the QA Approval Queue
+    /// <summary>
+    /// DTO for the items displayed in the QA Approval Queue.
+    /// Contains all necessary details to avoid follow-up database calls.
+    /// </summary>
     public class QaQueueItemDto
     {
         public string RequestNo { get; set; }
@@ -94,12 +92,8 @@ namespace IssuanceApp.Data
         public string DocumentNo { get; set; }
         public string PreparedBy { get; set; }
         public DateTime RequestedAt { get; set; }
-
-        // Fields specific to the QA view (note they are not nullable)
         public string AuthorizedBy { get; set; }
         public DateTime GmActionAt { get; set; }
-
-        // Full details for instant display
         public string FromDepartment { get; set; }
         public string BatchNo { get; set; }
         public string ItemMfgDate { get; set; }

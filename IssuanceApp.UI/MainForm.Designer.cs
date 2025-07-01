@@ -1,4 +1,8 @@
-﻿namespace DocumentIssuanceApp
+﻿// MainForm.Designer.cs
+
+using System.Windows.Forms;
+
+namespace IssuanceApp.UI
 {
     partial class MainForm
     {
@@ -31,11 +35,17 @@
             this.components = new System.ComponentModel.Container();
             this.tabControlMain = new System.Windows.Forms.TabControl();
             this.tabPageLogin = new System.Windows.Forms.TabPage();
+            this.loginControl1 = new IssuanceApp.UI.Controls.LoginControl();
             this.tabPageDocumentIssuance = new System.Windows.Forms.TabPage();
+            this.documentIssuanceControl1 = new IssuanceApp.UI.Controls.DocumentIssuanceControl();
             this.tabPageGmOperations = new System.Windows.Forms.TabPage();
+            this.gmOperationsControl1 = new IssuanceApp.UI.Controls.GmOperationsControl();
             this.tabPageQa = new System.Windows.Forms.TabPage();
+            this.qaControl1 = new IssuanceApp.UI.Controls.QaControl();
             this.tabPageAuditTrail = new System.Windows.Forms.TabPage();
+            this.auditTrailControl1 = new IssuanceApp.UI.Controls.AuditTrailControl();
             this.tabPageUsers = new System.Windows.Forms.TabPage();
+            this.usersControl1 = new IssuanceApp.UI.Controls.UsersControl();
             this.statusStripMain = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabelUser = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabelSpring = new System.Windows.Forms.ToolStripStatusLabel();
@@ -44,16 +54,10 @@
             this.pnlAppHeader = new System.Windows.Forms.Panel();
             this.lblAppTitle = new System.Windows.Forms.Label();
             this.flpHeader = new System.Windows.Forms.FlowLayoutPanel();
-            this.btnSignOut = new DocumentIssuanceApp.RoundedButton();
+            this.btnSignOut = new IssuanceApp.UI.RoundedButton();
             this.lblCurrentUserHeader = new System.Windows.Forms.Label();
             this.pnlMainContainer = new System.Windows.Forms.Panel();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
-            this.loginControl1 = new DocumentIssuanceApp.Controls.LoginControl();
-            this.documentIssuanceControl1 = new DocumentIssuanceApp.Controls.DocumentIssuanceControl();
-            this.gmOperationsControl1 = new DocumentIssuanceApp.Controls.GmOperationsControl();
-            this.qaControl1 = new DocumentIssuanceApp.Controls.QaControl();
-            this.auditTrailControl1 = new DocumentIssuanceApp.Controls.AuditTrailControl();
-            this.usersControl1 = new DocumentIssuanceApp.Controls.UsersControl();
             this.tabControlMain.SuspendLayout();
             this.tabPageLogin.SuspendLayout();
             this.tabPageDocumentIssuance.SuspendLayout();
@@ -95,6 +99,14 @@
             this.tabPageLogin.Text = "Login";
             this.tabPageLogin.UseVisualStyleBackColor = true;
             // 
+            // loginControl1
+            // 
+            this.loginControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.loginControl1.Location = new System.Drawing.Point(3, 3);
+            this.loginControl1.Name = "loginControl1";
+            this.loginControl1.Size = new System.Drawing.Size(1328, 579);
+            this.loginControl1.TabIndex = 0;
+            // 
             // tabPageDocumentIssuance
             // 
             this.tabPageDocumentIssuance.Controls.Add(this.documentIssuanceControl1);
@@ -106,6 +118,15 @@
             this.tabPageDocumentIssuance.TabIndex = 1;
             this.tabPageDocumentIssuance.Text = "Document Issuance";
             this.tabPageDocumentIssuance.UseVisualStyleBackColor = true;
+            // 
+            // documentIssuanceControl1
+            // 
+            this.documentIssuanceControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.documentIssuanceControl1.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.documentIssuanceControl1.Location = new System.Drawing.Point(3, 3);
+            this.documentIssuanceControl1.Name = "documentIssuanceControl1";
+            this.documentIssuanceControl1.Size = new System.Drawing.Size(1328, 579);
+            this.documentIssuanceControl1.TabIndex = 0;
             // 
             // tabPageGmOperations
             // 
@@ -119,6 +140,15 @@
             this.tabPageGmOperations.Text = "GM Operations";
             this.tabPageGmOperations.UseVisualStyleBackColor = true;
             // 
+            // gmOperationsControl1
+            // 
+            this.gmOperationsControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gmOperationsControl1.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.gmOperationsControl1.Location = new System.Drawing.Point(3, 3);
+            this.gmOperationsControl1.Name = "gmOperationsControl1";
+            this.gmOperationsControl1.Size = new System.Drawing.Size(1328, 579);
+            this.gmOperationsControl1.TabIndex = 0;
+            // 
             // tabPageQa
             // 
             this.tabPageQa.Controls.Add(this.qaControl1);
@@ -130,6 +160,15 @@
             this.tabPageQa.TabIndex = 3;
             this.tabPageQa.Text = "QA";
             this.tabPageQa.UseVisualStyleBackColor = true;
+            // 
+            // qaControl1
+            // 
+            this.qaControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.qaControl1.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.qaControl1.Location = new System.Drawing.Point(3, 3);
+            this.qaControl1.Name = "qaControl1";
+            this.qaControl1.Size = new System.Drawing.Size(1328, 579);
+            this.qaControl1.TabIndex = 0;
             // 
             // tabPageAuditTrail
             // 
@@ -143,6 +182,15 @@
             this.tabPageAuditTrail.Text = "Audit Trail";
             this.tabPageAuditTrail.UseVisualStyleBackColor = true;
             // 
+            // auditTrailControl1
+            // 
+            this.auditTrailControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.auditTrailControl1.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
+            this.auditTrailControl1.Location = new System.Drawing.Point(3, 3);
+            this.auditTrailControl1.Name = "auditTrailControl1";
+            this.auditTrailControl1.Size = new System.Drawing.Size(1328, 579);
+            this.auditTrailControl1.TabIndex = 0;
+            // 
             // tabPageUsers
             // 
             this.tabPageUsers.Controls.Add(this.usersControl1);
@@ -154,6 +202,16 @@
             this.tabPageUsers.TabIndex = 5;
             this.tabPageUsers.Text = "Users";
             this.tabPageUsers.UseVisualStyleBackColor = true;
+            // 
+            // usersControl1
+            // 
+            this.usersControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.usersControl1.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
+            this.usersControl1.Location = new System.Drawing.Point(3, 3);
+            this.usersControl1.Name = "usersControl1";
+            this.usersControl1.Padding = new System.Windows.Forms.Padding(10);
+            this.usersControl1.Size = new System.Drawing.Size(1328, 579);
+            this.usersControl1.TabIndex = 0;
             // 
             // statusStripMain
             // 
@@ -281,59 +339,6 @@
             this.imageList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
             this.imageList1.ImageSize = new System.Drawing.Size(16, 16);
             this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
-            // 
-            // loginControl1
-            // 
-            this.loginControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.loginControl1.Location = new System.Drawing.Point(3, 3);
-            this.loginControl1.Name = "loginControl1";
-            this.loginControl1.Size = new System.Drawing.Size(1328, 579);
-            this.loginControl1.TabIndex = 0;
-            // 
-            // documentIssuanceControl1
-            // 
-            this.documentIssuanceControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.documentIssuanceControl1.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.documentIssuanceControl1.Location = new System.Drawing.Point(3, 3);
-            this.documentIssuanceControl1.Name = "documentIssuanceControl1";
-            this.documentIssuanceControl1.Size = new System.Drawing.Size(1328, 579);
-            this.documentIssuanceControl1.TabIndex = 0;
-            // 
-            // gmOperationsControl1
-            // 
-            this.gmOperationsControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gmOperationsControl1.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.gmOperationsControl1.Location = new System.Drawing.Point(3, 3);
-            this.gmOperationsControl1.Name = "gmOperationsControl1";
-            this.gmOperationsControl1.Size = new System.Drawing.Size(1328, 579);
-            this.gmOperationsControl1.TabIndex = 0;
-            // 
-            // qaControl1
-            // 
-            this.qaControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.qaControl1.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.qaControl1.Location = new System.Drawing.Point(3, 3);
-            this.qaControl1.Name = "qaControl1";
-            this.qaControl1.Size = new System.Drawing.Size(1328, 579);
-            this.qaControl1.TabIndex = 0;
-            // 
-            // auditTrailControl1
-            // 
-            this.auditTrailControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.auditTrailControl1.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
-            this.auditTrailControl1.Location = new System.Drawing.Point(3, 3);
-            this.auditTrailControl1.Name = "auditTrailControl1";
-            this.auditTrailControl1.Size = new System.Drawing.Size(1328, 579);
-            this.auditTrailControl1.TabIndex = 0;
-            // 
-            // usersControl1
-            // 
-            this.usersControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.usersControl1.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
-            this.usersControl1.Location = new System.Drawing.Point(3, 3);
-            this.usersControl1.Name = "usersControl1";
-            this.usersControl1.Size = new System.Drawing.Size(1328, 579);
-            this.usersControl1.TabIndex = 0;
             // 
             // MainForm
             // 

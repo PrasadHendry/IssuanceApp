@@ -1,4 +1,5 @@
-﻿// --- Place this class in a new file "AppConstants.cs" inside the IssuanceApp.Data project ---
+﻿// AppConstants.cs
+
 namespace IssuanceApp.Data
 {
     /// <summary>

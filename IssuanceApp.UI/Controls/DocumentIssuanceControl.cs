@@ -1,15 +1,15 @@
-﻿// IssuanceApp.UI/Controls/DocumentIssuanceControl.cs
+﻿// DocumentIssuanceControl.cs
 
 using IssuanceApp.Data;
+using IssuanceApp.UI; // For ThemeManager
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace DocumentIssuanceApp.Controls
+namespace IssuanceApp.UI.Controls
 {
     public partial class DocumentIssuanceControl : UserControl
     {
@@ -55,7 +55,6 @@ namespace DocumentIssuanceApp.Controls
             cmbFromDepartmentDI.Items.AddRange(new string[] { "Production Department", "Quality Assurance", "Research & Development", "Regulatory Affairs", "Manufacturing", "Packaging Department" });
         }
 
-        // This public method will be called by MainForm when the tab becomes visible
         public async Task LoadInitialDataAsync()
         {
             if (_repository == null) return;
@@ -66,7 +65,7 @@ namespace DocumentIssuanceApp.Controls
                 txtRequestNoValueDI.Text = await _repository.GenerateNewRequestNumberAsync();
                 ClearDocumentIssuanceForm();
                 lblStatusValueDI.Text = "Ready to create a new request.";
-                lblStatusValueDI.ForeColor = SystemColors.ControlText;
+                lblStatusValueDI.ForeColor = System.Drawing.SystemColors.ControlText;
             }
             catch (Exception ex)
             {
@@ -79,6 +78,7 @@ namespace DocumentIssuanceApp.Controls
             }
         }
 
+        #region UI and Helper Methods
         private void DocTypeCheckbox_CheckedChanged(object sender, EventArgs e) => UpdateDocumentNumberFieldsVisibility();
 
         private void UpdateDocumentNumberFieldsVisibility()
@@ -119,56 +119,123 @@ namespace DocumentIssuanceApp.Controls
             if ((e.KeyChar == '.') && ((sender as TextBox).Text.IndexOf('.') > -1)) e.Handled = true;
         }
 
-        private async void BtnSubmitRequestDI_Click(object sender, EventArgs e)
+        private string GetDateStringFromComboBoxes(ComboBox monthComboBox, ComboBox yearComboBox)
         {
+            string month = monthComboBox?.SelectedItem?.ToString();
+            string year = yearComboBox?.SelectedItem?.ToString();
+            return (string.IsNullOrWhiteSpace(month) || string.IsNullOrWhiteSpace(year) || month == "N/A" || year == "N/A") ? null : $"{month}/{year}";
+        }
+
+        private void ClearDocumentIssuanceForm()
+        {
+            Action<Control.ControlCollection> clearControls = null;
+            clearControls = (controls) =>
+            {
+                foreach (Control c in controls)
+                {
+                    if (c is TextBox) ((TextBox)c).Clear();
+                    else if (c is CheckBox) ((CheckBox)c).Checked = false;
+                    else if (c is ComboBox)
+                    {
+                        var cmb = (ComboBox)c;
+                        if (cmb.Items.Count > 0) cmb.SelectedIndex = 0;
+                    }
+                    else if (c.HasChildren) clearControls(c.Controls);
+                }
+            };
+            clearControls(this.Controls);
+            dtpRequestDateDI.Value = DateTime.Now;
+        }
+        #endregion
+
+        #region Validation
+        private bool IsFormValid(out string errorMessage, out Control controlToFocus)
+        {
+            errorMessage = string.Empty;
+            controlToFocus = null;
+
             if (cmbFromDepartmentDI.SelectedItem == null || string.IsNullOrWhiteSpace(cmbFromDepartmentDI.SelectedItem.ToString()))
-            { MessageBox.Show("Please select a 'From Department'.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning); cmbFromDepartmentDI.Focus(); return; }
+            {
+                errorMessage = "Please select a 'From Department'.";
+                controlToFocus = cmbFromDepartmentDI;
+                return false;
+            }
+
             if (string.IsNullOrWhiteSpace(txtProductDI.Text))
-            { MessageBox.Show("Please enter the 'Product'.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning); txtProductDI.Focus(); return; }
+            {
+                errorMessage = "Please enter the 'Product'.";
+                controlToFocus = txtProductDI;
+                return false;
+            }
+
             var docNumbersList = new List<string>();
-            if (chkDocTypeBMRDI.Checked) { if (string.IsNullOrWhiteSpace(txtBmrDocNoDI.Text)) { MessageBox.Show("BMR is checked, please enter BMR Document No.", "Validation Error"); txtBmrDocNoDI.Focus(); return; } docNumbersList.Add(txtBmrDocNoDI.Text.Trim()); }
-            if (chkDocTypeBPRDI.Checked) { if (string.IsNullOrWhiteSpace(txtBprDocNoDI.Text)) { MessageBox.Show("BPR is checked, please enter BPR Document No.", "Validation Error"); txtBprDocNoDI.Focus(); return; } docNumbersList.Add(txtBprDocNoDI.Text.Trim()); }
-            if (chkDocTypeAppendixDI.Checked) { if (string.IsNullOrWhiteSpace(txtAppendixDocNoDI.Text)) { MessageBox.Show("Appendix is checked, please enter Appendix Document No.", "Validation Error"); txtAppendixDocNoDI.Focus(); return; } docNumbersList.Add(txtAppendixDocNoDI.Text.Trim()); }
-            if (chkDocTypeAddendumDI.Checked) { if (string.IsNullOrWhiteSpace(txtAddendumDocNoDI.Text)) { MessageBox.Show("Addendum is checked, please enter Addendum Document No.", "Validation Error"); txtAddendumDocNoDI.Focus(); return; } docNumbersList.Add(txtAddendumDocNoDI.Text.Trim()); }
-            if (!docNumbersList.Any()) { MessageBox.Show("Please select at least one 'Document Type' and provide its number.", "Validation Error"); grpDocTypeDI.Focus(); return; }
-            string parentBatchSizeStr = null;
+            if (chkDocTypeBMRDI.Checked) { if (string.IsNullOrWhiteSpace(txtBmrDocNoDI.Text)) { errorMessage = "BMR is checked, please enter BMR Document No."; controlToFocus = txtBmrDocNoDI; return false; } docNumbersList.Add(txtBmrDocNoDI.Text.Trim()); }
+            if (chkDocTypeBPRDI.Checked) { if (string.IsNullOrWhiteSpace(txtBprDocNoDI.Text)) { errorMessage = "BPR is checked, please enter BPR Document No."; controlToFocus = txtBprDocNoDI; return false; } docNumbersList.Add(txtBprDocNoDI.Text.Trim()); }
+            if (chkDocTypeAppendixDI.Checked) { if (string.IsNullOrWhiteSpace(txtAppendixDocNoDI.Text)) { errorMessage = "Appendix is checked, please enter Appendix Document No."; controlToFocus = txtAppendixDocNoDI; return false; } docNumbersList.Add(txtAppendixDocNoDI.Text.Trim()); }
+            if (chkDocTypeAddendumDI.Checked) { if (string.IsNullOrWhiteSpace(txtAddendumDocNoDI.Text)) { errorMessage = "Addendum is checked, please enter Addendum Document No."; controlToFocus = txtAddendumDocNoDI; return false; } docNumbersList.Add(txtAddendumDocNoDI.Text.Trim()); }
+            if (!docNumbersList.Any()) { errorMessage = "Please select at least one 'Document Type' and provide its number."; controlToFocus = grpDocTypeDI; return false; }
+
             if (!string.IsNullOrWhiteSpace(txtParentBatchSizeValueDI.Text))
             {
-                if (!decimal.TryParse(txtParentBatchSizeValueDI.Text, out _)) { MessageBox.Show("Parent Batch Size must be a valid number.", "Validation Error"); txtParentBatchSizeValueDI.Focus(); return; }
-                if (cmbParentBatchSizeUnitDI.SelectedItem == null || cmbParentBatchSizeUnitDI.SelectedItem.ToString() == "N/A") { MessageBox.Show("Please select a Unit for the Parent Batch Size.", "Validation Error"); cmbParentBatchSizeUnitDI.Focus(); return; }
-                parentBatchSizeStr = $"{txtParentBatchSizeValueDI.Text.Trim()} {cmbParentBatchSizeUnitDI.SelectedItem}";
+                if (!decimal.TryParse(txtParentBatchSizeValueDI.Text, out _)) { errorMessage = "Parent Batch Size must be a valid number."; controlToFocus = txtParentBatchSizeValueDI; return false; }
+                if (cmbParentBatchSizeUnitDI.SelectedItem == null || cmbParentBatchSizeUnitDI.SelectedItem.ToString() == "N/A") { errorMessage = "Please select a Unit for the Parent Batch Size."; controlToFocus = cmbParentBatchSizeUnitDI; return false; }
             }
-            if (string.IsNullOrWhiteSpace(txtItemBatchSizeValueDI.Text)) { MessageBox.Show("Item Batch Size value is required.", "Validation Error"); txtItemBatchSizeValueDI.Focus(); return; }
-            if (!decimal.TryParse(txtItemBatchSizeValueDI.Text, out _)) { MessageBox.Show("Item Batch Size must be a valid number.", "Validation Error"); txtItemBatchSizeValueDI.Focus(); return; }
-            if (cmbItemBatchSizeUnitDI.SelectedItem == null || cmbItemBatchSizeUnitDI.SelectedItem.ToString() == "N/A") { MessageBox.Show("Please select a Unit for the Item Batch Size.", "Validation Error"); cmbItemBatchSizeUnitDI.Focus(); return; }
+
+            if (string.IsNullOrWhiteSpace(txtItemBatchSizeValueDI.Text)) { errorMessage = "Item Batch Size value is required."; controlToFocus = txtItemBatchSizeValueDI; return false; }
+            if (!decimal.TryParse(txtItemBatchSizeValueDI.Text, out _)) { errorMessage = "Item Batch Size must be a valid number."; controlToFocus = txtItemBatchSizeValueDI; return false; }
+            if (cmbItemBatchSizeUnitDI.SelectedItem == null || cmbItemBatchSizeUnitDI.SelectedItem.ToString() == "N/A") { errorMessage = "Please select a Unit for the Item Batch Size."; controlToFocus = cmbItemBatchSizeUnitDI; return false; }
+
+            return true;
+        }
+        #endregion
+
+        #region Event Handlers
+        private async void BtnSubmitRequestDI_Click(object sender, EventArgs e)
+        {
+            if (!IsFormValid(out string errorMessage, out Control controlToFocus))
+            {
+                MessageBox.Show(errorMessage, "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                controlToFocus?.Focus();
+                return;
+            }
+
+            string parentBatchSizeStr = !string.IsNullOrWhiteSpace(txtParentBatchSizeValueDI.Text)
+                ? $"{txtParentBatchSizeValueDI.Text.Trim()} {cmbParentBatchSizeUnitDI.SelectedItem}"
+                : null;
+
+            var docNumbers = new List<string>();
+            if (chkDocTypeBMRDI.Checked) docNumbers.Add(txtBmrDocNoDI.Text.Trim());
+            if (chkDocTypeBPRDI.Checked) docNumbers.Add(txtBprDocNoDI.Text.Trim());
+            if (chkDocTypeAppendixDI.Checked) docNumbers.Add(txtAppendixDocNoDI.Text.Trim());
+            if (chkDocTypeAddendumDI.Checked) docNumbers.Add(txtAddendumDocNoDI.Text.Trim());
 
             var issuanceData = new IssuanceRequestData
             {
                 RequestNo = txtRequestNoValueDI.Text,
                 RequestDate = dtpRequestDateDI.Value.Date,
                 FromDepartment = cmbFromDepartmentDI.SelectedItem.ToString(),
-                DocumentNo = string.Join(",", docNumbersList),
+                DocumentNo = string.Join(",", docNumbers),
+                Product = txtProductDI.Text.Trim(),
+                BatchNo = string.IsNullOrWhiteSpace(txtBatchNoDI.Text) ? null : txtBatchNoDI.Text.Trim(),
+                BatchSize = $"{txtItemBatchSizeValueDI.Text.Trim()} {cmbItemBatchSizeUnitDI.SelectedItem}",
+                PreparedBy = _loggedInUserName,
                 ParentBatchNumber = string.IsNullOrWhiteSpace(txtParentBatchNoDI.Text) ? null : txtParentBatchNoDI.Text.Trim(),
                 ParentBatchSize = parentBatchSizeStr,
                 ParentMfgDate = GetDateStringFromComboBoxes(cmbParentMfgMonthDI, cmbParentMfgYearDI),
                 ParentExpDate = GetDateStringFromComboBoxes(cmbParentExpMonthDI, cmbParentExpYearDI),
-                Product = txtProductDI.Text.Trim(),
-                BatchNo = string.IsNullOrWhiteSpace(txtBatchNoDI.Text) ? null : txtBatchNoDI.Text.Trim(),
-                BatchSize = $"{txtItemBatchSizeValueDI.Text.Trim()} {cmbItemBatchSizeUnitDI.SelectedItem}",
                 ItemMfgDate = GetDateStringFromComboBoxes(cmbItemMfgMonthDI, cmbItemMfgYearDI),
                 ItemExpDate = GetDateStringFromComboBoxes(cmbItemExpMonthDI, cmbItemExpYearDI),
                 Market = string.IsNullOrWhiteSpace(txtMarketDI.Text) ? null : txtMarketDI.Text.Trim(),
                 PackSize = string.IsNullOrWhiteSpace(txtPackSizeDI.Text) ? null : txtPackSizeDI.Text.Trim(),
                 ExportOrderNo = string.IsNullOrWhiteSpace(txtExportOrderNoDI.Text) ? null : txtExportOrderNoDI.Text.Trim(),
                 RequestComment = txtRemarksDI.Text.Trim(),
-                PreparedBy = _loggedInUserName
             };
 
             btnSubmitRequestDI.Enabled = false;
             btnClearFormDI.Enabled = false;
             this.Cursor = Cursors.WaitCursor;
             lblStatusValueDI.Text = "Submitting request...";
-            lblStatusValueDI.ForeColor = SystemColors.ControlText;
+            lblStatusValueDI.ForeColor = System.Drawing.SystemColors.ControlText;
 
             try
             {
@@ -195,41 +262,7 @@ namespace DocumentIssuanceApp.Controls
         private async void BtnClearFormDI_Click(object sender, EventArgs e)
         {
             await LoadInitialDataAsync();
-            lblStatusValueDI.Text = "Form cleared. Ready for new request.";
-            lblStatusValueDI.ForeColor = SystemColors.ControlText;
         }
-
-        private void ClearDocumentIssuanceForm()
-        {
-            chkDocTypeBMRDI.Checked = chkDocTypeBPRDI.Checked = chkDocTypeAppendixDI.Checked = chkDocTypeAddendumDI.Checked = false;
-            dtpRequestDateDI.Value = DateTime.Now;
-            if (cmbFromDepartmentDI.Items.Count > 0) cmbFromDepartmentDI.SelectedIndex = 0;
-            txtParentBatchNoDI.Clear();
-            txtParentBatchSizeValueDI.Clear();
-            if (cmbParentBatchSizeUnitDI.Items.Count > 0) cmbParentBatchSizeUnitDI.SelectedIndex = 0;
-            if (cmbParentMfgMonthDI.Items.Count > 0) cmbParentMfgMonthDI.SelectedIndex = 0;
-            if (cmbParentMfgYearDI.Items.Count > 0) cmbParentMfgYearDI.SelectedIndex = 0;
-            if (cmbParentExpMonthDI.Items.Count > 0) cmbParentExpMonthDI.SelectedIndex = 0;
-            if (cmbParentExpYearDI.Items.Count > 0) cmbParentExpYearDI.SelectedIndex = 0;
-            txtProductDI.Clear();
-            txtBatchNoDI.Clear();
-            txtItemBatchSizeValueDI.Clear();
-            if (cmbItemBatchSizeUnitDI.Items.Count > 0) cmbItemBatchSizeUnitDI.SelectedIndex = 0;
-            cmbItemMfgMonthDI.SelectedIndex = DateTime.Now.Month - 1;
-            cmbItemMfgYearDI.SelectedItem = DateTime.Now.Year.ToString();
-            cmbItemExpMonthDI.SelectedIndex = DateTime.Now.Month - 1;
-            cmbItemExpYearDI.SelectedItem = DateTime.Now.Year.ToString();
-            txtMarketDI.Clear();
-            txtPackSizeDI.Clear();
-            txtExportOrderNoDI.Clear();
-            txtRemarksDI.Clear();
-        }
-
-        private string GetDateStringFromComboBoxes(ComboBox monthComboBox, ComboBox yearComboBox)
-        {
-            string month = monthComboBox?.SelectedItem?.ToString();
-            string year = yearComboBox?.SelectedItem?.ToString();
-            return (string.IsNullOrWhiteSpace(month) || string.IsNullOrWhiteSpace(year) || month == "N/A" || year == "N/A") ? null : $"{month}/{year}";
-        }
+        #endregion
     }
 }

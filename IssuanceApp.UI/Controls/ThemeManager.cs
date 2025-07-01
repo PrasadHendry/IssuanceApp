@@ -1,9 +1,9 @@
-﻿// IssuanceApp.UI/ThemeManager.cs
+﻿// ThemeManager.cs
 
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace DocumentIssuanceApp.Controls
+namespace IssuanceApp.UI
 {
     /// <summary>
     /// Centralizes UI styling, colors, and fonts for the entire application.

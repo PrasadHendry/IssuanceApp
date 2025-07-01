@@ -1,4 +1,6 @@
-﻿namespace DocumentIssuanceApp.Controls
+﻿// GmOperationsControl.Designer.cs
+
+namespace IssuanceApp.UI.Controls
 {
     partial class GmOperationsControl
     {
@@ -34,7 +36,7 @@
             this.tlpGmTopControls = new System.Windows.Forms.TableLayoutPanel();
             this.pnlGmQueueHeader = new System.Windows.Forms.Panel();
             this.lblGmQueueTitle = new System.Windows.Forms.Label();
-            this.btnGmRefreshList = new DocumentIssuanceApp.RoundedButton();
+            this.btnGmRefreshList = new IssuanceApp.UI.RoundedButton();
             this.dgvGmQueue = new System.Windows.Forms.DataGridView();
             this.colGmRequestNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colGmRequestDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -76,8 +78,8 @@
             this.lblGmComment = new System.Windows.Forms.Label();
             this.txtGmComment = new System.Windows.Forms.TextBox();
             this.flpGmActionButtons = new System.Windows.Forms.FlowLayoutPanel();
-            this.btnGmAuthorize = new DocumentIssuanceApp.RoundedButton();
-            this.btnGmReject = new DocumentIssuanceApp.RoundedButton();
+            this.btnGmAuthorize = new IssuanceApp.UI.RoundedButton();
+            this.btnGmReject = new IssuanceApp.UI.RoundedButton();
             this.tlpGmOperationsMain.SuspendLayout();
             this.pnlGmTopSection.SuspendLayout();
             this.tlpGmTopControls.SuspendLayout();
@@ -156,6 +158,7 @@
             // btnGmRefreshList
             // 
             this.btnGmRefreshList.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.btnGmRefreshList.CornerRadius = 8;
             this.btnGmRefreshList.FlatAppearance.BorderSize = 0;
             this.btnGmRefreshList.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnGmRefreshList.Font = new System.Drawing.Font("Segoe UI Semibold", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -636,6 +639,7 @@
             // 
             // btnGmAuthorize
             // 
+            this.btnGmAuthorize.CornerRadius = 8;
             this.btnGmAuthorize.FlatAppearance.BorderSize = 0;
             this.btnGmAuthorize.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnGmAuthorize.Font = new System.Drawing.Font("Segoe UI Semibold", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -648,6 +652,7 @@
             // 
             // btnGmReject
             // 
+            this.btnGmReject.CornerRadius = 8;
             this.btnGmReject.FlatAppearance.BorderSize = 0;
             this.btnGmReject.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnGmReject.Font = new System.Drawing.Font("Segoe UI Semibold", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -695,7 +700,7 @@
         private System.Windows.Forms.TableLayoutPanel tlpGmTopControls;
         private System.Windows.Forms.Panel pnlGmQueueHeader;
         private System.Windows.Forms.Label lblGmQueueTitle;
-        private RoundedButton btnGmRefreshList;
+        private UI.RoundedButton btnGmRefreshList;
         private System.Windows.Forms.DataGridView dgvGmQueue;
         private System.Windows.Forms.TableLayoutPanel tlpGmBottomSection;
         private System.Windows.Forms.GroupBox grpGmSelectedRequest;
@@ -731,8 +736,8 @@
         private System.Windows.Forms.Label lblGmComment;
         private System.Windows.Forms.TextBox txtGmComment;
         private System.Windows.Forms.FlowLayoutPanel flpGmActionButtons;
-        private RoundedButton btnGmAuthorize;
-        private RoundedButton btnGmReject;
+        private UI.RoundedButton btnGmAuthorize;
+        private UI.RoundedButton btnGmReject;
         private System.Windows.Forms.DataGridViewTextBoxColumn colGmRequestNo;
         private System.Windows.Forms.DataGridViewTextBoxColumn colGmRequestDate;
         private System.Windows.Forms.DataGridViewTextBoxColumn colGmProduct;

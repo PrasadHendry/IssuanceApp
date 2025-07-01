@@ -1,4 +1,6 @@
-﻿namespace DocumentIssuanceApp.Controls
+﻿// QaControl.Designer.cs
+
+namespace IssuanceApp.UI.Controls
 {
     partial class QaControl
     {
@@ -34,8 +36,16 @@
             this.tlpQaTopControls = new System.Windows.Forms.TableLayoutPanel();
             this.pnlQaQueueHeader = new System.Windows.Forms.Panel();
             this.lblQaQueueTitle = new System.Windows.Forms.Label();
-            this.btnQaRefreshList = new DocumentIssuanceApp.RoundedButton();
+            this.btnQaRefreshList = new IssuanceApp.UI.RoundedButton();
             this.dgvQaQueue = new System.Windows.Forms.DataGridView();
+            this.colQaRequestNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colQaRequestDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colQaProduct = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colQaDocTypes = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colQaPreparedBy = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colQaRequestedAt = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colQaAuthorizedBy = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colQaGmActionAt = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tlpQaBottomSection = new System.Windows.Forms.TableLayoutPanel();
             this.grpQaSelectedRequest = new System.Windows.Forms.GroupBox();
             this.tlpQaRequestDetails = new System.Windows.Forms.TableLayoutPanel();
@@ -74,20 +84,12 @@
             this.flpQaOptionalControls = new System.Windows.Forms.FlowLayoutPanel();
             this.lblQaPrintCount = new System.Windows.Forms.Label();
             this.numQaPrintCount = new System.Windows.Forms.NumericUpDown();
-            this.btnQaBrowseSelectDocument = new DocumentIssuanceApp.RoundedButton();
+            this.btnQaBrowseSelectDocument = new IssuanceApp.UI.RoundedButton();
             this.lblQaComment = new System.Windows.Forms.Label();
             this.txtQaComment = new System.Windows.Forms.TextBox();
             this.flpQaActionButtons = new System.Windows.Forms.FlowLayoutPanel();
-            this.btnQaApprove = new DocumentIssuanceApp.RoundedButton();
-            this.btnQaReject = new DocumentIssuanceApp.RoundedButton();
-            this.colQaRequestNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colQaRequestDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colQaProduct = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colQaDocTypes = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colQaPreparedBy = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colQaRequestedAt = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colQaAuthorizedBy = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colQaGmActionAt = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.btnQaApprove = new IssuanceApp.UI.RoundedButton();
+            this.btnQaReject = new IssuanceApp.UI.RoundedButton();
             this.tlpQaOperationsMain.SuspendLayout();
             this.pnlQaTopSection.SuspendLayout();
             this.tlpQaTopControls.SuspendLayout();
@@ -168,6 +170,7 @@
             // btnQaRefreshList
             // 
             this.btnQaRefreshList.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.btnQaRefreshList.CornerRadius = 8;
             this.btnQaRefreshList.FlatAppearance.BorderSize = 0;
             this.btnQaRefreshList.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnQaRefreshList.Font = new System.Drawing.Font("Segoe UI Semibold", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -212,6 +215,62 @@
             this.dgvQaQueue.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvQaQueue.Size = new System.Drawing.Size(1298, 198);
             this.dgvQaQueue.TabIndex = 1;
+            // 
+            // colQaRequestNo
+            // 
+            this.colQaRequestNo.HeaderText = "Request No.";
+            this.colQaRequestNo.MinimumWidth = 6;
+            this.colQaRequestNo.Name = "colQaRequestNo";
+            this.colQaRequestNo.ReadOnly = true;
+            // 
+            // colQaRequestDate
+            // 
+            this.colQaRequestDate.HeaderText = "Request Date";
+            this.colQaRequestDate.MinimumWidth = 6;
+            this.colQaRequestDate.Name = "colQaRequestDate";
+            this.colQaRequestDate.ReadOnly = true;
+            // 
+            // colQaProduct
+            // 
+            this.colQaProduct.HeaderText = "Product";
+            this.colQaProduct.MinimumWidth = 6;
+            this.colQaProduct.Name = "colQaProduct";
+            this.colQaProduct.ReadOnly = true;
+            // 
+            // colQaDocTypes
+            // 
+            this.colQaDocTypes.DataPropertyName = "DocumentNo";
+            this.colQaDocTypes.HeaderText = "Document No(s).";
+            this.colQaDocTypes.MinimumWidth = 6;
+            this.colQaDocTypes.Name = "colQaDocTypes";
+            this.colQaDocTypes.ReadOnly = true;
+            // 
+            // colQaPreparedBy
+            // 
+            this.colQaPreparedBy.HeaderText = "Prepared By";
+            this.colQaPreparedBy.MinimumWidth = 6;
+            this.colQaPreparedBy.Name = "colQaPreparedBy";
+            this.colQaPreparedBy.ReadOnly = true;
+            // 
+            // colQaRequestedAt
+            // 
+            this.colQaRequestedAt.HeaderText = "Requested At";
+            this.colQaRequestedAt.Name = "colQaRequestedAt";
+            this.colQaRequestedAt.ReadOnly = true;
+            // 
+            // colQaAuthorizedBy
+            // 
+            this.colQaAuthorizedBy.HeaderText = "Authorized By (GM)";
+            this.colQaAuthorizedBy.MinimumWidth = 6;
+            this.colQaAuthorizedBy.Name = "colQaAuthorizedBy";
+            this.colQaAuthorizedBy.ReadOnly = true;
+            // 
+            // colQaGmActionAt
+            // 
+            this.colQaGmActionAt.HeaderText = "GM Action At";
+            this.colQaGmActionAt.MinimumWidth = 6;
+            this.colQaGmActionAt.Name = "colQaGmActionAt";
+            this.colQaGmActionAt.ReadOnly = true;
             // 
             // tlpQaBottomSection
             // 
@@ -665,6 +724,7 @@
             // 
             // btnQaBrowseSelectDocument
             // 
+            this.btnQaBrowseSelectDocument.CornerRadius = 8;
             this.btnQaBrowseSelectDocument.Font = new System.Drawing.Font("Segoe UI Semibold", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnQaBrowseSelectDocument.Location = new System.Drawing.Point(166, 3);
             this.btnQaBrowseSelectDocument.Name = "btnQaBrowseSelectDocument";
@@ -705,6 +765,7 @@
             // 
             // btnQaApprove
             // 
+            this.btnQaApprove.CornerRadius = 8;
             this.btnQaApprove.FlatAppearance.BorderSize = 0;
             this.btnQaApprove.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnQaApprove.Font = new System.Drawing.Font("Segoe UI Semibold", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -717,6 +778,7 @@
             // 
             // btnQaReject
             // 
+            this.btnQaReject.CornerRadius = 8;
             this.btnQaReject.FlatAppearance.BorderSize = 0;
             this.btnQaReject.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnQaReject.Font = new System.Drawing.Font("Segoe UI Semibold", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -823,7 +885,7 @@
         private System.Windows.Forms.TableLayoutPanel tlpQaTopControls;
         private System.Windows.Forms.Panel pnlQaQueueHeader;
         private System.Windows.Forms.Label lblQaQueueTitle;
-        private RoundedButton btnQaRefreshList;
+        private UI.RoundedButton btnQaRefreshList;
         private System.Windows.Forms.DataGridView dgvQaQueue;
         private System.Windows.Forms.TableLayoutPanel tlpQaBottomSection;
         private System.Windows.Forms.GroupBox grpQaSelectedRequest;
@@ -863,12 +925,12 @@
         private System.Windows.Forms.FlowLayoutPanel flpQaOptionalControls;
         private System.Windows.Forms.Label lblQaPrintCount;
         private System.Windows.Forms.NumericUpDown numQaPrintCount;
-        private RoundedButton btnQaBrowseSelectDocument;
+        private UI.RoundedButton btnQaBrowseSelectDocument;
         private System.Windows.Forms.Label lblQaComment;
         private System.Windows.Forms.TextBox txtQaComment;
         private System.Windows.Forms.FlowLayoutPanel flpQaActionButtons;
-        private RoundedButton btnQaApprove;
-        private RoundedButton btnQaReject;
+        private UI.RoundedButton btnQaApprove;
+        private UI.RoundedButton btnQaReject;
         private System.Windows.Forms.DataGridViewTextBoxColumn colQaRequestNo;
         private System.Windows.Forms.DataGridViewTextBoxColumn colQaRequestDate;
         private System.Windows.Forms.DataGridViewTextBoxColumn colQaProduct;

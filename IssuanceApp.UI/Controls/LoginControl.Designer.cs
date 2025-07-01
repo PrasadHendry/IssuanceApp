@@ -1,4 +1,6 @@
-﻿namespace DocumentIssuanceApp.Controls
+﻿// LoginControl.Designer.cs
+
+namespace IssuanceApp.UI.Controls
 {
     partial class LoginControl
     {
@@ -31,7 +33,7 @@
             this.tlpLoginMain = new System.Windows.Forms.TableLayoutPanel();
             this.panelLoginContainer = new System.Windows.Forms.Panel();
             this.lblLoginStatus = new System.Windows.Forms.Label();
-            this.btnLogin = new DocumentIssuanceApp.RoundedButton();
+            this.btnLogin = new IssuanceApp.UI.RoundedButton();
             this.txtPassword = new System.Windows.Forms.TextBox();
             this.lblPassword = new System.Windows.Forms.Label();
             this.cmbRole = new System.Windows.Forms.ComboBox();
@@ -159,7 +161,7 @@
         private System.Windows.Forms.TableLayoutPanel tlpLoginMain;
         private System.Windows.Forms.Panel panelLoginContainer;
         private System.Windows.Forms.Label lblLoginStatus;
-        private RoundedButton btnLogin;
+        private UI.RoundedButton btnLogin;
         private System.Windows.Forms.TextBox txtPassword;
         private System.Windows.Forms.Label lblPassword;
         private System.Windows.Forms.ComboBox cmbRole;

@@ -1,11 +1,12 @@
-﻿// IssuanceApp.UI/Controls/GmOperationsControl.cs
+﻿// GmOperationsControl.cs
 
 using IssuanceApp.Data;
+using IssuanceApp.UI; // For ThemeManager
 using System;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace DocumentIssuanceApp.Controls
+namespace IssuanceApp.UI.Controls
 {
     public partial class GmOperationsControl : UserControl
     {

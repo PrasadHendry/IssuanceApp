@@ -1,15 +1,16 @@
-﻿// IssuanceApp.UI/Controls/LoginControl.cs
+﻿// LoginControl.cs
 
-using DocumentIssuanceApp; // THIS IS THE CRUCIAL FIX
 using IssuanceApp.Data;
+using IssuanceApp.UI; // For ThemeManager
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Security.Principal;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace DocumentIssuanceApp.Controls
+namespace IssuanceApp.UI.Controls
 {
     public partial class LoginControl : UserControl
     {
@@ -39,15 +40,20 @@ namespace DocumentIssuanceApp.Controls
                 cmbRole.Items.AddRange(roleNames.ToArray());
                 if (cmbRole.Items.Contains(AppConstants.RoleRequester)) cmbRole.SelectedItem = AppConstants.RoleRequester;
                 else if (cmbRole.Items.Count > 0) cmbRole.SelectedIndex = 0;
-                btnLogin.Enabled = true;
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Could not load user roles from the database.\n" + ex.Message, "Fatal Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                // Disable login if roles can't be loaded
+                btnLogin.Enabled = false;
+                lblLoginStatus.Text = "Database connection failed.";
+                lblLoginStatus.ForeColor = Color.Red;
+                return;
             }
             finally
             {
                 this.Cursor = Cursors.Default;
+                btnLogin.Enabled = true;
             }
         }
 
@@ -104,7 +110,7 @@ namespace DocumentIssuanceApp.Controls
             catch (Exception ex)
             {
                 MessageBox.Show("An error occurred during authentication: " + ex.Message, "Login Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                lblLoginStatus.Text = "An error occurred.";
+                lblLoginStatus.Text = "An authentication error occurred.";
                 lblLoginStatus.ForeColor = Color.Red;
             }
             finally

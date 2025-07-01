@@ -1,30 +1,26 @@
-﻿// IssuanceApp.UI/Controls/AuditTrailControl.cs
+﻿// AuditTrailControl.cs
 
 using IssuanceApp.Data;
+using IssuanceApp.UI; // For ThemeManager
 using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Drawing;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace DocumentIssuanceApp.Controls
+namespace IssuanceApp.UI.Controls
 {
     public partial class AuditTrailControl : UserControl
     {
         private IssuanceRepository _repository;
-
-        // --- Fields for HIGH-PERFORMANCE Audit Trail Virtual Mode ---
         private List<int> _auditTrailKeyCache;
-        private Dictionary<int, AuditTrailEntry> _auditTrailPageCache;
+        private Dictionary<int, AuditTrailEntry> _auditTrailDataCache;
         private HashSet<int> _pagesBeingFetched;
         private const int AuditPageSize = 50;
-        private SortOrder _auditSortOrder = SortOrder.None;
-        private string _auditSortColumn = string.Empty;
+        private SortOrder _auditSortOrder = SortOrder.Descending;
+        private string _auditSortColumn = "colAuditRequestNo";
 
-        // --- CancellationTokenSource for robust async operations ---
         private CancellationTokenSource _dataLoadCts = new CancellationTokenSource();
 
         public AuditTrailControl()
@@ -41,12 +37,9 @@ namespace DocumentIssuanceApp.Controls
         public void InitializeControl(IssuanceRepository repository)
         {
             _repository = repository;
-
-            // --- Initialize Fields ---
-            _auditTrailPageCache = new Dictionary<int, AuditTrailEntry>();
+            _auditTrailDataCache = new Dictionary<int, AuditTrailEntry>();
             _pagesBeingFetched = new HashSet<int>();
 
-            // --- Configure Controls ---
             cmbAuditStatus.Items.Clear();
             cmbAuditStatus.Items.AddRange(new object[] { "All", "Pending GM Approval", "Pending QA Approval", "Approved (Issued)", "Rejected by GM", "Rejected by QA" });
             cmbAuditStatus.SelectedIndex = 0;
@@ -57,7 +50,6 @@ namespace DocumentIssuanceApp.Controls
             dgvAuditTrail.VirtualMode = true;
             SetupAuditTrailColumns();
 
-            // --- Wire up Events ---
             dgvAuditTrail.CellValueNeeded += DgvAuditTrail_CellValueNeeded;
             dgvAuditTrail.ColumnHeaderMouseClick += DgvAuditTrail_ColumnHeaderMouseClick;
             btnApplyAuditFilter.Click += async (s, e) => await LoadAuditTrailDataAsync();
@@ -67,24 +59,20 @@ namespace DocumentIssuanceApp.Controls
             btnExportToExcel.Click += (s, e) => MessageBox.Show("Excel export not implemented.", "TODO", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        // This method should be called by MainForm when the control is no longer needed
         public void CancelAllOperations()
         {
-            _dataLoadCts.Cancel();
+            _dataLoadCts?.Cancel();
         }
 
         private void SetupAuditTrailColumns()
         {
             dgvAuditTrail.Columns.Clear();
-
-            // Use a mix of AutoSizeMode settings for a good layout
             var wrapTextStyle = new DataGridViewCellStyle { WrapMode = DataGridViewTriState.True, Alignment = DataGridViewContentAlignment.TopLeft };
-            var noWrapStyle = new DataGridViewCellStyle { WrapMode = DataGridViewTriState.False, Alignment = DataGridViewContentAlignment.TopLeft };
 
             dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditRequestNo", HeaderText = "Request No.", DataPropertyName = "RequestNo", Width = 140, Frozen = true });
             dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditRequestDate", HeaderText = "Request Date", DataPropertyName = "RequestDate", DefaultCellStyle = new DataGridViewCellStyle { Format = "dd-MMM-yyyy" }, AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells });
             dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditProduct", HeaderText = "Product", DataPropertyName = "Product", Width = 200 });
-            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditDocumentNumbers", HeaderText = "Document No(s).", DataPropertyName = "DocumentNumbers", DefaultCellStyle = noWrapStyle, AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells });
+            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditDocumentNumbers", HeaderText = "Document No(s).", DataPropertyName = "DocumentNumbers", AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells });
             dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditStatusDerived", HeaderText = "Status", DataPropertyName = "DerivedStatus", Width = 150 });
             dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditPreparedBy", HeaderText = "Prepared By", DataPropertyName = "PreparedBy", AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells });
             dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditRequestedAt", HeaderText = "Requested At", DataPropertyName = "RequestedAt", DefaultCellStyle = new DataGridViewCellStyle { Format = "dd-MMM-yyyy HH:mm" }, AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells });
@@ -110,8 +98,8 @@ namespace DocumentIssuanceApp.Controls
             btnApplyAuditFilter.Enabled = btnClearAuditFilters.Enabled = btnRefreshAuditList.Enabled = false;
             try
             {
-                _auditTrailPageCache.Clear();
-                _pagesBeingFetched.Clear();
+                _auditTrailKeyCache = null;
+                _auditTrailDataCache.Clear();
                 dgvAuditTrail.RowCount = 0;
 
                 var columnMap = new Dictionary<string, string>
@@ -127,22 +115,13 @@ namespace DocumentIssuanceApp.Controls
                     txtAuditRequestNo.Text, txtAuditProduct.Text, dbSortColumn, _auditSortOrder, token);
 
                 token.ThrowIfCancellationRequested();
-
-                if (_auditTrailKeyCache.Any())
-                {
-                    FetchAuditPage(0, token);
-                }
+                dgvAuditTrail.RowCount = _auditTrailKeyCache.Count;
             }
-            catch (OperationCanceledException)
-            {
-                Console.WriteLine("Audit trail load was cancelled by a new request.");
-            }
+            catch (OperationCanceledException) { /* Expected, ignore */ }
             catch (Exception ex)
             {
                 if (!token.IsCancellationRequested)
-                {
                     MessageBox.Show("Failed to load audit trail: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
             }
             finally
             {
@@ -156,85 +135,59 @@ namespace DocumentIssuanceApp.Controls
 
         private void DgvAuditTrail_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
         {
-            if (e.RowIndex < 0 || _auditTrailKeyCache == null) return;
+            if (_auditTrailKeyCache == null || e.RowIndex < 0 || e.RowIndex >= _auditTrailKeyCache.Count) return;
 
-            if (e.RowIndex >= dgvAuditTrail.RowCount - 5 && dgvAuditTrail.RowCount < _auditTrailKeyCache.Count)
+            if (_auditTrailDataCache.TryGetValue(e.RowIndex, out AuditTrailEntry entry))
             {
-                FetchAuditPage(dgvAuditTrail.RowCount, _dataLoadCts.Token);
-            }
-
-            if (e.RowIndex >= _auditTrailKeyCache.Count) return;
-
-            if (_auditTrailPageCache.ContainsKey(e.RowIndex))
-            {
-                var entry = _auditTrailPageCache[e.RowIndex];
-                if (entry == null) return;
-
-                string colName = dgvAuditTrail.Columns[e.ColumnIndex].Name;
-                switch (colName)
+                string colPropName = dgvAuditTrail.Columns[e.ColumnIndex].DataPropertyName;
+                if (!string.IsNullOrEmpty(colPropName))
                 {
-                    case "colAuditRequestNo": e.Value = entry.RequestNo; break;
-                    case "colAuditRequestDate": e.Value = entry.RequestDate; break;
-                    case "colAuditProduct": e.Value = entry.Product; break;
-                    case "colAuditDocumentNumbers": e.Value = entry.DocumentNumbers; break;
-                    case "colAuditStatusDerived": e.Value = entry.DerivedStatus; break;
-                    case "colAuditPreparedBy": e.Value = entry.PreparedBy; break;
-                    case "colAuditRequestedAt": e.Value = entry.RequestedAt; break;
-                    case "colAuditGmAction": e.Value = entry.GmOperationsAction; break;
-                    case "colAuditAuthorizedBy": e.Value = entry.AuthorizedBy; break;
-                    case "colAuditGmActionAt": e.Value = entry.GmOperationsAt; break;
-                    case "colAuditGmComment": e.Value = entry.GmOperationsComment; break;
-                    case "colAuditQaAction": e.Value = entry.QAAction; break;
-                    case "colAuditApprovedBy": e.Value = entry.ApprovedBy; break;
-                    case "colAuditQaActionAt": e.Value = entry.QAAt; break;
-                    case "colAuditQaComment": e.Value = entry.QAComment; break;
+                    e.Value = typeof(AuditTrailEntry).GetProperty(colPropName)?.GetValue(entry);
                 }
             }
             else
             {
                 e.Value = "Loading...";
+                int pageNumber = e.RowIndex / AuditPageSize;
+                FetchAuditPage(pageNumber, _dataLoadCts.Token);
             }
         }
 
-        private async void FetchAuditPage(int rowIndex, CancellationToken token)
+        private async void FetchAuditPage(int pageNumber, CancellationToken token)
         {
-            if (token.IsCancellationRequested) return;
-
-            int pageNumber = rowIndex / AuditPageSize;
-            if (_pagesBeingFetched.Contains(pageNumber)) return;
+            if (token.IsCancellationRequested || _pagesBeingFetched.Contains(pageNumber)) return;
 
             try
             {
                 _pagesBeingFetched.Add(pageNumber);
-                if (token.IsCancellationRequested) return;
-
                 int start = pageNumber * AuditPageSize;
-                int end = Math.Min(start + AuditPageSize, _auditTrailKeyCache.Count);
-                if (start >= end) return;
+                var keysToFetch = _auditTrailKeyCache.Skip(start).Take(AuditPageSize).ToList();
+                if (!keysToFetch.Any()) return;
 
-                var keysToFetch = _auditTrailKeyCache.GetRange(start, end - start);
                 var entries = await _repository.GetAuditTrailEntriesAsync(keysToFetch, token);
-                token.ThrowIfCancellationRequested();
+                var entryDict = entries.ToDictionary(en => en.IssuanceID);
 
-                var entryDict = entries.ToDictionary(entry => entry.IssuanceID);
+                if (this.IsDisposed || token.IsCancellationRequested) return;
 
-                if (dgvAuditTrail.IsDisposed || token.IsCancellationRequested) return;
-
-                dgvAuditTrail.BeginInvoke(new Action(() =>
+                this.BeginInvoke(new Action(() =>
                 {
                     if (token.IsCancellationRequested) return;
-                    for (int i = start; i < end; i++)
+
+                    int endRange = Math.Min(start + AuditPageSize, _auditTrailKeyCache.Count);
+                    for (int i = start; i < endRange; i++)
                     {
                         var key = _auditTrailKeyCache[i];
-                        if (entryDict.ContainsKey(key))
+                        if (entryDict.TryGetValue(key, out AuditTrailEntry fetchedEntry))
                         {
-                            _auditTrailPageCache[i] = entryDict[key];
+                            _auditTrailDataCache[i] = fetchedEntry;
                         }
                     }
-                    dgvAuditTrail.RowCount += (end - start);
-                    for (int i = start; i < end; i++)
+
+                    // --- THIS IS THE FIX ---
+                    // Invalidate the specific rows that have been loaded to trigger a repaint
+                    for (int i = start; i < endRange; i++)
                     {
-                        dgvAuditTrail.AutoResizeRow(i, DataGridViewAutoSizeRowMode.AllCells);
+                        dgvAuditTrail.InvalidateRow(i);
                     }
                 }));
             }
@@ -252,9 +205,19 @@ namespace DocumentIssuanceApp.Controls
 
         private async void DgvAuditTrail_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            string newSortColumn = dgvAuditTrail.Columns[e.ColumnIndex].Name;
-            _auditSortOrder = (_auditSortColumn == newSortColumn && _auditSortOrder == SortOrder.Ascending) ? SortOrder.Descending : SortOrder.Ascending;
-            _auditSortColumn = newSortColumn;
+            string newSortColumnName = dgvAuditTrail.Columns[e.ColumnIndex].Name;
+
+            if (_auditSortColumn == newSortColumnName)
+                _auditSortOrder = (_auditSortOrder == SortOrder.Ascending) ? SortOrder.Descending : SortOrder.Ascending;
+            else
+                _auditSortOrder = SortOrder.Ascending;
+
+            _auditSortColumn = newSortColumnName;
+
+            foreach (DataGridViewColumn col in dgvAuditTrail.Columns)
+                col.HeaderCell.SortGlyphDirection = SortOrder.None;
+            dgvAuditTrail.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection = _auditSortOrder;
+
             await LoadAuditTrailDataAsync();
         }
 
@@ -265,8 +228,13 @@ namespace DocumentIssuanceApp.Controls
             cmbAuditStatus.SelectedIndex = 0;
             txtAuditRequestNo.Clear();
             txtAuditProduct.Clear();
-            _auditSortColumn = string.Empty;
-            _auditSortOrder = SortOrder.None;
+            _auditSortColumn = "colAuditRequestNo";
+            _auditSortOrder = SortOrder.Descending;
+
+            foreach (DataGridViewColumn col in dgvAuditTrail.Columns)
+                col.HeaderCell.SortGlyphDirection = SortOrder.None;
+            dgvAuditTrail.Columns["colAuditRequestNo"].HeaderCell.SortGlyphDirection = _auditSortOrder;
+
             await LoadAuditTrailDataAsync();
         }
     }

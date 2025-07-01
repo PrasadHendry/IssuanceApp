@@ -1,7 +1,6 @@
-﻿// IssuanceApp.UI/MainForm.cs
-
-using DocumentIssuanceApp.Controls;
+﻿// MainForm.cs
 using IssuanceApp.Data;
+using IssuanceApp.UI.Controls; // Corrected using for controls
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using UiTimer = System.Windows.Forms.Timer;
 
+// --- THIS IS THE CORRECT NAMESPACE TO MATCH YOUR PROJECT SETTINGS ---
 namespace IssuanceApp.UI
 {
     public partial class MainForm : Form
@@ -27,13 +27,10 @@ namespace IssuanceApp.UI
         #endregion
 
         #region Constructor and Form Lifecycle
-
-        // --- THIS IS THE MODIFIED CONSTRUCTOR FOR DEPENDENCY INJECTION ---
         public MainForm(IssuanceRepository repository)
         {
             InitializeComponent();
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
-
             this.DoubleBuffered = true;
             this.FormBorderStyle = FormBorderStyle.Sizable;
 
@@ -56,7 +53,6 @@ namespace IssuanceApp.UI
 
         private void InitializeUserControls()
         {
-            // Initialize all controls, passing the repository they need to function.
             this.loginControl1.LoginAttemptCompleted += LoginControl_LoginAttemptCompleted;
             this.loginControl1.InitializeControl(_repository);
 
@@ -69,7 +65,6 @@ namespace IssuanceApp.UI
 
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
-            // Use the simplified null-conditional operator
             auditTrailControl1?.CancelAllOperations();
             statusTimer?.Stop();
             statusTimer?.Dispose();
@@ -93,7 +88,6 @@ namespace IssuanceApp.UI
         private async Task LoadDataForSelectedTabAsync()
         {
             if (tabControlMain.SelectedTab == null || loggedInRole == null) return;
-
             string selectedTabName = tabControlMain.SelectedTab.Name;
 
             if (selectedTabName == ControlNames.TabPageDocumentIssuance)
@@ -124,11 +118,7 @@ namespace IssuanceApp.UI
 
         private void InitializeDynamicControls()
         {
-            allTabPages = new List<TabPage>();
-            foreach (TabPage tp in tabControlMain.TabPages)
-            {
-                allTabPages.Add(tp);
-            }
+            allTabPages = tabControlMain.TabPages.Cast<TabPage>().ToList();
         }
 
         private void StatusTimer_Tick(object sender, EventArgs e)
@@ -169,13 +159,10 @@ namespace IssuanceApp.UI
                 {
                     loggedInRole = e.Role;
                     loggedInUserName = e.UserName;
-
                     toolStripStatusLabelUser.Text = $"User: {loggedInUserName} ({loggedInRole})";
                     lblCurrentUserHeader.Text = $"Logged in as: {loggedInUserName} ({loggedInRole})";
-                    lblCurrentUserHeader.ForeColor = ThemeManager.HeaderTextColor;
                     pnlAppHeader.Visible = true;
 
-                    // Re-initialize controls with the correct logged-in username
                     documentIssuanceControl1.InitializeControl(_repository, loggedInUserName);
                     gmOperationsControl1.InitializeControl(_repository, loggedInUserName);
                     qaControl1.InitializeControl(_repository, loggedInUserName);
@@ -183,7 +170,6 @@ namespace IssuanceApp.UI
                     _gmDataLoaded = _qaDataLoaded = _auditDataLoaded = _usersDataLoaded = false;
                     EnableTabsBasedOnRole(loggedInRole);
                     SwitchToDefaultTabForRole(loggedInRole);
-
                     await LoadDataForSelectedTabAsync();
                 }
                 else

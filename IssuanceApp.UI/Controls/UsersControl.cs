@@ -1,13 +1,12 @@
-﻿// IssuanceApp.UI/Controls/UsersControl.cs
+﻿// UsersControl.cs
 
-using DocumentIssuanceApp.Controls;
 using IssuanceApp.Data;
+using IssuanceApp.UI; // For ThemeManager
 using System;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using BCrypt.Net; // This is the correct using statement for BCrypt.Net-Next
 
-namespace DocumentIssuanceApp.Controls
+namespace IssuanceApp.UI.Controls
 {
     public partial class UsersControl : UserControl
     {
@@ -83,23 +82,22 @@ namespace DocumentIssuanceApp.Controls
 
         private async void BtnResetPassword_Click(object sender, EventArgs e)
         {
-            if (dgvUserRoles.SelectedRows.Count == 0)
-            {
-                MessageBox.Show("Please select a role from the list.", "No Role Selected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
+            if (dgvUserRoles.SelectedRows.Count == 0) return;
+
             string roleName = txtRoleNameManage.Text;
             if (MessageBox.Show($"Are you sure you want to reset the password for the '{roleName}' role?", "Confirm Password Reset", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 string newPassword = "Password123";
-                // This is the correct call syntax for the library
-                string newPasswordHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
+
+                // --- BCrypt REMOVED ---
+                // The plaintext password is now sent directly to the database.
+                string newPasswordForDb = newPassword;
 
                 btnResetPassword.Enabled = false;
                 this.Cursor = Cursors.WaitCursor;
                 try
                 {
-                    if (await _repository.ResetUserPasswordAsync(roleName, newPasswordHash))
+                    if (await _repository.ResetUserPasswordAsync(roleName, newPasswordForDb))
                     {
                         MessageBox.Show($"Password for role '{roleName}' has been reset to:\n\n{newPassword}\n\nPlease inform the user.", "Password Reset", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         dgvUserRoles.ClearSelection();

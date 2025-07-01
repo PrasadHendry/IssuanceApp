@@ -1,15 +1,15 @@
-﻿// IssuanceApp.UI/Controls/QaControl.cs
+﻿// QaControl.cs
 
 using IssuanceApp.Data;
+using IssuanceApp.UI; // For ThemeManager
 using System;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace DocumentIssuanceApp.Controls
+namespace IssuanceApp.UI.Controls
 {
     public partial class QaControl : UserControl
     {
-        // --- FIELD DEFINITIONS (These were missing) ---
         private IssuanceRepository _repository;
         private string _loggedInUserName;
 
@@ -23,17 +23,18 @@ namespace DocumentIssuanceApp.Controls
             ThemeManager.StyleDataGridView(dgvQaQueue);
         }
 
-        // --- METHOD DEFINITION (This was missing) ---
         public void InitializeControl(IssuanceRepository repository, string loggedInUserName)
         {
             _repository = repository;
             _loggedInUserName = loggedInUserName;
+
             SetupQaQueueColumns();
             dgvQaQueue.SelectionChanged += DgvQaQueue_SelectionChanged;
             btnQaRefreshList.Click += async (s, e) => await LoadPendingQueueAsync();
             btnQaApprove.Click += BtnQaApprove_Click;
             btnQaReject.Click += BtnQaReject_Click;
             btnQaBrowseSelectDocument.Click += (s, e) => MessageBox.Show("Functionality to open document location is not yet implemented.", "TODO", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
             ClearQaSelectedRequestDetails();
             lblQaQueueTitle.Text = "Pending QA Approval Queue (0)";
         }
@@ -54,7 +55,6 @@ namespace DocumentIssuanceApp.Controls
             dgvQaQueue.Columns.Add(new DataGridViewTextBoxColumn { Name = "colQaGmActionAt", DataPropertyName = nameof(QaQueueItemDto.GmActionAt), HeaderText = "GM Action At", DefaultCellStyle = new DataGridViewCellStyle { Format = "dd-MMM-yyyy HH:mm" }, FillWeight = 15 });
         }
 
-        // --- METHOD DEFINITION (This was missing) ---
         public async Task LoadPendingQueueAsync()
         {
             if (_repository == null) return;
@@ -125,7 +125,6 @@ namespace DocumentIssuanceApp.Controls
         private void BtnQaApprove_Click(object sender, EventArgs e) => ProcessQaActionAsync(AppConstants.ActionApproved, false);
         private void BtnQaReject_Click(object sender, EventArgs e) => ProcessQaActionAsync(AppConstants.ActionRejected, true);
 
-        // --- METHOD DEFINITION (This was missing) ---
         private async void ProcessQaActionAsync(string action, bool commentsMandatory)
         {
             if (dgvQaQueue.SelectedRows.Count == 0 || string.IsNullOrEmpty(txtQaDetailRequestNo.Text))

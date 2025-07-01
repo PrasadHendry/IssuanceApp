@@ -6,7 +6,6 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using BCrypt.Net;
 using Microsoft.Data.SqlClient;
 
 namespace IssuanceApp.Data
@@ -88,9 +87,9 @@ namespace IssuanceApp.Data
             object result = await ExecuteScalarAsync(sql, parameters);
             if (result != null && result != DBNull.Value)
             {
-                string storedHash = result.ToString();
-                // This requires the BCrypt.Net-Next package
-                return BCrypt.Net.BCrypt.Verify(password, storedHash);
+                string storedPassword = result.ToString();
+                // --- BCrypt REMOVED: Reverted to simple plaintext comparison ---
+                return password == storedPassword;
             }
             return false;
         }
@@ -111,12 +110,12 @@ namespace IssuanceApp.Data
             return roles;
         }
 
-        public async Task<bool> ResetUserPasswordAsync(string roleName, string newPasswordHash)
+        public async Task<bool> ResetUserPasswordAsync(string roleName, string newPassword)
         {
-            string sql = "UPDATE dbo.User_Roles SET PasswordHash = @NewPasswordHash WHERE RoleName = @RoleName;";
+            string sql = "UPDATE dbo.User_Roles SET PasswordHash = @NewPassword WHERE RoleName = @RoleName;";
             var parameters = new List<SqlParameter>
             {
-                new SqlParameter("@NewPasswordHash", newPasswordHash),
+                new SqlParameter("@NewPassword", newPassword),
                 new SqlParameter("@RoleName", roleName)
             };
             return await ExecuteNonQueryAsync(sql, parameters) > 0;

@@ -1,4 +1,6 @@
-﻿namespace DocumentIssuanceApp.Controls
+﻿// DocumentIssuanceControl.Designer.cs
+
+namespace IssuanceApp.UI.Controls
 {
     partial class DocumentIssuanceControl
     {
@@ -99,8 +101,8 @@
             this.txtRemarksDI = new System.Windows.Forms.TextBox();
             this.pnlActionBottomDI = new System.Windows.Forms.Panel();
             this.flpActionButtonsDI = new System.Windows.Forms.FlowLayoutPanel();
-            this.btnSubmitRequestDI = new DocumentIssuanceApp.RoundedButton();
-            this.btnClearFormDI = new DocumentIssuanceApp.RoundedButton();
+            this.btnSubmitRequestDI = new IssuanceApp.UI.RoundedButton();
+            this.btnClearFormDI = new IssuanceApp.UI.RoundedButton();
             this.pnlStatusDI = new System.Windows.Forms.Panel();
             this.lblStatusValueDI = new System.Windows.Forms.Label();
             this.lblStatusLabelDI = new System.Windows.Forms.Label();
@@ -1129,8 +1131,8 @@
         private System.Windows.Forms.TextBox txtRemarksDI;
         private System.Windows.Forms.Panel pnlActionBottomDI;
         private System.Windows.Forms.FlowLayoutPanel flpActionButtonsDI;
-        private RoundedButton btnSubmitRequestDI;
-        private RoundedButton btnClearFormDI;
+        private UI.RoundedButton btnSubmitRequestDI;
+        private UI.RoundedButton btnClearFormDI;
         private System.Windows.Forms.Panel pnlStatusDI;
         private System.Windows.Forms.Label lblStatusValueDI;
         private System.Windows.Forms.Label lblStatusLabelDI;

@@ -1,4 +1,6 @@
-﻿namespace DocumentIssuanceApp.Controls
+﻿// AuditTrailControl.Designer.cs
+
+namespace IssuanceApp.UI.Controls
 {
     partial class AuditTrailControl
     {
@@ -42,13 +44,13 @@
             this.txtAuditRequestNo = new System.Windows.Forms.TextBox();
             this.lblAuditProduct = new System.Windows.Forms.Label();
             this.txtAuditProduct = new System.Windows.Forms.TextBox();
-            this.btnApplyAuditFilter = new DocumentIssuanceApp.RoundedButton();
-            this.btnClearAuditFilters = new DocumentIssuanceApp.RoundedButton();
-            this.btnRefreshAuditList = new DocumentIssuanceApp.RoundedButton();
+            this.btnApplyAuditFilter = new IssuanceApp.UI.RoundedButton();
+            this.btnClearAuditFilters = new IssuanceApp.UI.RoundedButton();
+            this.btnRefreshAuditList = new IssuanceApp.UI.RoundedButton();
             this.dgvAuditTrail = new System.Windows.Forms.DataGridView();
             this.flpAuditExportButtons = new System.Windows.Forms.FlowLayoutPanel();
-            this.btnExportToCsv = new DocumentIssuanceApp.RoundedButton();
-            this.btnExportToExcel = new DocumentIssuanceApp.RoundedButton();
+            this.btnExportToCsv = new IssuanceApp.UI.RoundedButton();
+            this.btnExportToExcel = new IssuanceApp.UI.RoundedButton();
             this.tlpAuditTrailMain.SuspendLayout();
             this.grpAuditFilters.SuspendLayout();
             this.tlpAuditFilters.SuspendLayout();
@@ -221,6 +223,7 @@
             // btnApplyAuditFilter
             // 
             this.btnApplyAuditFilter.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.btnApplyAuditFilter.CornerRadius = 8;
             this.btnApplyAuditFilter.FlatAppearance.BorderSize = 0;
             this.btnApplyAuditFilter.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnApplyAuditFilter.Font = new System.Drawing.Font("Segoe UI Semibold", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -234,6 +237,7 @@
             // btnClearAuditFilters
             // 
             this.btnClearAuditFilters.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.btnClearAuditFilters.CornerRadius = 8;
             this.btnClearAuditFilters.FlatAppearance.BorderSize = 0;
             this.btnClearAuditFilters.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnClearAuditFilters.Font = new System.Drawing.Font("Segoe UI Semibold", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -247,6 +251,7 @@
             // btnRefreshAuditList
             // 
             this.btnRefreshAuditList.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.btnRefreshAuditList.CornerRadius = 8;
             this.btnRefreshAuditList.FlatAppearance.BorderSize = 0;
             this.btnRefreshAuditList.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnRefreshAuditList.Font = new System.Drawing.Font("Segoe UI Semibold", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -296,6 +301,7 @@
             // btnExportToCsv
             // 
             this.btnExportToCsv.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.btnExportToCsv.CornerRadius = 8;
             this.btnExportToCsv.Font = new System.Drawing.Font("Segoe UI Semibold", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnExportToCsv.Location = new System.Drawing.Point(8, 4);
             this.btnExportToCsv.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -308,6 +314,7 @@
             // btnExportToExcel
             // 
             this.btnExportToExcel.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.btnExportToExcel.CornerRadius = 8;
             this.btnExportToExcel.Font = new System.Drawing.Font("Segoe UI Semibold", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnExportToExcel.Location = new System.Drawing.Point(194, 4);
             this.btnExportToExcel.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -351,12 +358,12 @@
         private System.Windows.Forms.TextBox txtAuditRequestNo;
         private System.Windows.Forms.Label lblAuditProduct;
         private System.Windows.Forms.TextBox txtAuditProduct;
-        private RoundedButton btnApplyAuditFilter;
-        private RoundedButton btnClearAuditFilters;
-        private RoundedButton btnRefreshAuditList;
+        private UI.RoundedButton btnApplyAuditFilter;
+        private UI.RoundedButton btnClearAuditFilters;
+        private UI.RoundedButton btnRefreshAuditList;
         private System.Windows.Forms.DataGridView dgvAuditTrail;
         private System.Windows.Forms.FlowLayoutPanel flpAuditExportButtons;
-        private RoundedButton btnExportToCsv;
-        private RoundedButton btnExportToExcel;
+        private UI.RoundedButton btnExportToCsv;
+        private UI.RoundedButton btnExportToExcel;
     }
 }
