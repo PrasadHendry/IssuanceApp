@@ -4,15 +4,12 @@ using DocumentIssuanceApp.Controls;
 using IssuanceApp.Data;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Drawing;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using UiTimer = System.Windows.Forms.Timer;
 
-namespace DocumentIssuanceApp
+namespace IssuanceApp.UI
 {
     public partial class MainForm : Form
     {
@@ -23,33 +20,22 @@ namespace DocumentIssuanceApp
         private string loggedInUserName = null;
         private List<TabPage> allTabPages;
 
-        // Flags to prevent redundant data loading on tab switching
         private bool _gmDataLoaded = false;
         private bool _qaDataLoaded = false;
         private bool _auditDataLoaded = false;
         private bool _usersDataLoaded = false;
-
-        private readonly CancellationTokenSource _dataLoadCts = new CancellationTokenSource();
         #endregion
 
         #region Constructor and Form Lifecycle
-        public MainForm()
+
+        // --- THIS IS THE MODIFIED CONSTRUCTOR FOR DEPENDENCY INJECTION ---
+        public MainForm(IssuanceRepository repository)
         {
             InitializeComponent();
+            _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+
             this.DoubleBuffered = true;
             this.FormBorderStyle = FormBorderStyle.Sizable;
-
-            try
-            {
-                string connStr = ConfigurationManager.ConnectionStrings["IssuanceAppDB"].ConnectionString;
-                _repository = new IssuanceRepository(connStr);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Could not read database configuration. The application will now close.\n\nError: " + ex.Message, "Configuration Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                Load += (s, e) => Close();
-                return;
-            }
 
             InitializeDynamicControls();
             InitializeUserControls();
@@ -60,10 +46,8 @@ namespace DocumentIssuanceApp
             statusTimer.Tick += StatusTimer_Tick;
             statusTimer.Start();
 
-            // *** FIX: Set initial status bar text ***
             toolStripStatusLabelUser.Text = "User: Not Logged In";
-
-            this.tabControlMain.SelectedIndexChanged += async (s, e) => await LoadDataForSelectedTabAsync();
+            this.tabControlMain.SelectedIndexChanged += TabControlMain_SelectedIndexChanged;
             btnSignOut.Click += BtnSignOut_Click;
 
             SetupTabs();
@@ -72,27 +56,40 @@ namespace DocumentIssuanceApp
 
         private void InitializeUserControls()
         {
+            // Initialize all controls, passing the repository they need to function.
             this.loginControl1.LoginAttemptCompleted += LoginControl_LoginAttemptCompleted;
             this.loginControl1.InitializeControl(_repository);
+
+            documentIssuanceControl1.InitializeControl(_repository, null);
+            gmOperationsControl1.InitializeControl(_repository, null);
+            qaControl1.InitializeControl(_repository, null);
+            auditTrailControl1.InitializeControl(_repository);
+            usersControl1.InitializeControl(_repository);
         }
 
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
-            _dataLoadCts.Cancel();
-            if (auditTrailControl1 != null)
-            {
-                auditTrailControl1.CancelAllOperations();
-            }
-            if (statusTimer != null)
-            {
-                statusTimer.Stop();
-                statusTimer.Dispose();
-            }
+            // Use the simplified null-conditional operator
+            auditTrailControl1?.CancelAllOperations();
+            statusTimer?.Stop();
+            statusTimer?.Dispose();
             base.OnFormClosing(e);
         }
         #endregion
 
         #region Tab and State Management
+        private async void TabControlMain_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                await LoadDataForSelectedTabAsync();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"An error occurred while loading tab data: {ex.Message}", "Load Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
         private async Task LoadDataForSelectedTabAsync()
         {
             if (tabControlMain.SelectedTab == null || loggedInRole == null) return;
@@ -166,34 +163,40 @@ namespace DocumentIssuanceApp
         #region Login and Role Management
         private async void LoginControl_LoginAttemptCompleted(object sender, LoginEventArgs e)
         {
-            if (e.IsAuthenticated)
+            try
             {
-                loggedInRole = e.Role;
-                loggedInUserName = e.UserName;
+                if (e.IsAuthenticated)
+                {
+                    loggedInRole = e.Role;
+                    loggedInUserName = e.UserName;
 
-                toolStripStatusLabelUser.Text = $"User: {loggedInUserName} ({loggedInRole})";
-                lblCurrentUserHeader.Text = $"Logged in as: {loggedInUserName} ({loggedInRole})";
-                lblCurrentUserHeader.ForeColor = ThemeManager.HeaderTextColor;
-                pnlAppHeader.Visible = true;
+                    toolStripStatusLabelUser.Text = $"User: {loggedInUserName} ({loggedInRole})";
+                    lblCurrentUserHeader.Text = $"Logged in as: {loggedInUserName} ({loggedInRole})";
+                    lblCurrentUserHeader.ForeColor = ThemeManager.HeaderTextColor;
+                    pnlAppHeader.Visible = true;
 
-                documentIssuanceControl1.InitializeControl(_repository, loggedInUserName);
-                gmOperationsControl1.InitializeControl(_repository, loggedInUserName);
-                qaControl1.InitializeControl(_repository, loggedInUserName);
-                auditTrailControl1.InitializeControl(_repository);
-                usersControl1.InitializeControl(_repository);
+                    // Re-initialize controls with the correct logged-in username
+                    documentIssuanceControl1.InitializeControl(_repository, loggedInUserName);
+                    gmOperationsControl1.InitializeControl(_repository, loggedInUserName);
+                    qaControl1.InitializeControl(_repository, loggedInUserName);
 
-                _gmDataLoaded = _qaDataLoaded = _auditDataLoaded = _usersDataLoaded = false;
-                EnableTabsBasedOnRole(loggedInRole);
-                SwitchToDefaultTabForRole(loggedInRole);
+                    _gmDataLoaded = _qaDataLoaded = _auditDataLoaded = _usersDataLoaded = false;
+                    EnableTabsBasedOnRole(loggedInRole);
+                    SwitchToDefaultTabForRole(loggedInRole);
 
-                await LoadDataForSelectedTabAsync();
+                    await LoadDataForSelectedTabAsync();
+                }
+                else
+                {
+                    pnlAppHeader.Visible = false;
+                    loggedInRole = null;
+                    UpdateStatusBarForSignOut();
+                    EnableTabsBasedOnRole(null);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                pnlAppHeader.Visible = false;
-                loggedInRole = null;
-                UpdateStatusBarForSignOut();
-                EnableTabsBasedOnRole(null);
+                MessageBox.Show($"A critical error occurred after login: {ex.Message}", "Application Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
