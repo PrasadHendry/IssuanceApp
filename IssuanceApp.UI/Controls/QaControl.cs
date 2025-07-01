@@ -29,11 +29,13 @@ namespace DocumentIssuanceApp.Controls
             _loggedInUserName = loggedInUserName;
 
             // Setup DataGridView
+            dgvQaQueue.AutoGenerateColumns = false;
             dgvQaQueue.Columns["colQaRequestNo"].DataPropertyName = nameof(PendingRequestSummary.RequestNo);
             dgvQaQueue.Columns["colQaRequestDate"].DataPropertyName = nameof(PendingRequestSummary.RequestDate);
             dgvQaQueue.Columns["colQaProduct"].DataPropertyName = nameof(PendingRequestSummary.Product);
             dgvQaQueue.Columns["colQaDocTypes"].DataPropertyName = nameof(PendingRequestSummary.DocumentNo);
             dgvQaQueue.Columns["colQaPreparedBy"].DataPropertyName = nameof(PendingRequestSummary.PreparedBy);
+            dgvQaQueue.Columns["colQaRequestedAt"].DataPropertyName = nameof(PendingRequestSummary.RequestedAt);
             dgvQaQueue.Columns["colQaAuthorizedBy"].DataPropertyName = nameof(PendingRequestSummary.AuthorizedBy);
             dgvQaQueue.Columns["colQaGmActionAt"].DataPropertyName = nameof(PendingRequestSummary.GmActionAt);
 
@@ -65,7 +67,6 @@ namespace DocumentIssuanceApp.Controls
                 if (dgvQaQueue.Rows.Count > 0)
                 {
                     dgvQaQueue.Rows[0].Selected = true;
-                    // *** THIS IS THE FIX: Explicitly call the detail display method ***
                     await DisplaySelectedRequestDetailsAsync(dgvQaQueue.Rows[0]);
                 }
             }
@@ -90,24 +91,25 @@ namespace DocumentIssuanceApp.Controls
 
         private async Task DisplaySelectedRequestDetailsAsync(DataGridViewRow selectedRow)
         {
-            // Cast to our new DTO
+            // *** FIX: Use the strongly-typed DTO for safe data access ***
             if (!(selectedRow.DataBoundItem is PendingRequestSummary request))
             {
                 ClearQaSelectedRequestDetails();
                 return;
             }
-
-            // Access data via properties
             string requestNo = request.RequestNo;
-            txtQaDetailRequestNo.Text = request.RequestNo;
+            txtQaDetailRequestNo.Text = requestNo;
             txtQaDetailRequestDate.Text = request.RequestDate.ToString("dd-MMM-yyyy");
             txtQaDetailProduct.Text = request.Product;
             txtQaDetailDocTypes.Text = request.DocumentNo;
             txtQaDetailPreparedBy.Text = request.PreparedBy;
+            txtQaDetailRequestedAt.Text = request.RequestedAt.ToString("dd-MMM-yyyy HH:mm"); // *** FIX: Populate the requested at textbox ***
             if (request.GmActionAt.HasValue)
                 txtQaDetailGmActionTime.Text = request.GmActionAt.Value.ToString("dd-MMM-yyyy HH:mm");
+            else
+                txtQaDetailGmActionTime.Text = string.Empty;
 
-            // The rest of this method remains the same
+
             this.Cursor = Cursors.WaitCursor;
             try
             {

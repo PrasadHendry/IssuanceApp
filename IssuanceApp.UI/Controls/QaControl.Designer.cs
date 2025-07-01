@@ -36,13 +36,6 @@
             this.lblQaQueueTitle = new System.Windows.Forms.Label();
             this.btnQaRefreshList = new DocumentIssuanceApp.RoundedButton();
             this.dgvQaQueue = new System.Windows.Forms.DataGridView();
-            this.colQaRequestNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colQaRequestDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colQaProduct = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colQaDocTypes = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colQaPreparedBy = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colQaAuthorizedBy = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colQaGmActionAt = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tlpQaBottomSection = new System.Windows.Forms.TableLayoutPanel();
             this.grpQaSelectedRequest = new System.Windows.Forms.GroupBox();
             this.tlpQaRequestDetails = new System.Windows.Forms.TableLayoutPanel();
@@ -87,6 +80,14 @@
             this.flpQaActionButtons = new System.Windows.Forms.FlowLayoutPanel();
             this.btnQaApprove = new DocumentIssuanceApp.RoundedButton();
             this.btnQaReject = new DocumentIssuanceApp.RoundedButton();
+            this.colQaRequestNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colQaRequestDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colQaProduct = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colQaDocTypes = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colQaPreparedBy = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colQaRequestedAt = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colQaAuthorizedBy = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colQaGmActionAt = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tlpQaOperationsMain.SuspendLayout();
             this.pnlQaTopSection.SuspendLayout();
             this.tlpQaTopControls.SuspendLayout();
@@ -105,8 +106,6 @@
             // tlpQaOperationsMain
             // 
             this.tlpQaOperationsMain.AutoScroll = true;
-            this.tlpQaOperationsMain.AutoSize = true;
-            this.tlpQaOperationsMain.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.tlpQaOperationsMain.ColumnCount = 1;
             this.tlpQaOperationsMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tlpQaOperationsMain.Controls.Add(this.pnlQaTopSection, 0, 0);
@@ -192,6 +191,7 @@
             this.colQaProduct,
             this.colQaDocTypes,
             this.colQaPreparedBy,
+            this.colQaRequestedAt,
             this.colQaAuthorizedBy,
             this.colQaGmActionAt});
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
@@ -212,56 +212,6 @@
             this.dgvQaQueue.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvQaQueue.Size = new System.Drawing.Size(1298, 198);
             this.dgvQaQueue.TabIndex = 1;
-            // 
-            // colQaRequestNo
-            // 
-            this.colQaRequestNo.HeaderText = "Request No.";
-            this.colQaRequestNo.MinimumWidth = 6;
-            this.colQaRequestNo.Name = "colQaRequestNo";
-            this.colQaRequestNo.ReadOnly = true;
-            // 
-            // colQaRequestDate
-            // 
-            this.colQaRequestDate.HeaderText = "Request Date";
-            this.colQaRequestDate.MinimumWidth = 6;
-            this.colQaRequestDate.Name = "colQaRequestDate";
-            this.colQaRequestDate.ReadOnly = true;
-            // 
-            // colQaProduct
-            // 
-            this.colQaProduct.HeaderText = "Product";
-            this.colQaProduct.MinimumWidth = 6;
-            this.colQaProduct.Name = "colQaProduct";
-            this.colQaProduct.ReadOnly = true;
-            // 
-            // colQaDocTypes
-            // 
-            this.colQaDocTypes.DataPropertyName = "DocumentNo";
-            this.colQaDocTypes.HeaderText = "Document No(s).";
-            this.colQaDocTypes.MinimumWidth = 6;
-            this.colQaDocTypes.Name = "colQaDocTypes";
-            this.colQaDocTypes.ReadOnly = true;
-            // 
-            // colQaPreparedBy
-            // 
-            this.colQaPreparedBy.HeaderText = "Prepared By";
-            this.colQaPreparedBy.MinimumWidth = 6;
-            this.colQaPreparedBy.Name = "colQaPreparedBy";
-            this.colQaPreparedBy.ReadOnly = true;
-            // 
-            // colQaAuthorizedBy
-            // 
-            this.colQaAuthorizedBy.HeaderText = "Authorized By (GM)";
-            this.colQaAuthorizedBy.MinimumWidth = 6;
-            this.colQaAuthorizedBy.Name = "colQaAuthorizedBy";
-            this.colQaAuthorizedBy.ReadOnly = true;
-            // 
-            // colQaGmActionAt
-            // 
-            this.colQaGmActionAt.HeaderText = "GM Action At";
-            this.colQaGmActionAt.MinimumWidth = 6;
-            this.colQaGmActionAt.Name = "colQaGmActionAt";
-            this.colQaGmActionAt.ReadOnly = true;
             // 
             // tlpQaBottomSection
             // 
@@ -777,6 +727,62 @@
             this.btnQaReject.Text = "Reject";
             this.btnQaReject.UseVisualStyleBackColor = true;
             // 
+            // colQaRequestNo
+            // 
+            this.colQaRequestNo.HeaderText = "Request No.";
+            this.colQaRequestNo.MinimumWidth = 6;
+            this.colQaRequestNo.Name = "colQaRequestNo";
+            this.colQaRequestNo.ReadOnly = true;
+            // 
+            // colQaRequestDate
+            // 
+            this.colQaRequestDate.HeaderText = "Request Date";
+            this.colQaRequestDate.MinimumWidth = 6;
+            this.colQaRequestDate.Name = "colQaRequestDate";
+            this.colQaRequestDate.ReadOnly = true;
+            // 
+            // colQaProduct
+            // 
+            this.colQaProduct.HeaderText = "Product";
+            this.colQaProduct.MinimumWidth = 6;
+            this.colQaProduct.Name = "colQaProduct";
+            this.colQaProduct.ReadOnly = true;
+            // 
+            // colQaDocTypes
+            // 
+            this.colQaDocTypes.DataPropertyName = "DocumentNo";
+            this.colQaDocTypes.HeaderText = "Document No(s).";
+            this.colQaDocTypes.MinimumWidth = 6;
+            this.colQaDocTypes.Name = "colQaDocTypes";
+            this.colQaDocTypes.ReadOnly = true;
+            // 
+            // colQaPreparedBy
+            // 
+            this.colQaPreparedBy.HeaderText = "Prepared By";
+            this.colQaPreparedBy.MinimumWidth = 6;
+            this.colQaPreparedBy.Name = "colQaPreparedBy";
+            this.colQaPreparedBy.ReadOnly = true;
+            // 
+            // colQaRequestedAt
+            // 
+            this.colQaRequestedAt.HeaderText = "Requested At";
+            this.colQaRequestedAt.Name = "colQaRequestedAt";
+            this.colQaRequestedAt.ReadOnly = true;
+            // 
+            // colQaAuthorizedBy
+            // 
+            this.colQaAuthorizedBy.HeaderText = "Authorized By (GM)";
+            this.colQaAuthorizedBy.MinimumWidth = 6;
+            this.colQaAuthorizedBy.Name = "colQaAuthorizedBy";
+            this.colQaAuthorizedBy.ReadOnly = true;
+            // 
+            // colQaGmActionAt
+            // 
+            this.colQaGmActionAt.HeaderText = "GM Action At";
+            this.colQaGmActionAt.MinimumWidth = 6;
+            this.colQaGmActionAt.Name = "colQaGmActionAt";
+            this.colQaGmActionAt.ReadOnly = true;
+            // 
             // QaControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
@@ -807,6 +813,7 @@
             this.flpQaActionButtons.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
+
         }
 
         #endregion
@@ -867,6 +874,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn colQaProduct;
         private System.Windows.Forms.DataGridViewTextBoxColumn colQaDocTypes;
         private System.Windows.Forms.DataGridViewTextBoxColumn colQaPreparedBy;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colQaRequestedAt;
         private System.Windows.Forms.DataGridViewTextBoxColumn colQaAuthorizedBy;
         private System.Windows.Forms.DataGridViewTextBoxColumn colQaGmActionAt;
     }

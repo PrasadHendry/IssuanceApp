@@ -58,6 +58,7 @@
             // 
             // tlpAuditTrailMain
             // 
+            this.tlpAuditTrailMain.AutoScroll = true;
             this.tlpAuditTrailMain.ColumnCount = 1;
             this.tlpAuditTrailMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tlpAuditTrailMain.Controls.Add(this.grpAuditFilters, 0, 0);

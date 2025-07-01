@@ -1,6 +1,6 @@
 ﻿// IssuanceApp.UI/MainForm.cs
 
-using DocumentIssuanceApp.Controls; // THIS IS THE FIX FOR MAINFORM
+using DocumentIssuanceApp.Controls;
 using IssuanceApp.Data;
 using System;
 using System.Collections.Generic;
@@ -60,7 +60,10 @@ namespace DocumentIssuanceApp
             statusTimer.Tick += StatusTimer_Tick;
             statusTimer.Start();
 
-            this.tabControlMain.SelectedIndexChanged += TabControlMain_SelectedIndexChanged;
+            // *** FIX: Set initial status bar text ***
+            toolStripStatusLabelUser.Text = "User: Not Logged In";
+
+            this.tabControlMain.SelectedIndexChanged += async (s, e) => await LoadDataForSelectedTabAsync();
             btnSignOut.Click += BtnSignOut_Click;
 
             SetupTabs();
@@ -76,7 +79,10 @@ namespace DocumentIssuanceApp
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
             _dataLoadCts.Cancel();
-            auditTrailControl1.CancelAllOperations();
+            if (auditTrailControl1 != null)
+            {
+                auditTrailControl1.CancelAllOperations();
+            }
             if (statusTimer != null)
             {
                 statusTimer.Stop();
@@ -87,7 +93,7 @@ namespace DocumentIssuanceApp
         #endregion
 
         #region Tab and State Management
-        private async void TabControlMain_SelectedIndexChanged(object sender, EventArgs e)
+        private async Task LoadDataForSelectedTabAsync()
         {
             if (tabControlMain.SelectedTab == null || loggedInRole == null) return;
 
@@ -158,7 +164,7 @@ namespace DocumentIssuanceApp
         #endregion
 
         #region Login and Role Management
-        private void LoginControl_LoginAttemptCompleted(object sender, LoginEventArgs e)
+        private async void LoginControl_LoginAttemptCompleted(object sender, LoginEventArgs e)
         {
             if (e.IsAuthenticated)
             {
@@ -179,6 +185,8 @@ namespace DocumentIssuanceApp
                 _gmDataLoaded = _qaDataLoaded = _auditDataLoaded = _usersDataLoaded = false;
                 EnableTabsBasedOnRole(loggedInRole);
                 SwitchToDefaultTabForRole(loggedInRole);
+
+                await LoadDataForSelectedTabAsync();
             }
             else
             {
@@ -210,7 +218,7 @@ namespace DocumentIssuanceApp
 
         private void UpdateStatusBarForSignOut()
         {
-            toolStripStatusLabelUser.Text = $"User: {loggedInUserName} (Not Logged In)";
+            toolStripStatusLabelUser.Text = "User: Not Logged In";
             toolStripStatusLabelDateTime.Text = DateTime.Now.ToString("dd-MMM-yyyy hh:mm tt");
         }
 

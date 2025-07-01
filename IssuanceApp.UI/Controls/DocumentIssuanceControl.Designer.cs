@@ -131,8 +131,6 @@
             // tlpDocumentIssuanceMain
             // 
             this.tlpDocumentIssuanceMain.AutoScroll = true;
-            this.tlpDocumentIssuanceMain.AutoSize = true;
-            this.tlpDocumentIssuanceMain.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.tlpDocumentIssuanceMain.ColumnCount = 1;
             this.tlpDocumentIssuanceMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tlpDocumentIssuanceMain.Controls.Add(this.lblHeaderDI, 0, 0);
@@ -153,7 +151,7 @@
             this.tlpDocumentIssuanceMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpDocumentIssuanceMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpDocumentIssuanceMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpDocumentIssuanceMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tlpDocumentIssuanceMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpDocumentIssuanceMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpDocumentIssuanceMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpDocumentIssuanceMain.Size = new System.Drawing.Size(1313, 709);

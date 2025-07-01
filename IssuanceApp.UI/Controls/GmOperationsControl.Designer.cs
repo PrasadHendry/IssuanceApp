@@ -94,8 +94,6 @@
             // tlpGmOperationsMain
             // 
             this.tlpGmOperationsMain.AutoScroll = true;
-            this.tlpGmOperationsMain.AutoSize = true;
-            this.tlpGmOperationsMain.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.tlpGmOperationsMain.ColumnCount = 1;
             this.tlpGmOperationsMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tlpGmOperationsMain.Controls.Add(this.pnlGmTopSection, 0, 0);
@@ -682,6 +680,7 @@
             this.flpGmActionButtons.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
+
         }
 
         #endregion

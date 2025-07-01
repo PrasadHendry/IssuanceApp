@@ -211,8 +211,9 @@ namespace IssuanceApp.Data
         public async Task<List<PendingRequestSummary>> GetQaPendingQueueAsync()
         {
             var queue = new List<PendingRequestSummary>();
+            // *** FIX: Added t.RequestedAt to the SELECT statement ***
             string sql = @"
-        SELECT i.RequestNo, i.RequestDate, i.Product, i.DocumentNo, t.PreparedBy, t.AuthorizedBy, t.GmOperationsAt AS GmActionAt
+        SELECT i.RequestNo, i.RequestDate, i.Product, i.DocumentNo, t.PreparedBy, t.RequestedAt, t.AuthorizedBy, t.GmOperationsAt AS GmActionAt
         FROM dbo.Doc_Issuance AS i JOIN dbo.Issuance_Tracker AS t ON i.IssuanceID = t.IssuanceID
         WHERE t.GmOperationsAction = @Action AND t.QAAction IS NULL ORDER BY i.RequestNo DESC;";
             var parameters = new List<SqlParameter> { new SqlParameter("@Action", AppConstants.ActionAuthorized) };
@@ -229,6 +230,7 @@ namespace IssuanceApp.Data
                     Product = row["Product"].ToString(),
                     DocumentNo = row["DocumentNo"].ToString(),
                     PreparedBy = row["PreparedBy"].ToString(),
+                    RequestedAt = (DateTime)row["RequestedAt"], // *** FIX: Populate the DTO property ***
                     AuthorizedBy = row["AuthorizedBy"].ToString(),
                     GmActionAt = row["GmActionAt"] != DBNull.Value ? (DateTime?)row["GmActionAt"] : null
                 });

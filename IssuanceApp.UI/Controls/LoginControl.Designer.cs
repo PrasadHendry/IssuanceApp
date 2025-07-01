@@ -31,11 +31,11 @@
             this.tlpLoginMain = new System.Windows.Forms.TableLayoutPanel();
             this.panelLoginContainer = new System.Windows.Forms.Panel();
             this.lblLoginStatus = new System.Windows.Forms.Label();
+            this.btnLogin = new DocumentIssuanceApp.RoundedButton();
             this.txtPassword = new System.Windows.Forms.TextBox();
             this.lblPassword = new System.Windows.Forms.Label();
             this.cmbRole = new System.Windows.Forms.ComboBox();
             this.lblRole = new System.Windows.Forms.Label();
-            this.btnLogin = new DocumentIssuanceApp.RoundedButton();
             this.tlpLoginMain.SuspendLayout();
             this.panelLoginContainer.SuspendLayout();
             this.SuspendLayout();
@@ -59,9 +59,7 @@
             // 
             // panelLoginContainer
             // 
-            this.panelLoginContainer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panelLoginContainer.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.panelLoginContainer.Controls.Add(this.lblLoginStatus);
             this.panelLoginContainer.Controls.Add(this.btnLogin);
             this.panelLoginContainer.Controls.Add(this.txtPassword);
@@ -86,11 +84,24 @@
             this.lblLoginStatus.TabIndex = 5;
             this.lblLoginStatus.Text = "*Please login to continue.";
             // 
+            // btnLogin
+            // 
+            this.btnLogin.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.btnLogin.CornerRadius = 10;
+            this.btnLogin.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnLogin.Location = new System.Drawing.Point(158, 125);
+            this.btnLogin.Name = "btnLogin";
+            this.btnLogin.Size = new System.Drawing.Size(142, 56);
+            this.btnLogin.TabIndex = 4;
+            this.btnLogin.Text = "Login";
+            this.btnLogin.UseVisualStyleBackColor = true;
+            this.btnLogin.Click += new System.EventHandler(this.BtnLogin_Click);
+            // 
             // txtPassword
             // 
             this.txtPassword.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.txtPassword.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtPassword.Location = new System.Drawing.Point(158, 77);
+            this.txtPassword.Location = new System.Drawing.Point(136, 77);
             this.txtPassword.Name = "txtPassword";
             this.txtPassword.PasswordChar = '*';
             this.txtPassword.Size = new System.Drawing.Size(320, 35);
@@ -101,7 +112,7 @@
             this.lblPassword.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.lblPassword.AutoSize = true;
             this.lblPassword.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblPassword.Location = new System.Drawing.Point(23, 77);
+            this.lblPassword.Location = new System.Drawing.Point(23, 80);
             this.lblPassword.Name = "lblPassword";
             this.lblPassword.Size = new System.Drawing.Size(111, 30);
             this.lblPassword.TabIndex = 2;
@@ -113,7 +124,7 @@
             this.cmbRole.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbRole.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cmbRole.FormattingEnabled = true;
-            this.cmbRole.Location = new System.Drawing.Point(158, 15);
+            this.cmbRole.Location = new System.Drawing.Point(136, 15);
             this.cmbRole.Name = "cmbRole";
             this.cmbRole.Size = new System.Drawing.Size(320, 38);
             this.cmbRole.TabIndex = 1;
@@ -123,23 +134,11 @@
             this.lblRole.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.lblRole.AutoSize = true;
             this.lblRole.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblRole.Location = new System.Drawing.Point(4, 15);
+            this.lblRole.Location = new System.Drawing.Point(8, 15);
             this.lblRole.Name = "lblRole";
             this.lblRole.Size = new System.Drawing.Size(126, 30);
             this.lblRole.TabIndex = 0;
             this.lblRole.Text = "Select Role:";
-            // 
-            // btnLogin
-            // 
-            this.btnLogin.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.btnLogin.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnLogin.Location = new System.Drawing.Point(158, 125);
-            this.btnLogin.Name = "btnLogin";
-            this.btnLogin.Size = new System.Drawing.Size(142, 56);
-            this.btnLogin.TabIndex = 4;
-            this.btnLogin.Text = "Login";
-            this.btnLogin.UseVisualStyleBackColor = true;
-            this.btnLogin.Click += new System.EventHandler(this.BtnLogin_Click);
             // 
             // LoginControl
             // 
