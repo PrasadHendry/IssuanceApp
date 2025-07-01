@@ -1,5 +1,4 @@
 ﻿// IssuanceRepository.cs
-
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -7,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
+using BCrypt.Net;
 using Microsoft.Data.SqlClient;
 
 namespace IssuanceApp.Data
@@ -23,7 +22,7 @@ namespace IssuanceApp.Data
             _connectionString = connectionString;
         }
 
-        #region Generic Async Data Access Helpers
+        #region Generic Helpers
         private async Task<DataTable> GetDataTableAsync(string sql, List<SqlParameter> parameters = null, CancellationToken token = default)
         {
             var dt = new DataTable();
@@ -89,10 +88,9 @@ namespace IssuanceApp.Data
             object result = await ExecuteScalarAsync(sql, parameters);
             if (result != null && result != DBNull.Value)
             {
-                // CRITICAL SECURITY WARNING: This method uses plain-text password comparison.
-                // In a production environment, this MUST be replaced with a strong hashing algorithm.
-                // Example: return BCrypt.Net.BCrypt.Verify(password, result.ToString());
-                return password == result.ToString();
+                string storedHash = result.ToString();
+                // This requires the BCrypt.Net-Next package
+                return BCrypt.Net.BCrypt.Verify(password, storedHash);
             }
             return false;
         }
@@ -101,10 +99,7 @@ namespace IssuanceApp.Data
         {
             var roles = new List<UserRole>();
             string sql = "SELECT RoleID, RoleName FROM dbo.User_Roles ORDER BY RoleID;";
-
             DataTable dt = await GetDataTableAsync(sql);
-
-            // Convert the DataTable to a strongly-typed List<UserRole>
             foreach (DataRow row in dt.Rows)
             {
                 roles.Add(new UserRole
@@ -129,12 +124,9 @@ namespace IssuanceApp.Data
         #endregion
 
         #region Document Issuance
-
         public async Task<string> GenerateNewRequestNumberAsync()
         {
             string prefix = $"REQ-{DateTime.Now:yyyyMMdd}-";
-            int nextSequence;
-
             using (var conn = new SqlConnection(_connectionString))
             {
                 await conn.OpenAsync();
@@ -142,16 +134,16 @@ namespace IssuanceApp.Data
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
                     object result = await cmd.ExecuteScalarAsync();
-                    nextSequence = (int)result;
+                    return $"{prefix}{(int)result:D3}";
                 }
             }
-            return $"{prefix}{nextSequence:D3}";
         }
 
         public async Task CreateIssuanceRequestAsync(IssuanceRequestData data)
         {
             using (var conn = new SqlConnection(_connectionString))
             {
+                await conn.OpenAsync();
                 using (var cmd = new SqlCommand("dbo.sp_CreateIssuanceRequest", conn))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
@@ -173,8 +165,6 @@ namespace IssuanceApp.Data
                     cmd.Parameters.AddWithValue("@ExportOrderNo", (object)data.ExportOrderNo ?? DBNull.Value);
                     cmd.Parameters.AddWithValue("@PreparedBy", data.PreparedBy);
                     cmd.Parameters.AddWithValue("@RequestComment", (object)data.RequestComment ?? DBNull.Value);
-
-                    await conn.OpenAsync();
                     await cmd.ExecuteNonQueryAsync();
                 }
             }
@@ -182,40 +172,28 @@ namespace IssuanceApp.Data
         #endregion
 
         #region GM & QA Operations
-        public async Task<List<PendingRequestSummary>> GetGmPendingQueueAsync()
+        public async Task<List<GmQueueItemDto>> GetGmPendingQueueAsync()
         {
-            var queue = new List<PendingRequestSummary>();
-            // MODIFIED SQL QUERY: Select all the detail fields at once.
+            var queue = new List<GmQueueItemDto>();
             string sql = @"
-        SELECT 
-            i.RequestNo, i.RequestDate, i.Product, i.DocumentNo, t.PreparedBy, t.RequestedAt,
-            i.FromDepartment, i.BatchNo, i.ItemMfgDate, i.ItemExpDate, i.Market, i.PackSize,
-            t.RequestComment
-        FROM 
-            dbo.Doc_Issuance AS i 
-        JOIN 
-            dbo.Issuance_Tracker AS t ON i.IssuanceID = t.IssuanceID
-        WHERE 
-            t.GmOperationsAction IS NULL 
-        ORDER BY 
-            i.RequestNo DESC;";
-
+                SELECT 
+                    i.RequestNo, i.RequestDate, i.Product, i.DocumentNo, t.PreparedBy, t.RequestedAt,
+                    i.FromDepartment, i.BatchNo, i.ItemMfgDate, i.ItemExpDate, i.Market, i.PackSize,
+                    t.RequestComment
+                FROM dbo.Doc_Issuance AS i 
+                JOIN dbo.Issuance_Tracker AS t ON i.IssuanceID = t.IssuanceID
+                WHERE t.GmOperationsAction IS NULL ORDER BY i.RequestNo DESC;";
             DataTable dt = await GetDataTableAsync(sql);
-
-            // Convert DataTable to a strongly-typed List
             foreach (DataRow row in dt.Rows)
             {
-                queue.Add(new PendingRequestSummary
+                queue.Add(new GmQueueItemDto
                 {
-                    // Existing mappings
                     RequestNo = row["RequestNo"].ToString(),
                     RequestDate = (DateTime)row["RequestDate"],
                     Product = row["Product"].ToString(),
                     DocumentNo = row["DocumentNo"].ToString(),
                     PreparedBy = row["PreparedBy"].ToString(),
                     RequestedAt = (DateTime)row["RequestedAt"],
-
-                    // --- NEW MAPPINGS ---
                     FromDepartment = row["FromDepartment"].ToString(),
                     BatchNo = row["BatchNo"].ToString(),
                     ItemMfgDate = row["ItemMfgDate"].ToString(),
@@ -228,43 +206,42 @@ namespace IssuanceApp.Data
             return queue;
         }
 
-        public async Task<List<PendingRequestSummary>> GetQaPendingQueueAsync()
+        public async Task<List<QaQueueItemDto>> GetQaPendingQueueAsync()
         {
-            var queue = new List<PendingRequestSummary>();
-            // *** FIX: Added t.RequestedAt to the SELECT statement ***
+            var queue = new List<QaQueueItemDto>();
             string sql = @"
-        SELECT i.RequestNo, i.RequestDate, i.Product, i.DocumentNo, t.PreparedBy, t.RequestedAt, t.AuthorizedBy, t.GmOperationsAt AS GmActionAt
-        FROM dbo.Doc_Issuance AS i JOIN dbo.Issuance_Tracker AS t ON i.IssuanceID = t.IssuanceID
-        WHERE t.GmOperationsAction = @Action AND t.QAAction IS NULL ORDER BY i.RequestNo DESC;";
+                SELECT 
+                    i.RequestNo, i.RequestDate, i.Product, i.DocumentNo, t.PreparedBy, t.RequestedAt, 
+                    t.AuthorizedBy, t.GmOperationsAt, i.FromDepartment, i.BatchNo, i.ItemMfgDate, 
+                    i.ItemExpDate, i.Market, i.PackSize, t.RequestComment, t.GmOperationsComment
+                FROM dbo.Doc_Issuance AS i 
+                JOIN dbo.Issuance_Tracker AS t ON i.IssuanceID = t.IssuanceID
+                WHERE t.GmOperationsAction = @Action AND t.QAAction IS NULL ORDER BY i.RequestNo DESC;";
             var parameters = new List<SqlParameter> { new SqlParameter("@Action", AppConstants.ActionAuthorized) };
-
             DataTable dt = await GetDataTableAsync(sql, parameters);
-
-            // Convert DataTable to a strongly-typed List
             foreach (DataRow row in dt.Rows)
             {
-                queue.Add(new PendingRequestSummary
+                queue.Add(new QaQueueItemDto
                 {
                     RequestNo = row["RequestNo"].ToString(),
                     RequestDate = (DateTime)row["RequestDate"],
                     Product = row["Product"].ToString(),
                     DocumentNo = row["DocumentNo"].ToString(),
                     PreparedBy = row["PreparedBy"].ToString(),
-                    RequestedAt = (DateTime)row["RequestedAt"], // *** FIX: Populate the DTO property ***
+                    RequestedAt = (DateTime)row["RequestedAt"],
                     AuthorizedBy = row["AuthorizedBy"].ToString(),
-                    GmActionAt = row["GmActionAt"] != DBNull.Value ? (DateTime?)row["GmActionAt"] : null
+                    GmActionAt = (DateTime)row["GmOperationsAt"],
+                    FromDepartment = row["FromDepartment"].ToString(),
+                    BatchNo = row["BatchNo"].ToString(),
+                    ItemMfgDate = row["ItemMfgDate"].ToString(),
+                    ItemExpDate = row["ItemExpDate"].ToString(),
+                    Market = row["Market"].ToString(),
+                    PackSize = row["PackSize"].ToString(),
+                    RequestComment = row["RequestComment"].ToString(),
+                    GmOperationsComment = row["GmOperationsComment"].ToString()
                 });
             }
             return queue;
-        }
-
-        public Task<DataTable> GetFullRequestDetailsAsync(string requestNo)
-        {
-            string sql = @"
-                SELECT i.*, t.RequestComment, t.GmOperationsComment
-                FROM dbo.Doc_Issuance AS i JOIN dbo.Issuance_Tracker AS t ON i.IssuanceID = t.IssuanceID
-                WHERE i.RequestNo = @RequestNo;";
-            return GetDataTableAsync(sql, new List<SqlParameter> { new SqlParameter("@RequestNo", requestNo) });
         }
 
         public async Task<bool> UpdateGmActionAsync(string requestNo, string action, string comment, string userName)
@@ -275,10 +252,8 @@ namespace IssuanceApp.Data
                 WHERE IssuanceID = (SELECT IssuanceID FROM dbo.Doc_Issuance WHERE RequestNo = @RequestNo);";
             var parameters = new List<SqlParameter>
             {
-                new SqlParameter("@Action", action),
-                new SqlParameter("@User", userName),
-                new SqlParameter("@Comment", (object)comment ?? DBNull.Value),
-                new SqlParameter("@RequestNo", requestNo)
+                new SqlParameter("@Action", action), new SqlParameter("@User", userName),
+                new SqlParameter("@Comment", (object)comment ?? DBNull.Value), new SqlParameter("@RequestNo", requestNo)
             };
             return await ExecuteNonQueryAsync(sql, parameters) > 0;
         }
@@ -291,10 +266,8 @@ namespace IssuanceApp.Data
                 WHERE IssuanceID = (SELECT IssuanceID FROM dbo.Doc_Issuance WHERE RequestNo = @RequestNo);";
             var parameters = new List<SqlParameter>
             {
-                new SqlParameter("@Action", action),
-                new SqlParameter("@User", userName),
-                new SqlParameter("@Comment", (object)comment ?? DBNull.Value),
-                new SqlParameter("@RequestNo", requestNo)
+                new SqlParameter("@Action", action), new SqlParameter("@User", userName),
+                new SqlParameter("@Comment", (object)comment ?? DBNull.Value), new SqlParameter("@RequestNo", requestNo)
             };
             return await ExecuteNonQueryAsync(sql, parameters) > 0;
         }
@@ -313,46 +286,26 @@ namespace IssuanceApp.Data
                             WHEN t.GmOperationsAction = @ActionAuthorized THEN 'Pending QA Approval'
                             ELSE 'Pending GM Approval'
                         END AS DerivedStatus
-                    FROM dbo.Doc_Issuance i
-                    JOIN dbo.Issuance_Tracker t ON i.IssuanceID = t.IssuanceID
+                    FROM dbo.Doc_Issuance i JOIN dbo.Issuance_Tracker t ON i.IssuanceID = t.IssuanceID
                     WHERE i.RequestDate BETWEEN @FromDate AND @ToDate
                 )
                 SELECT IssuanceID FROM AuditData
                 WHERE 1=1 ");
-
             var parameters = new List<SqlParameter>
             {
-                new SqlParameter("@FromDate", from.Date),
-                new SqlParameter("@ToDate", to.Date),
+                new SqlParameter("@FromDate", from.Date), new SqlParameter("@ToDate", to.Date),
                 new SqlParameter("@ActionRejected", AppConstants.ActionRejected),
                 new SqlParameter("@ActionApproved", AppConstants.ActionApproved),
                 new SqlParameter("@ActionAuthorized", AppConstants.ActionAuthorized)
             };
 
-            if (status != "All")
-            {
-                sqlBuilder.Append("AND DerivedStatus = @Status ");
-                parameters.Add(new SqlParameter("@Status", status));
-            }
-            if (!string.IsNullOrWhiteSpace(requestNo))
-            {
-                sqlBuilder.Append("AND RequestNo LIKE @RequestNo ");
-                parameters.Add(new SqlParameter("@RequestNo", $"%{requestNo.Trim()}%"));
-            }
-            if (!string.IsNullOrWhiteSpace(product))
-            {
-                sqlBuilder.Append("AND Product LIKE @Product ");
-                parameters.Add(new SqlParameter("@Product", $"%{product.Trim()}%"));
-            }
+            if (status != "All") { sqlBuilder.Append("AND DerivedStatus = @Status "); parameters.Add(new SqlParameter("@Status", status)); }
+            if (!string.IsNullOrWhiteSpace(requestNo)) { sqlBuilder.Append("AND RequestNo LIKE @RequestNo "); parameters.Add(new SqlParameter("@RequestNo", $"%{requestNo.Trim()}%")); }
+            if (!string.IsNullOrWhiteSpace(product)) { sqlBuilder.Append("AND Product LIKE @Product "); parameters.Add(new SqlParameter("@Product", $"%{product.Trim()}%")); }
 
-            string safeSortColumn = "RequestNo"; // Default sort column is now RequestNo
+            string safeSortColumn = "RequestNo";
             var validSortColumns = new List<string> { "RequestNo", "RequestDate", "Product", "DerivedStatus", "PreparedBy", "RequestedAt" };
-            if (!string.IsNullOrEmpty(sortColumn) && validSortColumns.Contains(sortColumn))
-            {
-                safeSortColumn = sortColumn;
-            }
-
-            // Default sort is now DESC unless explicitly set to ASC
+            if (!string.IsNullOrEmpty(sortColumn) && validSortColumns.Contains(sortColumn)) { safeSortColumn = sortColumn; }
             string sortDirection = (sortOrder == System.Windows.Forms.SortOrder.Ascending) ? "ASC" : "DESC";
             sqlBuilder.Append($" ORDER BY {safeSortColumn} {sortDirection}");
 
@@ -362,10 +315,7 @@ namespace IssuanceApp.Data
 
         public async Task<List<AuditTrailEntry>> GetAuditTrailEntriesAsync(List<int> keys, CancellationToken token)
         {
-            if (keys == null || !keys.Any())
-            {
-                return new List<AuditTrailEntry>();
-            }
+            if (keys == null || !keys.Any()) { return new List<AuditTrailEntry>(); }
 
             var results = new List<AuditTrailEntry>();
             var sqlBuilder = new StringBuilder(@"
@@ -379,14 +329,11 @@ namespace IssuanceApp.Data
                         WHEN t.GmOperationsAction = @ActionAuthorized THEN 'Pending QA Approval'
                         ELSE 'Pending GM Approval'
                     END AS DerivedStatus
-                FROM dbo.Doc_Issuance i
-                JOIN dbo.Issuance_Tracker t ON i.IssuanceID = t.IssuanceID
+                FROM dbo.Doc_Issuance i JOIN dbo.Issuance_Tracker t ON i.IssuanceID = t.IssuanceID
                 WHERE i.IssuanceID IN (");
-
             var parameters = new List<SqlParameter>
             {
-                new SqlParameter("@ActionRejected", AppConstants.ActionRejected),
-                new SqlParameter("@ActionApproved", AppConstants.ActionApproved),
+                new SqlParameter("@ActionRejected", AppConstants.ActionRejected), new SqlParameter("@ActionApproved", AppConstants.ActionApproved),
                 new SqlParameter("@ActionAuthorized", AppConstants.ActionAuthorized)
             };
 

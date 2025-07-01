@@ -65,9 +65,9 @@ namespace IssuanceApp.Data
         public string ExportOrderNo { get; set; }
         public string RequestComment { get; set; }
     }
-    public class PendingRequestSummary
+    // 1. DTO for the GM Operations Queue
+    public class GmQueueItemDto
     {
-        // Existing Properties
         public string RequestNo { get; set; }
         public DateTime RequestDate { get; set; }
         public string Product { get; set; }
@@ -75,7 +75,7 @@ namespace IssuanceApp.Data
         public string PreparedBy { get; set; }
         public DateTime RequestedAt { get; set; }
 
-        // --- NEW PROPERTIES TO ADD ---
+        // Full details for instant display
         public string FromDepartment { get; set; }
         public string BatchNo { get; set; }
         public string ItemMfgDate { get; set; }
@@ -83,10 +83,30 @@ namespace IssuanceApp.Data
         public string Market { get; set; }
         public string PackSize { get; set; }
         public string RequestComment { get; set; }
-        public string GmOperationsComment { get; set; } // For QA screen
+    }
 
-        // QA-specific fields (will be null for GM queue)
+    // 2. DTO for the QA Approval Queue
+    public class QaQueueItemDto
+    {
+        public string RequestNo { get; set; }
+        public DateTime RequestDate { get; set; }
+        public string Product { get; set; }
+        public string DocumentNo { get; set; }
+        public string PreparedBy { get; set; }
+        public DateTime RequestedAt { get; set; }
+
+        // Fields specific to the QA view (note they are not nullable)
         public string AuthorizedBy { get; set; }
-        public DateTime? GmActionAt { get; set; }
+        public DateTime GmActionAt { get; set; }
+
+        // Full details for instant display
+        public string FromDepartment { get; set; }
+        public string BatchNo { get; set; }
+        public string ItemMfgDate { get; set; }
+        public string ItemExpDate { get; set; }
+        public string Market { get; set; }
+        public string PackSize { get; set; }
+        public string RequestComment { get; set; }
+        public string GmOperationsComment { get; set; }
     }
 }

@@ -1,11 +1,11 @@
 ﻿// IssuanceApp.UI/Controls/UsersControl.cs
 
-using DocumentIssuanceApp.Controls; // Namespace for ThemeManager
+using DocumentIssuanceApp.Controls;
 using IssuanceApp.Data;
 using System;
-using System.Data;
-using System.Threading.Tasks; // For Task
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using BCrypt.Net; // This is the correct using statement for BCrypt.Net-Next
 
 namespace DocumentIssuanceApp.Controls
 {
@@ -26,25 +26,33 @@ namespace DocumentIssuanceApp.Controls
         {
             _repository = repository;
             _userRolesBindingSource = new BindingSource();
-            dgvUserRoles.AutoGenerateColumns = false;
-            dgvUserRoles.Columns["colUserRoleId"].DataPropertyName = nameof(UserRole.RoleID);
-            dgvUserRoles.Columns["colUserRoleName"].DataPropertyName = nameof(UserRole.RoleName);
+            SetupUserRolesColumns();
             dgvUserRoles.DataSource = _userRolesBindingSource;
             dgvUserRoles.SelectionChanged += DgvUserRoles_SelectionChanged;
             btnRefreshUserRoles.Click += async (s, e) => await LoadUserRolesAsync();
             btnResetPassword.Click += BtnResetPassword_Click;
         }
 
+        private void SetupUserRolesColumns()
+        {
+            dgvUserRoles.AutoGenerateColumns = false;
+            dgvUserRoles.Columns.Clear();
+            dgvUserRoles.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+
+            dgvUserRoles.Columns.Add(new DataGridViewTextBoxColumn { Name = "colUserRoleId", DataPropertyName = nameof(UserRole.RoleID), HeaderText = "Role ID", FillWeight = 25 });
+            dgvUserRoles.Columns.Add(new DataGridViewTextBoxColumn { Name = "colUserRoleName", DataPropertyName = nameof(UserRole.RoleName), HeaderText = "Role Name", FillWeight = 75 });
+        }
+
         public async Task LoadUserRolesAsync()
         {
             if (_repository == null) return;
-
             this.Cursor = Cursors.WaitCursor;
             btnRefreshUserRoles.Enabled = false;
             try
             {
                 _userRolesBindingSource.DataSource = await _repository.GetUserRolesForGridAsync();
                 dgvUserRoles.ClearSelection();
+                DgvUserRoles_SelectionChanged(null, EventArgs.Empty);
             }
             catch (Exception ex)
             {
@@ -64,9 +72,7 @@ namespace DocumentIssuanceApp.Controls
 
             if (isRowSelected)
             {
-                // Cast the DataBoundItem to our DTO
                 var selectedRole = dgvUserRoles.SelectedRows[0].DataBoundItem as UserRole;
-                // Access the property directly - no more magic strings!
                 txtRoleNameManage.Text = selectedRole?.RoleName ?? string.Empty;
             }
             else
@@ -86,7 +92,8 @@ namespace DocumentIssuanceApp.Controls
             if (MessageBox.Show($"Are you sure you want to reset the password for the '{roleName}' role?", "Confirm Password Reset", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 string newPassword = "Password123";
-                string newPasswordHash = newPassword;
+                // This is the correct call syntax for the library
+                string newPasswordHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
 
                 btnResetPassword.Enabled = false;
                 this.Cursor = Cursors.WaitCursor;
@@ -94,7 +101,7 @@ namespace DocumentIssuanceApp.Controls
                 {
                     if (await _repository.ResetUserPasswordAsync(roleName, newPasswordHash))
                     {
-                        MessageBox.Show($"Password for role '{roleName}' has been reset.", "Password Reset", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show($"Password for role '{roleName}' has been reset to:\n\n{newPassword}\n\nPlease inform the user.", "Password Reset", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         dgvUserRoles.ClearSelection();
                     }
                     else

@@ -2,7 +2,6 @@
 
 using IssuanceApp.Data;
 using System;
-using System.Data;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -10,6 +9,7 @@ namespace DocumentIssuanceApp.Controls
 {
     public partial class QaControl : UserControl
     {
+        // --- FIELD DEFINITIONS (These were missing) ---
         private IssuanceRepository _repository;
         private string _loggedInUserName;
 
@@ -23,51 +23,51 @@ namespace DocumentIssuanceApp.Controls
             ThemeManager.StyleDataGridView(dgvQaQueue);
         }
 
+        // --- METHOD DEFINITION (This was missing) ---
         public void InitializeControl(IssuanceRepository repository, string loggedInUserName)
         {
             _repository = repository;
             _loggedInUserName = loggedInUserName;
-
-            // Setup DataGridView
-            dgvQaQueue.AutoGenerateColumns = false;
-            dgvQaQueue.Columns["colQaRequestNo"].DataPropertyName = nameof(PendingRequestSummary.RequestNo);
-            dgvQaQueue.Columns["colQaRequestDate"].DataPropertyName = nameof(PendingRequestSummary.RequestDate);
-            dgvQaQueue.Columns["colQaProduct"].DataPropertyName = nameof(PendingRequestSummary.Product);
-            dgvQaQueue.Columns["colQaDocTypes"].DataPropertyName = nameof(PendingRequestSummary.DocumentNo);
-            dgvQaQueue.Columns["colQaPreparedBy"].DataPropertyName = nameof(PendingRequestSummary.PreparedBy);
-            dgvQaQueue.Columns["colQaRequestedAt"].DataPropertyName = nameof(PendingRequestSummary.RequestedAt);
-            dgvQaQueue.Columns["colQaAuthorizedBy"].DataPropertyName = nameof(PendingRequestSummary.AuthorizedBy);
-            dgvQaQueue.Columns["colQaGmActionAt"].DataPropertyName = nameof(PendingRequestSummary.GmActionAt);
-
-            // Wire up events
+            SetupQaQueueColumns();
             dgvQaQueue.SelectionChanged += DgvQaQueue_SelectionChanged;
             btnQaRefreshList.Click += async (s, e) => await LoadPendingQueueAsync();
             btnQaApprove.Click += BtnQaApprove_Click;
             btnQaReject.Click += BtnQaReject_Click;
             btnQaBrowseSelectDocument.Click += (s, e) => MessageBox.Show("Functionality to open document location is not yet implemented.", "TODO", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
             ClearQaSelectedRequestDetails();
             lblQaQueueTitle.Text = "Pending QA Approval Queue (0)";
         }
 
-        // Public method for MainForm to call when the tab is selected
+        private void SetupQaQueueColumns()
+        {
+            dgvQaQueue.AutoGenerateColumns = false;
+            dgvQaQueue.Columns.Clear();
+            dgvQaQueue.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+
+            dgvQaQueue.Columns.Add(new DataGridViewTextBoxColumn { Name = "colQaRequestNo", DataPropertyName = nameof(QaQueueItemDto.RequestNo), HeaderText = "Request No.", FillWeight = 15 });
+            dgvQaQueue.Columns.Add(new DataGridViewTextBoxColumn { Name = "colQaRequestDate", DataPropertyName = nameof(QaQueueItemDto.RequestDate), HeaderText = "Request Date", DefaultCellStyle = new DataGridViewCellStyle { Format = "dd-MMM-yyyy" }, FillWeight = 12 });
+            dgvQaQueue.Columns.Add(new DataGridViewTextBoxColumn { Name = "colQaProduct", DataPropertyName = nameof(QaQueueItemDto.Product), HeaderText = "Product", FillWeight = 23 });
+            dgvQaQueue.Columns.Add(new DataGridViewTextBoxColumn { Name = "colQaDocTypes", DataPropertyName = nameof(QaQueueItemDto.DocumentNo), HeaderText = "Document No(s).", FillWeight = 15 });
+            dgvQaQueue.Columns.Add(new DataGridViewTextBoxColumn { Name = "colQaPreparedBy", DataPropertyName = nameof(QaQueueItemDto.PreparedBy), HeaderText = "Prepared By", FillWeight = 10 });
+            dgvQaQueue.Columns.Add(new DataGridViewTextBoxColumn { Name = "colQaRequestedAt", DataPropertyName = nameof(QaQueueItemDto.RequestedAt), HeaderText = "Requested At", DefaultCellStyle = new DataGridViewCellStyle { Format = "dd-MMM-yyyy HH:mm" }, FillWeight = 15 });
+            dgvQaQueue.Columns.Add(new DataGridViewTextBoxColumn { Name = "colQaAuthorizedBy", DataPropertyName = nameof(QaQueueItemDto.AuthorizedBy), HeaderText = "Authorized By (GM)", FillWeight = 10 });
+            dgvQaQueue.Columns.Add(new DataGridViewTextBoxColumn { Name = "colQaGmActionAt", DataPropertyName = nameof(QaQueueItemDto.GmActionAt), HeaderText = "GM Action At", DefaultCellStyle = new DataGridViewCellStyle { Format = "dd-MMM-yyyy HH:mm" }, FillWeight = 15 });
+        }
+
+        // --- METHOD DEFINITION (This was missing) ---
         public async Task LoadPendingQueueAsync()
         {
             if (_repository == null) return;
-
             this.Cursor = Cursors.WaitCursor;
             btnQaRefreshList.Enabled = false;
             try
             {
-                dgvQaQueue.DataSource = null;
                 var data = await _repository.GetQaPendingQueueAsync();
                 dgvQaQueue.DataSource = data;
                 lblQaQueueTitle.Text = $"Pending QA Approval Queue ({dgvQaQueue.Rows.Count})";
-                ClearQaSelectedRequestDetails();
-                if (dgvQaQueue.Rows.Count > 0)
+                if (dgvQaQueue.Rows.Count == 0)
                 {
-                    dgvQaQueue.Rows[0].Selected = true;
-                    await DisplaySelectedRequestDetailsAsync(dgvQaQueue.Rows[0]);
+                    ClearQaSelectedRequestDetails();
                 }
             }
             catch (Exception ex)
@@ -81,60 +81,37 @@ namespace DocumentIssuanceApp.Controls
             }
         }
 
-        private async void DgvQaQueue_SelectionChanged(object sender, EventArgs e)
+        private void DgvQaQueue_SelectionChanged(object sender, EventArgs e)
         {
             if (dgvQaQueue.SelectedRows.Count > 0)
-                await DisplaySelectedRequestDetailsAsync(dgvQaQueue.SelectedRows[0]);
+                DisplaySelectedRequestDetails(dgvQaQueue.SelectedRows[0]);
             else
                 ClearQaSelectedRequestDetails();
         }
 
-        private async Task DisplaySelectedRequestDetailsAsync(DataGridViewRow selectedRow)
+        private void DisplaySelectedRequestDetails(DataGridViewRow selectedRow)
         {
-            // *** FIX: Use the strongly-typed DTO for safe data access ***
-            if (!(selectedRow.DataBoundItem is PendingRequestSummary request))
+            if (!(selectedRow.DataBoundItem is QaQueueItemDto request))
             {
                 ClearQaSelectedRequestDetails();
                 return;
             }
-            string requestNo = request.RequestNo;
-            txtQaDetailRequestNo.Text = requestNo;
+
+            txtQaDetailRequestNo.Text = request.RequestNo;
             txtQaDetailRequestDate.Text = request.RequestDate.ToString("dd-MMM-yyyy");
             txtQaDetailProduct.Text = request.Product;
             txtQaDetailDocTypes.Text = request.DocumentNo;
             txtQaDetailPreparedBy.Text = request.PreparedBy;
-            txtQaDetailRequestedAt.Text = request.RequestedAt.ToString("dd-MMM-yyyy HH:mm"); // *** FIX: Populate the requested at textbox ***
-            if (request.GmActionAt.HasValue)
-                txtQaDetailGmActionTime.Text = request.GmActionAt.Value.ToString("dd-MMM-yyyy HH:mm");
-            else
-                txtQaDetailGmActionTime.Text = string.Empty;
-
-
-            this.Cursor = Cursors.WaitCursor;
-            try
-            {
-                DataTable dt = await _repository.GetFullRequestDetailsAsync(requestNo);
-                if (dt.Rows.Count > 0)
-                {
-                    DataRow detailRow = dt.Rows[0];
-                    txtQaDetailFromDept.Text = detailRow["FromDepartment"].ToString();
-                    txtQaDetailBatchNo.Text = detailRow["BatchNo"].ToString();
-                    txtQaDetailMfgDate.Text = detailRow["ItemMfgDate"].ToString();
-                    txtQaDetailExpDate.Text = detailRow["ItemExpDate"].ToString();
-                    txtQaDetailMarket.Text = detailRow["Market"].ToString();
-                    txtQaDetailPackSize.Text = detailRow["PackSize"].ToString();
-                    txtQaDetailRequesterComments.Text = detailRow["RequestComment"].ToString();
-                    txtQaDetailGmComment.Text = detailRow["GmOperationsComment"].ToString();
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Failed to load full details for request: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            finally
-            {
-                this.Cursor = Cursors.Default;
-            }
+            txtQaDetailRequestedAt.Text = request.RequestedAt.ToString("dd-MMM-yyyy HH:mm");
+            txtQaDetailGmActionTime.Text = request.GmActionAt.ToString("dd-MMM-yyyy HH:mm");
+            txtQaDetailFromDept.Text = request.FromDepartment;
+            txtQaDetailBatchNo.Text = request.BatchNo;
+            txtQaDetailMfgDate.Text = request.ItemMfgDate;
+            txtQaDetailExpDate.Text = request.ItemExpDate;
+            txtQaDetailMarket.Text = request.Market;
+            txtQaDetailPackSize.Text = request.PackSize;
+            txtQaDetailRequesterComments.Text = request.RequestComment;
+            txtQaDetailGmComment.Text = request.GmOperationsComment;
         }
 
         private void ClearQaSelectedRequestDetails()
@@ -148,6 +125,7 @@ namespace DocumentIssuanceApp.Controls
         private void BtnQaApprove_Click(object sender, EventArgs e) => ProcessQaActionAsync(AppConstants.ActionApproved, false);
         private void BtnQaReject_Click(object sender, EventArgs e) => ProcessQaActionAsync(AppConstants.ActionRejected, true);
 
+        // --- METHOD DEFINITION (This was missing) ---
         private async void ProcessQaActionAsync(string action, bool commentsMandatory)
         {
             if (dgvQaQueue.SelectedRows.Count == 0 || string.IsNullOrEmpty(txtQaDetailRequestNo.Text))

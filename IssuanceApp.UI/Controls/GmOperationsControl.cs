@@ -2,7 +2,6 @@
 
 using IssuanceApp.Data;
 using System;
-using System.Data;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -26,95 +25,39 @@ namespace DocumentIssuanceApp.Controls
         {
             _repository = repository;
             _loggedInUserName = loggedInUserName;
-
-            // Setup the DataGridView programmatically. This prevents the crash.
             SetupGmQueueColumns();
-
-            // Wire up events
             dgvGmQueue.SelectionChanged += DgvGmQueue_SelectionChanged;
             btnGmRefreshList.Click += async (s, e) => await LoadPendingQueueAsync();
             btnGmAuthorize.Click += BtnGmAuthorize_Click;
             btnGmReject.Click += BtnGmReject_Click;
-
             ClearGmSelectedRequestDetails();
             lblGmQueueTitle.Text = "Pending GM Approval Queue (0)";
         }
 
-        // This new method creates the columns in code, making it robust and easy to manage.
         private void SetupGmQueueColumns()
         {
             dgvGmQueue.AutoGenerateColumns = false;
             dgvGmQueue.Columns.Clear();
-
-            // Set the base AutoSizeMode for the entire grid
             dgvGmQueue.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
 
-            // Now, add the columns with their proportional FillWeight
-            dgvGmQueue.Columns.Add(new DataGridViewTextBoxColumn
-            {
-                Name = "colGmRequestNo",
-                DataPropertyName = nameof(PendingRequestSummary.RequestNo),
-                HeaderText = "Request No.",
-                FillWeight = 15  // Give it a medium weight
-            });
-
-            dgvGmQueue.Columns.Add(new DataGridViewTextBoxColumn
-            {
-                Name = "colGmRequestDate",
-                DataPropertyName = nameof(PendingRequestSummary.RequestDate),
-                HeaderText = "Request Date",
-                DefaultCellStyle = new DataGridViewCellStyle { Format = "dd-MMM-yyyy" },
-                FillWeight = 12 // A bit smaller
-            });
-
-            dgvGmQueue.Columns.Add(new DataGridViewTextBoxColumn
-            {
-                Name = "colGmProduct",
-                DataPropertyName = nameof(PendingRequestSummary.Product),
-                HeaderText = "Product",
-                FillWeight = 28 // Give it a larger weight
-            });
-
-            dgvGmQueue.Columns.Add(new DataGridViewTextBoxColumn
-            {
-                Name = "colGmDocTypes",
-                DataPropertyName = nameof(PendingRequestSummary.DocumentNo),
-                HeaderText = "Document No(s).",
-                FillWeight = 20 // Also larger
-            });
-
-            dgvGmQueue.Columns.Add(new DataGridViewTextBoxColumn
-            {
-                Name = "colGmPreparedBy",
-                DataPropertyName = nameof(PendingRequestSummary.PreparedBy),
-                HeaderText = "Prepared By",
-                FillWeight = 10 // Smallest weight
-            });
-
-            dgvGmQueue.Columns.Add(new DataGridViewTextBoxColumn
-            {
-                Name = "colGmRequestedAt",
-                DataPropertyName = nameof(PendingRequestSummary.RequestedAt),
-                HeaderText = "Requested At",
-                DefaultCellStyle = new DataGridViewCellStyle { Format = "dd-MMM-yyyy HH:mm" },
-                FillWeight = 15 // Medium weight
-            });
+            dgvGmQueue.Columns.Add(new DataGridViewTextBoxColumn { Name = "colGmRequestNo", DataPropertyName = nameof(GmQueueItemDto.RequestNo), HeaderText = "Request No.", FillWeight = 15 });
+            dgvGmQueue.Columns.Add(new DataGridViewTextBoxColumn { Name = "colGmRequestDate", DataPropertyName = nameof(GmQueueItemDto.RequestDate), HeaderText = "Request Date", DefaultCellStyle = new DataGridViewCellStyle { Format = "dd-MMM-yyyy" }, FillWeight = 12 });
+            dgvGmQueue.Columns.Add(new DataGridViewTextBoxColumn { Name = "colGmProduct", DataPropertyName = nameof(GmQueueItemDto.Product), HeaderText = "Product", FillWeight = 28 });
+            dgvGmQueue.Columns.Add(new DataGridViewTextBoxColumn { Name = "colGmDocTypes", DataPropertyName = nameof(GmQueueItemDto.DocumentNo), HeaderText = "Document No(s).", FillWeight = 20 });
+            dgvGmQueue.Columns.Add(new DataGridViewTextBoxColumn { Name = "colGmPreparedBy", DataPropertyName = nameof(GmQueueItemDto.PreparedBy), HeaderText = "Prepared By", FillWeight = 10 });
+            dgvGmQueue.Columns.Add(new DataGridViewTextBoxColumn { Name = "colGmRequestedAt", DataPropertyName = nameof(GmQueueItemDto.RequestedAt), HeaderText = "Requested At", DefaultCellStyle = new DataGridViewCellStyle { Format = "dd-MMM-yyyy HH:mm" }, FillWeight = 15 });
         }
 
         public async Task LoadPendingQueueAsync()
         {
             if (_repository == null) return;
-
             this.Cursor = Cursors.WaitCursor;
             btnGmRefreshList.Enabled = false;
             try
             {
-                // This call now fetches all data needed, preventing extra DB calls later.
                 var data = await _repository.GetGmPendingQueueAsync();
                 dgvGmQueue.DataSource = data;
-
                 lblGmQueueTitle.Text = $"Pending GM Approval Queue ({dgvGmQueue.Rows.Count})";
-
                 if (dgvGmQueue.Rows.Count == 0)
                 {
                     ClearGmSelectedRequestDetails();
@@ -134,30 +77,25 @@ namespace DocumentIssuanceApp.Controls
         private void DgvGmQueue_SelectionChanged(object sender, EventArgs e)
         {
             if (dgvGmQueue.SelectedRows.Count > 0)
-                // No 'await' needed anymore
                 DisplaySelectedRequestDetails(dgvGmQueue.SelectedRows[0]);
             else
                 ClearGmSelectedRequestDetails();
         }
 
-        // This method is now synchronous and much faster.
         private void DisplaySelectedRequestDetails(DataGridViewRow selectedRow)
         {
-            if (!(selectedRow.DataBoundItem is PendingRequestSummary request))
+            if (!(selectedRow.DataBoundItem is GmQueueItemDto request))
             {
                 ClearGmSelectedRequestDetails();
                 return;
             }
 
-            // All data comes directly from the 'request' object, making this instant.
             txtGmDetailRequestNo.Text = request.RequestNo;
             txtGmDetailRequestDate.Text = request.RequestDate.ToString("dd-MMM-yyyy");
             txtGmDetailProduct.Text = request.Product;
             txtGmDetailDocTypes.Text = request.DocumentNo;
             txtGmDetailPreparedBy.Text = request.PreparedBy;
             txtGmDetailRequestedAt.Text = request.RequestedAt.ToString("dd-MMM-yyyy HH:mm");
-
-            // --- POPULATE THE REST OF THE FIELDS ---
             txtGmDetailFromDept.Text = request.FromDepartment;
             txtGmDetailBatchNo.Text = request.BatchNo;
             txtGmDetailMfgDate.Text = request.ItemMfgDate;
@@ -201,7 +139,7 @@ namespace DocumentIssuanceApp.Controls
                     if (success)
                     {
                         MessageBox.Show($"Request '{requestNo}' has been {action.ToLower()}ed successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        await LoadPendingQueueAsync(); // Reload the queue
+                        await LoadPendingQueueAsync();
                     }
                     else
                     {
