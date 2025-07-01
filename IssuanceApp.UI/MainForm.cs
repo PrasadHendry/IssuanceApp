@@ -161,7 +161,7 @@ namespace IssuanceApp.UI
                     loggedInUserName = e.UserName;
                     toolStripStatusLabelUser.Text = $"User: {loggedInUserName} ({loggedInRole})";
                     lblCurrentUserHeader.Text = $"Logged in as: {loggedInUserName} ({loggedInRole})";
-                    lblCurrentUserHeader.ForeColor = ThemeManager.AppHeaderColor;
+                    lblCurrentUserHeader.ForeColor = ThemeManager.HeaderTextColor;
                     pnlAppHeader.Visible = true;
 
                     documentIssuanceControl1.InitializeControl(_repository, loggedInUserName);
