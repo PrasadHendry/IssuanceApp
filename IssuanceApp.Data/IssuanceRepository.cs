@@ -185,10 +185,20 @@ namespace IssuanceApp.Data
         public async Task<List<PendingRequestSummary>> GetGmPendingQueueAsync()
         {
             var queue = new List<PendingRequestSummary>();
+            // MODIFIED SQL QUERY: Select all the detail fields at once.
             string sql = @"
-        SELECT i.RequestNo, i.RequestDate, i.Product, i.DocumentNo, t.PreparedBy, t.RequestedAt
-        FROM dbo.Doc_Issuance AS i JOIN dbo.Issuance_Tracker AS t ON i.IssuanceID = t.IssuanceID
-        WHERE t.GmOperationsAction IS NULL ORDER BY i.RequestNo DESC;";
+        SELECT 
+            i.RequestNo, i.RequestDate, i.Product, i.DocumentNo, t.PreparedBy, t.RequestedAt,
+            i.FromDepartment, i.BatchNo, i.ItemMfgDate, i.ItemExpDate, i.Market, i.PackSize,
+            t.RequestComment
+        FROM 
+            dbo.Doc_Issuance AS i 
+        JOIN 
+            dbo.Issuance_Tracker AS t ON i.IssuanceID = t.IssuanceID
+        WHERE 
+            t.GmOperationsAction IS NULL 
+        ORDER BY 
+            i.RequestNo DESC;";
 
             DataTable dt = await GetDataTableAsync(sql);
 
@@ -197,12 +207,22 @@ namespace IssuanceApp.Data
             {
                 queue.Add(new PendingRequestSummary
                 {
+                    // Existing mappings
                     RequestNo = row["RequestNo"].ToString(),
                     RequestDate = (DateTime)row["RequestDate"],
                     Product = row["Product"].ToString(),
                     DocumentNo = row["DocumentNo"].ToString(),
                     PreparedBy = row["PreparedBy"].ToString(),
-                    RequestedAt = (DateTime)row["RequestedAt"]
+                    RequestedAt = (DateTime)row["RequestedAt"],
+
+                    // --- NEW MAPPINGS ---
+                    FromDepartment = row["FromDepartment"].ToString(),
+                    BatchNo = row["BatchNo"].ToString(),
+                    ItemMfgDate = row["ItemMfgDate"].ToString(),
+                    ItemExpDate = row["ItemExpDate"].ToString(),
+                    Market = row["Market"].ToString(),
+                    PackSize = row["PackSize"].ToString(),
+                    RequestComment = row["RequestComment"].ToString()
                 });
             }
             return queue;

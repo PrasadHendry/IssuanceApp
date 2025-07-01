@@ -67,12 +67,23 @@ namespace IssuanceApp.Data
     }
     public class PendingRequestSummary
     {
+        // Existing Properties
         public string RequestNo { get; set; }
         public DateTime RequestDate { get; set; }
         public string Product { get; set; }
         public string DocumentNo { get; set; }
         public string PreparedBy { get; set; }
         public DateTime RequestedAt { get; set; }
+
+        // --- NEW PROPERTIES TO ADD ---
+        public string FromDepartment { get; set; }
+        public string BatchNo { get; set; }
+        public string ItemMfgDate { get; set; }
+        public string ItemExpDate { get; set; }
+        public string Market { get; set; }
+        public string PackSize { get; set; }
+        public string RequestComment { get; set; }
+        public string GmOperationsComment { get; set; } // For QA screen
 
         // QA-specific fields (will be null for GM queue)
         public string AuthorizedBy { get; set; }

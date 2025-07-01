@@ -27,13 +27,8 @@ namespace DocumentIssuanceApp.Controls
             _repository = repository;
             _loggedInUserName = loggedInUserName;
 
-            // Setup DataGridView
-            dgvGmQueue.Columns["colGmRequestNo"].DataPropertyName = nameof(PendingRequestSummary.RequestNo);
-            dgvGmQueue.Columns["colGmRequestDate"].DataPropertyName = nameof(PendingRequestSummary.RequestDate);
-            dgvGmQueue.Columns["colGmProduct"].DataPropertyName = nameof(PendingRequestSummary.Product);
-            dgvGmQueue.Columns["colGmDocTypes"].DataPropertyName = nameof(PendingRequestSummary.DocumentNo);
-            dgvGmQueue.Columns["colGmPreparedBy"].DataPropertyName = nameof(PendingRequestSummary.PreparedBy);
-            dgvGmQueue.Columns["colGmRequestedAt"].DataPropertyName = nameof(PendingRequestSummary.RequestedAt);
+            // Setup the DataGridView programmatically. This prevents the crash.
+            SetupGmQueueColumns();
 
             // Wire up events
             dgvGmQueue.SelectionChanged += DgvGmQueue_SelectionChanged;
@@ -45,7 +40,67 @@ namespace DocumentIssuanceApp.Controls
             lblGmQueueTitle.Text = "Pending GM Approval Queue (0)";
         }
 
-        // Public method for MainForm to call when the tab is selected
+        // This new method creates the columns in code, making it robust and easy to manage.
+        private void SetupGmQueueColumns()
+        {
+            dgvGmQueue.AutoGenerateColumns = false;
+            dgvGmQueue.Columns.Clear();
+
+            // Set the base AutoSizeMode for the entire grid
+            dgvGmQueue.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+
+            // Now, add the columns with their proportional FillWeight
+            dgvGmQueue.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "colGmRequestNo",
+                DataPropertyName = nameof(PendingRequestSummary.RequestNo),
+                HeaderText = "Request No.",
+                FillWeight = 15  // Give it a medium weight
+            });
+
+            dgvGmQueue.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "colGmRequestDate",
+                DataPropertyName = nameof(PendingRequestSummary.RequestDate),
+                HeaderText = "Request Date",
+                DefaultCellStyle = new DataGridViewCellStyle { Format = "dd-MMM-yyyy" },
+                FillWeight = 12 // A bit smaller
+            });
+
+            dgvGmQueue.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "colGmProduct",
+                DataPropertyName = nameof(PendingRequestSummary.Product),
+                HeaderText = "Product",
+                FillWeight = 28 // Give it a larger weight
+            });
+
+            dgvGmQueue.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "colGmDocTypes",
+                DataPropertyName = nameof(PendingRequestSummary.DocumentNo),
+                HeaderText = "Document No(s).",
+                FillWeight = 20 // Also larger
+            });
+
+            dgvGmQueue.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "colGmPreparedBy",
+                DataPropertyName = nameof(PendingRequestSummary.PreparedBy),
+                HeaderText = "Prepared By",
+                FillWeight = 10 // Smallest weight
+            });
+
+            dgvGmQueue.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "colGmRequestedAt",
+                DataPropertyName = nameof(PendingRequestSummary.RequestedAt),
+                HeaderText = "Requested At",
+                DefaultCellStyle = new DataGridViewCellStyle { Format = "dd-MMM-yyyy HH:mm" },
+                FillWeight = 15 // Medium weight
+            });
+        }
+
         public async Task LoadPendingQueueAsync()
         {
             if (_repository == null) return;
@@ -54,17 +109,15 @@ namespace DocumentIssuanceApp.Controls
             btnGmRefreshList.Enabled = false;
             try
             {
-                dgvGmQueue.DataSource = null;
+                // This call now fetches all data needed, preventing extra DB calls later.
                 var data = await _repository.GetGmPendingQueueAsync();
                 dgvGmQueue.DataSource = data;
-                lblGmQueueTitle.Text = $"Pending GM Approval Queue ({dgvGmQueue.Rows.Count})";
-                ClearGmSelectedRequestDetails();
 
-                if (dgvGmQueue.Rows.Count > 0)
+                lblGmQueueTitle.Text = $"Pending GM Approval Queue ({dgvGmQueue.Rows.Count})";
+
+                if (dgvGmQueue.Rows.Count == 0)
                 {
-                    dgvGmQueue.Rows[0].Selected = true;
-                    // *** THIS IS THE FIX: Explicitly call the detail display method ***
-                    await DisplaySelectedRequestDetailsAsync(dgvGmQueue.Rows[0]);
+                    ClearGmSelectedRequestDetails();
                 }
             }
             catch (Exception ex)
@@ -78,26 +131,25 @@ namespace DocumentIssuanceApp.Controls
             }
         }
 
-        private async void DgvGmQueue_SelectionChanged(object sender, EventArgs e)
+        private void DgvGmQueue_SelectionChanged(object sender, EventArgs e)
         {
             if (dgvGmQueue.SelectedRows.Count > 0)
-                await DisplaySelectedRequestDetailsAsync(dgvGmQueue.SelectedRows[0]);
+                // No 'await' needed anymore
+                DisplaySelectedRequestDetails(dgvGmQueue.SelectedRows[0]);
             else
                 ClearGmSelectedRequestDetails();
         }
 
-        private async Task DisplaySelectedRequestDetailsAsync(DataGridViewRow selectedRow)
+        // This method is now synchronous and much faster.
+        private void DisplaySelectedRequestDetails(DataGridViewRow selectedRow)
         {
-            // BEFORE: if (!(selectedRow.DataBoundItem is DataRowView rowView))
-            // AFTER: Cast to our new DTO
             if (!(selectedRow.DataBoundItem is PendingRequestSummary request))
             {
                 ClearGmSelectedRequestDetails();
                 return;
             }
 
-            // Access data via properties (compile-time safe) instead of strings
-            string requestNo = request.RequestNo;
+            // All data comes directly from the 'request' object, making this instant.
             txtGmDetailRequestNo.Text = request.RequestNo;
             txtGmDetailRequestDate.Text = request.RequestDate.ToString("dd-MMM-yyyy");
             txtGmDetailProduct.Text = request.Product;
@@ -105,31 +157,14 @@ namespace DocumentIssuanceApp.Controls
             txtGmDetailPreparedBy.Text = request.PreparedBy;
             txtGmDetailRequestedAt.Text = request.RequestedAt.ToString("dd-MMM-yyyy HH:mm");
 
-            this.Cursor = Cursors.WaitCursor;
-            try
-            {
-                // The rest of this method (fetching full details) remains the same
-                DataTable dt = await _repository.GetFullRequestDetailsAsync(requestNo);
-                if (dt.Rows.Count > 0)
-                {
-                    DataRow detailRow = dt.Rows[0];
-                    txtGmDetailFromDept.Text = detailRow["FromDepartment"].ToString();
-                    txtGmDetailBatchNo.Text = detailRow["BatchNo"].ToString();
-                    txtGmDetailMfgDate.Text = detailRow["ItemMfgDate"].ToString();
-                    txtGmDetailExpDate.Text = detailRow["ItemExpDate"].ToString();
-                    txtGmDetailMarket.Text = detailRow["Market"].ToString();
-                    txtGmDetailPackSize.Text = detailRow["PackSize"].ToString();
-                    txtGmDetailRequesterComments.Text = detailRow["RequestComment"].ToString();
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Failed to load full details for request: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            finally
-            {
-                this.Cursor = Cursors.Default;
-            }
+            // --- POPULATE THE REST OF THE FIELDS ---
+            txtGmDetailFromDept.Text = request.FromDepartment;
+            txtGmDetailBatchNo.Text = request.BatchNo;
+            txtGmDetailMfgDate.Text = request.ItemMfgDate;
+            txtGmDetailExpDate.Text = request.ItemExpDate;
+            txtGmDetailMarket.Text = request.Market;
+            txtGmDetailPackSize.Text = request.PackSize;
+            txtGmDetailRequesterComments.Text = request.RequestComment;
         }
 
         private void ClearGmSelectedRequestDetails()
@@ -165,8 +200,8 @@ namespace DocumentIssuanceApp.Controls
                     bool success = await _repository.UpdateGmActionAsync(requestNo, action, txtGmComment.Text, _loggedInUserName);
                     if (success)
                     {
-                        MessageBox.Show($"Request '{requestNo}' has been {action.ToLower()}.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        await LoadPendingQueueAsync();
+                        MessageBox.Show($"Request '{requestNo}' has been {action.ToLower()}ed successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        await LoadPendingQueueAsync(); // Reload the queue
                     }
                     else
                     {
