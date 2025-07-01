@@ -200,6 +200,7 @@
             // 
             // colGmRequestNo
             // 
+            this.colGmRequestNo.DataPropertyName = "RequestNo";
             this.colGmRequestNo.HeaderText = "Request No.";
             this.colGmRequestNo.MinimumWidth = 6;
             this.colGmRequestNo.Name = "colGmRequestNo";
@@ -207,6 +208,7 @@
             // 
             // colGmRequestDate
             // 
+            this.colGmRequestDate.DataPropertyName = "RequestDate";
             this.colGmRequestDate.HeaderText = "Request Date";
             this.colGmRequestDate.MinimumWidth = 6;
             this.colGmRequestDate.Name = "colGmRequestDate";
@@ -214,6 +216,7 @@
             // 
             // colGmProduct
             // 
+            this.colGmProduct.DataPropertyName = "Product";
             this.colGmProduct.HeaderText = "Product";
             this.colGmProduct.MinimumWidth = 6;
             this.colGmProduct.Name = "colGmProduct";
@@ -229,6 +232,7 @@
             // 
             // colGmPreparedBy
             // 
+            this.colGmPreparedBy.DataPropertyName = "PreparedBy";
             this.colGmPreparedBy.HeaderText = "Prepared By";
             this.colGmPreparedBy.MinimumWidth = 6;
             this.colGmPreparedBy.Name = "colGmPreparedBy";
@@ -236,6 +240,7 @@
             // 
             // colGmRequestedAt
             // 
+            this.colGmRequestedAt.DataPropertyName = "RequestedAt";
             this.colGmRequestedAt.HeaderText = "Requested At";
             this.colGmRequestedAt.MinimumWidth = 6;
             this.colGmRequestedAt.Name = "colGmRequestedAt";
