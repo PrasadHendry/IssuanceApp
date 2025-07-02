@@ -1,4 +1,5 @@
-﻿using IssuanceApp.Data;
+﻿// DocumentIssuanceControl.cs
+using IssuanceApp.Data;
 using IssuanceApp.UI; // For ThemeManager
 using System;
 using System.Collections.Generic;
@@ -59,7 +60,6 @@ namespace IssuanceApp.UI.Controls
             this.Cursor = Cursors.WaitCursor;
             try
             {
-                // FIX: Clear the form first, then generate and set the new request number.
                 ClearDocumentIssuanceForm();
                 txtRequestNoValueDI.Text = await _repository.GenerateNewRequestNumberAsync();
 
@@ -148,10 +148,12 @@ namespace IssuanceApp.UI.Controls
         #endregion
 
         #region Validation
-        private bool IsFormValid(out string errorMessage, out Control controlToFocus)
+        // REFINEMENT: The method now returns the validated list of document numbers.
+        private bool IsFormValid(out string errorMessage, out Control controlToFocus, out List<string> validatedDocNumbers)
         {
             errorMessage = string.Empty;
             controlToFocus = null;
+            validatedDocNumbers = new List<string>(); // Initialize the output list
 
             if (cmbFromDepartmentDI.SelectedItem == null || string.IsNullOrWhiteSpace(cmbFromDepartmentDI.SelectedItem.ToString()))
             {
@@ -167,12 +169,12 @@ namespace IssuanceApp.UI.Controls
                 return false;
             }
 
-            var docNumbersList = new List<string>();
-            if (chkDocTypeBMRDI.Checked) { if (string.IsNullOrWhiteSpace(txtBmrDocNoDI.Text)) { errorMessage = "BMR is checked, please enter BMR Document No."; controlToFocus = txtBmrDocNoDI; return false; } docNumbersList.Add(txtBmrDocNoDI.Text.Trim()); }
-            if (chkDocTypeBPRDI.Checked) { if (string.IsNullOrWhiteSpace(txtBprDocNoDI.Text)) { errorMessage = "BPR is checked, please enter BPR Document No."; controlToFocus = txtBprDocNoDI; return false; } docNumbersList.Add(txtBprDocNoDI.Text.Trim()); }
-            if (chkDocTypeAppendixDI.Checked) { if (string.IsNullOrWhiteSpace(txtAppendixDocNoDI.Text)) { errorMessage = "Appendix is checked, please enter Appendix Document No."; controlToFocus = txtAppendixDocNoDI; return false; } docNumbersList.Add(txtAppendixDocNoDI.Text.Trim()); }
-            if (chkDocTypeAddendumDI.Checked) { if (string.IsNullOrWhiteSpace(txtAddendumDocNoDI.Text)) { errorMessage = "Addendum is checked, please enter Addendum Document No."; controlToFocus = txtAddendumDocNoDI; return false; } docNumbersList.Add(txtAddendumDocNoDI.Text.Trim()); }
-            if (!docNumbersList.Any()) { errorMessage = "Please select at least one 'Document Type' and provide its number."; controlToFocus = grpDocTypeDI; return false; }
+            // Populate the 'validatedDocNumbers' list as we check the inputs
+            if (chkDocTypeBMRDI.Checked) { if (string.IsNullOrWhiteSpace(txtBmrDocNoDI.Text)) { errorMessage = "BMR is checked, please enter BMR Document No."; controlToFocus = txtBmrDocNoDI; return false; } validatedDocNumbers.Add(txtBmrDocNoDI.Text.Trim()); }
+            if (chkDocTypeBPRDI.Checked) { if (string.IsNullOrWhiteSpace(txtBprDocNoDI.Text)) { errorMessage = "BPR is checked, please enter BPR Document No."; controlToFocus = txtBprDocNoDI; return false; } validatedDocNumbers.Add(txtBprDocNoDI.Text.Trim()); }
+            if (chkDocTypeAppendixDI.Checked) { if (string.IsNullOrWhiteSpace(txtAppendixDocNoDI.Text)) { errorMessage = "Appendix is checked, please enter Appendix Document No."; controlToFocus = txtAppendixDocNoDI; return false; } validatedDocNumbers.Add(txtAppendixDocNoDI.Text.Trim()); }
+            if (chkDocTypeAddendumDI.Checked) { if (string.IsNullOrWhiteSpace(txtAddendumDocNoDI.Text)) { errorMessage = "Addendum is checked, please enter Addendum Document No."; controlToFocus = txtAddendumDocNoDI; return false; } validatedDocNumbers.Add(txtAddendumDocNoDI.Text.Trim()); }
+            if (!validatedDocNumbers.Any()) { errorMessage = "Please select at least one 'Document Type' and provide its number."; controlToFocus = grpDocTypeDI; return false; }
 
             if (!string.IsNullOrWhiteSpace(txtParentBatchSizeValueDI.Text))
             {
@@ -191,7 +193,8 @@ namespace IssuanceApp.UI.Controls
         #region Event Handlers
         private async void BtnSubmitRequestDI_Click(object sender, EventArgs e)
         {
-            if (!IsFormValid(out string errorMessage, out Control controlToFocus))
+            // REFINEMENT: Call the updated validation method and receive the validated list.
+            if (!IsFormValid(out string errorMessage, out Control controlToFocus, out List<string> docNumbers))
             {
                 MessageBox.Show(errorMessage, "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 controlToFocus?.Focus();
@@ -202,17 +205,12 @@ namespace IssuanceApp.UI.Controls
                 ? $"{txtParentBatchSizeValueDI.Text.Trim()} {cmbParentBatchSizeUnitDI.SelectedItem}"
                 : null;
 
-            var docNumbers = new List<string>();
-            if (chkDocTypeBMRDI.Checked) docNumbers.Add(txtBmrDocNoDI.Text.Trim());
-            if (chkDocTypeBPRDI.Checked) docNumbers.Add(txtBprDocNoDI.Text.Trim());
-            if (chkDocTypeAppendixDI.Checked) docNumbers.Add(txtAppendixDocNoDI.Text.Trim());
-            if (chkDocTypeAddendumDI.Checked) docNumbers.Add(txtAddendumDocNoDI.Text.Trim());
-
             var issuanceData = new IssuanceRequestData
             {
                 RequestNo = txtRequestNoValueDI.Text,
                 RequestDate = dtpRequestDateDI.Value.Date,
                 FromDepartment = cmbFromDepartmentDI.SelectedItem.ToString(),
+                // REFINEMENT: Use the list that was returned directly from the validation method.
                 DocumentNo = string.Join(",", docNumbers),
                 Product = txtProductDI.Text.Trim(),
                 BatchNo = string.IsNullOrWhiteSpace(txtBatchNoDI.Text) ? null : txtBatchNoDI.Text.Trim(),

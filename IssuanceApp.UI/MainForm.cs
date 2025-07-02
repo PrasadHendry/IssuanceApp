@@ -1,6 +1,6 @@
 ﻿// MainForm.cs
 using IssuanceApp.Data;
-using IssuanceApp.UI.Controls; // Corrected using for controls
+using IssuanceApp.UI.Controls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using UiTimer = System.Windows.Forms.Timer;
 
-// --- THIS IS THE CORRECT NAMESPACE TO MATCH YOUR PROJECT SETTINGS ---
 namespace IssuanceApp.UI
 {
     public partial class MainForm : Form
@@ -20,10 +19,8 @@ namespace IssuanceApp.UI
         private string loggedInUserName = null;
         private List<TabPage> allTabPages;
 
-        private bool _gmDataLoaded = false;
-        private bool _qaDataLoaded = false;
-        private bool _auditDataLoaded = false;
-        private bool _usersDataLoaded = false;
+        // REFINEMENT: Replaced multiple boolean flags with a single, scalable HashSet.
+        private readonly HashSet<string> _loadedTabs = new HashSet<string>();
         #endregion
 
         #region Constructor and Form Lifecycle
@@ -90,30 +87,33 @@ namespace IssuanceApp.UI
             if (tabControlMain.SelectedTab == null || loggedInRole == null) return;
             string selectedTabName = tabControlMain.SelectedTab.Name;
 
+            if (_loadedTabs.Contains(selectedTabName))
+            {
+                return;
+            }
+
             if (selectedTabName == ControlNames.TabPageDocumentIssuance)
             {
                 await documentIssuanceControl1.LoadInitialDataAsync();
             }
-            else if (selectedTabName == ControlNames.TabPageGmOperations && !_gmDataLoaded)
+            else if (selectedTabName == ControlNames.TabPageGmOperations)
             {
                 await gmOperationsControl1.LoadPendingQueueAsync();
-                _gmDataLoaded = true;
             }
-            else if (selectedTabName == ControlNames.TabPageQA && !_qaDataLoaded)
+            else if (selectedTabName == ControlNames.TabPageQA)
             {
                 await qaControl1.LoadPendingQueueAsync();
-                _qaDataLoaded = true;
             }
-            else if (selectedTabName == ControlNames.TabPageAuditTrail && !_auditDataLoaded)
+            else if (selectedTabName == ControlNames.TabPageAuditTrail)
             {
                 await auditTrailControl1.LoadAuditTrailDataAsync();
-                _auditDataLoaded = true;
             }
-            else if (selectedTabName == ControlNames.TabPageUsers && !_usersDataLoaded)
+            else if (selectedTabName == ControlNames.TabPageUsers)
             {
                 await usersControl1.LoadUserRolesAsync();
-                _usersDataLoaded = true;
             }
+
+            _loadedTabs.Add(selectedTabName);
         }
 
         private void InitializeDynamicControls()
@@ -151,7 +151,7 @@ namespace IssuanceApp.UI
         #endregion
 
         #region Login and Role Management
-        private async void LoginControl_LoginAttemptCompleted(object sender, LoginEventArgs e)
+        private void LoginControl_LoginAttemptCompleted(object sender, LoginEventArgs e)
         {
             try
             {
@@ -168,10 +168,10 @@ namespace IssuanceApp.UI
                     gmOperationsControl1.InitializeControl(_repository, loggedInUserName);
                     qaControl1.InitializeControl(_repository, loggedInUserName);
 
-                    _gmDataLoaded = _qaDataLoaded = _auditDataLoaded = _usersDataLoaded = false;
+                    _loadedTabs.Clear();
                     EnableTabsBasedOnRole(loggedInRole);
+
                     SwitchToDefaultTabForRole(loggedInRole);
-                    await LoadDataForSelectedTabAsync();
                 }
                 else
                 {
@@ -195,7 +195,8 @@ namespace IssuanceApp.UI
                 loginControl1.Reset();
                 pnlAppHeader.Visible = false;
                 UpdateStatusBarForSignOut();
-                _gmDataLoaded = _qaDataLoaded = _auditDataLoaded = _usersDataLoaded = false;
+
+                _loadedTabs.Clear();
 
                 EnableTabsBasedOnRole(null);
                 var loginTab = allTabPages.FirstOrDefault(t => t.Name == ControlNames.TabPageLogin);
@@ -236,7 +237,7 @@ namespace IssuanceApp.UI
                     (tab.Name == ControlNames.TabPageGmOperations && (isGm || isAdmin)) ||
                     (tab.Name == ControlNames.TabPageQA && (isQa || isAdmin)) ||
                     (tab.Name == ControlNames.TabPageUsers && isAdmin) ||
-                    (tab.Name == ControlNames.TabPageAuditTrail);
+                    (tab.Name == ControlNames.TabPageAuditTrail && isLoggedIn);
 
                 if (shouldShowTab)
                 {

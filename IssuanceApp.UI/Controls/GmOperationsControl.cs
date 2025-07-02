@@ -78,9 +78,14 @@ namespace IssuanceApp.UI.Controls
         private void DgvGmQueue_SelectionChanged(object sender, EventArgs e)
         {
             if (dgvGmQueue.SelectedRows.Count > 0)
+            {
                 DisplaySelectedRequestDetails(dgvGmQueue.SelectedRows[0]);
+                grpGmAction.Enabled = true;
+            }
             else
+            {
                 ClearGmSelectedRequestDetails();
+            }
         }
 
         private void DisplaySelectedRequestDetails(DataGridViewRow selectedRow)
@@ -111,6 +116,8 @@ namespace IssuanceApp.UI.Controls
             foreach (Control c in tlpGmRequestDetails.Controls)
                 if (c is TextBox tb) tb.Clear();
             txtGmComment.Clear();
+
+            grpGmAction.Enabled = false;
         }
 
         private void BtnGmAuthorize_Click(object sender, EventArgs e) => ProcessGmActionAsync(AppConstants.ActionAuthorized, false);

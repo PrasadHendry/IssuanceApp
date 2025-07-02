@@ -19,7 +19,7 @@ namespace IssuanceApp.UI.Controls
         private HashSet<int> _pagesBeingFetched;
         private const int AuditPageSize = 50;
         private SortOrder _auditSortOrder = SortOrder.Descending;
-        private string _auditSortColumn = "colAuditRequestNo";
+        private string _auditSortColumn = nameof(AuditTrailEntry.RequestNo);
 
         private CancellationTokenSource _dataLoadCts = new CancellationTokenSource();
 
@@ -69,21 +69,21 @@ namespace IssuanceApp.UI.Controls
             dgvAuditTrail.Columns.Clear();
             var wrapTextStyle = new DataGridViewCellStyle { WrapMode = DataGridViewTriState.True, Alignment = DataGridViewContentAlignment.TopLeft };
 
-            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditRequestNo", HeaderText = "Request No.", DataPropertyName = "RequestNo", Width = 140, Frozen = true });
-            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditRequestDate", HeaderText = "Request Date", DataPropertyName = "RequestDate", DefaultCellStyle = new DataGridViewCellStyle { Format = "dd-MMM-yyyy" }, AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells });
-            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditProduct", HeaderText = "Product", DataPropertyName = "Product", Width = 200 });
-            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditDocumentNumbers", HeaderText = "Document No(s).", DataPropertyName = "DocumentNumbers", AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells });
-            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditStatusDerived", HeaderText = "Status", DataPropertyName = "DerivedStatus", Width = 150 });
-            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditPreparedBy", HeaderText = "Prepared By", DataPropertyName = "PreparedBy", AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells });
-            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditRequestedAt", HeaderText = "Requested At", DataPropertyName = "RequestedAt", DefaultCellStyle = new DataGridViewCellStyle { Format = "dd-MMM-yyyy HH:mm" }, AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells });
-            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditGmAction", HeaderText = "GM Action", DataPropertyName = "GmOperationsAction", AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells });
-            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditAuthorizedBy", HeaderText = "GM User", DataPropertyName = "AuthorizedBy", AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells });
-            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditGmActionAt", HeaderText = "GM Action At", DataPropertyName = "GmOperationsAt", DefaultCellStyle = new DataGridViewCellStyle { Format = "dd-MMM-yyyy HH:mm" }, AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells });
-            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditGmComment", HeaderText = "GM Comment", DataPropertyName = "GmOperationsComment", Width = 250, DefaultCellStyle = wrapTextStyle });
-            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditQaAction", HeaderText = "QA Action", DataPropertyName = "QAAction", AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells });
-            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditApprovedBy", HeaderText = "QA User", DataPropertyName = "ApprovedBy", AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells });
-            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditQaActionAt", HeaderText = "QA Action At", DataPropertyName = "QAAt", DefaultCellStyle = new DataGridViewCellStyle { Format = "dd-MMM-yyyy HH:mm" }, AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells });
-            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditQaComment", HeaderText = "QA Comment", DataPropertyName = "QAComment", Width = 250, DefaultCellStyle = wrapTextStyle });
+            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditRequestNo", HeaderText = "Request No.", DataPropertyName = nameof(AuditTrailEntry.RequestNo), Width = 140, Frozen = true });
+            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditRequestDate", HeaderText = "Request Date", DataPropertyName = nameof(AuditTrailEntry.RequestDate), DefaultCellStyle = new DataGridViewCellStyle { Format = "dd-MMM-yyyy" }, AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells });
+            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditProduct", HeaderText = "Product", DataPropertyName = nameof(AuditTrailEntry.Product), Width = 200 });
+            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditDocumentNumbers", HeaderText = "Document No(s).", DataPropertyName = nameof(AuditTrailEntry.DocumentNumbers), AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells });
+            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditStatusDerived", HeaderText = "Status", DataPropertyName = nameof(AuditTrailEntry.DerivedStatus), Width = 150 });
+            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditPreparedBy", HeaderText = "Prepared By", DataPropertyName = nameof(AuditTrailEntry.PreparedBy), AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells });
+            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditRequestedAt", HeaderText = "Requested At", DataPropertyName = nameof(AuditTrailEntry.RequestedAt), DefaultCellStyle = new DataGridViewCellStyle { Format = "dd-MMM-yyyy HH:mm" }, AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells });
+            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditGmAction", HeaderText = "GM Action", DataPropertyName = nameof(AuditTrailEntry.GmOperationsAction), AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells });
+            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditAuthorizedBy", HeaderText = "GM User", DataPropertyName = nameof(AuditTrailEntry.AuthorizedBy), AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells });
+            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditGmActionAt", HeaderText = "GM Action At", DataPropertyName = nameof(AuditTrailEntry.GmOperationsAt), DefaultCellStyle = new DataGridViewCellStyle { Format = "dd-MMM-yyyy HH:mm" }, AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells });
+            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditGmComment", HeaderText = "GM Comment", DataPropertyName = nameof(AuditTrailEntry.GmOperationsComment), Width = 250, DefaultCellStyle = wrapTextStyle });
+            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditQaAction", HeaderText = "QA Action", DataPropertyName = nameof(AuditTrailEntry.QAAction), AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells });
+            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditApprovedBy", HeaderText = "QA User", DataPropertyName = nameof(AuditTrailEntry.ApprovedBy), AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells });
+            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditQaActionAt", HeaderText = "QA Action At", DataPropertyName = nameof(AuditTrailEntry.QAAt), DefaultCellStyle = new DataGridViewCellStyle { Format = "dd-MMM-yyyy HH:mm" }, AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells });
+            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditQaComment", HeaderText = "QA Comment", DataPropertyName = nameof(AuditTrailEntry.QAComment), Width = 250, DefaultCellStyle = wrapTextStyle });
         }
 
         public async Task LoadAuditTrailDataAsync()
@@ -101,21 +101,23 @@ namespace IssuanceApp.UI.Controls
                 _auditTrailKeyCache = null;
                 _auditTrailDataCache.Clear();
                 dgvAuditTrail.RowCount = 0;
+                dgvAuditTrail.Refresh();
 
-                var columnMap = new Dictionary<string, string>
-                {
-                    { "colAuditRequestNo", "RequestNo" }, { "colAuditRequestDate", "RequestDate" },
-                    { "colAuditProduct", "Product" }, { "colAuditStatusDerived", "DerivedStatus" },
-                    { "colAuditPreparedBy", "PreparedBy" }, { "colAuditRequestedAt", "RequestedAt" }
-                };
-                columnMap.TryGetValue(_auditSortColumn, out string dbSortColumn);
+                string dbSortColumn = _auditSortColumn;
 
                 _auditTrailKeyCache = await _repository.GetAuditTrailKeysAsync(
                     dtpAuditFrom.Value, dtpAuditTo.Value, cmbAuditStatus.SelectedItem.ToString(),
                     txtAuditRequestNo.Text, txtAuditProduct.Text, dbSortColumn, _auditSortOrder, token);
 
                 token.ThrowIfCancellationRequested();
+
                 dgvAuditTrail.RowCount = _auditTrailKeyCache.Count;
+
+                if (dgvAuditTrail.RowCount > 0)
+                {
+                    // CORRECTED: Use Invalidate() instead of the non-existent InvalidateRows().
+                    dgvAuditTrail.Invalidate();
+                }
             }
             catch (OperationCanceledException) { /* Expected, ignore */ }
             catch (Exception ex)
@@ -129,6 +131,12 @@ namespace IssuanceApp.UI.Controls
                 {
                     this.Cursor = Cursors.Default;
                     btnApplyAuditFilter.Enabled = btnClearAuditFilters.Enabled = btnRefreshAuditList.Enabled = true;
+
+                    foreach (DataGridViewColumn col in dgvAuditTrail.Columns)
+                        col.HeaderCell.SortGlyphDirection = SortOrder.None;
+
+                    var sortCol = dgvAuditTrail.Columns.Cast<DataGridViewColumn>().FirstOrDefault(c => c.DataPropertyName == _auditSortColumn);
+                    if (sortCol != null) sortCol.HeaderCell.SortGlyphDirection = _auditSortOrder;
                 }
             }
         }
@@ -177,17 +185,16 @@ namespace IssuanceApp.UI.Controls
                     for (int i = start; i < endRange; i++)
                     {
                         var key = _auditTrailKeyCache[i];
-                        if (entryDict.TryGetValue(key, out AuditTrailEntry fetchedEntry))
+                        if (_auditTrailKeyCache.Count > i && entryDict.TryGetValue(key, out AuditTrailEntry fetchedEntry))
                         {
                             _auditTrailDataCache[i] = fetchedEntry;
                         }
                     }
 
-                    // --- THIS IS THE FIX ---
-                    // Invalidate the specific rows that have been loaded to trigger a repaint
-                    for (int i = start; i < endRange; i++)
+                    if (keysToFetch.Count > 0)
                     {
-                        dgvAuditTrail.InvalidateRow(i);
+                        // CORRECTED: Use Invalidate() instead of the non-existent InvalidateRows().
+                        dgvAuditTrail.Invalidate();
                     }
                 }));
             }
@@ -205,7 +212,8 @@ namespace IssuanceApp.UI.Controls
 
         private async void DgvAuditTrail_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            string newSortColumnName = dgvAuditTrail.Columns[e.ColumnIndex].Name;
+            string newSortColumnName = dgvAuditTrail.Columns[e.ColumnIndex].DataPropertyName;
+            if (string.IsNullOrEmpty(newSortColumnName)) return;
 
             if (_auditSortColumn == newSortColumnName)
                 _auditSortOrder = (_auditSortOrder == SortOrder.Ascending) ? SortOrder.Descending : SortOrder.Ascending;
@@ -216,7 +224,6 @@ namespace IssuanceApp.UI.Controls
 
             foreach (DataGridViewColumn col in dgvAuditTrail.Columns)
                 col.HeaderCell.SortGlyphDirection = SortOrder.None;
-            dgvAuditTrail.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection = _auditSortOrder;
 
             await LoadAuditTrailDataAsync();
         }
@@ -228,12 +235,12 @@ namespace IssuanceApp.UI.Controls
             cmbAuditStatus.SelectedIndex = 0;
             txtAuditRequestNo.Clear();
             txtAuditProduct.Clear();
-            _auditSortColumn = "colAuditRequestNo";
+
+            _auditSortColumn = nameof(AuditTrailEntry.RequestNo);
             _auditSortOrder = SortOrder.Descending;
 
             foreach (DataGridViewColumn col in dgvAuditTrail.Columns)
                 col.HeaderCell.SortGlyphDirection = SortOrder.None;
-            dgvAuditTrail.Columns["colAuditRequestNo"].HeaderCell.SortGlyphDirection = _auditSortOrder;
 
             await LoadAuditTrailDataAsync();
         }

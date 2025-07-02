@@ -30,6 +30,9 @@ namespace IssuanceApp.UI.Controls
             dgvUserRoles.SelectionChanged += DgvUserRoles_SelectionChanged;
             btnRefreshUserRoles.Click += async (s, e) => await LoadUserRolesAsync();
             btnResetPassword.Click += BtnResetPassword_Click;
+
+            // Initial state: disable the manage role section
+            grpManageRole.Enabled = false;
         }
 
         private void SetupUserRolesColumns()
@@ -51,6 +54,7 @@ namespace IssuanceApp.UI.Controls
             {
                 _userRolesBindingSource.DataSource = await _repository.GetUserRolesForGridAsync();
                 dgvUserRoles.ClearSelection();
+                // Trigger selection changed logic to update UI state
                 DgvUserRoles_SelectionChanged(null, EventArgs.Empty);
             }
             catch (Exception ex)
@@ -67,7 +71,9 @@ namespace IssuanceApp.UI.Controls
         private void DgvUserRoles_SelectionChanged(object sender, EventArgs e)
         {
             bool isRowSelected = dgvUserRoles.SelectedRows.Count > 0;
-            btnResetPassword.Enabled = isRowSelected;
+
+            // UX IMPROVEMENT: Enable/disable the entire group box when a role is selected
+            grpManageRole.Enabled = isRowSelected;
 
             if (isRowSelected)
             {
@@ -78,6 +84,10 @@ namespace IssuanceApp.UI.Controls
             {
                 txtRoleNameManage.Text = string.Empty;
             }
+
+            // Reset password text when selection changes (not strictly necessary 
+            // since it's in a dialog now, but good practice)
+            // txtNewPassword.Clear(); // Removed as per dialog implementation
         }
 
         private async void BtnResetPassword_Click(object sender, EventArgs e)
@@ -85,35 +95,47 @@ namespace IssuanceApp.UI.Controls
             if (dgvUserRoles.SelectedRows.Count == 0) return;
 
             string roleName = txtRoleNameManage.Text;
-            if (MessageBox.Show($"Are you sure you want to reset the password for the '{roleName}' role?", "Confirm Password Reset", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+
+            // FEATURE IMPLEMENTATION: Use a dialog to get the new password
+            using (var passwordDialog = new PasswordInputDialog(roleName))
             {
-                string newPassword = "Password123";
-
-                // --- BCrypt REMOVED ---
-                // The plaintext password is now sent directly to the database.
-                string newPasswordForDb = newPassword;
-
-                btnResetPassword.Enabled = false;
-                this.Cursor = Cursors.WaitCursor;
-                try
+                // Show the dialog modally. Pass 'this' to center the dialog over the control.
+                if (passwordDialog.ShowDialog(this) == DialogResult.OK)
                 {
-                    if (await _repository.ResetUserPasswordAsync(roleName, newPasswordForDb))
+                    string newPassword = passwordDialog.NewPassword;
+                    // In a real application, you would hash the password here before sending it to the repository.
+                    string newPasswordForDb = newPassword;
+
+                    // Proceed with reset confirmation *after* getting the password
+                    if (MessageBox.Show($"Are you sure you want to reset the password for the '{roleName}' role?", "Confirm Password Reset", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                     {
-                        MessageBox.Show($"Password for role '{roleName}' has been reset to:\n\n{newPassword}\n\nPlease inform the user.", "Password Reset", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        dgvUserRoles.ClearSelection();
+                        btnResetPassword.Enabled = false; // Disable only the reset button during the async operation
+                        this.Cursor = Cursors.WaitCursor;
+                        try
+                        {
+                            if (await _repository.ResetUserPasswordAsync(roleName, newPasswordForDb))
+                            {
+                                MessageBox.Show($"Password for role '{roleName}' has been reset successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                // No need to clear selection here, the UI updates when the grid is refreshed
+                                // dgvUserRoles.ClearSelection(); // Removed
+                            }
+                            else
+                                MessageBox.Show("Failed to reset password. The role may no longer exist.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show("An error occurred while resetting the password: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                        finally
+                        {
+                            btnResetPassword.Enabled = true;
+                            this.Cursor = Cursors.Default;
+                            // Re-apply enabled state based on selection status after async op
+                            DgvUserRoles_SelectionChanged(null, EventArgs.Empty);
+                        }
                     }
-                    else
-                        MessageBox.Show("Failed to reset password. The role may no longer exist.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("An error occurred while resetting the password: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                finally
-                {
-                    btnResetPassword.Enabled = true;
-                    this.Cursor = Cursors.Default;
-                }
+                // If DialogResult is not OK (e.g., Cancel), the code simply exits the 'if' block
             }
         }
     }

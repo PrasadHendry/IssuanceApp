@@ -38,8 +38,7 @@ namespace IssuanceApp.UI.Controls
             {
                 List<string> roleNames = await _repository.GetRoleNamesAsync();
                 cmbRole.Items.AddRange(roleNames.ToArray());
-                if (cmbRole.Items.Contains(AppConstants.RoleRequester)) cmbRole.SelectedItem = AppConstants.RoleRequester;
-                else if (cmbRole.Items.Count > 0) cmbRole.SelectedIndex = 0;
+                SetDefaultRole(); // REFINEMENT: Call helper method to set default selection.
             }
             catch (Exception ex)
             {
@@ -57,18 +56,16 @@ namespace IssuanceApp.UI.Controls
             }
         }
 
+        // REFINEMENT: Switched to Environment.UserName for a more direct way to get the username without the domain.
         private string GetOsUser()
         {
             try
             {
-                using (var currentUser = WindowsIdentity.GetCurrent())
-                {
-                    string fullUserName = currentUser.Name;
-                    return fullUserName.Split('\\').LastOrDefault() ?? fullUserName;
-                }
+                return Environment.UserName;
             }
             catch (Exception ex)
             {
+                // It's good practice to log this, even if just to the console for debugging.
                 Console.WriteLine("Error getting OS username: " + ex.Message);
                 return "Unknown User";
             }
@@ -126,6 +123,12 @@ namespace IssuanceApp.UI.Controls
             lblLoginStatus.Text = "*Please login to continue.";
             lblLoginStatus.ForeColor = SystemColors.ControlText;
             txtPassword.Clear();
+            SetDefaultRole(); // REFINEMENT: Call helper method to set default selection.
+        }
+
+        // REFINEMENT: New helper method to avoid duplicating this logic in InitializeControl and Reset.
+        private void SetDefaultRole()
+        {
             if (cmbRole.Items.Count > 0)
             {
                 if (cmbRole.Items.Contains(AppConstants.RoleRequester))

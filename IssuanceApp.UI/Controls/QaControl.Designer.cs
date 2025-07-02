@@ -82,8 +82,6 @@ namespace IssuanceApp.UI.Controls
             this.grpQaAction = new System.Windows.Forms.GroupBox();
             this.tlpQaActionControls = new System.Windows.Forms.TableLayoutPanel();
             this.flpQaOptionalControls = new System.Windows.Forms.FlowLayoutPanel();
-            this.lblQaPrintCount = new System.Windows.Forms.Label();
-            this.numQaPrintCount = new System.Windows.Forms.NumericUpDown();
             this.btnQaBrowseSelectDocument = new IssuanceApp.UI.RoundedButton();
             this.lblQaComment = new System.Windows.Forms.Label();
             this.txtQaComment = new System.Windows.Forms.TextBox();
@@ -101,7 +99,6 @@ namespace IssuanceApp.UI.Controls
             this.grpQaAction.SuspendLayout();
             this.tlpQaActionControls.SuspendLayout();
             this.flpQaOptionalControls.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numQaPrintCount)).BeginInit();
             this.flpQaActionButtons.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -683,8 +680,6 @@ namespace IssuanceApp.UI.Controls
             // 
             // flpQaOptionalControls
             // 
-            this.flpQaOptionalControls.Controls.Add(this.lblQaPrintCount);
-            this.flpQaOptionalControls.Controls.Add(this.numQaPrintCount);
             this.flpQaOptionalControls.Controls.Add(this.btnQaBrowseSelectDocument);
             this.flpQaOptionalControls.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flpQaOptionalControls.Location = new System.Drawing.Point(3, 3);
@@ -693,40 +688,11 @@ namespace IssuanceApp.UI.Controls
             this.flpQaOptionalControls.TabIndex = 0;
             this.flpQaOptionalControls.WrapContents = false;
             // 
-            // lblQaPrintCount
-            // 
-            this.lblQaPrintCount.AutoSize = true;
-            this.lblQaPrintCount.Location = new System.Drawing.Point(3, 8);
-            this.lblQaPrintCount.Margin = new System.Windows.Forms.Padding(3, 8, 3, 3);
-            this.lblQaPrintCount.Name = "lblQaPrintCount";
-            this.lblQaPrintCount.Size = new System.Drawing.Size(81, 17);
-            this.lblQaPrintCount.TabIndex = 0;
-            this.lblQaPrintCount.Text = "Print Count:";
-            // 
-            // numQaPrintCount
-            // 
-            this.numQaPrintCount.Location = new System.Drawing.Point(90, 5);
-            this.numQaPrintCount.Margin = new System.Windows.Forms.Padding(3, 5, 3, 3);
-            this.numQaPrintCount.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numQaPrintCount.Name = "numQaPrintCount";
-            this.numQaPrintCount.Size = new System.Drawing.Size(70, 25);
-            this.numQaPrintCount.TabIndex = 1;
-            this.numQaPrintCount.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.numQaPrintCount.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            // 
             // btnQaBrowseSelectDocument
             // 
             this.btnQaBrowseSelectDocument.CornerRadius = 8;
             this.btnQaBrowseSelectDocument.Font = new System.Drawing.Font("Segoe UI Semibold", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnQaBrowseSelectDocument.Location = new System.Drawing.Point(166, 3);
+            this.btnQaBrowseSelectDocument.Location = new System.Drawing.Point(3, 3);
             this.btnQaBrowseSelectDocument.Name = "btnQaBrowseSelectDocument";
             this.btnQaBrowseSelectDocument.Size = new System.Drawing.Size(180, 30);
             this.btnQaBrowseSelectDocument.TabIndex = 2;
@@ -789,62 +755,6 @@ namespace IssuanceApp.UI.Controls
             this.btnQaReject.Text = "Reject";
             this.btnQaReject.UseVisualStyleBackColor = true;
             // 
-            // colQaRequestNo
-            // 
-            this.colQaRequestNo.HeaderText = "Request No.";
-            this.colQaRequestNo.MinimumWidth = 6;
-            this.colQaRequestNo.Name = "colQaRequestNo";
-            this.colQaRequestNo.ReadOnly = true;
-            // 
-            // colQaRequestDate
-            // 
-            this.colQaRequestDate.HeaderText = "Request Date";
-            this.colQaRequestDate.MinimumWidth = 6;
-            this.colQaRequestDate.Name = "colQaRequestDate";
-            this.colQaRequestDate.ReadOnly = true;
-            // 
-            // colQaProduct
-            // 
-            this.colQaProduct.HeaderText = "Product";
-            this.colQaProduct.MinimumWidth = 6;
-            this.colQaProduct.Name = "colQaProduct";
-            this.colQaProduct.ReadOnly = true;
-            // 
-            // colQaDocTypes
-            // 
-            this.colQaDocTypes.DataPropertyName = "DocumentNo";
-            this.colQaDocTypes.HeaderText = "Document No(s).";
-            this.colQaDocTypes.MinimumWidth = 6;
-            this.colQaDocTypes.Name = "colQaDocTypes";
-            this.colQaDocTypes.ReadOnly = true;
-            // 
-            // colQaPreparedBy
-            // 
-            this.colQaPreparedBy.HeaderText = "Prepared By";
-            this.colQaPreparedBy.MinimumWidth = 6;
-            this.colQaPreparedBy.Name = "colQaPreparedBy";
-            this.colQaPreparedBy.ReadOnly = true;
-            // 
-            // colQaRequestedAt
-            // 
-            this.colQaRequestedAt.HeaderText = "Requested At";
-            this.colQaRequestedAt.Name = "colQaRequestedAt";
-            this.colQaRequestedAt.ReadOnly = true;
-            // 
-            // colQaAuthorizedBy
-            // 
-            this.colQaAuthorizedBy.HeaderText = "Authorized By (GM)";
-            this.colQaAuthorizedBy.MinimumWidth = 6;
-            this.colQaAuthorizedBy.Name = "colQaAuthorizedBy";
-            this.colQaAuthorizedBy.ReadOnly = true;
-            // 
-            // colQaGmActionAt
-            // 
-            this.colQaGmActionAt.HeaderText = "GM Action At";
-            this.colQaGmActionAt.MinimumWidth = 6;
-            this.colQaGmActionAt.Name = "colQaGmActionAt";
-            this.colQaGmActionAt.ReadOnly = true;
-            // 
             // QaControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
@@ -870,8 +780,6 @@ namespace IssuanceApp.UI.Controls
             this.tlpQaActionControls.ResumeLayout(false);
             this.tlpQaActionControls.PerformLayout();
             this.flpQaOptionalControls.ResumeLayout(false);
-            this.flpQaOptionalControls.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numQaPrintCount)).EndInit();
             this.flpQaActionButtons.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -923,8 +831,6 @@ namespace IssuanceApp.UI.Controls
         private System.Windows.Forms.GroupBox grpQaAction;
         private System.Windows.Forms.TableLayoutPanel tlpQaActionControls;
         private System.Windows.Forms.FlowLayoutPanel flpQaOptionalControls;
-        private System.Windows.Forms.Label lblQaPrintCount;
-        private System.Windows.Forms.NumericUpDown numQaPrintCount;
         private UI.RoundedButton btnQaBrowseSelectDocument;
         private System.Windows.Forms.Label lblQaComment;
         private System.Windows.Forms.TextBox txtQaComment;

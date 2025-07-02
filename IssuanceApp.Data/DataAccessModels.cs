@@ -35,6 +35,8 @@ namespace IssuanceApp.Data
         public string ApprovedBy { get; set; }
         public DateTime? QAAt { get; set; }
         public string QAComment { get; set; }
+
+        // REMOVED: The PrintCount property has been deleted from this model.
     }
 
     public class IssuanceRequestData

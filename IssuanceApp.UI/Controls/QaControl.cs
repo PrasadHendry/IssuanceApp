@@ -3,6 +3,9 @@
 using IssuanceApp.Data;
 using IssuanceApp.UI; // For ThemeManager
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -35,7 +38,7 @@ namespace IssuanceApp.UI.Controls
             btnQaReject.Click += BtnQaReject_Click;
             btnQaBrowseSelectDocument.Click += (s, e) => MessageBox.Show("Functionality to open document location is not yet implemented.", "TODO", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-            ClearQaSelectedRequestDetails();
+            ClearQaSelectedRequestDetails(); // This will now also disable the action panel
             lblQaQueueTitle.Text = "Pending QA Approval Queue (0)";
         }
 
@@ -53,6 +56,8 @@ namespace IssuanceApp.UI.Controls
             dgvQaQueue.Columns.Add(new DataGridViewTextBoxColumn { Name = "colQaRequestedAt", DataPropertyName = nameof(QaQueueItemDto.RequestedAt), HeaderText = "Requested At", DefaultCellStyle = new DataGridViewCellStyle { Format = "dd-MMM-yyyy HH:mm" }, FillWeight = 15 });
             dgvQaQueue.Columns.Add(new DataGridViewTextBoxColumn { Name = "colQaAuthorizedBy", DataPropertyName = nameof(QaQueueItemDto.AuthorizedBy), HeaderText = "Authorized By (GM)", FillWeight = 10 });
             dgvQaQueue.Columns.Add(new DataGridViewTextBoxColumn { Name = "colQaGmActionAt", DataPropertyName = nameof(QaQueueItemDto.GmActionAt), HeaderText = "GM Action At", DefaultCellStyle = new DataGridViewCellStyle { Format = "dd-MMM-yyyy HH:mm" }, FillWeight = 15 });
+
+            // MODIFIED: Print Count column has been removed.
         }
 
         public async Task LoadPendingQueueAsync()
@@ -84,9 +89,14 @@ namespace IssuanceApp.UI.Controls
         private void DgvQaQueue_SelectionChanged(object sender, EventArgs e)
         {
             if (dgvQaQueue.SelectedRows.Count > 0)
+            {
                 DisplaySelectedRequestDetails(dgvQaQueue.SelectedRows[0]);
+                grpQaAction.Enabled = true;
+            }
             else
+            {
                 ClearQaSelectedRequestDetails();
+            }
         }
 
         private void DisplaySelectedRequestDetails(DataGridViewRow selectedRow)
@@ -119,7 +129,10 @@ namespace IssuanceApp.UI.Controls
             foreach (Control c in tlpQaRequestDetails.Controls)
                 if (c is TextBox tb) tb.Clear();
             txtQaComment.Clear();
-            numQaPrintCount.Value = 1;
+
+            // MODIFIED: Line referencing numQaPrintCount removed.
+
+            grpQaAction.Enabled = false;
         }
 
         private void BtnQaApprove_Click(object sender, EventArgs e) => ProcessQaActionAsync(AppConstants.ActionApproved, false);
@@ -139,10 +152,8 @@ namespace IssuanceApp.UI.Controls
                 return;
             }
             string requestNo = txtQaDetailRequestNo.Text;
-            int printCount = (int)numQaPrintCount.Value;
-            string message = action == AppConstants.ActionApproved
-                ? $"Are you sure you want to approve request '{requestNo}'?\nPrint Count: {printCount}"
-                : $"Are you sure you want to reject request '{requestNo}'?";
+
+            string message = $"Are you sure you want to {action.ToLower()} request '{requestNo}'?";
 
             if (MessageBox.Show(message, $"Confirm {action}", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
@@ -153,9 +164,7 @@ namespace IssuanceApp.UI.Controls
                     bool success = await _repository.UpdateQaActionAsync(requestNo, action, txtQaComment.Text, _loggedInUserName);
                     if (success)
                     {
-                        string successMessage = action == AppConstants.ActionApproved
-                            ? $"Request '{requestNo}' approved successfully. Printed {printCount} copies."
-                            : $"Request '{requestNo}' rejected successfully.";
+                        string successMessage = $"Request '{requestNo}' has been {action.ToLower()}ed successfully.";
                         MessageBox.Show(successMessage, "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         await LoadPendingQueueAsync();
                     }
