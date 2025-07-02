@@ -4,11 +4,10 @@ namespace IssuanceApp.UI.Controls
 {
     partial class UsersControl
     {
-        /// <summary> 
+        /// <summary>
         /// Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
-
         /// <summary> 
         /// Clean up any resources being used.
         /// </summary>
@@ -83,8 +82,8 @@ namespace IssuanceApp.UI.Controls
             this.dgvUserRoles.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.DisplayedCells;
             this.dgvUserRoles.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvUserRoles.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.colUserRoleId,
-            this.colUserRoleName});
+        this.colUserRoleId,
+        this.colUserRoleName});
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
             dataGridViewCellStyle1.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
@@ -212,6 +211,7 @@ namespace IssuanceApp.UI.Controls
             // btnResetPassword
             // 
             this.btnResetPassword.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)));
+            this.tlpManageRole.SetColumnSpan(this.btnResetPassword, 2);
             this.btnResetPassword.CornerRadius = 8;
             this.btnResetPassword.Enabled = false;
             this.btnResetPassword.Font = new System.Drawing.Font("Segoe UI Semibold", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));

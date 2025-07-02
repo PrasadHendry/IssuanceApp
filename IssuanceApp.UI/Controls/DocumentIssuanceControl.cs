@@ -1,6 +1,4 @@
-﻿// DocumentIssuanceControl.cs
-
-using IssuanceApp.Data;
+﻿using IssuanceApp.Data;
 using IssuanceApp.UI; // For ThemeManager
 using System;
 using System.Collections.Generic;
@@ -15,7 +13,6 @@ namespace IssuanceApp.UI.Controls
     {
         private IssuanceRepository _repository;
         private string _loggedInUserName;
-
         public DocumentIssuanceControl()
         {
             InitializeComponent();
@@ -62,8 +59,10 @@ namespace IssuanceApp.UI.Controls
             this.Cursor = Cursors.WaitCursor;
             try
             {
-                txtRequestNoValueDI.Text = await _repository.GenerateNewRequestNumberAsync();
+                // FIX: Clear the form first, then generate and set the new request number.
                 ClearDocumentIssuanceForm();
+                txtRequestNoValueDI.Text = await _repository.GenerateNewRequestNumberAsync();
+
                 lblStatusValueDI.Text = "Ready to create a new request.";
                 lblStatusValueDI.ForeColor = System.Drawing.SystemColors.ControlText;
             }
@@ -133,7 +132,7 @@ namespace IssuanceApp.UI.Controls
             {
                 foreach (Control c in controls)
                 {
-                    if (c is TextBox) ((TextBox)c).Clear();
+                    if (c is TextBox tb && tb.Name != "txtRequestNoValueDI") ((TextBox)c).Clear();
                     else if (c is CheckBox) ((CheckBox)c).Checked = false;
                     else if (c is ComboBox)
                     {
