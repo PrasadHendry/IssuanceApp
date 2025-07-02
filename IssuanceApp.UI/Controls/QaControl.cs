@@ -3,9 +3,6 @@
 using IssuanceApp.Data;
 using IssuanceApp.UI; // For ThemeManager
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -32,14 +29,30 @@ namespace IssuanceApp.UI.Controls
             _loggedInUserName = loggedInUserName;
 
             SetupQaQueueColumns();
-            dgvQaQueue.SelectionChanged += DgvQaQueue_SelectionChanged;
-            btnQaRefreshList.Click += async (s, e) => await LoadPendingQueueAsync();
-            btnQaApprove.Click += BtnQaApprove_Click;
-            btnQaReject.Click += BtnQaReject_Click;
-            btnQaBrowseSelectDocument.Click += (s, e) => MessageBox.Show("Functionality to open document location is not yet implemented.", "TODO", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-            ClearQaSelectedRequestDetails(); // This will now also disable the action panel
+            // CORRECTED: Unsubscribe from events before subscribing to prevent duplicates.
+            dgvQaQueue.SelectionChanged -= DgvQaQueue_SelectionChanged;
+            dgvQaQueue.SelectionChanged += DgvQaQueue_SelectionChanged;
+
+            btnQaRefreshList.Click -= async (s, e) => await LoadPendingQueueAsync();
+            btnQaRefreshList.Click += async (s, e) => await LoadPendingQueueAsync();
+
+            btnQaApprove.Click -= BtnQaApprove_Click;
+            btnQaApprove.Click += BtnQaApprove_Click;
+
+            btnQaReject.Click -= BtnQaReject_Click;
+            btnQaReject.Click += BtnQaReject_Click;
+
+            btnQaBrowseSelectDocument.Click -= BrowseDocument_Click; // Assuming a named handler might be added later
+            btnQaBrowseSelectDocument.Click += BrowseDocument_Click;
+
+            ClearQaSelectedRequestDetails();
             lblQaQueueTitle.Text = "Pending QA Approval Queue (0)";
+        }
+
+        private void BrowseDocument_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Functionality to open document location is not yet implemented.", "TODO", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void SetupQaQueueColumns()
@@ -56,8 +69,6 @@ namespace IssuanceApp.UI.Controls
             dgvQaQueue.Columns.Add(new DataGridViewTextBoxColumn { Name = "colQaRequestedAt", DataPropertyName = nameof(QaQueueItemDto.RequestedAt), HeaderText = "Requested At", DefaultCellStyle = new DataGridViewCellStyle { Format = "dd-MMM-yyyy HH:mm" }, FillWeight = 15 });
             dgvQaQueue.Columns.Add(new DataGridViewTextBoxColumn { Name = "colQaAuthorizedBy", DataPropertyName = nameof(QaQueueItemDto.AuthorizedBy), HeaderText = "Authorized By (GM)", FillWeight = 10 });
             dgvQaQueue.Columns.Add(new DataGridViewTextBoxColumn { Name = "colQaGmActionAt", DataPropertyName = nameof(QaQueueItemDto.GmActionAt), HeaderText = "GM Action At", DefaultCellStyle = new DataGridViewCellStyle { Format = "dd-MMM-yyyy HH:mm" }, FillWeight = 15 });
-
-            // MODIFIED: Print Count column has been removed.
         }
 
         public async Task LoadPendingQueueAsync()
@@ -129,9 +140,6 @@ namespace IssuanceApp.UI.Controls
             foreach (Control c in tlpQaRequestDetails.Controls)
                 if (c is TextBox tb) tb.Clear();
             txtQaComment.Clear();
-
-            // MODIFIED: Line referencing numQaPrintCount removed.
-
             grpQaAction.Enabled = false;
         }
 

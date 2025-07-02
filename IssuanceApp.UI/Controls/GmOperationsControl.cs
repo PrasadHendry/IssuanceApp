@@ -27,10 +27,20 @@ namespace IssuanceApp.UI.Controls
             _repository = repository;
             _loggedInUserName = loggedInUserName;
             SetupGmQueueColumns();
+
+            // CORRECTED: Unsubscribe from events before subscribing to prevent duplicates.
+            dgvGmQueue.SelectionChanged -= DgvGmQueue_SelectionChanged;
             dgvGmQueue.SelectionChanged += DgvGmQueue_SelectionChanged;
+
+            btnGmRefreshList.Click -= async (s, e) => await LoadPendingQueueAsync();
             btnGmRefreshList.Click += async (s, e) => await LoadPendingQueueAsync();
+
+            btnGmAuthorize.Click -= BtnGmAuthorize_Click;
             btnGmAuthorize.Click += BtnGmAuthorize_Click;
+
+            btnGmReject.Click -= BtnGmReject_Click;
             btnGmReject.Click += BtnGmReject_Click;
+
             ClearGmSelectedRequestDetails();
             lblGmQueueTitle.Text = "Pending GM Approval Queue (0)";
         }

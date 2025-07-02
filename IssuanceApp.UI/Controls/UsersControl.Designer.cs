@@ -41,7 +41,6 @@ namespace IssuanceApp.UI.Controls
             this.tlpManageRole = new System.Windows.Forms.TableLayoutPanel();
             this.lblRoleNameManage = new System.Windows.Forms.Label();
             this.txtRoleNameManage = new System.Windows.Forms.TextBox();
-            this.flpManageActions = new System.Windows.Forms.FlowLayoutPanel(); // Added FlowLayoutPanel
             this.btnResetPassword = new IssuanceApp.UI.RoundedButton();
             ((System.ComponentModel.ISupportInitialize)(this.scUsersMain)).BeginInit();
             this.scUsersMain.Panel1.SuspendLayout();
@@ -51,7 +50,6 @@ namespace IssuanceApp.UI.Controls
             this.tlpUserRolesHeader.SuspendLayout();
             this.grpManageRole.SuspendLayout();
             this.tlpManageRole.SuspendLayout();
-            this.flpManageActions.SuspendLayout(); // SuspendLayout/ResumeLayout for the new panel
             this.SuspendLayout();
             // 
             // scUsersMain
@@ -181,12 +179,14 @@ namespace IssuanceApp.UI.Controls
             this.tlpManageRole.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tlpManageRole.Controls.Add(this.lblRoleNameManage, 0, 0);
             this.tlpManageRole.Controls.Add(this.txtRoleNameManage, 1, 0);
-            this.tlpManageRole.Controls.Add(this.flpManageActions, 0, 1); // Added FlowLayoutPanel control
+            // BUG FIX: Added the button directly to the TableLayoutPanel in its own row.
+            this.tlpManageRole.Controls.Add(this.btnResetPassword, 0, 1);
             this.tlpManageRole.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tlpManageRole.Location = new System.Drawing.Point(10, 28);
             this.tlpManageRole.Name = "tlpManageRole";
-            this.tlpManageRole.RowCount = 2;
+            this.tlpManageRole.RowCount = 3; // Added a third row for spacing
             this.tlpManageRole.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
+            this.tlpManageRole.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 45F));
             this.tlpManageRole.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tlpManageRole.Size = new System.Drawing.Size(812, 513);
             this.tlpManageRole.TabIndex = 0;
@@ -210,22 +210,14 @@ namespace IssuanceApp.UI.Controls
             this.txtRoleNameManage.Size = new System.Drawing.Size(723, 25);
             this.txtRoleNameManage.TabIndex = 1;
             // 
-            // flpManageActions
-            // 
-            this.tlpManageRole.SetColumnSpan(this.flpManageActions, 2);
-            this.flpManageActions.Controls.Add(this.btnResetPassword);
-            this.flpManageActions.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flpManageActions.Location = new System.Drawing.Point(3, 38);
-            this.flpManageActions.Name = "flpManageActions";
-            this.flpManageActions.Size = new System.Drawing.Size(806, 472);
-            this.flpManageActions.TabIndex = 2;
-            // 
             // btnResetPassword
             // 
+            // BUG FIX: Removed the unnecessary FlowLayoutPanel and set ColumnSpan.
+            this.tlpManageRole.SetColumnSpan(this.btnResetPassword, 2);
             this.btnResetPassword.CornerRadius = 8;
             this.btnResetPassword.Enabled = false;
             this.btnResetPassword.Font = new System.Drawing.Font("Segoe UI Semibold", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnResetPassword.Location = new System.Drawing.Point(3, 3);
+            this.btnResetPassword.Location = new System.Drawing.Point(3, 38);
             this.btnResetPassword.Name = "btnResetPassword";
             this.btnResetPassword.Size = new System.Drawing.Size(140, 35);
             this.btnResetPassword.TabIndex = 1;
@@ -251,7 +243,6 @@ namespace IssuanceApp.UI.Controls
             this.grpManageRole.ResumeLayout(false);
             this.tlpManageRole.ResumeLayout(false);
             this.tlpManageRole.PerformLayout();
-            this.flpManageActions.ResumeLayout(false); // ResumeLayout for the new panel
             this.ResumeLayout(false);
         }
 
@@ -269,6 +260,5 @@ namespace IssuanceApp.UI.Controls
         private System.Windows.Forms.Label lblRoleNameManage;
         private System.Windows.Forms.TextBox txtRoleNameManage;
         private UI.RoundedButton btnResetPassword;
-        private System.Windows.Forms.FlowLayoutPanel flpManageActions; // Added FlowLayoutPanel declaration
     }
 }

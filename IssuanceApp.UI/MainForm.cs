@@ -18,8 +18,6 @@ namespace IssuanceApp.UI
         private string loggedInRole = null;
         private string loggedInUserName = null;
         private List<TabPage> allTabPages;
-
-        // REFINEMENT: Replaced multiple boolean flags with a single, scalable HashSet.
         private readonly HashSet<string> _loadedTabs = new HashSet<string>();
         #endregion
 
@@ -151,7 +149,7 @@ namespace IssuanceApp.UI
         #endregion
 
         #region Login and Role Management
-        private void LoginControl_LoginAttemptCompleted(object sender, LoginEventArgs e)
+        private async void LoginControl_LoginAttemptCompleted(object sender, LoginEventArgs e)
         {
             try
             {
@@ -172,6 +170,9 @@ namespace IssuanceApp.UI
                     EnableTabsBasedOnRole(loggedInRole);
 
                     SwitchToDefaultTabForRole(loggedInRole);
+
+                    // CORRECTED: Explicitly load data for the initial tab after login.
+                    await LoadDataForSelectedTabAsync();
                 }
                 else
                 {

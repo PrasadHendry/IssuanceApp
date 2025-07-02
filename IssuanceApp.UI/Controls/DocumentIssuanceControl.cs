@@ -148,12 +148,11 @@ namespace IssuanceApp.UI.Controls
         #endregion
 
         #region Validation
-        // REFINEMENT: The method now returns the validated list of document numbers.
         private bool IsFormValid(out string errorMessage, out Control controlToFocus, out List<string> validatedDocNumbers)
         {
             errorMessage = string.Empty;
             controlToFocus = null;
-            validatedDocNumbers = new List<string>(); // Initialize the output list
+            validatedDocNumbers = new List<string>();
 
             if (cmbFromDepartmentDI.SelectedItem == null || string.IsNullOrWhiteSpace(cmbFromDepartmentDI.SelectedItem.ToString()))
             {
@@ -169,7 +168,6 @@ namespace IssuanceApp.UI.Controls
                 return false;
             }
 
-            // Populate the 'validatedDocNumbers' list as we check the inputs
             if (chkDocTypeBMRDI.Checked) { if (string.IsNullOrWhiteSpace(txtBmrDocNoDI.Text)) { errorMessage = "BMR is checked, please enter BMR Document No."; controlToFocus = txtBmrDocNoDI; return false; } validatedDocNumbers.Add(txtBmrDocNoDI.Text.Trim()); }
             if (chkDocTypeBPRDI.Checked) { if (string.IsNullOrWhiteSpace(txtBprDocNoDI.Text)) { errorMessage = "BPR is checked, please enter BPR Document No."; controlToFocus = txtBprDocNoDI; return false; } validatedDocNumbers.Add(txtBprDocNoDI.Text.Trim()); }
             if (chkDocTypeAppendixDI.Checked) { if (string.IsNullOrWhiteSpace(txtAppendixDocNoDI.Text)) { errorMessage = "Appendix is checked, please enter Appendix Document No."; controlToFocus = txtAppendixDocNoDI; return false; } validatedDocNumbers.Add(txtAppendixDocNoDI.Text.Trim()); }
@@ -178,8 +176,18 @@ namespace IssuanceApp.UI.Controls
 
             if (!string.IsNullOrWhiteSpace(txtParentBatchSizeValueDI.Text))
             {
-                if (!decimal.TryParse(txtParentBatchSizeValueDI.Text, out _)) { errorMessage = "Parent Batch Size must be a valid number."; controlToFocus = txtParentBatchSizeValueDI; return false; }
-                if (cmbParentBatchSizeUnitDI.SelectedItem == null || cmbParentBatchSizeUnitDI.SelectedItem.ToString() == "N/A") { errorMessage = "Please select a Unit for the Parent Batch Size."; controlToFocus = cmbParentBatchSizeUnitDI; return false; }
+                if (!decimal.TryParse(txtParentBatchSizeValueDI.Text, out decimal parentBatchSize))
+                {
+                    errorMessage = "Parent Batch Size must be a valid number.";
+                    controlToFocus = txtParentBatchSizeValueDI;
+                    return false;
+                }
+                if (parentBatchSize > 0 && (cmbParentBatchSizeUnitDI.SelectedItem == null || cmbParentBatchSizeUnitDI.SelectedItem.ToString() == "N/A"))
+                {
+                    errorMessage = "Please select a Unit for the Parent Batch Size.";
+                    controlToFocus = cmbParentBatchSizeUnitDI;
+                    return false;
+                }
             }
 
             if (string.IsNullOrWhiteSpace(txtItemBatchSizeValueDI.Text)) { errorMessage = "Item Batch Size value is required."; controlToFocus = txtItemBatchSizeValueDI; return false; }
@@ -193,7 +201,6 @@ namespace IssuanceApp.UI.Controls
         #region Event Handlers
         private async void BtnSubmitRequestDI_Click(object sender, EventArgs e)
         {
-            // REFINEMENT: Call the updated validation method and receive the validated list.
             if (!IsFormValid(out string errorMessage, out Control controlToFocus, out List<string> docNumbers))
             {
                 MessageBox.Show(errorMessage, "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -201,7 +208,14 @@ namespace IssuanceApp.UI.Controls
                 return;
             }
 
-            string parentBatchSizeStr = !string.IsNullOrWhiteSpace(txtParentBatchSizeValueDI.Text)
+            // BUG FIX: Disable buttons immediately to prevent double-clicks.
+            btnSubmitRequestDI.Enabled = false;
+            btnClearFormDI.Enabled = false;
+            this.Cursor = Cursors.WaitCursor;
+            lblStatusValueDI.Text = "Submitting request...";
+            lblStatusValueDI.ForeColor = System.Drawing.SystemColors.ControlText;
+
+            string parentBatchSizeStr = !string.IsNullOrWhiteSpace(txtParentBatchSizeValueDI.Text) && decimal.TryParse(txtParentBatchSizeValueDI.Text, out decimal pbs) && pbs > 0
                 ? $"{txtParentBatchSizeValueDI.Text.Trim()} {cmbParentBatchSizeUnitDI.SelectedItem}"
                 : null;
 
@@ -210,7 +224,6 @@ namespace IssuanceApp.UI.Controls
                 RequestNo = txtRequestNoValueDI.Text,
                 RequestDate = dtpRequestDateDI.Value.Date,
                 FromDepartment = cmbFromDepartmentDI.SelectedItem.ToString(),
-                // REFINEMENT: Use the list that was returned directly from the validation method.
                 DocumentNo = string.Join(",", docNumbers),
                 Product = txtProductDI.Text.Trim(),
                 BatchNo = string.IsNullOrWhiteSpace(txtBatchNoDI.Text) ? null : txtBatchNoDI.Text.Trim(),
@@ -227,12 +240,6 @@ namespace IssuanceApp.UI.Controls
                 ExportOrderNo = string.IsNullOrWhiteSpace(txtExportOrderNoDI.Text) ? null : txtExportOrderNoDI.Text.Trim(),
                 RequestComment = txtRemarksDI.Text.Trim(),
             };
-
-            btnSubmitRequestDI.Enabled = false;
-            btnClearFormDI.Enabled = false;
-            this.Cursor = Cursors.WaitCursor;
-            lblStatusValueDI.Text = "Submitting request...";
-            lblStatusValueDI.ForeColor = System.Drawing.SystemColors.ControlText;
 
             try
             {

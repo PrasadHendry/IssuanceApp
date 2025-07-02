@@ -72,7 +72,8 @@ namespace IssuanceApp.UI.Controls
             dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditRequestNo", HeaderText = "Request No.", DataPropertyName = nameof(AuditTrailEntry.RequestNo), Width = 140, Frozen = true });
             dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditRequestDate", HeaderText = "Request Date", DataPropertyName = nameof(AuditTrailEntry.RequestDate), DefaultCellStyle = new DataGridViewCellStyle { Format = "dd-MMM-yyyy" }, AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells });
             dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditProduct", HeaderText = "Product", DataPropertyName = nameof(AuditTrailEntry.Product), Width = 200 });
-            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditDocumentNumbers", HeaderText = "Document No(s).", DataPropertyName = nameof(AuditTrailEntry.DocumentNumbers), AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells });
+            // CORRECTED: DataPropertyName now points to the correct property name "DocumentNo".
+            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditDocumentNumbers", HeaderText = "Document No(s).", DataPropertyName = nameof(AuditTrailEntry.DocumentNo), AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells });
             dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditStatusDerived", HeaderText = "Status", DataPropertyName = nameof(AuditTrailEntry.DerivedStatus), Width = 150 });
             dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditPreparedBy", HeaderText = "Prepared By", DataPropertyName = nameof(AuditTrailEntry.PreparedBy), AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells });
             dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditRequestedAt", HeaderText = "Requested At", DataPropertyName = nameof(AuditTrailEntry.RequestedAt), DefaultCellStyle = new DataGridViewCellStyle { Format = "dd-MMM-yyyy HH:mm" }, AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells });
@@ -115,7 +116,6 @@ namespace IssuanceApp.UI.Controls
 
                 if (dgvAuditTrail.RowCount > 0)
                 {
-                    // CORRECTED: Use Invalidate() instead of the non-existent InvalidateRows().
                     dgvAuditTrail.Invalidate();
                 }
             }
@@ -193,7 +193,6 @@ namespace IssuanceApp.UI.Controls
 
                     if (keysToFetch.Count > 0)
                     {
-                        // CORRECTED: Use Invalidate() instead of the non-existent InvalidateRows().
                         dgvAuditTrail.Invalidate();
                     }
                 }));
