@@ -98,7 +98,9 @@ namespace IssuanceApp.Data
                 SELECT 
                     i.RequestNo, i.RequestDate, i.Product, i.DocumentNo, t.PreparedBy, t.RequestedAt,
                     i.FromDepartment, i.BatchNo, i.ItemMfgDate, i.ItemExpDate, i.Market, i.PackSize,
-                    t.RequestComment
+                    t.RequestComment,
+                    -- ADDED --
+                    i.ParentBatchNumber, i.ParentBatchSize, i.ParentMfgDate, i.ParentExpDate
                 FROM dbo.Doc_Issuance AS i 
                 JOIN dbo.Issuance_Tracker AS t ON i.IssuanceID = t.IssuanceID
                 WHERE t.GmOperationsAction IS NULL ORDER BY i.RequestNo DESC;";
@@ -115,7 +117,9 @@ namespace IssuanceApp.Data
                 SELECT 
                     i.RequestNo, i.RequestDate, i.Product, i.DocumentNo, t.PreparedBy, t.RequestedAt, 
                     t.AuthorizedBy, t.GmOperationsAt, i.FromDepartment, i.BatchNo, i.ItemMfgDate, 
-                    i.ItemExpDate, i.Market, i.PackSize, t.RequestComment, t.GmOperationsComment
+                    i.ItemExpDate, i.Market, i.PackSize, t.RequestComment, t.GmOperationsComment,
+                    -- ADDED --
+                    i.ParentBatchNumber, i.ParentBatchSize, i.ParentMfgDate, i.ParentExpDate
                 FROM dbo.Doc_Issuance AS i 
                 JOIN dbo.Issuance_Tracker AS t ON i.IssuanceID = t.IssuanceID
                 WHERE t.GmOperationsAction = @Action AND t.QAAction IS NULL ORDER BY i.RequestNo DESC;";
@@ -216,6 +220,8 @@ namespace IssuanceApp.Data
                 SELECT i.IssuanceID, i.RequestNo, i.RequestDate, i.Product, i.DocumentNo, t.PreparedBy, t.RequestedAt, t.RequestComment,
                        t.GmOperationsAction, t.AuthorizedBy, t.GmOperationsAt, t.GmOperationsComment,
                        t.QAAction, t.ApprovedBy, t.QAAt, t.QAComment,
+                       -- ADDED --
+                       i.ParentBatchNumber, i.ParentBatchSize, i.ParentMfgDate, i.ParentExpDate,
                     CASE 
                         WHEN t.QAAction = @ActionRejected THEN 'Rejected by QA'
                         WHEN t.GmOperationsAction = @ActionRejected THEN 'Rejected by GM'

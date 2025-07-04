@@ -133,6 +133,13 @@ namespace IssuanceApp.UI.Controls
             txtQaDetailPackSize.Text = request.PackSize;
             txtQaDetailRequesterComments.Text = request.RequestComment;
             txtQaDetailGmComment.Text = request.GmOperationsComment;
+
+            // --- ADDED ---
+            txtQaParentBatchNo.Text = request.ParentBatchNumber;
+            txtQaParentBatchSize.Text = request.ParentBatchSize;
+            txtQaParentMfgDate.Text = request.ParentMfgDate;
+            txtQaParentExpDate.Text = request.ParentExpDate;
+            grpQaParentBatchInfo.Visible = !string.IsNullOrEmpty(request.ParentBatchNumber);
         }
 
         private void ClearQaSelectedRequestDetails()
@@ -140,6 +147,12 @@ namespace IssuanceApp.UI.Controls
             foreach (Control c in tlpQaRequestDetails.Controls)
                 if (c is TextBox tb) tb.Clear();
             txtQaComment.Clear();
+
+            // --- ADDED ---
+            foreach (Control c in tlpQaParentBatchInfo.Controls)
+                if (c is TextBox tb) tb.Clear();
+            grpQaParentBatchInfo.Visible = false;
+
             grpQaAction.Enabled = false;
         }
 

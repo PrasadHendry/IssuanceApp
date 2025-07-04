@@ -119,6 +119,13 @@ namespace IssuanceApp.UI.Controls
             txtGmDetailMarket.Text = request.Market;
             txtGmDetailPackSize.Text = request.PackSize;
             txtGmDetailRequesterComments.Text = request.RequestComment;
+
+            // --- ADDED ---
+            txtGmParentBatchNo.Text = request.ParentBatchNumber;
+            txtGmParentBatchSize.Text = request.ParentBatchSize;
+            txtGmParentMfgDate.Text = request.ParentMfgDate;
+            txtGmParentExpDate.Text = request.ParentExpDate;
+            grpGmParentBatchInfo.Visible = !string.IsNullOrEmpty(request.ParentBatchNumber);
         }
 
         private void ClearGmSelectedRequestDetails()
@@ -126,6 +133,11 @@ namespace IssuanceApp.UI.Controls
             foreach (Control c in tlpGmRequestDetails.Controls)
                 if (c is TextBox tb) tb.Clear();
             txtGmComment.Clear();
+
+            // --- ADDED ---
+            foreach (Control c in tlpGmParentBatchInfo.Controls)
+                if (c is TextBox tb) tb.Clear();
+            grpGmParentBatchInfo.Visible = false;
 
             grpGmAction.Enabled = false;
         }

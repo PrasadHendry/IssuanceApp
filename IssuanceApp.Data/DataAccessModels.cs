@@ -16,7 +16,6 @@ namespace IssuanceApp.Data
         public string RequestNo { get; set; }
         public DateTime RequestDate { get; set; }
         public string Product { get; set; }
-        // CORRECTED: Renamed property from DocumentNumbers to DocumentNo to match the database column.
         public string DocumentNo { get; set; }
         public string DerivedStatus { get; set; }
         public string PreparedBy { get; set; }
@@ -29,6 +28,11 @@ namespace IssuanceApp.Data
         public string ApprovedBy { get; set; }
         public DateTime? QAAt { get; set; }
         public string QAComment { get; set; }
+        // --- ADDED ---
+        public string ParentBatchNumber { get; set; }
+        public string ParentBatchSize { get; set; }
+        public string ParentMfgDate { get; set; }
+        public string ParentExpDate { get; set; }
     }
 
     public class IssuanceRequestData
@@ -68,6 +72,11 @@ namespace IssuanceApp.Data
         public string Market { get; set; }
         public string PackSize { get; set; }
         public string RequestComment { get; set; }
+        // --- ADDED ---
+        public string ParentBatchNumber { get; set; }
+        public string ParentBatchSize { get; set; }
+        public string ParentMfgDate { get; set; }
+        public string ParentExpDate { get; set; }
     }
 
     public class QaQueueItemDto
@@ -88,5 +97,10 @@ namespace IssuanceApp.Data
         public string PackSize { get; set; }
         public string RequestComment { get; set; }
         public string GmOperationsComment { get; set; }
+        // --- ADDED ---
+        public string ParentBatchNumber { get; set; }
+        public string ParentBatchSize { get; set; }
+        public string ParentMfgDate { get; set; }
+        public string ParentExpDate { get; set; }
     }
 }

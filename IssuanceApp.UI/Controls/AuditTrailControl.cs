@@ -68,12 +68,16 @@ namespace IssuanceApp.UI.Controls
         {
             dgvAuditTrail.Columns.Clear();
             var wrapTextStyle = new DataGridViewCellStyle { WrapMode = DataGridViewTriState.True, Alignment = DataGridViewContentAlignment.TopLeft };
+            var noWrapStyle = new DataGridViewCellStyle { WrapMode = DataGridViewTriState.False, Alignment = DataGridViewContentAlignment.MiddleLeft };
 
             dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditRequestNo", HeaderText = "Request No.", DataPropertyName = nameof(AuditTrailEntry.RequestNo), Width = 140, Frozen = true });
             dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditRequestDate", HeaderText = "Request Date", DataPropertyName = nameof(AuditTrailEntry.RequestDate), DefaultCellStyle = new DataGridViewCellStyle { Format = "dd-MMM-yyyy" }, AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells });
             dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditProduct", HeaderText = "Product", DataPropertyName = nameof(AuditTrailEntry.Product), Width = 200 });
-            // CORRECTED: DataPropertyName now points to the correct property name "DocumentNo".
-            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditDocumentNumbers", HeaderText = "Document No(s).", DataPropertyName = nameof(AuditTrailEntry.DocumentNo), AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells });
+
+            // --- FIX IS HERE ---
+            // Changed AutoSizeMode to None and set a generous initial width.
+            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditDocumentNumbers", HeaderText = "Document No(s).", DataPropertyName = nameof(AuditTrailEntry.DocumentNo), AutoSizeMode = DataGridViewAutoSizeColumnMode.None, Width = 250, DefaultCellStyle = noWrapStyle });
+
             dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditStatusDerived", HeaderText = "Status", DataPropertyName = nameof(AuditTrailEntry.DerivedStatus), Width = 150 });
             dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditPreparedBy", HeaderText = "Prepared By", DataPropertyName = nameof(AuditTrailEntry.PreparedBy), AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells });
             dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditRequestedAt", HeaderText = "Requested At", DataPropertyName = nameof(AuditTrailEntry.RequestedAt), DefaultCellStyle = new DataGridViewCellStyle { Format = "dd-MMM-yyyy HH:mm" }, AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells });
@@ -85,6 +89,10 @@ namespace IssuanceApp.UI.Controls
             dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditApprovedBy", HeaderText = "QA User", DataPropertyName = nameof(AuditTrailEntry.ApprovedBy), AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells });
             dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditQaActionAt", HeaderText = "QA Action At", DataPropertyName = nameof(AuditTrailEntry.QAAt), DefaultCellStyle = new DataGridViewCellStyle { Format = "dd-MMM-yyyy HH:mm" }, AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells });
             dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditQaComment", HeaderText = "QA Comment", DataPropertyName = nameof(AuditTrailEntry.QAComment), Width = 250, DefaultCellStyle = wrapTextStyle });
+            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditParentBatchNo", HeaderText = "Parent Batch No.", DataPropertyName = nameof(AuditTrailEntry.ParentBatchNumber), Width = 150 });
+            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditParentBatchSize", HeaderText = "Parent Batch Size", DataPropertyName = nameof(AuditTrailEntry.ParentBatchSize), AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells });
+            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditParentMfgDate", HeaderText = "Parent Mfg. Date", DataPropertyName = nameof(AuditTrailEntry.ParentMfgDate), AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells });
+            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditParentExpDate", HeaderText = "Parent Exp. Date", DataPropertyName = nameof(AuditTrailEntry.ParentExpDate), AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells });
         }
 
         public async Task LoadAuditTrailDataAsync()

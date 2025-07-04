@@ -19,12 +19,6 @@ namespace IssuanceApp.UI.Controls
             InitializeComponent();
             ThemeManager.StyleSuccessButton(btnSubmitRequestDI);
             ThemeManager.StyleSecondaryButton(btnClearFormDI);
-        }
-
-        public void InitializeControl(IssuanceRepository repository, string loggedInUserName)
-        {
-            _repository = repository;
-            _loggedInUserName = loggedInUserName;
 
             // Wire up events
             chkDocTypeBMRDI.CheckedChanged += DocTypeCheckbox_CheckedChanged;
@@ -35,6 +29,12 @@ namespace IssuanceApp.UI.Controls
             txtItemBatchSizeValueDI.KeyPress += NumericTextBox_KeyPress;
             btnSubmitRequestDI.Click += BtnSubmitRequestDI_Click;
             btnClearFormDI.Click += BtnClearFormDI_Click;
+        }
+
+        public void InitializeControl(IssuanceRepository repository, string loggedInUserName)
+        {
+            _repository = repository;
+            _loggedInUserName = loggedInUserName;
 
             // Populate static controls
             string[] monthNames = CultureInfo.CurrentCulture.DateTimeFormat.AbbreviatedMonthNames.Where(m => !string.IsNullOrEmpty(m)).ToArray();

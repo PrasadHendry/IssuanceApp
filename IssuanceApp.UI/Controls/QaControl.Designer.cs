@@ -88,6 +88,17 @@ namespace IssuanceApp.UI.Controls
             this.flpQaActionButtons = new System.Windows.Forms.FlowLayoutPanel();
             this.btnQaApprove = new IssuanceApp.UI.RoundedButton();
             this.btnQaReject = new IssuanceApp.UI.RoundedButton();
+            // --- NEW CONTROLS DECLARED ---
+            this.grpQaParentBatchInfo = new System.Windows.Forms.GroupBox();
+            this.tlpQaParentBatchInfo = new System.Windows.Forms.TableLayoutPanel();
+            this.lblQaParentBatchNo = new System.Windows.Forms.Label();
+            this.txtQaParentBatchNo = new System.Windows.Forms.TextBox();
+            this.lblQaParentBatchSize = new System.Windows.Forms.Label();
+            this.txtQaParentBatchSize = new System.Windows.Forms.TextBox();
+            this.lblQaParentMfgDate = new System.Windows.Forms.Label();
+            this.txtQaParentMfgDate = new System.Windows.Forms.TextBox();
+            this.lblQaParentExpDate = new System.Windows.Forms.Label();
+            this.txtQaParentExpDate = new System.Windows.Forms.TextBox();
             this.tlpQaOperationsMain.SuspendLayout();
             this.pnlQaTopSection.SuspendLayout();
             this.tlpQaTopControls.SuspendLayout();
@@ -100,6 +111,9 @@ namespace IssuanceApp.UI.Controls
             this.tlpQaActionControls.SuspendLayout();
             this.flpQaOptionalControls.SuspendLayout();
             this.flpQaActionButtons.SuspendLayout();
+            // --- NEW SUSPENDLAYOUT CALL ---
+            this.grpQaParentBatchInfo.SuspendLayout();
+            this.tlpQaParentBatchInfo.SuspendLayout();
             this.SuspendLayout();
             // 
             // tlpQaOperationsMain
@@ -275,11 +289,13 @@ namespace IssuanceApp.UI.Controls
             this.tlpQaBottomSection.ColumnCount = 1;
             this.tlpQaBottomSection.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tlpQaBottomSection.Controls.Add(this.grpQaSelectedRequest, 0, 0);
-            this.tlpQaBottomSection.Controls.Add(this.grpQaAction, 0, 1);
+            this.tlpQaBottomSection.Controls.Add(this.grpQaParentBatchInfo, 0, 1);
+            this.tlpQaBottomSection.Controls.Add(this.grpQaAction, 0, 2);
             this.tlpQaBottomSection.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tlpQaBottomSection.Location = new System.Drawing.Point(13, 263);
             this.tlpQaBottomSection.Name = "tlpQaBottomSection";
-            this.tlpQaBottomSection.RowCount = 2;
+            this.tlpQaBottomSection.RowCount = 3;
+            this.tlpQaBottomSection.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpQaBottomSection.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpQaBottomSection.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 180F));
             this.tlpQaBottomSection.Size = new System.Drawing.Size(1304, 541);
@@ -418,7 +434,7 @@ namespace IssuanceApp.UI.Controls
             this.lblQaDetailDocTypesLabel.Name = "lblQaDetailDocTypesLabel";
             this.lblQaDetailDocTypesLabel.Size = new System.Drawing.Size(112, 17);
             this.lblQaDetailDocTypesLabel.TabIndex = 6;
-            this.lblQaDetailDocTypesLabel.Text = "Document Types:";
+            this.lblQaDetailDocTypesLabel.Text = "Document No.(s):";
             // 
             // txtQaDetailDocTypes
             // 
@@ -647,11 +663,126 @@ namespace IssuanceApp.UI.Controls
             this.txtQaDetailGmActionTime.Size = new System.Drawing.Size(1112, 25);
             this.txtQaDetailGmActionTime.TabIndex = 29;
             // 
+            // grpQaParentBatchInfo
+            // 
+            this.grpQaParentBatchInfo.AutoSize = true;
+            this.grpQaParentBatchInfo.Controls.Add(this.tlpQaParentBatchInfo);
+            this.grpQaParentBatchInfo.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.grpQaParentBatchInfo.Location = new System.Drawing.Point(3, 364);
+            this.grpQaParentBatchInfo.Name = "grpQaParentBatchInfo";
+            this.grpQaParentBatchInfo.Padding = new System.Windows.Forms.Padding(10);
+            this.grpQaParentBatchInfo.Size = new System.Drawing.Size(1298, 96);
+            this.grpQaParentBatchInfo.TabIndex = 2;
+            this.grpQaParentBatchInfo.TabStop = false;
+            this.grpQaParentBatchInfo.Text = "Parent Batch Information";
+            this.grpQaParentBatchInfo.Visible = false;
+            // 
+            // tlpQaParentBatchInfo
+            // 
+            this.tlpQaParentBatchInfo.AutoSize = true;
+            this.tlpQaParentBatchInfo.ColumnCount = 4;
+            this.tlpQaParentBatchInfo.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 160F));
+            this.tlpQaParentBatchInfo.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tlpQaParentBatchInfo.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 160F));
+            this.tlpQaParentBatchInfo.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tlpQaParentBatchInfo.Controls.Add(this.lblQaParentBatchNo, 0, 0);
+            this.tlpQaParentBatchInfo.Controls.Add(this.txtQaParentBatchNo, 1, 0);
+            this.tlpQaParentBatchInfo.Controls.Add(this.lblQaParentBatchSize, 2, 0);
+            this.tlpQaParentBatchInfo.Controls.Add(this.txtQaParentBatchSize, 3, 0);
+            this.tlpQaParentBatchInfo.Controls.Add(this.lblQaParentMfgDate, 0, 1);
+            this.tlpQaParentBatchInfo.Controls.Add(this.txtQaParentMfgDate, 1, 1);
+            this.tlpQaParentBatchInfo.Controls.Add(this.lblQaParentExpDate, 2, 1);
+            this.tlpQaParentBatchInfo.Controls.Add(this.txtQaParentExpDate, 3, 1);
+            this.tlpQaParentBatchInfo.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tlpQaParentBatchInfo.Location = new System.Drawing.Point(10, 28);
+            this.tlpQaParentBatchInfo.Name = "tlpQaParentBatchInfo";
+            this.tlpQaParentBatchInfo.RowCount = 2;
+            this.tlpQaParentBatchInfo.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tlpQaParentBatchInfo.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tlpQaParentBatchInfo.Size = new System.Drawing.Size(1278, 58);
+            this.tlpQaParentBatchInfo.TabIndex = 0;
+            // 
+            // lblQaParentBatchNo
+            // 
+            this.lblQaParentBatchNo.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblQaParentBatchNo.AutoSize = true;
+            this.lblQaParentBatchNo.Location = new System.Drawing.Point(43, 6);
+            this.lblQaParentBatchNo.Name = "lblQaParentBatchNo";
+            this.lblQaParentBatchNo.Size = new System.Drawing.Size(114, 17);
+            this.lblQaParentBatchNo.TabIndex = 0;
+            this.lblQaParentBatchNo.Text = "Parent Batch No.:";
+            // 
+            // txtQaParentBatchNo
+            // 
+            this.txtQaParentBatchNo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtQaParentBatchNo.Location = new System.Drawing.Point(163, 3);
+            this.txtQaParentBatchNo.Name = "txtQaParentBatchNo";
+            this.txtQaParentBatchNo.ReadOnly = true;
+            this.txtQaParentBatchNo.Size = new System.Drawing.Size(473, 25);
+            this.txtQaParentBatchNo.TabIndex = 1;
+            // 
+            // lblQaParentBatchSize
+            // 
+            this.lblQaParentBatchSize.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblQaParentBatchSize.AutoSize = true;
+            this.lblQaParentBatchSize.Location = new System.Drawing.Point(675, 6);
+            this.lblQaParentBatchSize.Name = "lblQaParentBatchSize";
+            this.lblQaParentBatchSize.Size = new System.Drawing.Size(116, 17);
+            this.lblQaParentBatchSize.TabIndex = 2;
+            this.lblQaParentBatchSize.Text = "Parent Batch Size:";
+            // 
+            // txtQaParentBatchSize
+            // 
+            this.txtQaParentBatchSize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtQaParentBatchSize.Location = new System.Drawing.Point(797, 3);
+            this.txtQaParentBatchSize.Name = "txtQaParentBatchSize";
+            this.txtQaParentBatchSize.ReadOnly = true;
+            this.txtQaParentBatchSize.Size = new System.Drawing.Size(478, 25);
+            this.txtQaParentBatchSize.TabIndex = 3;
+            // 
+            // lblQaParentMfgDate
+            // 
+            this.lblQaParentMfgDate.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblQaParentMfgDate.AutoSize = true;
+            this.lblQaParentMfgDate.Location = new System.Drawing.Point(43, 36);
+            this.lblQaParentMfgDate.Name = "lblQaParentMfgDate";
+            this.lblQaParentMfgDate.Size = new System.Drawing.Size(114, 17);
+            this.lblQaParentMfgDate.TabIndex = 4;
+            this.lblQaParentMfgDate.Text = "Parent Mfg. Date:";
+            // 
+            // txtQaParentMfgDate
+            // 
+            this.txtQaParentMfgDate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtQaParentMfgDate.Location = new System.Drawing.Point(163, 33);
+            this.txtQaParentMfgDate.Name = "txtQaParentMfgDate";
+            this.txtQaParentMfgDate.ReadOnly = true;
+            this.txtQaParentMfgDate.Size = new System.Drawing.Size(473, 25);
+            this.txtQaParentMfgDate.TabIndex = 5;
+            // 
+            // lblQaParentExpDate
+            // 
+            this.lblQaParentExpDate.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblQaParentExpDate.AutoSize = true;
+            this.lblQaParentExpDate.Location = new System.Drawing.Point(679, 36);
+            this.lblQaParentExpDate.Name = "lblQaParentExpDate";
+            this.lblQaParentExpDate.Size = new System.Drawing.Size(112, 17);
+            this.lblQaParentExpDate.TabIndex = 6;
+            this.lblQaParentExpDate.Text = "Parent Exp. Date:";
+            // 
+            // txtQaParentExpDate
+            // 
+            this.txtQaParentExpDate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtQaParentExpDate.Location = new System.Drawing.Point(797, 33);
+            this.txtQaParentExpDate.Name = "txtQaParentExpDate";
+            this.txtQaParentExpDate.ReadOnly = true;
+            this.txtQaParentExpDate.Size = new System.Drawing.Size(478, 25);
+            this.txtQaParentExpDate.TabIndex = 7;
+            // 
             // grpQaAction
             // 
             this.grpQaAction.Controls.Add(this.tlpQaActionControls);
             this.grpQaAction.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.grpQaAction.Location = new System.Drawing.Point(3, 364);
+            this.grpQaAction.Location = new System.Drawing.Point(3, 466);
             this.grpQaAction.Name = "grpQaAction";
             this.grpQaAction.Padding = new System.Windows.Forms.Padding(10);
             this.grpQaAction.Size = new System.Drawing.Size(1298, 174);
@@ -781,9 +912,13 @@ namespace IssuanceApp.UI.Controls
             this.tlpQaActionControls.PerformLayout();
             this.flpQaOptionalControls.ResumeLayout(false);
             this.flpQaActionButtons.ResumeLayout(false);
+            // --- NEW RESUMELAYOUT CALL ---
+            this.grpQaParentBatchInfo.ResumeLayout(false);
+            this.grpQaParentBatchInfo.PerformLayout();
+            this.tlpQaParentBatchInfo.ResumeLayout(false);
+            this.tlpQaParentBatchInfo.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
-
         }
 
         #endregion
@@ -845,5 +980,16 @@ namespace IssuanceApp.UI.Controls
         private System.Windows.Forms.DataGridViewTextBoxColumn colQaRequestedAt;
         private System.Windows.Forms.DataGridViewTextBoxColumn colQaAuthorizedBy;
         private System.Windows.Forms.DataGridViewTextBoxColumn colQaGmActionAt;
+        // --- NEW CONTROL DECLARATIONS ---
+        private System.Windows.Forms.GroupBox grpQaParentBatchInfo;
+        private System.Windows.Forms.TableLayoutPanel tlpQaParentBatchInfo;
+        private System.Windows.Forms.Label lblQaParentBatchNo;
+        private System.Windows.Forms.TextBox txtQaParentBatchNo;
+        private System.Windows.Forms.Label lblQaParentBatchSize;
+        private System.Windows.Forms.TextBox txtQaParentBatchSize;
+        private System.Windows.Forms.Label lblQaParentMfgDate;
+        private System.Windows.Forms.TextBox txtQaParentMfgDate;
+        private System.Windows.Forms.Label lblQaParentExpDate;
+        private System.Windows.Forms.TextBox txtQaParentExpDate;
     }
 }

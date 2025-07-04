@@ -80,6 +80,17 @@ namespace IssuanceApp.UI.Controls
             this.flpGmActionButtons = new System.Windows.Forms.FlowLayoutPanel();
             this.btnGmAuthorize = new IssuanceApp.UI.RoundedButton();
             this.btnGmReject = new IssuanceApp.UI.RoundedButton();
+            // --- NEW CONTROLS DECLARED ---
+            this.grpGmParentBatchInfo = new System.Windows.Forms.GroupBox();
+            this.tlpGmParentBatchInfo = new System.Windows.Forms.TableLayoutPanel();
+            this.lblGmParentBatchNo = new System.Windows.Forms.Label();
+            this.txtGmParentBatchNo = new System.Windows.Forms.TextBox();
+            this.lblGmParentBatchSize = new System.Windows.Forms.Label();
+            this.txtGmParentBatchSize = new System.Windows.Forms.TextBox();
+            this.lblGmParentMfgDate = new System.Windows.Forms.Label();
+            this.txtGmParentMfgDate = new System.Windows.Forms.TextBox();
+            this.lblGmParentExpDate = new System.Windows.Forms.Label();
+            this.txtGmParentExpDate = new System.Windows.Forms.TextBox();
             this.tlpGmOperationsMain.SuspendLayout();
             this.pnlGmTopSection.SuspendLayout();
             this.tlpGmTopControls.SuspendLayout();
@@ -91,6 +102,9 @@ namespace IssuanceApp.UI.Controls
             this.grpGmAction.SuspendLayout();
             this.tlpGmActionControls.SuspendLayout();
             this.flpGmActionButtons.SuspendLayout();
+            // --- NEW SUSPENDLAYOUT CALL ---
+            this.grpGmParentBatchInfo.SuspendLayout();
+            this.tlpGmParentBatchInfo.SuspendLayout();
             this.SuspendLayout();
             // 
             // tlpGmOperationsMain
@@ -255,11 +269,13 @@ namespace IssuanceApp.UI.Controls
             this.tlpGmBottomSection.ColumnCount = 1;
             this.tlpGmBottomSection.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tlpGmBottomSection.Controls.Add(this.grpGmSelectedRequest, 0, 0);
-            this.tlpGmBottomSection.Controls.Add(this.grpGmAction, 0, 1);
+            this.tlpGmBottomSection.Controls.Add(this.grpGmParentBatchInfo, 0, 1);
+            this.tlpGmBottomSection.Controls.Add(this.grpGmAction, 0, 2);
             this.tlpGmBottomSection.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tlpGmBottomSection.Location = new System.Drawing.Point(13, 263);
             this.tlpGmBottomSection.Name = "tlpGmBottomSection";
-            this.tlpGmBottomSection.RowCount = 2;
+            this.tlpGmBottomSection.RowCount = 3;
+            this.tlpGmBottomSection.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpGmBottomSection.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpGmBottomSection.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 140F));
             this.tlpGmBottomSection.Size = new System.Drawing.Size(1287, 430);
@@ -578,11 +594,126 @@ namespace IssuanceApp.UI.Controls
             this.txtGmDetailRequesterComments.Size = new System.Drawing.Size(1105, 44);
             this.txtGmDetailRequesterComments.TabIndex = 25;
             // 
+            // grpGmParentBatchInfo
+            // 
+            this.grpGmParentBatchInfo.AutoSize = true;
+            this.grpGmParentBatchInfo.Controls.Add(this.tlpGmParentBatchInfo);
+            this.grpGmParentBatchInfo.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.grpGmParentBatchInfo.Location = new System.Drawing.Point(3, 293);
+            this.grpGmParentBatchInfo.Name = "grpGmParentBatchInfo";
+            this.grpGmParentBatchInfo.Padding = new System.Windows.Forms.Padding(10);
+            this.grpGmParentBatchInfo.Size = new System.Drawing.Size(1281, 96);
+            this.grpGmParentBatchInfo.TabIndex = 2;
+            this.grpGmParentBatchInfo.TabStop = false;
+            this.grpGmParentBatchInfo.Text = "Parent Batch Information";
+            this.grpGmParentBatchInfo.Visible = false;
+            // 
+            // tlpGmParentBatchInfo
+            // 
+            this.tlpGmParentBatchInfo.AutoSize = true;
+            this.tlpGmParentBatchInfo.ColumnCount = 4;
+            this.tlpGmParentBatchInfo.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 150F));
+            this.tlpGmParentBatchInfo.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tlpGmParentBatchInfo.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 150F));
+            this.tlpGmParentBatchInfo.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tlpGmParentBatchInfo.Controls.Add(this.lblGmParentBatchNo, 0, 0);
+            this.tlpGmParentBatchInfo.Controls.Add(this.txtGmParentBatchNo, 1, 0);
+            this.tlpGmParentBatchInfo.Controls.Add(this.lblGmParentBatchSize, 2, 0);
+            this.tlpGmParentBatchInfo.Controls.Add(this.txtGmParentBatchSize, 3, 0);
+            this.tlpGmParentBatchInfo.Controls.Add(this.lblGmParentMfgDate, 0, 1);
+            this.tlpGmParentBatchInfo.Controls.Add(this.txtGmParentMfgDate, 1, 1);
+            this.tlpGmParentBatchInfo.Controls.Add(this.lblGmParentExpDate, 2, 1);
+            this.tlpGmParentBatchInfo.Controls.Add(this.txtGmParentExpDate, 3, 1);
+            this.tlpGmParentBatchInfo.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tlpGmParentBatchInfo.Location = new System.Drawing.Point(10, 28);
+            this.tlpGmParentBatchInfo.Name = "tlpGmParentBatchInfo";
+            this.tlpGmParentBatchInfo.RowCount = 2;
+            this.tlpGmParentBatchInfo.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tlpGmParentBatchInfo.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tlpGmParentBatchInfo.Size = new System.Drawing.Size(1261, 58);
+            this.tlpGmParentBatchInfo.TabIndex = 0;
+            // 
+            // lblGmParentBatchNo
+            // 
+            this.lblGmParentBatchNo.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblGmParentBatchNo.AutoSize = true;
+            this.lblGmParentBatchNo.Location = new System.Drawing.Point(33, 6);
+            this.lblGmParentBatchNo.Name = "lblGmParentBatchNo";
+            this.lblGmParentBatchNo.Size = new System.Drawing.Size(114, 17);
+            this.lblGmParentBatchNo.TabIndex = 0;
+            this.lblGmParentBatchNo.Text = "Parent Batch No.:";
+            // 
+            // txtGmParentBatchNo
+            // 
+            this.txtGmParentBatchNo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtGmParentBatchNo.Location = new System.Drawing.Point(153, 3);
+            this.txtGmParentBatchNo.Name = "txtGmParentBatchNo";
+            this.txtGmParentBatchNo.ReadOnly = true;
+            this.txtGmParentBatchNo.Size = new System.Drawing.Size(474, 25);
+            this.txtGmParentBatchNo.TabIndex = 1;
+            // 
+            // lblGmParentBatchSize
+            // 
+            this.lblGmParentBatchSize.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblGmParentBatchSize.AutoSize = true;
+            this.lblGmParentBatchSize.Location = new System.Drawing.Point(661, 6);
+            this.lblGmParentBatchSize.Name = "lblGmParentBatchSize";
+            this.lblGmParentBatchSize.Size = new System.Drawing.Size(116, 17);
+            this.lblGmParentBatchSize.TabIndex = 2;
+            this.lblGmParentBatchSize.Text = "Parent Batch Size:";
+            // 
+            // txtGmParentBatchSize
+            // 
+            this.txtGmParentBatchSize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtGmParentBatchSize.Location = new System.Drawing.Point(783, 3);
+            this.txtGmParentBatchSize.Name = "txtGmParentBatchSize";
+            this.txtGmParentBatchSize.ReadOnly = true;
+            this.txtGmParentBatchSize.Size = new System.Drawing.Size(475, 25);
+            this.txtGmParentBatchSize.TabIndex = 3;
+            // 
+            // lblGmParentMfgDate
+            // 
+            this.lblGmParentMfgDate.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblGmParentMfgDate.AutoSize = true;
+            this.lblGmParentMfgDate.Location = new System.Drawing.Point(33, 36);
+            this.lblGmParentMfgDate.Name = "lblGmParentMfgDate";
+            this.lblGmParentMfgDate.Size = new System.Drawing.Size(114, 17);
+            this.lblGmParentMfgDate.TabIndex = 4;
+            this.lblGmParentMfgDate.Text = "Parent Mfg. Date:";
+            // 
+            // txtGmParentMfgDate
+            // 
+            this.txtGmParentMfgDate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtGmParentMfgDate.Location = new System.Drawing.Point(153, 33);
+            this.txtGmParentMfgDate.Name = "txtGmParentMfgDate";
+            this.txtGmParentMfgDate.ReadOnly = true;
+            this.txtGmParentMfgDate.Size = new System.Drawing.Size(474, 25);
+            this.txtGmParentMfgDate.TabIndex = 5;
+            // 
+            // lblGmParentExpDate
+            // 
+            this.lblGmParentExpDate.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblGmParentExpDate.AutoSize = true;
+            this.lblGmParentExpDate.Location = new System.Drawing.Point(665, 36);
+            this.lblGmParentExpDate.Name = "lblGmParentExpDate";
+            this.lblGmParentExpDate.Size = new System.Drawing.Size(112, 17);
+            this.lblGmParentExpDate.TabIndex = 6;
+            this.lblGmParentExpDate.Text = "Parent Exp. Date:";
+            // 
+            // txtGmParentExpDate
+            // 
+            this.txtGmParentExpDate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtGmParentExpDate.Location = new System.Drawing.Point(783, 33);
+            this.txtGmParentExpDate.Name = "txtGmParentExpDate";
+            this.txtGmParentExpDate.ReadOnly = true;
+            this.txtGmParentExpDate.Size = new System.Drawing.Size(475, 25);
+            this.txtGmParentExpDate.TabIndex = 7;
+            // 
             // grpGmAction
             // 
             this.grpGmAction.Controls.Add(this.tlpGmActionControls);
             this.grpGmAction.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.grpGmAction.Location = new System.Drawing.Point(3, 293);
+            this.grpGmAction.Location = new System.Drawing.Point(3, 395);
             this.grpGmAction.Name = "grpGmAction";
             this.grpGmAction.Padding = new System.Windows.Forms.Padding(10);
             this.grpGmAction.Size = new System.Drawing.Size(1281, 134);
@@ -688,9 +819,13 @@ namespace IssuanceApp.UI.Controls
             this.tlpGmActionControls.ResumeLayout(false);
             this.tlpGmActionControls.PerformLayout();
             this.flpGmActionButtons.ResumeLayout(false);
+            // --- NEW RESUMELAYOUT CALL ---
+            this.grpGmParentBatchInfo.ResumeLayout(false);
+            this.grpGmParentBatchInfo.PerformLayout();
+            this.tlpGmParentBatchInfo.ResumeLayout(false);
+            this.tlpGmParentBatchInfo.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
-
         }
 
         #endregion
@@ -744,5 +879,16 @@ namespace IssuanceApp.UI.Controls
         private System.Windows.Forms.DataGridViewTextBoxColumn colGmDocTypes;
         private System.Windows.Forms.DataGridViewTextBoxColumn colGmPreparedBy;
         private System.Windows.Forms.DataGridViewTextBoxColumn colGmRequestedAt;
+        // --- NEW CONTROL DECLARATIONS ---
+        private System.Windows.Forms.GroupBox grpGmParentBatchInfo;
+        private System.Windows.Forms.TableLayoutPanel tlpGmParentBatchInfo;
+        private System.Windows.Forms.Label lblGmParentBatchNo;
+        private System.Windows.Forms.TextBox txtGmParentBatchNo;
+        private System.Windows.Forms.Label lblGmParentBatchSize;
+        private System.Windows.Forms.TextBox txtGmParentBatchSize;
+        private System.Windows.Forms.Label lblGmParentMfgDate;
+        private System.Windows.Forms.TextBox txtGmParentMfgDate;
+        private System.Windows.Forms.Label lblGmParentExpDate;
+        private System.Windows.Forms.TextBox txtGmParentExpDate;
     }
 }

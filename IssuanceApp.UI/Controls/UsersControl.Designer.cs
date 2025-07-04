@@ -179,16 +179,14 @@ namespace IssuanceApp.UI.Controls
             this.tlpManageRole.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tlpManageRole.Controls.Add(this.lblRoleNameManage, 0, 0);
             this.tlpManageRole.Controls.Add(this.txtRoleNameManage, 1, 0);
-            // BUG FIX: Added the button directly to the TableLayoutPanel in its own row.
             this.tlpManageRole.Controls.Add(this.btnResetPassword, 0, 1);
-            this.tlpManageRole.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tlpManageRole.Dock = System.Windows.Forms.DockStyle.Top;
             this.tlpManageRole.Location = new System.Drawing.Point(10, 28);
             this.tlpManageRole.Name = "tlpManageRole";
-            this.tlpManageRole.RowCount = 3; // Added a third row for spacing
+            this.tlpManageRole.RowCount = 2;
             this.tlpManageRole.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
             this.tlpManageRole.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 45F));
-            this.tlpManageRole.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpManageRole.Size = new System.Drawing.Size(812, 513);
+            this.tlpManageRole.Size = new System.Drawing.Size(812, 80);
             this.tlpManageRole.TabIndex = 0;
             // 
             // lblRoleNameManage
@@ -212,15 +210,13 @@ namespace IssuanceApp.UI.Controls
             // 
             // btnResetPassword
             // 
-            // BUG FIX: Removed the unnecessary FlowLayoutPanel and set ColumnSpan.
             this.tlpManageRole.SetColumnSpan(this.btnResetPassword, 2);
             this.btnResetPassword.CornerRadius = 8;
-            this.btnResetPassword.Enabled = false;
             this.btnResetPassword.Font = new System.Drawing.Font("Segoe UI Semibold", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnResetPassword.Location = new System.Drawing.Point(3, 38);
             this.btnResetPassword.Name = "btnResetPassword";
             this.btnResetPassword.Size = new System.Drawing.Size(140, 35);
-            this.btnResetPassword.TabIndex = 1;
+            this.btnResetPassword.TabIndex = 2;
             this.btnResetPassword.Text = "Reset Password";
             this.btnResetPassword.UseVisualStyleBackColor = true;
             // 
