@@ -19,6 +19,7 @@ namespace IssuanceApp.UI.Controls
         public PasswordInputDialog(string roleName) : this()
         {
             this.Text = $"Reset Password for '{roleName}'";
+            // --- FIX: This line connects the OK button to its click-handling code ---
             this.btnOk.Click += new System.EventHandler(this.btnOk_Click);
         }
 
@@ -44,6 +45,7 @@ namespace IssuanceApp.UI.Controls
             this.Close();
         }
 
+        // This handler is already correctly wired by the designer for the Cancel button
         private void btnCancel_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.Cancel;
