@@ -33,6 +33,7 @@ namespace IssuanceApp.Data
         public string ParentBatchSize { get; set; }
         public string ParentMfgDate { get; set; }
         public string ParentExpDate { get; set; }
+        public string FromDepartment { get; set; }
     }
 
     public class IssuanceRequestData

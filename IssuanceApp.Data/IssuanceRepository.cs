@@ -217,10 +217,9 @@ namespace IssuanceApp.Data
             if (keys == null || !keys.Any()) { return new List<AuditTrailEntry>(); }
 
             string sql = @"
-                SELECT i.IssuanceID, i.RequestNo, i.RequestDate, i.Product, i.DocumentNo, t.PreparedBy, t.RequestedAt, t.RequestComment,
+                SELECT i.IssuanceID, i.RequestNo, i.RequestDate, i.Product, i.DocumentNo, t.PreparedBy, i.FromDepartment, t.RequestedAt, t.RequestComment,
                        t.GmOperationsAction, t.AuthorizedBy, t.GmOperationsAt, t.GmOperationsComment,
                        t.QAAction, t.ApprovedBy, t.QAAt, t.QAComment,
-                       -- ADDED --
                        i.ParentBatchNumber, i.ParentBatchSize, i.ParentMfgDate, i.ParentExpDate,
                     CASE 
                         WHEN t.QAAction = @ActionRejected THEN 'Rejected by QA'
