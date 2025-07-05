@@ -125,6 +125,7 @@ namespace IssuanceApp.UI.Controls
             txtQaDetailPreparedBy.Text = request.PreparedBy;
             txtQaDetailRequestedAt.Text = request.RequestedAt.ToString("dd-MMM-yyyy HH:mm");
             txtQaDetailGmActionTime.Text = request.GmActionAt.ToString("dd-MMM-yyyy HH:mm");
+            txtQaDetailGmActionTime.Text = request.GmOperationsAt.ToString("dd-MMM-yyyy HH:mm");
             txtQaDetailFromDept.Text = request.FromDepartment;
             txtQaDetailBatchNo.Text = request.BatchNo;
             txtQaDetailMfgDate.Text = request.ItemMfgDate;
