@@ -68,7 +68,8 @@ namespace IssuanceApp.UI.Controls
             dgvQaQueue.Columns.Add(new DataGridViewTextBoxColumn { Name = "colQaPreparedBy", DataPropertyName = nameof(QaQueueItemDto.PreparedBy), HeaderText = "Prepared By", FillWeight = 10 });
             dgvQaQueue.Columns.Add(new DataGridViewTextBoxColumn { Name = "colQaRequestedAt", DataPropertyName = nameof(QaQueueItemDto.RequestedAt), HeaderText = "Requested At", DefaultCellStyle = new DataGridViewCellStyle { Format = "dd-MMM-yyyy HH:mm" }, FillWeight = 15 });
             dgvQaQueue.Columns.Add(new DataGridViewTextBoxColumn { Name = "colQaAuthorizedBy", DataPropertyName = nameof(QaQueueItemDto.AuthorizedBy), HeaderText = "Authorized By (GM)", FillWeight = 10 });
-            dgvQaQueue.Columns.Add(new DataGridViewTextBoxColumn { Name = "colQaGmActionAt", DataPropertyName = nameof(QaQueueItemDto.GmActionAt), HeaderText = "GM Action At", DefaultCellStyle = new DataGridViewCellStyle { Format = "dd-MMM-yyyy HH:mm" }, FillWeight = 15 });
+            // --- FIX: Updated DataPropertyName to match the corrected model ---
+            dgvQaQueue.Columns.Add(new DataGridViewTextBoxColumn { Name = "colQaGmActionAt", DataPropertyName = nameof(QaQueueItemDto.GmOperationsAt), HeaderText = "GM Action At", DefaultCellStyle = new DataGridViewCellStyle { Format = "dd-MMM-yyyy HH:mm" }, FillWeight = 15 });
         }
 
         public async Task LoadPendingQueueAsync()
@@ -124,7 +125,7 @@ namespace IssuanceApp.UI.Controls
             txtQaDetailDocTypes.Text = request.DocumentNo;
             txtQaDetailPreparedBy.Text = request.PreparedBy;
             txtQaDetailRequestedAt.Text = request.RequestedAt.ToString("dd-MMM-yyyy HH:mm");
-            txtQaDetailGmActionTime.Text = request.GmActionAt.ToString("dd-MMM-yyyy HH:mm");
+            // --- FIX: Updated property name to match the corrected model ---
             txtQaDetailGmActionTime.Text = request.GmOperationsAt.ToString("dd-MMM-yyyy HH:mm");
             txtQaDetailFromDept.Text = request.FromDepartment;
             txtQaDetailBatchNo.Text = request.BatchNo;

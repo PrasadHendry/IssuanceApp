@@ -89,7 +89,7 @@ namespace IssuanceApp.Data
         public string PreparedBy { get; set; }
         public DateTime RequestedAt { get; set; }
         public string AuthorizedBy { get; set; }
-        public DateTime GmActionAt { get; set; }
+        public DateTime GmOperationsAt { get; set; }
         public string FromDepartment { get; set; }
         public string BatchNo { get; set; }
         public string ItemMfgDate { get; set; }
