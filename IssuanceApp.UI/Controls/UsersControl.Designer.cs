@@ -30,67 +30,48 @@ namespace IssuanceApp.UI.Controls
         private void InitializeComponent()
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            this.scUsersMain = new System.Windows.Forms.SplitContainer();
+            this.pnlLeft = new System.Windows.Forms.Panel();
             this.dgvUserRoles = new System.Windows.Forms.DataGridView();
             this.colUserRoleId = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colUserRoleName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tlpUserRolesHeader = new System.Windows.Forms.TableLayoutPanel();
             this.lblApplicationRoles = new System.Windows.Forms.Label();
             this.btnRefreshUserRoles = new IssuanceApp.UI.RoundedButton();
+            this.pnlRight = new System.Windows.Forms.Panel();
             this.grpManageRole = new System.Windows.Forms.GroupBox();
             this.tlpManageRole = new System.Windows.Forms.TableLayoutPanel();
             this.lblRoleNameManage = new System.Windows.Forms.Label();
             this.txtRoleNameManage = new System.Windows.Forms.TextBox();
             this.btnResetPassword = new IssuanceApp.UI.RoundedButton();
-            ((System.ComponentModel.ISupportInitialize)(this.scUsersMain)).BeginInit();
-            this.scUsersMain.Panel1.SuspendLayout();
-            this.scUsersMain.Panel2.SuspendLayout();
-            this.scUsersMain.SuspendLayout();
+            this.pnlLeft.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvUserRoles)).BeginInit();
             this.tlpUserRolesHeader.SuspendLayout();
+            this.pnlRight.SuspendLayout();
             this.grpManageRole.SuspendLayout();
             this.tlpManageRole.SuspendLayout();
             this.SuspendLayout();
             // 
-            // scUsersMain
+            // pnlLeft
             // 
-            this.scUsersMain.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.scUsersMain.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.scUsersMain.Location = new System.Drawing.Point(10, 10);
-            this.scUsersMain.Name = "scUsersMain";
-            // 
-            // scUsersMain.Panel1
-            // 
-            this.scUsersMain.Panel1.Controls.Add(this.dgvUserRoles);
-            this.scUsersMain.Panel1.Controls.Add(this.tlpUserRolesHeader);
-            this.scUsersMain.Panel1.Padding = new System.Windows.Forms.Padding(5);
-            // 
-            // scUsersMain.Panel2
-            // 
-            this.scUsersMain.Panel2.Controls.Add(this.grpManageRole);
-            this.scUsersMain.Panel2.Padding = new System.Windows.Forms.Padding(5);
-            this.scUsersMain.Size = new System.Drawing.Size(1293, 561);
-            this.scUsersMain.SplitterDistance = 450;
-            this.scUsersMain.SplitterWidth = 1;
-            this.scUsersMain.TabIndex = 1;
+            this.pnlLeft.Controls.Add(this.dgvUserRoles);
+            this.pnlLeft.Controls.Add(this.tlpUserRolesHeader);
+            this.pnlLeft.Dock = System.Windows.Forms.DockStyle.Left;
+            this.pnlLeft.Location = new System.Drawing.Point(10, 10);
+            this.pnlLeft.Name = "pnlLeft";
+            this.pnlLeft.Padding = new System.Windows.Forms.Padding(5);
+            this.pnlLeft.Size = new System.Drawing.Size(450, 561);
+            this.pnlLeft.TabIndex = 0;
             // 
             // dgvUserRoles
             // 
             this.dgvUserRoles.AllowUserToAddRows = false;
             this.dgvUserRoles.AllowUserToDeleteRows = false;
             this.dgvUserRoles.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.dgvUserRoles.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.DisplayedCells;
             this.dgvUserRoles.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvUserRoles.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colUserRoleId,
             this.colUserRoleName});
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
             dataGridViewCellStyle1.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.dgvUserRoles.DefaultCellStyle = dataGridViewCellStyle1;
             this.dgvUserRoles.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgvUserRoles.Location = new System.Drawing.Point(5, 40);
@@ -107,7 +88,6 @@ namespace IssuanceApp.UI.Controls
             this.colUserRoleId.DataPropertyName = "RoleID";
             this.colUserRoleId.FillWeight = 50F;
             this.colUserRoleId.HeaderText = "Role ID";
-            this.colUserRoleId.MinimumWidth = 6;
             this.colUserRoleId.Name = "colUserRoleId";
             this.colUserRoleId.ReadOnly = true;
             // 
@@ -116,7 +96,6 @@ namespace IssuanceApp.UI.Controls
             this.colUserRoleName.DataPropertyName = "RoleName";
             this.colUserRoleName.FillWeight = 150F;
             this.colUserRoleName.HeaderText = "Role Name";
-            this.colUserRoleName.MinimumWidth = 6;
             this.colUserRoleName.Name = "colUserRoleName";
             this.colUserRoleName.ReadOnly = true;
             // 
@@ -150,15 +129,24 @@ namespace IssuanceApp.UI.Controls
             // 
             this.btnRefreshUserRoles.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnRefreshUserRoles.CornerRadius = 8;
-            this.btnRefreshUserRoles.FlatAppearance.BorderSize = 0;
             this.btnRefreshUserRoles.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnRefreshUserRoles.Font = new System.Drawing.Font("Segoe UI Semibold", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnRefreshUserRoles.Font = new System.Drawing.Font("Segoe UI Semibold", 10.2F, System.Drawing.FontStyle.Bold);
             this.btnRefreshUserRoles.Location = new System.Drawing.Point(322, 3);
             this.btnRefreshUserRoles.Name = "btnRefreshUserRoles";
             this.btnRefreshUserRoles.Size = new System.Drawing.Size(115, 29);
             this.btnRefreshUserRoles.TabIndex = 1;
             this.btnRefreshUserRoles.Text = "Refresh List";
             this.btnRefreshUserRoles.UseVisualStyleBackColor = true;
+            // 
+            // pnlRight
+            // 
+            this.pnlRight.Controls.Add(this.grpManageRole);
+            this.pnlRight.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlRight.Location = new System.Drawing.Point(460, 10);
+            this.pnlRight.Name = "pnlRight";
+            this.pnlRight.Padding = new System.Windows.Forms.Padding(5);
+            this.pnlRight.Size = new System.Drawing.Size(843, 561);
+            this.pnlRight.TabIndex = 1;
             // 
             // grpManageRole
             // 
@@ -167,7 +155,7 @@ namespace IssuanceApp.UI.Controls
             this.grpManageRole.Location = new System.Drawing.Point(5, 5);
             this.grpManageRole.Name = "grpManageRole";
             this.grpManageRole.Padding = new System.Windows.Forms.Padding(10);
-            this.grpManageRole.Size = new System.Drawing.Size(832, 551);
+            this.grpManageRole.Size = new System.Drawing.Size(833, 551);
             this.grpManageRole.TabIndex = 0;
             this.grpManageRole.TabStop = false;
             this.grpManageRole.Text = "Manage Role";
@@ -186,7 +174,7 @@ namespace IssuanceApp.UI.Controls
             this.tlpManageRole.RowCount = 2;
             this.tlpManageRole.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
             this.tlpManageRole.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 45F));
-            this.tlpManageRole.Size = new System.Drawing.Size(812, 80);
+            this.tlpManageRole.Size = new System.Drawing.Size(813, 80);
             this.tlpManageRole.TabIndex = 0;
             // 
             // lblRoleNameManage
@@ -205,14 +193,14 @@ namespace IssuanceApp.UI.Controls
             this.txtRoleNameManage.Location = new System.Drawing.Point(86, 5);
             this.txtRoleNameManage.Name = "txtRoleNameManage";
             this.txtRoleNameManage.ReadOnly = true;
-            this.txtRoleNameManage.Size = new System.Drawing.Size(723, 25);
+            this.txtRoleNameManage.Size = new System.Drawing.Size(724, 25);
             this.txtRoleNameManage.TabIndex = 1;
             // 
             // btnResetPassword
             // 
             this.tlpManageRole.SetColumnSpan(this.btnResetPassword, 2);
             this.btnResetPassword.CornerRadius = 8;
-            this.btnResetPassword.Font = new System.Drawing.Font("Segoe UI Semibold", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnResetPassword.Font = new System.Drawing.Font("Segoe UI Semibold", 10.2F, System.Drawing.FontStyle.Bold);
             this.btnResetPassword.Location = new System.Drawing.Point(3, 38);
             this.btnResetPassword.Name = "btnResetPassword";
             this.btnResetPassword.Size = new System.Drawing.Size(140, 35);
@@ -224,18 +212,17 @@ namespace IssuanceApp.UI.Controls
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.scUsersMain);
+            this.Controls.Add(this.pnlRight);
+            this.Controls.Add(this.pnlLeft);
             this.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
             this.Name = "UsersControl";
             this.Padding = new System.Windows.Forms.Padding(10);
             this.Size = new System.Drawing.Size(1313, 581);
-            this.scUsersMain.Panel1.ResumeLayout(false);
-            this.scUsersMain.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.scUsersMain)).EndInit();
-            this.scUsersMain.ResumeLayout(false);
+            this.pnlLeft.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvUserRoles)).EndInit();
             this.tlpUserRolesHeader.ResumeLayout(false);
             this.tlpUserRolesHeader.PerformLayout();
+            this.pnlRight.ResumeLayout(false);
             this.grpManageRole.ResumeLayout(false);
             this.tlpManageRole.ResumeLayout(false);
             this.tlpManageRole.PerformLayout();
@@ -244,7 +231,6 @@ namespace IssuanceApp.UI.Controls
 
         #endregion
 
-        private System.Windows.Forms.SplitContainer scUsersMain;
         private System.Windows.Forms.DataGridView dgvUserRoles;
         private System.Windows.Forms.DataGridViewTextBoxColumn colUserRoleId;
         private System.Windows.Forms.DataGridViewTextBoxColumn colUserRoleName;
@@ -256,5 +242,7 @@ namespace IssuanceApp.UI.Controls
         private System.Windows.Forms.Label lblRoleNameManage;
         private System.Windows.Forms.TextBox txtRoleNameManage;
         private UI.RoundedButton btnResetPassword;
+        private System.Windows.Forms.Panel pnlLeft;
+        private System.Windows.Forms.Panel pnlRight;
     }
 }
