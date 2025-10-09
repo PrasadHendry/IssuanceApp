@@ -30,7 +30,7 @@ namespace IssuanceApp.UI
             this.FormBorderStyle = FormBorderStyle.Sizable;
 
             InitializeDynamicControls();
-            InitializeUserControls();
+            InitializeUserControls(); // Call here to initialize controls before login
             ApplyPharmaTheme();
 
             this.Text = "Document Issuance System";
@@ -51,10 +51,13 @@ namespace IssuanceApp.UI
             this.loginControl1.LoginAttemptCompleted += LoginControl_LoginAttemptCompleted;
             this.loginControl1.InitializeControl(_repository);
 
+            // Initialize all controls with a placeholder null username
             documentIssuanceControl1.InitializeControl(_repository, null);
             gmOperationsControl1.InitializeControl(_repository, null);
             qaControl1.InitializeControl(_repository, null);
-            auditTrailControl1.InitializeControl(_repository);
+            // --- UPDATED CALL ---
+            auditTrailControl1.InitializeControl(_repository, null);
+            // --- END UPDATED CALL ---
             usersControl1.InitializeControl(_repository);
         }
 
@@ -85,33 +88,40 @@ namespace IssuanceApp.UI
             if (tabControlMain.SelectedTab == null || loggedInRole == null) return;
             string selectedTabName = tabControlMain.SelectedTab.Name;
 
-            if (_loadedTabs.Contains(selectedTabName))
-            {
-                return;
-            }
+            // Note: We don't use _loadedTabs for AuditTrail anymore, as filters can change.
+            // We only use it for controls that only need to load configuration data once.
+            // The logic below ensures data is loaded on first access, but subsequent filter changes
+            // trigger a reload via button clicks/checkbox changes within the control itself.
+
+            bool isFirstLoad = _loadedTabs.Contains(selectedTabName);
 
             if (selectedTabName == ControlNames.TabPageDocumentIssuance)
             {
-                await documentIssuanceControl1.LoadInitialDataAsync();
+                if (!isFirstLoad) await documentIssuanceControl1.LoadInitialDataAsync();
             }
             else if (selectedTabName == ControlNames.TabPageGmOperations)
             {
-                await gmOperationsControl1.LoadPendingQueueAsync();
+                if (!isFirstLoad) await gmOperationsControl1.LoadPendingQueueAsync();
             }
             else if (selectedTabName == ControlNames.TabPageQA)
             {
-                await qaControl1.LoadPendingQueueAsync();
+                if (!isFirstLoad) await qaControl1.LoadPendingQueueAsync();
             }
             else if (selectedTabName == ControlNames.TabPageAuditTrail)
             {
+                // The AuditTrail is designed to always load data when the tab is selected
+                // to respect the current filter settings, so we force a reload.
                 await auditTrailControl1.LoadAuditTrailDataAsync();
             }
             else if (selectedTabName == ControlNames.TabPageUsers)
             {
-                await usersControl1.LoadUserRolesAsync();
+                if (!isFirstLoad) await usersControl1.LoadUserRolesAsync();
             }
 
-            _loadedTabs.Add(selectedTabName);
+            if (!isFirstLoad)
+            {
+                _loadedTabs.Add(selectedTabName);
+            }
         }
 
         private void InitializeDynamicControls()
@@ -162,9 +172,13 @@ namespace IssuanceApp.UI
                     lblCurrentUserHeader.ForeColor = ThemeManager.HeaderTextColor;
                     pnlAppHeader.Visible = true;
 
+                    // Re-initialize controls with the logged-in username
                     documentIssuanceControl1.InitializeControl(_repository, loggedInUserName);
                     gmOperationsControl1.InitializeControl(_repository, loggedInUserName);
                     qaControl1.InitializeControl(_repository, loggedInUserName);
+                    // --- UPDATED CALL ---
+                    auditTrailControl1.InitializeControl(_repository, loggedInUserName);
+                    // --- END UPDATED CALL ---
 
                     _loadedTabs.Clear();
                     EnableTabsBasedOnRole(loggedInRole);
@@ -193,9 +207,16 @@ namespace IssuanceApp.UI
             if (MessageBox.Show("Are you sure you want to sign out?", "Confirm Sign Out", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 loggedInRole = null;
+                loggedInUserName = null; // Clear the username on sign out
                 loginControl1.Reset();
                 pnlAppHeader.Visible = false;
                 UpdateStatusBarForSignOut();
+
+                // Re-initialize controls with null username
+                documentIssuanceControl1.InitializeControl(_repository, null);
+                gmOperationsControl1.InitializeControl(_repository, null);
+                qaControl1.InitializeControl(_repository, null);
+                auditTrailControl1.InitializeControl(_repository, null);
 
                 _loadedTabs.Clear();
 

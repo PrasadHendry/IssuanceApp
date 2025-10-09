@@ -8,7 +8,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.Data.SqlClient;
-// REFINEMENT: Added using static directive to simplify access to AppConstants members.
 using static IssuanceApp.Data.AppConstants;
 
 namespace IssuanceApp.Data
@@ -169,7 +168,18 @@ namespace IssuanceApp.Data
         #endregion
 
         #region Audit Trail
-        public async Task<List<int>> GetAuditTrailKeysAsync(DateTime from, DateTime to, string status, string requestNo, string product, string sortColumn, System.Windows.Forms.SortOrder sortOrder, CancellationToken token)
+        // --- UPDATED SIGNATURE FOR NEW FILTERS ---
+        public async Task<List<int>> GetAuditTrailKeysAsync(
+            DateTime from,
+            DateTime to,
+            string status,
+            string requestNo,
+            string product,
+            string sortColumn,
+            System.Windows.Forms.SortOrder sortOrder,
+            bool ignoreDateFilter, // New: Ignore Date Filter
+            string preparedByFilter, // New: Filter by PreparedBy (Logged-in User)
+            CancellationToken token)
         {
             var sqlBuilder = new StringBuilder(@"
                 WITH AuditData AS (
@@ -182,17 +192,32 @@ namespace IssuanceApp.Data
                             ELSE 'Pending GM Approval'
                         END AS DerivedStatus
                     FROM dbo.Doc_Issuance i JOIN dbo.Issuance_Tracker t ON i.IssuanceID = t.IssuanceID
-                    WHERE i.RequestDate BETWEEN @FromDate AND @ToDate
-                )
-                SELECT IssuanceID FROM AuditData
-                WHERE 1=1 ");
+                    WHERE 1=1 "); // Use 1=1 for flexible WHERE clause
 
             var parameters = new DynamicParameters();
-            parameters.Add("@FromDate", from.Date);
-            parameters.Add("@ToDate", to.Date);
             parameters.Add("@ActionRejected", ActionRejected);
             parameters.Add("@ActionApproved", ActionApproved);
             parameters.Add("@ActionAuthorized", ActionAuthorized);
+
+            // --- DATE FILTER LOGIC ---
+            if (!ignoreDateFilter)
+            {
+                sqlBuilder.Append("AND i.RequestDate BETWEEN @FromDate AND @ToDate ");
+                parameters.Add("@FromDate", from.Date);
+                parameters.Add("@ToDate", to.Date);
+            }
+            // --- END DATE FILTER LOGIC ---
+
+            sqlBuilder.Append(") SELECT IssuanceID FROM AuditData WHERE 1=1 ");
+
+            // --- USER FILTER LOGIC ---
+            if (!string.IsNullOrWhiteSpace(preparedByFilter))
+            {
+                sqlBuilder.Append("AND PreparedBy = @PreparedByFilter ");
+                parameters.Add("@PreparedByFilter", preparedByFilter);
+            }
+            // --- END USER FILTER LOGIC ---
+
 
             if (status != "All") { sqlBuilder.Append("AND DerivedStatus = @Status "); parameters.Add("@Status", status); }
             if (!string.IsNullOrWhiteSpace(requestNo)) { sqlBuilder.Append("AND RequestNo LIKE @RequestNo "); parameters.Add("@RequestNo", $"%{requestNo.Trim()}%"); }

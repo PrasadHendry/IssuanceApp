@@ -23,6 +23,9 @@ namespace IssuanceApp.UI.Controls
 
         private CancellationTokenSource _dataLoadCts = new CancellationTokenSource();
 
+        // --- ADDED FIELD ---
+        private string _loggedInUserName;
+
         public AuditTrailControl()
         {
             InitializeComponent();
@@ -34,9 +37,11 @@ namespace IssuanceApp.UI.Controls
             ThemeManager.StyleDataGridView(dgvAuditTrail);
         }
 
-        public void InitializeControl(IssuanceRepository repository)
+        // --- UPDATED SIGNATURE ---
+        public void InitializeControl(IssuanceRepository repository, string loggedInUserName)
         {
             _repository = repository;
+            _loggedInUserName = loggedInUserName; // Store the logged-in user name
             _auditTrailDataCache = new Dictionary<int, AuditTrailEntry>();
             _pagesBeingFetched = new HashSet<int>();
 
@@ -49,6 +54,11 @@ namespace IssuanceApp.UI.Controls
             dgvAuditTrail.AutoGenerateColumns = false;
             dgvAuditTrail.VirtualMode = true;
             SetupAuditTrailColumns();
+
+            // --- ADDED EVENT HANDLERS FOR NEW CHECKBOXES ---
+            chkIgnoreDateFilter.CheckedChanged += async (s, e) => await LoadAuditTrailDataAsync();
+            chkFilterByCurrentUser.CheckedChanged += async (s, e) => await LoadAuditTrailDataAsync();
+            // --- END ADDED EVENT HANDLERS ---
 
             dgvAuditTrail.CellValueNeeded += DgvAuditTrail_CellValueNeeded;
             dgvAuditTrail.ColumnHeaderMouseClick += DgvAuditTrail_ColumnHeaderMouseClick;
@@ -115,9 +125,23 @@ namespace IssuanceApp.UI.Controls
 
                 string dbSortColumn = _auditSortColumn;
 
+                // Determine filter parameters
+                bool ignoreDate = chkIgnoreDateFilter.Checked;
+                string userFilter = chkFilterByCurrentUser.Checked ? _loggedInUserName : null;
+
+                // --- UPDATED CALL TO REPOSITORY WITH NEW PARAMETERS ---
                 _auditTrailKeyCache = await _repository.GetAuditTrailKeysAsync(
-                    dtpAuditFrom.Value, dtpAuditTo.Value, cmbAuditStatus.SelectedItem.ToString(),
-                    txtAuditRequestNo.Text, txtAuditProduct.Text, dbSortColumn, _auditSortOrder, token);
+                    dtpAuditFrom.Value,
+                    dtpAuditTo.Value,
+                    cmbAuditStatus.SelectedItem.ToString(),
+                    txtAuditRequestNo.Text,
+                    txtAuditProduct.Text,
+                    dbSortColumn,
+                    _auditSortOrder,
+                    ignoreDate, // New parameter
+                    userFilter, // New parameter
+                    token);
+                // --- END UPDATED CALL ---
 
                 token.ThrowIfCancellationRequested();
 
@@ -243,6 +267,11 @@ namespace IssuanceApp.UI.Controls
             cmbAuditStatus.SelectedIndex = 0;
             txtAuditRequestNo.Clear();
             txtAuditProduct.Clear();
+
+            // --- ADDED: Clear new filters ---
+            chkIgnoreDateFilter.Checked = false;
+            chkFilterByCurrentUser.Checked = false;
+            // --- END ADDED ---
 
             _auditSortColumn = nameof(AuditTrailEntry.RequestNo);
             _auditSortOrder = SortOrder.Descending;
