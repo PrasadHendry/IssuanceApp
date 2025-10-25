@@ -34,25 +34,59 @@ namespace IssuanceApp.UI.Controls
             cmbRole.Items.Clear();
             btnLogin.Enabled = false;
             this.Cursor = Cursors.WaitCursor;
+
             try
             {
-                List<string> roleNames = await _repository.GetRoleNamesAsync();
-                cmbRole.Items.AddRange(roleNames.ToArray());
-                SetDefaultRole(); // REFINEMENT: Call helper method to set default selection.
+                // Await the task where the database call and detailed error handling occurs
+                await LoadRolesFromDatabaseAsync();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                MessageBox.Show("Could not load user roles from the database.\n" + ex.Message, "Fatal Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-                // Disable login if roles can't be loaded
-                btnLogin.Enabled = false;
-                lblLoginStatus.Text = "Database connection failed.";
-                lblLoginStatus.ForeColor = Color.Red;
-                return;
+                // Catching the exception here but relying on LoadRolesFromDatabaseAsync
+                // to have already shown the user a detailed error message.
             }
             finally
             {
                 this.Cursor = Cursors.Default;
-                btnLogin.Enabled = true;
+                // Only enable the button if roles were successfully loaded
+                btnLogin.Enabled = cmbRole.Items.Count > 0;
+            }
+        }
+
+        /// <summary>
+        /// Loads user roles from the database asynchronously with explicit error reporting on the UI thread.
+        /// </summary>
+        private async Task LoadRolesFromDatabaseAsync()
+        {
+            try
+            {
+                List<string> roleNames = await _repository.GetRoleNamesAsync();
+
+                if (this.IsDisposed) return; // Guard against control disposal
+
+                cmbRole.Items.AddRange(roleNames.ToArray());
+                SetDefaultRole(); // Set default selection if roles were loaded
+            }
+            catch (Exception ex)
+            {
+                if (this.IsDisposed) return;
+
+                // CRITICAL ERROR: Database connection failed during role load.
+                string errorMessage = "Could not load user roles from the database. Please check the connection string and database availability.\n\nDetails: " + ex.Message;
+
+                // Use Invoke to ensure the MessageBox and UI updates happen safely on the UI thread
+                this.Invoke(new Action(() =>
+                {
+                    MessageBox.Show(errorMessage, "Database Connection Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+
+                    // Update UI state to reflect failure
+                    btnLogin.Enabled = false;
+                    lblLoginStatus.Text = "Database connection failed.";
+                    lblLoginStatus.ForeColor = Color.Red;
+                }));
+
+                // Re-throw the exception to satisfy the outer try-catch for logging/tracing (optional but good practice)
+                throw;
             }
         }
 
