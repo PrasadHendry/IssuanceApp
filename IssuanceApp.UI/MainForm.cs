@@ -55,7 +55,7 @@ namespace IssuanceApp.UI
             documentIssuanceControl1.InitializeControl(_repository, null);
             gmOperationsControl1.InitializeControl(_repository, null);
             qaControl1.InitializeControl(_repository, null);
-            // --- UPDATED CALL ---
+            // --- UPDATED CALL: Passing null username initially ---
             auditTrailControl1.InitializeControl(_repository, null);
             // --- END UPDATED CALL ---
             usersControl1.InitializeControl(_repository);
@@ -87,11 +87,6 @@ namespace IssuanceApp.UI
         {
             if (tabControlMain.SelectedTab == null || loggedInRole == null) return;
             string selectedTabName = tabControlMain.SelectedTab.Name;
-
-            // Note: We don't use _loadedTabs for AuditTrail anymore, as filters can change.
-            // We only use it for controls that only need to load configuration data once.
-            // The logic below ensures data is loaded on first access, but subsequent filter changes
-            // trigger a reload via button clicks/checkbox changes within the control itself.
 
             bool isFirstLoad = _loadedTabs.Contains(selectedTabName);
 
@@ -176,7 +171,7 @@ namespace IssuanceApp.UI
                     documentIssuanceControl1.InitializeControl(_repository, loggedInUserName);
                     gmOperationsControl1.InitializeControl(_repository, loggedInUserName);
                     qaControl1.InitializeControl(_repository, loggedInUserName);
-                    // --- UPDATED CALL ---
+                    // --- UPDATED CALL: Passing loggedInUserName ---
                     auditTrailControl1.InitializeControl(_repository, loggedInUserName);
                     // --- END UPDATED CALL ---
 

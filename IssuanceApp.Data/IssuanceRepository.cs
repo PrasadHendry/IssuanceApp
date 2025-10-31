@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.Data.SqlClient;
+// REFINEMENT: Added using static directive to simplify access to AppConstants members.
 using static IssuanceApp.Data.AppConstants;
 
 namespace IssuanceApp.Data
@@ -117,7 +118,9 @@ namespace IssuanceApp.Data
                     i.RequestNo, i.RequestDate, i.Product, i.DocumentNo, t.PreparedBy, t.RequestedAt, 
                     t.AuthorizedBy, t.GmOperationsAt, i.FromDepartment, i.BatchNo, i.ItemMfgDate, 
                     i.ItemExpDate, i.Market, i.PackSize, t.RequestComment, t.GmOperationsComment,
-                    -- ADDED --
+                    -- ADDED FOR STAMPING CONTEXT:
+                    t.GmOperationsAction,
+                    -- END ADDED
                     i.ParentBatchNumber, i.ParentBatchSize, i.ParentMfgDate, i.ParentExpDate
                 FROM dbo.Doc_Issuance AS i 
                 JOIN dbo.Issuance_Tracker AS t ON i.IssuanceID = t.IssuanceID

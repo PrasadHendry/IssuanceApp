@@ -3,8 +3,13 @@
 using IssuanceApp.Data;
 using IssuanceApp.UI; // For ThemeManager
 using System;
+using System.Diagnostics;
+using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Linq;
+// NOTE: Removed System.Text.Json to resolve reference errors. Manual JSON is used.
 
 namespace IssuanceApp.UI.Controls
 {
@@ -12,6 +17,8 @@ namespace IssuanceApp.UI.Controls
     {
         private IssuanceRepository _repository;
         private string _loggedInUserName;
+
+        private const string WorkerExeName = "WordProcessorFrameworkPrototype.exe";
 
         public QaControl()
         {
@@ -174,38 +181,153 @@ namespace IssuanceApp.UI.Controls
                 txtQaComment.Focus();
                 return;
             }
-            string requestNo = txtQaDetailRequestNo.Text;
 
+            string requestNo = txtQaDetailRequestNo.Text;
             string message = $"Are you sure you want to {action.ToLower()} request '{requestNo}'?";
 
             if (MessageBox.Show(message, $"Confirm {action}", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 btnQaApprove.Enabled = btnQaReject.Enabled = false;
                 this.Cursor = Cursors.WaitCursor;
+
                 try
                 {
-                    bool success = await _repository.UpdateQaActionAsync(requestNo, action, txtQaComment.Text, _loggedInUserName);
+                    bool success = false;
+
+                    if (action == AppConstants.ActionApproved)
+                    {
+                        // --- INTEGRATION POINT: Fetch DTO, Serialize, and Execute Worker ---
+
+                        // 1. Fetch the full DTO from the selected row
+                        QaQueueItemDto requestDto = dgvQaQueue.SelectedRows[0].DataBoundItem as QaQueueItemDto;
+                        if (requestDto == null) throw new InvalidOperationException("Could not retrieve request data from the queue.");
+
+                        // 2. Set the *final* QA action/user for the stamp footer
+                        requestDto.QAAction = action; // Set the action to 'Approved' (uses the new DTO field)
+                        requestDto.ApprovedBy = _loggedInUserName; // Use logged-in user as the final approver (uses the new DTO field)
+                        requestDto.GmOperationsAction = AppConstants.ActionAuthorized; // Ensure GM Action is set
+
+                        string documentNoList = requestDto.DocumentNo;
+
+                        // 3. Manual JSON Serialization (to avoid System.Text.Json reference issues)
+                        // NOTE: Dates are formatted to be easily parsable by the worker.
+                        string recordJson = $@"{{
+                            ""RequestNo"": ""{requestDto.RequestNo}"",
+                            ""RequestDate"": ""{requestDto.RequestDate:yyyy-MM-dd HH:mm:ss}"",
+                            ""Product"": ""{requestDto.Product}"",
+                            ""DocumentNo"": ""{requestDto.DocumentNo}"",
+                            ""BatchNo"": ""{requestDto.BatchNo}"",
+                            ""PreparedBy"": ""{requestDto.PreparedBy}"",
+                            ""RequestedAt"": ""{requestDto.RequestedAt:yyyy-MM-dd HH:mm:ss}"",
+                            ""AuthorizedBy"": ""{requestDto.AuthorizedBy}"",
+                            ""GmOperationsAt"": ""{requestDto.GmOperationsAt:yyyy-MM-dd HH:mm:ss}"",
+                            ""GmOperationsComment"": ""{requestDto.GmOperationsComment.Replace("\"", "\\\"")}"",
+                            ""GmOperationsAction"": ""{requestDto.GmOperationsAction}"",
+                            ""QAAction"": ""{requestDto.QAAction}"",
+                            ""ApprovedBy"": ""{requestDto.ApprovedBy}"",
+                            ""ItemMfgDate"": ""{requestDto.ItemMfgDate}"",
+                            ""ItemExpDate"": ""{requestDto.ItemExpDate}""
+                        }}";
+
+                        Console.WriteLine($"[QA Control] Approving request {requestNo}. Launching external worker for documents: {documentNoList}");
+
+                        // 4. Pass BOTH the document list and the serialized record (using Base64 for safe CLI transfer)
+                        bool workerSuccess = await ExecuteWordProcessorWorkerAsync(documentNoList, recordJson);
+
+                        if (workerSuccess)
+                        {
+                            // Worker succeeded: Proceed to update status in DB
+                            success = await _repository.UpdateQaActionAsync(requestNo, action, txtQaComment.Text, _loggedInUserName);
+                            if (!success)
+                            {
+                                MessageBox.Show("Database update failed. The request may have been processed by another user.", "Data Stale", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            }
+                        }
+                        else
+                        {
+                            // Worker failed: Do NOT update DB status. Keep as 'Pending QA Approval'.
+                            MessageBox.Show($"Document processing failed for request '{requestNo}'. The request status remains 'Pending QA Approval'. See logs for details.", "Processing Failure", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            success = false;
+                        }
+                    }
+                    else
+                    {
+                        // Rejection: Directly update DB status
+                        success = await _repository.UpdateQaActionAsync(requestNo, action, txtQaComment.Text, _loggedInUserName);
+                    }
+
+                    // Final UI Update
                     if (success)
                     {
                         string successMessage = $"Request '{requestNo}' has been {action.ToLower()}ed successfully.";
                         MessageBox.Show(successMessage, "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        await LoadPendingQueueAsync();
                     }
-                    else
-                    {
-                        MessageBox.Show("Could not update request. It may have been processed by another user.", "Data Stale", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        await LoadPendingQueueAsync();
-                    }
+
+                    await LoadPendingQueueAsync();
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Failed to update request: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("A critical error occurred during the approval process: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 finally
                 {
                     btnQaApprove.Enabled = btnQaReject.Enabled = true;
                     this.Cursor = Cursors.Default;
                 }
+            }
+        }
+
+        /// <summary>
+        /// Executes the external Word Processor Worker application asynchronously.
+        /// </summary>
+        /// <param name="documentList">Comma-delimited string of document names to process.</param>
+        /// <param name="recordJson">JSON string of the QaQueueItemDto to be used for stamping.</param>
+        /// <returns>True if the worker process exits with code 0 (Success), False otherwise.</returns>
+        private async Task<bool> ExecuteWordProcessorWorkerAsync(string documentList, string recordJson)
+        {
+            string workerPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, WorkerExeName);
+
+            if (!File.Exists(workerPath))
+            {
+                MessageBox.Show($"Worker executable not found: {workerPath}", "FATAL Worker Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
+            // Arguments will be: "[doc1,doc2]" "[Base64_JSON_STRING]"
+            // Base64 encoding is used to safely pass the JSON string via CLI.
+            string base64Json = Convert.ToBase64String(Encoding.UTF8.GetBytes(recordJson));
+            // --- FIX: Set CreateNoWindow = false to show the console window ---
+            string arguments = $"\"{documentList}\" \"{base64Json}\"";
+
+            var startInfo = new ProcessStartInfo
+            {
+                FileName = workerPath,
+                Arguments = arguments,
+                UseShellExecute = false,
+                RedirectStandardOutput = false, // Set to FALSE so output goes to the visible console
+                CreateNoWindow = false          // Set to FALSE to show the console window
+            };
+
+            using (var process = new Process { StartInfo = startInfo })
+            {
+                // NOTE: Since we are not redirecting output, we cannot asynchronously read the stream.
+                // We rely on the console window being visible to the user for process monitoring.
+
+                process.Start();
+
+                // Wait for the process to exit
+                await Task.Run(() => process.WaitForExit()); // Use Task.Run to avoid blocking the UI thread
+
+                int exitCode = process.ExitCode;
+
+                if (exitCode != 0)
+                {
+                    // If the worker fails, we rely on the visible console for the error message.
+                    // We also show a message box to ensure the user is alerted.
+                    MessageBox.Show($"Worker process failed with Exit Code {exitCode}. Please review the worker's console window for details.", "Worker Process Failure", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+
+                return exitCode == 0;
             }
         }
     }

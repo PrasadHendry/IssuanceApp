@@ -23,7 +23,7 @@ namespace IssuanceApp.UI.Controls
 
         private CancellationTokenSource _dataLoadCts = new CancellationTokenSource();
 
-        // --- ADDED FIELD ---
+        // --- ADDED FIELD: Stores logged-in user for 'Show My Requests Only' filter ---
         private string _loggedInUserName;
 
         public AuditTrailControl()
@@ -37,7 +37,7 @@ namespace IssuanceApp.UI.Controls
             ThemeManager.StyleDataGridView(dgvAuditTrail);
         }
 
-        // --- UPDATED SIGNATURE ---
+        // --- UPDATED SIGNATURE: Accepts logged-in username ---
         public void InitializeControl(IssuanceRepository repository, string loggedInUserName)
         {
             _repository = repository;

@@ -90,6 +90,7 @@ namespace IssuanceApp.Data
         public DateTime RequestedAt { get; set; }
         public string AuthorizedBy { get; set; }
         public DateTime GmOperationsAt { get; set; }
+        public string GmOperationsComment { get; set; }
         public string FromDepartment { get; set; }
         public string BatchNo { get; set; }
         public string ItemMfgDate { get; set; }
@@ -97,7 +98,11 @@ namespace IssuanceApp.Data
         public string Market { get; set; }
         public string PackSize { get; set; }
         public string RequestComment { get; set; }
-        public string GmOperationsComment { get; set; }
+        // --- ADDED FOR STAMPING CONTEXT ---
+        public string GmOperationsAction { get; set; } // Needed for worker to derive status if needed
+        public string QAAction { get; set; } // Set by QaControl before serialization
+        public string ApprovedBy { get; set; } // Set by QaControl before serialization
+        // --- END ADDED FOR STAMPING CONTEXT ---
         // --- ADDED ---
         public string ParentBatchNumber { get; set; }
         public string ParentBatchSize { get; set; }
