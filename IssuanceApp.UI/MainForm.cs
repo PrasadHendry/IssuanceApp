@@ -125,7 +125,7 @@ namespace IssuanceApp.UI
 
         private void StatusTimer_Tick(object sender, EventArgs e)
         {
-            toolStripStatusLabelDateTime.Text = DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss tt");
+            toolStripStatusLabelDateTime.Text = DateTime.Now.ToString("dd-MM-yyyy HH:mm tt");
         }
 
         private void SetupTabs()
