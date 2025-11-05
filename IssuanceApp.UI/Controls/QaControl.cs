@@ -19,6 +19,9 @@ namespace IssuanceApp.UI.Controls
         private string _loggedInUserName;
 
         private const string WorkerExeName = "WordProcessorFrameworkPrototype.exe";
+        // --- NEW CONSTANT: Standardized Date/Time Format ---
+        private const string DateTimeFormat = "dd-MM-yyyy HH:mm:ss";
+        private const string DateFormat = "dd-MM-yyyy";
 
         public QaControl()
         {
@@ -69,14 +72,18 @@ namespace IssuanceApp.UI.Controls
             dgvQaQueue.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
 
             dgvQaQueue.Columns.Add(new DataGridViewTextBoxColumn { Name = "colQaRequestNo", DataPropertyName = nameof(QaQueueItemDto.RequestNo), HeaderText = "Request No.", FillWeight = 15 });
-            dgvQaQueue.Columns.Add(new DataGridViewTextBoxColumn { Name = "colQaRequestDate", DataPropertyName = nameof(QaQueueItemDto.RequestDate), HeaderText = "Request Date", DefaultCellStyle = new DataGridViewCellStyle { Format = "dd-MMM-yyyy" }, FillWeight = 12 });
+            // --- UPDATED DATE FORMAT ---
+            dgvQaQueue.Columns.Add(new DataGridViewTextBoxColumn { Name = "colQaRequestDate", DataPropertyName = nameof(QaQueueItemDto.RequestDate), HeaderText = "Request Date", DefaultCellStyle = new DataGridViewCellStyle { Format = DateFormat }, FillWeight = 12 });
+            // --- END UPDATED DATE FORMAT ---
             dgvQaQueue.Columns.Add(new DataGridViewTextBoxColumn { Name = "colQaProduct", DataPropertyName = nameof(QaQueueItemDto.Product), HeaderText = "Product", FillWeight = 23 });
             dgvQaQueue.Columns.Add(new DataGridViewTextBoxColumn { Name = "colQaDocTypes", DataPropertyName = nameof(QaQueueItemDto.DocumentNo), HeaderText = "Document No(s).", FillWeight = 15 });
             dgvQaQueue.Columns.Add(new DataGridViewTextBoxColumn { Name = "colQaPreparedBy", DataPropertyName = nameof(QaQueueItemDto.PreparedBy), HeaderText = "Prepared By", FillWeight = 10 });
-            dgvQaQueue.Columns.Add(new DataGridViewTextBoxColumn { Name = "colQaRequestedAt", DataPropertyName = nameof(QaQueueItemDto.RequestedAt), HeaderText = "Requested At", DefaultCellStyle = new DataGridViewCellStyle { Format = "dd-MMM-yyyy HH:mm" }, FillWeight = 15 });
-            dgvQaQueue.Columns.Add(new DataGridViewTextBoxColumn { Name = "colQaAuthorizedBy", DataPropertyName = nameof(QaQueueItemDto.AuthorizedBy), HeaderText = "Authorized By (GM)", FillWeight = 10 });
-            // --- FIX: Updated DataPropertyName to match the corrected model ---
-            dgvQaQueue.Columns.Add(new DataGridViewTextBoxColumn { Name = "colQaGmActionAt", DataPropertyName = nameof(QaQueueItemDto.GmOperationsAt), HeaderText = "GM Action At", DefaultCellStyle = new DataGridViewCellStyle { Format = "dd-MMM-yyyy HH:mm" }, FillWeight = 15 });
+            // --- UPDATED DATE/TIME FORMAT ---
+            dgvQaQueue.Columns.Add(new DataGridViewTextBoxColumn { Name = "colQaRequestedAt", DataPropertyName = nameof(QaQueueItemDto.RequestedAt), HeaderText = "Requested At", DefaultCellStyle = new DataGridViewCellStyle { Format = DateTimeFormat }, FillWeight = 15 });
+            dgvQaQueue.Columns.Add(new DataGridViewTextBoxColumn { Name = "colQaAuthorizedBy", DataPropertyName = nameof(QaQueueItemDto.AuthorizedBy), HeaderText = "Authorized By (HOD)", FillWeight = 10 }); // UPDATED TEXT
+            // --- UPDATED COLUMN NAME AND DATE/TIME FORMAT ---
+            dgvQaQueue.Columns.Add(new DataGridViewTextBoxColumn { Name = "colQaHodActionAt", DataPropertyName = nameof(QaQueueItemDto.HodAt), HeaderText = "HOD Action At", DefaultCellStyle = new DataGridViewCellStyle { Format = DateTimeFormat }, FillWeight = 15 }); // RENAMED COLUMN
+            // --- END UPDATED COLUMN NAME AND DATE/TIME FORMAT ---
         }
 
         public async Task LoadPendingQueueAsync()
@@ -127,13 +134,17 @@ namespace IssuanceApp.UI.Controls
             }
 
             txtQaDetailRequestNo.Text = request.RequestNo;
-            txtQaDetailRequestDate.Text = request.RequestDate.ToString("dd-MMM-yyyy");
+            // --- UPDATED DATE FORMAT ---
+            txtQaDetailRequestDate.Text = request.RequestDate.ToString(DateFormat);
+            txtQaDetailRequestedAt.Text = request.RequestedAt.ToString(DateTimeFormat);
+            // --- UPDATED CONTROL NAME AND DATE/TIME FORMAT ---
+            txtQaDetailHodActionTime.Text = request.HodAt.ToString(DateTimeFormat); // FIXED CONTROL NAME
+            txtQaDetailHodComment.Text = request.HodComment; // FIXED CONTROL NAME
+                                                             // --- END UPDATED DATE/TIME FORMAT ---
+
             txtQaDetailProduct.Text = request.Product;
             txtQaDetailDocTypes.Text = request.DocumentNo;
             txtQaDetailPreparedBy.Text = request.PreparedBy;
-            txtQaDetailRequestedAt.Text = request.RequestedAt.ToString("dd-MMM-yyyy HH:mm");
-            // --- FIX: Updated property name to match the corrected model ---
-            txtQaDetailGmActionTime.Text = request.GmOperationsAt.ToString("dd-MMM-yyyy HH:mm");
             txtQaDetailFromDept.Text = request.FromDepartment;
             txtQaDetailBatchNo.Text = request.BatchNo;
             txtQaDetailMfgDate.Text = request.ItemMfgDate;
@@ -141,7 +152,6 @@ namespace IssuanceApp.UI.Controls
             txtQaDetailMarket.Text = request.Market;
             txtQaDetailPackSize.Text = request.PackSize;
             txtQaDetailRequesterComments.Text = request.RequestComment;
-            txtQaDetailGmComment.Text = request.GmOperationsComment;
 
             // --- ADDED ---
             txtQaParentBatchNo.Text = request.ParentBatchNumber;
@@ -203,13 +213,13 @@ namespace IssuanceApp.UI.Controls
                         if (requestDto == null) throw new InvalidOperationException("Could not retrieve request data from the queue.");
 
                         // 2. Set the *final* QA action/user for the stamp footer
-                        requestDto.QAAction = action; // Set the action to 'Approved' (uses the new DTO field)
-                        requestDto.ApprovedBy = _loggedInUserName; // Use logged-in user as the final approver (uses the new DTO field)
-                        requestDto.GmOperationsAction = AppConstants.ActionAuthorized; // Ensure GM Action is set
+                        requestDto.QAAction = action;
+                        requestDto.ApprovedBy = _loggedInUserName;
+                        requestDto.HodAction = AppConstants.ActionAuthorized; // UPDATED PROPERTY NAME
 
                         string documentNoList = requestDto.DocumentNo;
 
-                        // 3. Manual JSON Serialization (to avoid System.Text.Json reference issues)
+                        // 3. Manual JSON Serialization (Updated to use new DTO properties and DateTimeFormat)
                         // NOTE: Dates are formatted to be easily parsable by the worker.
                         string recordJson = $@"{{
                             ""RequestNo"": ""{requestDto.RequestNo}"",
@@ -220,9 +230,9 @@ namespace IssuanceApp.UI.Controls
                             ""PreparedBy"": ""{requestDto.PreparedBy}"",
                             ""RequestedAt"": ""{requestDto.RequestedAt:yyyy-MM-dd HH:mm:ss}"",
                             ""AuthorizedBy"": ""{requestDto.AuthorizedBy}"",
-                            ""GmOperationsAt"": ""{requestDto.GmOperationsAt:yyyy-MM-dd HH:mm:ss}"",
-                            ""GmOperationsComment"": ""{requestDto.GmOperationsComment.Replace("\"", "\\\"")}"",
-                            ""GmOperationsAction"": ""{requestDto.GmOperationsAction}"",
+                            ""HodAt"": ""{requestDto.HodAt:yyyy-MM-dd HH:mm:ss}"", 
+                            ""HodComment"": ""{requestDto.HodComment.Replace("\"", "\\\"")}"", 
+                            ""HodAction"": ""{requestDto.HodAction}"", 
                             ""QAAction"": ""{requestDto.QAAction}"",
                             ""ApprovedBy"": ""{requestDto.ApprovedBy}"",
                             ""ItemMfgDate"": ""{requestDto.ItemMfgDate}"",
@@ -296,7 +306,6 @@ namespace IssuanceApp.UI.Controls
             // Arguments will be: "[doc1,doc2]" "[Base64_JSON_STRING]"
             // Base64 encoding is used to safely pass the JSON string via CLI.
             string base64Json = Convert.ToBase64String(Encoding.UTF8.GetBytes(recordJson));
-            // --- FIX: Set CreateNoWindow = false to show the console window ---
             string arguments = $"\"{documentList}\" \"{base64Json}\"";
 
             var startInfo = new ProcessStartInfo
@@ -304,19 +313,16 @@ namespace IssuanceApp.UI.Controls
                 FileName = workerPath,
                 Arguments = arguments,
                 UseShellExecute = false,
-                RedirectStandardOutput = false, // Set to FALSE so output goes to the visible console
+                RedirectStandardOutput = false, // Set to FALSE to show the console window
                 CreateNoWindow = false          // Set to FALSE to show the console window
             };
 
             using (var process = new Process { StartInfo = startInfo })
             {
-                // NOTE: Since we are not redirecting output, we cannot asynchronously read the stream.
-                // We rely on the console window being visible to the user for process monitoring.
-
                 process.Start();
 
-                // Wait for the process to exit
-                await Task.Run(() => process.WaitForExit()); // Use Task.Run to avoid blocking the UI thread
+                // Use Task.Run to avoid blocking the UI thread while waiting for the external process
+                await Task.Run(() => process.WaitForExit());
 
                 int exitCode = process.ExitCode;
 

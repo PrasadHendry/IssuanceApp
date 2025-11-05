@@ -91,8 +91,9 @@ namespace IssuanceApp.Data
         }
         #endregion
 
-        #region GM & QA Operations
-        public async Task<List<GmQueueItemDto>> GetGmPendingQueueAsync()
+        #region HOD & QA Operations
+        // RENAMED FROM GetGmPendingQueueAsync
+        public async Task<List<HodQueueItemDto>> GetHodPendingQueueAsync()
         {
             string sql = @"
                 SELECT 
@@ -103,10 +104,10 @@ namespace IssuanceApp.Data
                     i.ParentBatchNumber, i.ParentBatchSize, i.ParentMfgDate, i.ParentExpDate
                 FROM dbo.Doc_Issuance AS i 
                 JOIN dbo.Issuance_Tracker AS t ON i.IssuanceID = t.IssuanceID
-                WHERE t.GmOperationsAction IS NULL ORDER BY i.RequestNo DESC;";
+                WHERE t.HodAction IS NULL ORDER BY i.RequestNo DESC;"; // UPDATED COLUMN NAME
             using (var conn = new SqlConnection(_connectionString))
             {
-                var queue = await conn.QueryAsync<GmQueueItemDto>(sql);
+                var queue = await conn.QueryAsync<HodQueueItemDto>(sql);
                 return queue.ToList();
             }
         }
@@ -116,15 +117,15 @@ namespace IssuanceApp.Data
             string sql = @"
                 SELECT 
                     i.RequestNo, i.RequestDate, i.Product, i.DocumentNo, t.PreparedBy, t.RequestedAt, 
-                    t.AuthorizedBy, t.GmOperationsAt, i.FromDepartment, i.BatchNo, i.ItemMfgDate, 
-                    i.ItemExpDate, i.Market, i.PackSize, t.RequestComment, t.GmOperationsComment,
-                    -- ADDED FOR STAMPING CONTEXT:
-                    t.GmOperationsAction,
-                    -- END ADDED
+                    t.AuthorizedBy, t.HodAt, t.HodComment, -- UPDATED COLUMN NAMES
+                    t.HodAction, -- UPDATED COLUMN NAME
+                    i.FromDepartment, i.BatchNo, i.ItemMfgDate, 
+                    i.ItemExpDate, i.Market, i.PackSize, t.RequestComment,
+                    -- ADDED --
                     i.ParentBatchNumber, i.ParentBatchSize, i.ParentMfgDate, i.ParentExpDate
                 FROM dbo.Doc_Issuance AS i 
                 JOIN dbo.Issuance_Tracker AS t ON i.IssuanceID = t.IssuanceID
-                WHERE t.GmOperationsAction = @Action AND t.QAAction IS NULL ORDER BY i.RequestNo DESC;";
+                WHERE t.HodAction = @Action AND t.QAAction IS NULL ORDER BY i.RequestNo DESC;"; // UPDATED COLUMN NAME
             using (var conn = new SqlConnection(_connectionString))
             {
                 var queue = await conn.QueryAsync<QaQueueItemDto>(sql, new { Action = ActionAuthorized });
@@ -132,12 +133,13 @@ namespace IssuanceApp.Data
             }
         }
 
-        public async Task<bool> UpdateGmActionAsync(string requestNo, string action, string comment, string userName)
+        // RENAMED FROM UpdateGmActionAsync
+        public async Task<bool> UpdateHodActionAsync(string requestNo, string action, string comment, string userName)
         {
             string sql = @"
                 UPDATE dbo.Issuance_Tracker SET
-                    GmOperationsAction = @Action, AuthorizedBy = @User, GmOperationsAt = GETDATE(), GmOperationsComment = @Comment
-                WHERE IssuanceID = (SELECT IssuanceID FROM dbo.Doc_Issuance WHERE RequestNo = @RequestNo);";
+                    HodAction = @Action, AuthorizedBy = @User, HodAt = GETDATE(), HodComment = @Comment
+                WHERE IssuanceID = (SELECT IssuanceID FROM dbo.Doc_Issuance WHERE RequestNo = @RequestNo);"; // UPDATED COLUMN NAMES
             using (var conn = new SqlConnection(_connectionString))
             {
                 var parameters = new { Action = action, User = userName, Comment = comment, RequestNo = requestNo };
@@ -171,7 +173,6 @@ namespace IssuanceApp.Data
         #endregion
 
         #region Audit Trail
-        // --- UPDATED SIGNATURE FOR NEW FILTERS ---
         public async Task<List<int>> GetAuditTrailKeysAsync(
             DateTime from,
             DateTime to,
@@ -180,8 +181,8 @@ namespace IssuanceApp.Data
             string product,
             string sortColumn,
             System.Windows.Forms.SortOrder sortOrder,
-            bool ignoreDateFilter, // New: Ignore Date Filter
-            string preparedByFilter, // New: Filter by PreparedBy (Logged-in User)
+            bool ignoreDateFilter,
+            string preparedByFilter,
             CancellationToken token)
         {
             var sqlBuilder = new StringBuilder(@"
@@ -189,38 +190,33 @@ namespace IssuanceApp.Data
                     SELECT i.IssuanceID, i.RequestNo, i.RequestDate, i.Product, t.PreparedBy, t.RequestedAt,
                         CASE
                             WHEN t.QAAction = @ActionRejected THEN 'Rejected by QA'
-                            WHEN t.GmOperationsAction = @ActionRejected THEN 'Rejected by GM'
+                            WHEN t.HodAction = @ActionRejected THEN 'Rejected by HOD' -- UPDATED ROLE NAME
                             WHEN t.QAAction = @ActionApproved THEN 'Approved (Issued)'
-                            WHEN t.GmOperationsAction = @ActionAuthorized THEN 'Pending QA Approval'
-                            ELSE 'Pending GM Approval'
+                            WHEN t.HodAction = @ActionAuthorized THEN 'Pending QA Approval' -- UPDATED COLUMN NAME
+                            ELSE 'Pending HOD Approval' -- UPDATED ROLE NAME
                         END AS DerivedStatus
                     FROM dbo.Doc_Issuance i JOIN dbo.Issuance_Tracker t ON i.IssuanceID = t.IssuanceID
-                    WHERE 1=1 "); // Use 1=1 for flexible WHERE clause
+                    WHERE 1=1 ");
 
             var parameters = new DynamicParameters();
             parameters.Add("@ActionRejected", ActionRejected);
             parameters.Add("@ActionApproved", ActionApproved);
             parameters.Add("@ActionAuthorized", ActionAuthorized);
 
-            // --- DATE FILTER LOGIC ---
             if (!ignoreDateFilter)
             {
                 sqlBuilder.Append("AND i.RequestDate BETWEEN @FromDate AND @ToDate ");
                 parameters.Add("@FromDate", from.Date);
                 parameters.Add("@ToDate", to.Date);
             }
-            // --- END DATE FILTER LOGIC ---
 
             sqlBuilder.Append(") SELECT IssuanceID FROM AuditData WHERE 1=1 ");
 
-            // --- USER FILTER LOGIC ---
             if (!string.IsNullOrWhiteSpace(preparedByFilter))
             {
                 sqlBuilder.Append("AND PreparedBy = @PreparedByFilter ");
                 parameters.Add("@PreparedByFilter", preparedByFilter);
             }
-            // --- END USER FILTER LOGIC ---
-
 
             if (status != "All") { sqlBuilder.Append("AND DerivedStatus = @Status "); parameters.Add("@Status", status); }
             if (!string.IsNullOrWhiteSpace(requestNo)) { sqlBuilder.Append("AND RequestNo LIKE @RequestNo "); parameters.Add("@RequestNo", $"%{requestNo.Trim()}%"); }
@@ -246,15 +242,15 @@ namespace IssuanceApp.Data
 
             string sql = @"
                 SELECT i.IssuanceID, i.RequestNo, i.RequestDate, i.Product, i.DocumentNo, t.PreparedBy, i.FromDepartment, t.RequestedAt, t.RequestComment,
-                       t.GmOperationsAction, t.AuthorizedBy, t.GmOperationsAt, t.GmOperationsComment,
+                       t.HodAction, t.AuthorizedBy, t.HodAt, t.HodComment, -- UPDATED COLUMN NAMES
                        t.QAAction, t.ApprovedBy, t.QAAt, t.QAComment,
                        i.ParentBatchNumber, i.ParentBatchSize, i.ParentMfgDate, i.ParentExpDate,
                     CASE 
                         WHEN t.QAAction = @ActionRejected THEN 'Rejected by QA'
-                        WHEN t.GmOperationsAction = @ActionRejected THEN 'Rejected by GM'
+                        WHEN t.HodAction = @ActionRejected THEN 'Rejected by HOD' -- UPDATED ROLE NAME
                         WHEN t.QAAction = @ActionApproved THEN 'Approved (Issued)'
-                        WHEN t.GmOperationsAction = @ActionAuthorized THEN 'Pending QA Approval'
-                        ELSE 'Pending GM Approval'
+                        WHEN t.HodAction = @ActionAuthorized THEN 'Pending QA Approval' -- UPDATED COLUMN NAME
+                        ELSE 'Pending HOD Approval' -- UPDATED ROLE NAME
                     END AS DerivedStatus
                 FROM dbo.Doc_Issuance i JOIN dbo.Issuance_Tracker t ON i.IssuanceID = t.IssuanceID
                 WHERE i.IssuanceID IN @keys;";

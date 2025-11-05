@@ -9,7 +9,7 @@ namespace IssuanceApp.Data
     {
         // User Roles
         public const string RoleRequester = "Requester";
-        public const string RoleGmOperations = "GM_Operations";
+        public const string RoleHOD = "HOD"; // RENAMED FROM RoleGmOperations
         public const string RoleQA = "QA";
         public const string RoleAdmin = "Admin";
 

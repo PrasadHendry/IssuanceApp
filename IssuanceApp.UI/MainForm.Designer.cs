@@ -27,7 +27,7 @@ namespace IssuanceApp.UI
         #region Windows Form Designer generated code
 
         /// <summary>
-        /// Required method for Designer support - do not modify
+        /// Required method for support - do not modify
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent()
@@ -38,8 +38,10 @@ namespace IssuanceApp.UI
             this.loginControl1 = new IssuanceApp.UI.Controls.LoginControl();
             this.tabPageDocumentIssuance = new System.Windows.Forms.TabPage();
             this.documentIssuanceControl1 = new IssuanceApp.UI.Controls.DocumentIssuanceControl();
-            this.tabPageGmOperations = new System.Windows.Forms.TabPage();
-            this.gmOperationsControl1 = new IssuanceApp.UI.Controls.GmOperationsControl();
+            // --- RENAMED: tabPageGmOperations to tabPageHod ---
+            this.tabPageHod = new System.Windows.Forms.TabPage();
+            this.hodControl1 = new IssuanceApp.UI.Controls.HodControl(); // RENAMED CONTROL VARIABLE AND TYPE
+            // --- END RENAMED ---
             this.tabPageQa = new System.Windows.Forms.TabPage();
             this.qaControl1 = new IssuanceApp.UI.Controls.QaControl();
             this.tabPageAuditTrail = new System.Windows.Forms.TabPage();
@@ -61,7 +63,9 @@ namespace IssuanceApp.UI
             this.tabControlMain.SuspendLayout();
             this.tabPageLogin.SuspendLayout();
             this.tabPageDocumentIssuance.SuspendLayout();
-            this.tabPageGmOperations.SuspendLayout();
+            // --- RENAMED: tabPageGmOperations to tabPageHod ---
+            this.tabPageHod.SuspendLayout();
+            // --- END RENAMED ---
             this.tabPageQa.SuspendLayout();
             this.tabPageAuditTrail.SuspendLayout();
             this.tabPageUsers.SuspendLayout();
@@ -76,7 +80,9 @@ namespace IssuanceApp.UI
             // 
             this.tabControlMain.Controls.Add(this.tabPageLogin);
             this.tabControlMain.Controls.Add(this.tabPageDocumentIssuance);
-            this.tabControlMain.Controls.Add(this.tabPageGmOperations);
+            // --- RENAMED: tabPageGmOperations to tabPageHod ---
+            this.tabControlMain.Controls.Add(this.tabPageHod);
+            // --- END RENAMED ---
             this.tabControlMain.Controls.Add(this.tabPageQa);
             this.tabControlMain.Controls.Add(this.tabPageAuditTrail);
             this.tabControlMain.Controls.Add(this.tabPageUsers);
@@ -128,26 +134,26 @@ namespace IssuanceApp.UI
             this.documentIssuanceControl1.Size = new System.Drawing.Size(1328, 579);
             this.documentIssuanceControl1.TabIndex = 0;
             // 
-            // tabPageGmOperations
+            // tabPageHod
             // 
-            this.tabPageGmOperations.Controls.Add(this.gmOperationsControl1);
-            this.tabPageGmOperations.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tabPageGmOperations.Location = new System.Drawing.Point(4, 26);
-            this.tabPageGmOperations.Name = "tabPageGmOperations";
-            this.tabPageGmOperations.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageGmOperations.Size = new System.Drawing.Size(1334, 585);
-            this.tabPageGmOperations.TabIndex = 2;
-            this.tabPageGmOperations.Text = "GM Operations";
-            this.tabPageGmOperations.UseVisualStyleBackColor = true;
+            this.tabPageHod.Controls.Add(this.hodControl1); // RENAMED CONTROL INSTANCE
+            this.tabPageHod.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tabPageHod.Location = new System.Drawing.Point(4, 26);
+            this.tabPageHod.Name = "tabPageHod"; // RENAMED TAB PAGE NAME
+            this.tabPageHod.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageHod.Size = new System.Drawing.Size(1334, 585);
+            this.tabPageHod.TabIndex = 2;
+            this.tabPageHod.Text = "HOD Operations"; // UPDATED DISPLAY TEXT
+            this.tabPageHod.UseVisualStyleBackColor = true;
             // 
-            // gmOperationsControl1
+            // hodControl1
             // 
-            this.gmOperationsControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gmOperationsControl1.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.gmOperationsControl1.Location = new System.Drawing.Point(3, 3);
-            this.gmOperationsControl1.Name = "gmOperationsControl1";
-            this.gmOperationsControl1.Size = new System.Drawing.Size(1328, 579);
-            this.gmOperationsControl1.TabIndex = 0;
+            this.hodControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.hodControl1.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.hodControl1.Location = new System.Drawing.Point(3, 3);
+            this.hodControl1.Name = "hodControl1"; // RENAMED CONTROL NAME
+            this.hodControl1.Size = new System.Drawing.Size(1328, 579);
+            this.hodControl1.TabIndex = 0;
             // 
             // tabPageQa
             // 
@@ -356,7 +362,9 @@ namespace IssuanceApp.UI
             this.tabControlMain.ResumeLayout(false);
             this.tabPageLogin.ResumeLayout(false);
             this.tabPageDocumentIssuance.ResumeLayout(false);
-            this.tabPageGmOperations.ResumeLayout(false);
+            // --- RENAMED: tabPageGmOperations to tabPageHod ---
+            this.tabPageHod.ResumeLayout(false);
+            // --- END RENAMED ---
             this.tabPageQa.ResumeLayout(false);
             this.tabPageAuditTrail.ResumeLayout(false);
             this.tabPageUsers.ResumeLayout(false);
@@ -386,7 +394,9 @@ namespace IssuanceApp.UI
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelUser;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelSpring;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelDateTime;
-        private System.Windows.Forms.TabPage tabPageGmOperations;
+        // --- RENAMED: tabPageGmOperations to tabPageHod ---
+        private System.Windows.Forms.TabPage tabPageHod;
+        // --- END RENAMED ---
         private System.Windows.Forms.TableLayoutPanel tlpMasterContainer;
         private System.Windows.Forms.Panel pnlAppHeader;
         private System.Windows.Forms.Label lblAppTitle;
@@ -397,7 +407,9 @@ namespace IssuanceApp.UI
         private System.Windows.Forms.ImageList imageList1;
         private Controls.LoginControl loginControl1;
         private Controls.DocumentIssuanceControl documentIssuanceControl1;
-        private Controls.GmOperationsControl gmOperationsControl1;
+        // --- RENAMED: GmOperationsControl to HodControl ---
+        private Controls.HodControl hodControl1;
+        // --- END RENAMED ---
         private Controls.QaControl qaControl1;
         private Controls.AuditTrailControl auditTrailControl1;
         private Controls.UsersControl usersControl1;

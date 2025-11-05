@@ -45,7 +45,7 @@ namespace IssuanceApp.UI.Controls
             this.colQaPreparedBy = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colQaRequestedAt = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colQaAuthorizedBy = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colQaGmActionAt = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colQaHodActionAt = new System.Windows.Forms.DataGridViewTextBoxColumn(); // RENAMED
             this.tlpQaBottomSection = new System.Windows.Forms.TableLayoutPanel();
             this.grpQaSelectedRequest = new System.Windows.Forms.GroupBox();
             this.tlpQaRequestDetails = new System.Windows.Forms.TableLayoutPanel();
@@ -75,10 +75,10 @@ namespace IssuanceApp.UI.Controls
             this.txtQaDetailRequestedAt = new System.Windows.Forms.TextBox();
             this.lblQaDetailRequesterCommentsLabel = new System.Windows.Forms.Label();
             this.txtQaDetailRequesterComments = new System.Windows.Forms.TextBox();
-            this.lblQaDetailGmCommentLabel = new System.Windows.Forms.Label();
-            this.txtQaDetailGmComment = new System.Windows.Forms.TextBox();
-            this.lblQaDetailGmActionTimeLabel = new System.Windows.Forms.Label();
-            this.txtQaDetailGmActionTime = new System.Windows.Forms.TextBox();
+            this.lblQaDetailHodCommentLabel = new System.Windows.Forms.Label(); // RENAMED
+            this.txtQaDetailHodComment = new System.Windows.Forms.TextBox(); // RENAMED
+            this.lblQaDetailHodActionTimeLabel = new System.Windows.Forms.Label(); // RENAMED
+            this.txtQaDetailHodActionTime = new System.Windows.Forms.TextBox(); // RENAMED
             this.grpQaAction = new System.Windows.Forms.GroupBox();
             this.tlpQaActionControls = new System.Windows.Forms.TableLayoutPanel();
             this.flpQaOptionalControls = new System.Windows.Forms.FlowLayoutPanel();
@@ -88,7 +88,6 @@ namespace IssuanceApp.UI.Controls
             this.flpQaActionButtons = new System.Windows.Forms.FlowLayoutPanel();
             this.btnQaApprove = new IssuanceApp.UI.RoundedButton();
             this.btnQaReject = new IssuanceApp.UI.RoundedButton();
-            // --- NEW CONTROLS DECLARED ---
             this.grpQaParentBatchInfo = new System.Windows.Forms.GroupBox();
             this.tlpQaParentBatchInfo = new System.Windows.Forms.TableLayoutPanel();
             this.lblQaParentBatchNo = new System.Windows.Forms.Label();
@@ -111,7 +110,6 @@ namespace IssuanceApp.UI.Controls
             this.tlpQaActionControls.SuspendLayout();
             this.flpQaOptionalControls.SuspendLayout();
             this.flpQaActionButtons.SuspendLayout();
-            // --- NEW SUSPENDLAYOUT CALL ---
             this.grpQaParentBatchInfo.SuspendLayout();
             this.tlpQaParentBatchInfo.SuspendLayout();
             this.SuspendLayout();
@@ -207,7 +205,7 @@ namespace IssuanceApp.UI.Controls
             this.colQaPreparedBy,
             this.colQaRequestedAt,
             this.colQaAuthorizedBy,
-            this.colQaGmActionAt});
+            this.colQaHodActionAt});
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
             dataGridViewCellStyle1.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -229,6 +227,7 @@ namespace IssuanceApp.UI.Controls
             // 
             // colQaRequestNo
             // 
+            this.colQaRequestNo.DataPropertyName = "RequestNo";
             this.colQaRequestNo.HeaderText = "Request No.";
             this.colQaRequestNo.MinimumWidth = 6;
             this.colQaRequestNo.Name = "colQaRequestNo";
@@ -236,6 +235,7 @@ namespace IssuanceApp.UI.Controls
             // 
             // colQaRequestDate
             // 
+            this.colQaRequestDate.DataPropertyName = "RequestDate";
             this.colQaRequestDate.HeaderText = "Request Date";
             this.colQaRequestDate.MinimumWidth = 6;
             this.colQaRequestDate.Name = "colQaRequestDate";
@@ -243,6 +243,7 @@ namespace IssuanceApp.UI.Controls
             // 
             // colQaProduct
             // 
+            this.colQaProduct.DataPropertyName = "Product";
             this.colQaProduct.HeaderText = "Product";
             this.colQaProduct.MinimumWidth = 6;
             this.colQaProduct.Name = "colQaProduct";
@@ -258,6 +259,7 @@ namespace IssuanceApp.UI.Controls
             // 
             // colQaPreparedBy
             // 
+            this.colQaPreparedBy.DataPropertyName = "PreparedBy";
             this.colQaPreparedBy.HeaderText = "Prepared By";
             this.colQaPreparedBy.MinimumWidth = 6;
             this.colQaPreparedBy.Name = "colQaPreparedBy";
@@ -265,23 +267,26 @@ namespace IssuanceApp.UI.Controls
             // 
             // colQaRequestedAt
             // 
+            this.colQaRequestedAt.DataPropertyName = "RequestedAt";
             this.colQaRequestedAt.HeaderText = "Requested At";
             this.colQaRequestedAt.Name = "colQaRequestedAt";
             this.colQaRequestedAt.ReadOnly = true;
             // 
             // colQaAuthorizedBy
             // 
-            this.colQaAuthorizedBy.HeaderText = "Authorized By (GM)";
+            this.colQaAuthorizedBy.DataPropertyName = "AuthorizedBy";
+            this.colQaAuthorizedBy.HeaderText = "Authorized By (HOD)"; // UPDATED TEXT
             this.colQaAuthorizedBy.MinimumWidth = 6;
             this.colQaAuthorizedBy.Name = "colQaAuthorizedBy";
             this.colQaAuthorizedBy.ReadOnly = true;
             // 
-            // colQaGmActionAt
+            // colQaHodActionAt
             // 
-            this.colQaGmActionAt.HeaderText = "GM Action At";
-            this.colQaGmActionAt.MinimumWidth = 6;
-            this.colQaGmActionAt.Name = "colQaGmActionAt";
-            this.colQaGmActionAt.ReadOnly = true;
+            this.colQaHodActionAt.DataPropertyName = "HodAt"; // UPDATED PROPERTY NAME
+            this.colQaHodActionAt.HeaderText = "HOD Action At"; // UPDATED TEXT
+            this.colQaHodActionAt.MinimumWidth = 6;
+            this.colQaHodActionAt.Name = "colQaHodActionAt";
+            this.colQaHodActionAt.ReadOnly = true;
             // 
             // tlpQaBottomSection
             // 
@@ -349,10 +354,10 @@ namespace IssuanceApp.UI.Controls
             this.tlpQaRequestDetails.Controls.Add(this.txtQaDetailRequestedAt, 3, 5);
             this.tlpQaRequestDetails.Controls.Add(this.lblQaDetailRequesterCommentsLabel, 0, 6);
             this.tlpQaRequestDetails.Controls.Add(this.txtQaDetailRequesterComments, 1, 6);
-            this.tlpQaRequestDetails.Controls.Add(this.lblQaDetailGmCommentLabel, 0, 7);
-            this.tlpQaRequestDetails.Controls.Add(this.txtQaDetailGmComment, 1, 7);
-            this.tlpQaRequestDetails.Controls.Add(this.lblQaDetailGmActionTimeLabel, 0, 8);
-            this.tlpQaRequestDetails.Controls.Add(this.txtQaDetailGmActionTime, 1, 8);
+            this.tlpQaRequestDetails.Controls.Add(this.lblQaDetailHodCommentLabel, 0, 7); // RENAMED
+            this.tlpQaRequestDetails.Controls.Add(this.txtQaDetailHodComment, 1, 7); // RENAMED
+            this.tlpQaRequestDetails.Controls.Add(this.lblQaDetailHodActionTimeLabel, 0, 8); // RENAMED
+            this.tlpQaRequestDetails.Controls.Add(this.txtQaDetailHodActionTime, 1, 8); // RENAMED
             this.tlpQaRequestDetails.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tlpQaRequestDetails.Location = new System.Drawing.Point(10, 28);
             this.tlpQaRequestDetails.Name = "tlpQaRequestDetails";
@@ -620,48 +625,48 @@ namespace IssuanceApp.UI.Controls
             this.txtQaDetailRequesterComments.Size = new System.Drawing.Size(1112, 44);
             this.txtQaDetailRequesterComments.TabIndex = 25;
             // 
-            // lblQaDetailGmCommentLabel
+            // lblQaDetailHodCommentLabel
             // 
-            this.lblQaDetailGmCommentLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblQaDetailGmCommentLabel.AutoSize = true;
-            this.lblQaDetailGmCommentLabel.Location = new System.Drawing.Point(55, 236);
-            this.lblQaDetailGmCommentLabel.Name = "lblQaDetailGmCommentLabel";
-            this.lblQaDetailGmCommentLabel.Padding = new System.Windows.Forms.Padding(0, 5, 0, 0);
-            this.lblQaDetailGmCommentLabel.Size = new System.Drawing.Size(102, 22);
-            this.lblQaDetailGmCommentLabel.TabIndex = 26;
-            this.lblQaDetailGmCommentLabel.Text = "GM Comments:";
+            this.lblQaDetailHodCommentLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblQaDetailHodCommentLabel.AutoSize = true;
+            this.lblQaDetailHodCommentLabel.Location = new System.Drawing.Point(55, 236);
+            this.lblQaDetailHodCommentLabel.Name = "lblQaDetailHodCommentLabel"; // UPDATED TEXT
+            this.lblQaDetailHodCommentLabel.Padding = new System.Windows.Forms.Padding(0, 5, 0, 0);
+            this.lblQaDetailHodCommentLabel.Size = new System.Drawing.Size(102, 22);
+            this.lblQaDetailHodCommentLabel.TabIndex = 26;
+            this.lblQaDetailHodCommentLabel.Text = "HOD Comments:"; // UPDATED TEXT
             // 
-            // txtQaDetailGmComment
+            // txtQaDetailHodComment
             // 
-            this.tlpQaRequestDetails.SetColumnSpan(this.txtQaDetailGmComment, 3);
-            this.txtQaDetailGmComment.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtQaDetailGmComment.Location = new System.Drawing.Point(163, 239);
-            this.txtQaDetailGmComment.Multiline = true;
-            this.txtQaDetailGmComment.Name = "txtQaDetailGmComment";
-            this.txtQaDetailGmComment.ReadOnly = true;
-            this.txtQaDetailGmComment.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtQaDetailGmComment.Size = new System.Drawing.Size(1112, 44);
-            this.txtQaDetailGmComment.TabIndex = 27;
+            this.tlpQaRequestDetails.SetColumnSpan(this.txtQaDetailHodComment, 3);
+            this.txtQaDetailHodComment.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtQaDetailHodComment.Location = new System.Drawing.Point(163, 239);
+            this.txtQaDetailHodComment.Multiline = true;
+            this.txtQaDetailHodComment.Name = "txtQaDetailHodComment"; // UPDATED NAME
+            this.txtQaDetailHodComment.ReadOnly = true;
+            this.txtQaDetailHodComment.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txtQaDetailHodComment.Size = new System.Drawing.Size(1112, 44);
+            this.txtQaDetailHodComment.TabIndex = 27;
             // 
-            // lblQaDetailGmActionTimeLabel
+            // lblQaDetailHodActionTimeLabel
             // 
-            this.lblQaDetailGmActionTimeLabel.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.lblQaDetailGmActionTimeLabel.AutoSize = true;
-            this.lblQaDetailGmActionTimeLabel.Location = new System.Drawing.Point(49, 293);
-            this.lblQaDetailGmActionTimeLabel.Name = "lblQaDetailGmActionTimeLabel";
-            this.lblQaDetailGmActionTimeLabel.Size = new System.Drawing.Size(108, 17);
-            this.lblQaDetailGmActionTimeLabel.TabIndex = 28;
-            this.lblQaDetailGmActionTimeLabel.Text = "GM Action Time:";
+            this.lblQaDetailHodActionTimeLabel.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblQaDetailHodActionTimeLabel.AutoSize = true;
+            this.lblQaDetailHodActionTimeLabel.Location = new System.Drawing.Point(49, 293);
+            this.lblQaDetailHodActionTimeLabel.Name = "lblQaDetailHodActionTimeLabel"; // UPDATED NAME
+            this.lblQaDetailHodActionTimeLabel.Size = new System.Drawing.Size(108, 17);
+            this.lblQaDetailHodActionTimeLabel.TabIndex = 28;
+            this.lblQaDetailHodActionTimeLabel.Text = "HOD Action Time:"; // UPDATED TEXT
             // 
-            // txtQaDetailGmActionTime
+            // txtQaDetailHodActionTime
             // 
-            this.txtQaDetailGmActionTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.tlpQaRequestDetails.SetColumnSpan(this.txtQaDetailGmActionTime, 3);
-            this.txtQaDetailGmActionTime.Location = new System.Drawing.Point(163, 289);
-            this.txtQaDetailGmActionTime.Name = "txtQaDetailGmActionTime";
-            this.txtQaDetailGmActionTime.ReadOnly = true;
-            this.txtQaDetailGmActionTime.Size = new System.Drawing.Size(1112, 25);
-            this.txtQaDetailGmActionTime.TabIndex = 29;
+            this.txtQaDetailHodActionTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.tlpQaRequestDetails.SetColumnSpan(this.txtQaDetailHodActionTime, 3);
+            this.txtQaDetailHodActionTime.Location = new System.Drawing.Point(163, 289);
+            this.txtQaDetailHodActionTime.Name = "txtQaDetailHodActionTime"; // UPDATED NAME
+            this.txtQaDetailHodActionTime.ReadOnly = true;
+            this.txtQaDetailHodActionTime.Size = new System.Drawing.Size(1112, 25);
+            this.txtQaDetailHodActionTime.TabIndex = 29;
             // 
             // grpQaParentBatchInfo
             // 
@@ -912,9 +917,7 @@ namespace IssuanceApp.UI.Controls
             this.tlpQaActionControls.PerformLayout();
             this.flpQaOptionalControls.ResumeLayout(false);
             this.flpQaActionButtons.ResumeLayout(false);
-            // --- NEW RESUMELAYOUT CALL ---
             this.grpQaParentBatchInfo.ResumeLayout(false);
-            this.grpQaParentBatchInfo.PerformLayout();
             this.tlpQaParentBatchInfo.ResumeLayout(false);
             this.tlpQaParentBatchInfo.PerformLayout();
             this.ResumeLayout(false);
@@ -959,10 +962,10 @@ namespace IssuanceApp.UI.Controls
         private System.Windows.Forms.TextBox txtQaDetailRequestedAt;
         private System.Windows.Forms.Label lblQaDetailRequesterCommentsLabel;
         private System.Windows.Forms.TextBox txtQaDetailRequesterComments;
-        private System.Windows.Forms.Label lblQaDetailGmCommentLabel;
-        private System.Windows.Forms.TextBox txtQaDetailGmComment;
-        private System.Windows.Forms.Label lblQaDetailGmActionTimeLabel;
-        private System.Windows.Forms.TextBox txtQaDetailGmActionTime;
+        private System.Windows.Forms.Label lblQaDetailHodCommentLabel; // RENAMED
+        private System.Windows.Forms.TextBox txtQaDetailHodComment; // RENAMED
+        private System.Windows.Forms.Label lblQaDetailHodActionTimeLabel; // RENAMED
+        private System.Windows.Forms.TextBox txtQaDetailHodActionTime; // RENAMED
         private System.Windows.Forms.GroupBox grpQaAction;
         private System.Windows.Forms.TableLayoutPanel tlpQaActionControls;
         private System.Windows.Forms.FlowLayoutPanel flpQaOptionalControls;
@@ -979,7 +982,7 @@ namespace IssuanceApp.UI.Controls
         private System.Windows.Forms.DataGridViewTextBoxColumn colQaPreparedBy;
         private System.Windows.Forms.DataGridViewTextBoxColumn colQaRequestedAt;
         private System.Windows.Forms.DataGridViewTextBoxColumn colQaAuthorizedBy;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colQaGmActionAt;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colQaHodActionAt; // RENAMED
         // --- NEW CONTROL DECLARATIONS ---
         private System.Windows.Forms.GroupBox grpQaParentBatchInfo;
         private System.Windows.Forms.TableLayoutPanel tlpQaParentBatchInfo;

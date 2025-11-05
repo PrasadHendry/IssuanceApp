@@ -30,7 +30,7 @@ namespace IssuanceApp.UI
             this.FormBorderStyle = FormBorderStyle.Sizable;
 
             InitializeDynamicControls();
-            InitializeUserControls(); // Call here to initialize controls before login
+            InitializeUserControls();
             ApplyPharmaTheme();
 
             this.Text = "Document Issuance System";
@@ -51,13 +51,12 @@ namespace IssuanceApp.UI
             this.loginControl1.LoginAttemptCompleted += LoginControl_LoginAttemptCompleted;
             this.loginControl1.InitializeControl(_repository);
 
-            // Initialize all controls with a placeholder null username
             documentIssuanceControl1.InitializeControl(_repository, null);
-            gmOperationsControl1.InitializeControl(_repository, null);
+            // --- RENAMED CONTROL ---
+            hodControl1.InitializeControl(_repository, null);
+            // --- END RENAMED ---
             qaControl1.InitializeControl(_repository, null);
-            // --- UPDATED CALL: Passing null username initially ---
             auditTrailControl1.InitializeControl(_repository, null);
-            // --- END UPDATED CALL ---
             usersControl1.InitializeControl(_repository);
         }
 
@@ -94,18 +93,18 @@ namespace IssuanceApp.UI
             {
                 if (!isFirstLoad) await documentIssuanceControl1.LoadInitialDataAsync();
             }
-            else if (selectedTabName == ControlNames.TabPageGmOperations)
+            // --- UPDATED TAB CONSTANT ---
+            else if (selectedTabName == ControlNames.TabPageHOD)
             {
-                if (!isFirstLoad) await gmOperationsControl1.LoadPendingQueueAsync();
+                if (!isFirstLoad) await hodControl1.LoadPendingQueueAsync();
             }
+            // --- END UPDATED TAB CONSTANT ---
             else if (selectedTabName == ControlNames.TabPageQA)
             {
                 if (!isFirstLoad) await qaControl1.LoadPendingQueueAsync();
             }
             else if (selectedTabName == ControlNames.TabPageAuditTrail)
             {
-                // The AuditTrail is designed to always load data when the tab is selected
-                // to respect the current filter settings, so we force a reload.
                 await auditTrailControl1.LoadAuditTrailDataAsync();
             }
             else if (selectedTabName == ControlNames.TabPageUsers)
@@ -126,7 +125,7 @@ namespace IssuanceApp.UI
 
         private void StatusTimer_Tick(object sender, EventArgs e)
         {
-            toolStripStatusLabelDateTime.Text = DateTime.Now.ToString("dd-MMM-yyyy hh:mm tt");
+            toolStripStatusLabelDateTime.Text = DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss tt");
         }
 
         private void SetupTabs()
@@ -140,7 +139,9 @@ namespace IssuanceApp.UI
             switch (role)
             {
                 case AppConstants.RoleRequester: targetTab = allTabPages.FirstOrDefault(t => t.Name == ControlNames.TabPageDocumentIssuance); break;
-                case AppConstants.RoleGmOperations: targetTab = allTabPages.FirstOrDefault(t => t.Name == ControlNames.TabPageGmOperations); break;
+                // --- UPDATED ROLE AND TAB CONSTANTS ---
+                case AppConstants.RoleHOD: targetTab = allTabPages.FirstOrDefault(t => t.Name == ControlNames.TabPageHOD); break;
+                // --- END UPDATED ---
                 case AppConstants.RoleQA: targetTab = allTabPages.FirstOrDefault(t => t.Name == ControlNames.TabPageQA); break;
                 case AppConstants.RoleAdmin: targetTab = allTabPages.FirstOrDefault(t => t.Name == ControlNames.TabPageUsers); break;
                 default: targetTab = allTabPages.FirstOrDefault(t => t.Name == ControlNames.TabPageLogin); break;
@@ -169,11 +170,11 @@ namespace IssuanceApp.UI
 
                     // Re-initialize controls with the logged-in username
                     documentIssuanceControl1.InitializeControl(_repository, loggedInUserName);
-                    gmOperationsControl1.InitializeControl(_repository, loggedInUserName);
+                    // --- UPDATED CONTROL NAME ---
+                    hodControl1.InitializeControl(_repository, loggedInUserName);
+                    // --- END UPDATED ---
                     qaControl1.InitializeControl(_repository, loggedInUserName);
-                    // --- UPDATED CALL: Passing loggedInUserName ---
                     auditTrailControl1.InitializeControl(_repository, loggedInUserName);
-                    // --- END UPDATED CALL ---
 
                     _loadedTabs.Clear();
                     EnableTabsBasedOnRole(loggedInRole);
@@ -209,7 +210,9 @@ namespace IssuanceApp.UI
 
                 // Re-initialize controls with null username
                 documentIssuanceControl1.InitializeControl(_repository, null);
-                gmOperationsControl1.InitializeControl(_repository, null);
+                // --- UPDATED CONTROL NAME ---
+                hodControl1.InitializeControl(_repository, null);
+                // --- END UPDATED ---
                 qaControl1.InitializeControl(_repository, null);
                 auditTrailControl1.InitializeControl(_repository, null);
 
@@ -243,7 +246,9 @@ namespace IssuanceApp.UI
             }
 
             bool isRequester = (role == AppConstants.RoleRequester);
-            bool isGm = (role == AppConstants.RoleGmOperations);
+            // --- UPDATED ROLE CONSTANT ---
+            bool isHod = (role == AppConstants.RoleHOD);
+            // --- END UPDATED ---
             bool isQa = (role == AppConstants.RoleQA);
             bool isAdmin = (role == AppConstants.RoleAdmin);
 
@@ -251,7 +256,9 @@ namespace IssuanceApp.UI
             {
                 bool shouldShowTab =
                     (tab.Name == ControlNames.TabPageDocumentIssuance && (isRequester || isAdmin)) ||
-                    (tab.Name == ControlNames.TabPageGmOperations && (isGm || isAdmin)) ||
+                    // --- UPDATED TAB CONSTANT AND ROLE CHECK ---
+                    (tab.Name == ControlNames.TabPageHOD && (isHod || isAdmin)) ||
+                    // --- END UPDATED ---
                     (tab.Name == ControlNames.TabPageQA && (isQa || isAdmin)) ||
                     (tab.Name == ControlNames.TabPageUsers && isAdmin) ||
                     (tab.Name == ControlNames.TabPageAuditTrail && isLoggedIn);

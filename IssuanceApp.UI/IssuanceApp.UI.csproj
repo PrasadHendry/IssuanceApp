@@ -164,11 +164,11 @@
     <Compile Include="Controls\DocumentIssuanceControl.Designer.cs">
       <DependentUpon>DocumentIssuanceControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\GmOperationsControl.cs">
+    <Compile Include="Controls\HodControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\GmOperationsControl.Designer.cs">
-      <DependentUpon>GmOperationsControl.cs</DependentUpon>
+    <Compile Include="Controls\HodControl.Designer.cs">
+      <DependentUpon>HodControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\LoginControl.cs">
       <SubType>UserControl</SubType>

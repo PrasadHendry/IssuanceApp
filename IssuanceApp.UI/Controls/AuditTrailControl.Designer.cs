@@ -46,10 +46,8 @@ namespace IssuanceApp.UI.Controls
             this.btnApplyAuditFilter = new IssuanceApp.UI.RoundedButton();
             this.btnClearAuditFilters = new IssuanceApp.UI.RoundedButton();
             this.btnRefreshAuditList = new IssuanceApp.UI.RoundedButton();
-            // --- ADDED CONTROLS ---
             this.chkIgnoreDateFilter = new System.Windows.Forms.CheckBox();
             this.chkFilterByCurrentUser = new System.Windows.Forms.CheckBox();
-            // --- END ADDED CONTROLS ---
             this.dgvAuditTrail = new System.Windows.Forms.DataGridView();
             this.flpAuditExportButtons = new System.Windows.Forms.FlowLayoutPanel();
             this.btnExportToCsv = new IssuanceApp.UI.RoundedButton();
@@ -118,22 +116,20 @@ namespace IssuanceApp.UI.Controls
             this.tlpAuditFilters.Controls.Add(this.btnApplyAuditFilter, 4, 1);
             this.tlpAuditFilters.Controls.Add(this.btnClearAuditFilters, 5, 1);
             this.tlpAuditFilters.Controls.Add(this.btnRefreshAuditList, 6, 1);
-            // --- ADDED CONTROLS TO LAYOUT ---
             this.tlpAuditFilters.Controls.Add(this.chkIgnoreDateFilter, 0, 2);
             this.tlpAuditFilters.Controls.Add(this.chkFilterByCurrentUser, 2, 2);
-            // --- END ADDED CONTROLS TO LAYOUT ---
             this.tlpAuditFilters.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tlpAuditFilters.Location = new System.Drawing.Point(10, 28);
             this.tlpAuditFilters.Name = "tlpAuditFilters";
-            this.tlpAuditFilters.RowCount = 3; // INCREASED ROW COUNT
+            this.tlpAuditFilters.RowCount = 3;
             this.tlpAuditFilters.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
             this.tlpAuditFilters.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
-            this.tlpAuditFilters.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F)); // NEW ROW
-            this.tlpAuditFilters.Size = new System.Drawing.Size(1267, 105); // INCREASED HEIGHT
+            this.tlpAuditFilters.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
+            this.tlpAuditFilters.Size = new System.Drawing.Size(1267, 105);
             this.tlpAuditFilters.TabIndex = 0;
             // 
             // lblAuditFromDate
-            // ... (no change) ...
+            // 
             this.lblAuditFromDate.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.lblAuditFromDate.AutoSize = true;
             this.lblAuditFromDate.Location = new System.Drawing.Point(10, 9);
@@ -143,7 +139,7 @@ namespace IssuanceApp.UI.Controls
             this.lblAuditFromDate.Text = "From Date:";
             // 
             // dtpAuditFrom
-            // ... (no change) ...
+            // 
             this.dtpAuditFrom.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.dtpAuditFrom.Font = new System.Drawing.Font("Segoe UI", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.dtpAuditFrom.Format = System.Windows.Forms.DateTimePickerFormat.Short;
@@ -153,7 +149,7 @@ namespace IssuanceApp.UI.Controls
             this.dtpAuditFrom.TabIndex = 1;
             // 
             // lblAuditToDate
-            // ... (no change) ...
+            // 
             this.lblAuditToDate.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.lblAuditToDate.AutoSize = true;
             this.lblAuditToDate.Location = new System.Drawing.Point(243, 9);
@@ -163,7 +159,7 @@ namespace IssuanceApp.UI.Controls
             this.lblAuditToDate.Text = "To Date:";
             // 
             // dtpAuditTo
-            // ... (no change) ...
+            // 
             this.dtpAuditTo.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.dtpAuditTo.Font = new System.Drawing.Font("Segoe UI", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.dtpAuditTo.Format = System.Windows.Forms.DateTimePickerFormat.Short;
@@ -173,7 +169,7 @@ namespace IssuanceApp.UI.Controls
             this.dtpAuditTo.TabIndex = 3;
             // 
             // lblAuditStatus
-            // ... (no change) ...
+            // 
             this.lblAuditStatus.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.lblAuditStatus.AutoSize = true;
             this.lblAuditStatus.Location = new System.Drawing.Point(514, 9);
@@ -183,7 +179,7 @@ namespace IssuanceApp.UI.Controls
             this.lblAuditStatus.Text = "Status:";
             // 
             // cmbAuditStatus
-            // ... (no change) ...
+            // 
             this.cmbAuditStatus.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.cmbAuditStatus.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbAuditStatus.FormattingEnabled = true;
@@ -193,7 +189,7 @@ namespace IssuanceApp.UI.Controls
             this.cmbAuditStatus.TabIndex = 5;
             // 
             // lblAuditRequestNo
-            // ... (no change) ...
+            // 
             this.lblAuditRequestNo.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.lblAuditRequestNo.AutoSize = true;
             this.lblAuditRequestNo.Location = new System.Drawing.Point(3, 44);
@@ -203,7 +199,7 @@ namespace IssuanceApp.UI.Controls
             this.lblAuditRequestNo.Text = "Request No:";
             // 
             // txtAuditRequestNo
-            // ... (no change) ...
+            // 
             this.txtAuditRequestNo.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.txtAuditRequestNo.Location = new System.Drawing.Point(91, 40);
             this.txtAuditRequestNo.Name = "txtAuditRequestNo";
@@ -211,7 +207,7 @@ namespace IssuanceApp.UI.Controls
             this.txtAuditRequestNo.TabIndex = 7;
             // 
             // lblAuditProduct
-            // ... (no change) ...
+            // 
             this.lblAuditProduct.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.lblAuditProduct.AutoSize = true;
             this.lblAuditProduct.Location = new System.Drawing.Point(241, 44);
@@ -221,7 +217,7 @@ namespace IssuanceApp.UI.Controls
             this.lblAuditProduct.Text = "Product:";
             // 
             // txtAuditProduct
-            // ... (no change) ...
+            // 
             this.txtAuditProduct.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.txtAuditProduct.Location = new System.Drawing.Point(306, 40);
             this.txtAuditProduct.Name = "txtAuditProduct";
@@ -229,7 +225,7 @@ namespace IssuanceApp.UI.Controls
             this.txtAuditProduct.TabIndex = 9;
             // 
             // btnApplyAuditFilter
-            // ... (no change) ...
+            // 
             this.btnApplyAuditFilter.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.btnApplyAuditFilter.CornerRadius = 8;
             this.btnApplyAuditFilter.FlatAppearance.BorderSize = 0;
@@ -243,7 +239,7 @@ namespace IssuanceApp.UI.Controls
             this.btnApplyAuditFilter.UseVisualStyleBackColor = true;
             // 
             // btnClearAuditFilters
-            // ... (no change) ...
+            // 
             this.btnClearAuditFilters.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.btnClearAuditFilters.CornerRadius = 8;
             this.btnClearAuditFilters.FlatAppearance.BorderSize = 0;
@@ -257,7 +253,7 @@ namespace IssuanceApp.UI.Controls
             this.btnClearAuditFilters.UseVisualStyleBackColor = true;
             // 
             // btnRefreshAuditList
-            // ... (no change) ...
+            // 
             this.btnRefreshAuditList.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.btnRefreshAuditList.CornerRadius = 8;
             this.btnRefreshAuditList.FlatAppearance.BorderSize = 0;
@@ -295,7 +291,7 @@ namespace IssuanceApp.UI.Controls
             this.chkFilterByCurrentUser.UseVisualStyleBackColor = true;
             // 
             // dgvAuditTrail
-            // ... (no change) ...
+            // 
             this.dgvAuditTrail.AllowUserToAddRows = false;
             this.dgvAuditTrail.AllowUserToDeleteRows = false;
             this.dgvAuditTrail.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.None;
@@ -320,7 +316,7 @@ namespace IssuanceApp.UI.Controls
             this.dgvAuditTrail.VirtualMode = true;
             // 
             // flpAuditExportButtons
-            // ... (no change) ...
+            // 
             this.flpAuditExportButtons.Controls.Add(this.btnExportToCsv);
             this.flpAuditExportButtons.Controls.Add(this.btnExportToExcel);
             this.flpAuditExportButtons.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -331,7 +327,7 @@ namespace IssuanceApp.UI.Controls
             this.flpAuditExportButtons.TabIndex = 2;
             // 
             // btnExportToCsv
-            // ... (no change) ...
+            // 
             this.btnExportToCsv.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.btnExportToCsv.CornerRadius = 8;
             this.btnExportToCsv.Font = new System.Drawing.Font("Segoe UI Semibold", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -344,7 +340,7 @@ namespace IssuanceApp.UI.Controls
             this.btnExportToCsv.UseVisualStyleBackColor = true;
             // 
             // btnExportToExcel
-            // ... (no change) ...
+            // 
             this.btnExportToExcel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.btnExportToExcel.CornerRadius = 8;
             this.btnExportToExcel.Font = new System.Drawing.Font("Segoe UI Semibold", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -393,10 +389,8 @@ namespace IssuanceApp.UI.Controls
         private UI.RoundedButton btnApplyAuditFilter;
         private UI.RoundedButton btnClearAuditFilters;
         private UI.RoundedButton btnRefreshAuditList;
-        // --- ADDED CONTROLS TO DESIGNER ---
         private System.Windows.Forms.CheckBox chkIgnoreDateFilter;
         private System.Windows.Forms.CheckBox chkFilterByCurrentUser;
-        // --- END ADDED CONTROLS TO DESIGNER ---
         private System.Windows.Forms.DataGridView dgvAuditTrail;
         private System.Windows.Forms.FlowLayoutPanel flpAuditExportButtons;
         private UI.RoundedButton btnExportToCsv;

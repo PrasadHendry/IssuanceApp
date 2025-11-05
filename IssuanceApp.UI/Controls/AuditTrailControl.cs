@@ -22,9 +22,11 @@ namespace IssuanceApp.UI.Controls
         private string _auditSortColumn = nameof(AuditTrailEntry.RequestNo);
 
         private CancellationTokenSource _dataLoadCts = new CancellationTokenSource();
-
-        // --- ADDED FIELD: Stores logged-in user for 'Show My Requests Only' filter ---
         private string _loggedInUserName;
+
+        // --- NEW CONSTANTS: Standardized Date/Time Format ---
+        private const string DateTimeFormat = "dd-MM-yyyy HH:mm:ss";
+        private const string DateFormat = "dd-MM-yyyy";
 
         public AuditTrailControl()
         {
@@ -37,7 +39,6 @@ namespace IssuanceApp.UI.Controls
             ThemeManager.StyleDataGridView(dgvAuditTrail);
         }
 
-        // --- UPDATED SIGNATURE: Accepts logged-in username ---
         public void InitializeControl(IssuanceRepository repository, string loggedInUserName)
         {
             _repository = repository;
@@ -46,7 +47,8 @@ namespace IssuanceApp.UI.Controls
             _pagesBeingFetched = new HashSet<int>();
 
             cmbAuditStatus.Items.Clear();
-            cmbAuditStatus.Items.AddRange(new object[] { "All", "Pending GM Approval", "Pending QA Approval", "Approved (Issued)", "Rejected by GM", "Rejected by QA" });
+            // UPDATED TEXT
+            cmbAuditStatus.Items.AddRange(new object[] { "All", "Pending HOD Approval", "Pending QA Approval", "Approved (Issued)", "Rejected by HOD", "Rejected by QA" });
             cmbAuditStatus.SelectedIndex = 0;
             dtpAuditFrom.Value = DateTime.Now.Date.AddDays(-30);
             dtpAuditTo.Value = DateTime.Now.Date;
@@ -55,10 +57,8 @@ namespace IssuanceApp.UI.Controls
             dgvAuditTrail.VirtualMode = true;
             SetupAuditTrailColumns();
 
-            // --- ADDED EVENT HANDLERS FOR NEW CHECKBOXES ---
             chkIgnoreDateFilter.CheckedChanged += async (s, e) => await LoadAuditTrailDataAsync();
             chkFilterByCurrentUser.CheckedChanged += async (s, e) => await LoadAuditTrailDataAsync();
-            // --- END ADDED EVENT HANDLERS ---
 
             dgvAuditTrail.CellValueNeeded += DgvAuditTrail_CellValueNeeded;
             dgvAuditTrail.ColumnHeaderMouseClick += DgvAuditTrail_ColumnHeaderMouseClick;
@@ -81,7 +81,9 @@ namespace IssuanceApp.UI.Controls
             var noWrapStyle = new DataGridViewCellStyle { WrapMode = DataGridViewTriState.False, Alignment = DataGridViewContentAlignment.MiddleLeft };
 
             dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditRequestNo", HeaderText = "Request No.", DataPropertyName = nameof(AuditTrailEntry.RequestNo), Width = 140, Frozen = true });
-            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditRequestDate", HeaderText = "Request Date", DataPropertyName = nameof(AuditTrailEntry.RequestDate), DefaultCellStyle = new DataGridViewCellStyle { Format = "dd-MMM-yyyy" }, AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells });
+            // --- UPDATED DATE FORMAT ---
+            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditRequestDate", HeaderText = "Request Date", DataPropertyName = nameof(AuditTrailEntry.RequestDate), DefaultCellStyle = new DataGridViewCellStyle { Format = DateFormat }, AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells });
+            // --- END UPDATED DATE FORMAT ---
             dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditProduct", HeaderText = "Product", DataPropertyName = nameof(AuditTrailEntry.Product), Width = 200 });
 
             // --- FIX IS HERE ---
@@ -91,14 +93,17 @@ namespace IssuanceApp.UI.Controls
             dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditStatusDerived", HeaderText = "Status", DataPropertyName = nameof(AuditTrailEntry.DerivedStatus), Width = 150 });
             dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditPreparedBy", HeaderText = "Prepared By", DataPropertyName = nameof(AuditTrailEntry.PreparedBy), AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells });
             dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditFromDept", HeaderText = "From Department", DataPropertyName = nameof(AuditTrailEntry.FromDepartment), Width = 180 });
-            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditRequestedAt", HeaderText = "Requested At", DataPropertyName = nameof(AuditTrailEntry.RequestedAt), DefaultCellStyle = new DataGridViewCellStyle { Format = "dd-MMM-yyyy HH:mm" }, AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells });
-            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditGmAction", HeaderText = "GM Action", DataPropertyName = nameof(AuditTrailEntry.GmOperationsAction), AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells });
-            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditAuthorizedBy", HeaderText = "GM User", DataPropertyName = nameof(AuditTrailEntry.AuthorizedBy), AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells });
-            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditGmActionAt", HeaderText = "GM Action At", DataPropertyName = nameof(AuditTrailEntry.GmOperationsAt), DefaultCellStyle = new DataGridViewCellStyle { Format = "dd-MMM-yyyy HH:mm" }, AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells });
-            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditGmComment", HeaderText = "GM Comment", DataPropertyName = nameof(AuditTrailEntry.GmOperationsComment), Width = 250, DefaultCellStyle = wrapTextStyle });
+            // --- UPDATED DATE/TIME FORMAT ---
+            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditRequestedAt", HeaderText = "Requested At", DataPropertyName = nameof(AuditTrailEntry.RequestedAt), DefaultCellStyle = new DataGridViewCellStyle { Format = DateTimeFormat }, AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells });
+            // --- UPDATED COLUMN NAME AND DATE/TIME FORMAT ---
+            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditHodAction", HeaderText = "HOD Action", DataPropertyName = nameof(AuditTrailEntry.HodAction), AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells });
+            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditAuthorizedBy", HeaderText = "HOD User", DataPropertyName = nameof(AuditTrailEntry.AuthorizedBy), AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells });
+            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditHodActionAt", HeaderText = "HOD Action At", DataPropertyName = nameof(AuditTrailEntry.HodAt), DefaultCellStyle = new DataGridViewCellStyle { Format = DateTimeFormat }, AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells });
+            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditHodComment", HeaderText = "HOD Comment", DataPropertyName = nameof(AuditTrailEntry.HodComment), Width = 250, DefaultCellStyle = wrapTextStyle });
+            // --- END UPDATED COLUMN NAME AND DATE/TIME FORMAT ---
             dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditQaAction", HeaderText = "QA Action", DataPropertyName = nameof(AuditTrailEntry.QAAction), AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells });
             dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditApprovedBy", HeaderText = "QA User", DataPropertyName = nameof(AuditTrailEntry.ApprovedBy), AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells });
-            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditQaActionAt", HeaderText = "QA Action At", DataPropertyName = nameof(AuditTrailEntry.QAAt), DefaultCellStyle = new DataGridViewCellStyle { Format = "dd-MMM-yyyy HH:mm" }, AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells });
+            dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditQaActionAt", HeaderText = "QA Action At", DataPropertyName = nameof(AuditTrailEntry.QAAt), DefaultCellStyle = new DataGridViewCellStyle { Format = DateTimeFormat }, AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells });
             dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditQaComment", HeaderText = "QA Comment", DataPropertyName = nameof(AuditTrailEntry.QAComment), Width = 250, DefaultCellStyle = wrapTextStyle });
             dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditParentBatchNo", HeaderText = "Parent Batch No.", DataPropertyName = nameof(AuditTrailEntry.ParentBatchNumber), Width = 150 });
             dgvAuditTrail.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAuditParentBatchSize", HeaderText = "Parent Batch Size", DataPropertyName = nameof(AuditTrailEntry.ParentBatchSize), AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells });
@@ -129,7 +134,6 @@ namespace IssuanceApp.UI.Controls
                 bool ignoreDate = chkIgnoreDateFilter.Checked;
                 string userFilter = chkFilterByCurrentUser.Checked ? _loggedInUserName : null;
 
-                // --- UPDATED CALL TO REPOSITORY WITH NEW PARAMETERS ---
                 _auditTrailKeyCache = await _repository.GetAuditTrailKeysAsync(
                     dtpAuditFrom.Value,
                     dtpAuditTo.Value,
@@ -138,10 +142,9 @@ namespace IssuanceApp.UI.Controls
                     txtAuditProduct.Text,
                     dbSortColumn,
                     _auditSortOrder,
-                    ignoreDate, // New parameter
-                    userFilter, // New parameter
+                    ignoreDate,
+                    userFilter,
                     token);
-                // --- END UPDATED CALL ---
 
                 token.ThrowIfCancellationRequested();
 
@@ -183,6 +186,42 @@ namespace IssuanceApp.UI.Controls
                 string colPropName = dgvAuditTrail.Columns[e.ColumnIndex].DataPropertyName;
                 if (!string.IsNullOrEmpty(colPropName))
                 {
+                    // Check if the property is a DateTime type that needs custom formatting
+                    if (colPropName == nameof(AuditTrailEntry.RequestDate) ||
+                        colPropName == nameof(AuditTrailEntry.QAAt) ||
+                        colPropName == nameof(AuditTrailEntry.HodAt) ||
+                        colPropName == nameof(AuditTrailEntry.RequestedAt))
+                    {
+                        var prop = typeof(AuditTrailEntry).GetProperty(colPropName);
+                        var value = prop?.GetValue(entry);
+
+                        // 1. Handle non-nullable DateTime (e.g., RequestDate)
+                        if (value is DateTime dateTimeValue)
+                        {
+                            e.Value = (colPropName == nameof(AuditTrailEntry.RequestDate))
+                                ? dateTimeValue.ToString(DateFormat)
+                                : dateTimeValue.ToString(DateTimeFormat);
+                            return;
+                        }
+
+                        // 2. Handle nullable DateTime? (e.g., HodAt, QAAt)
+                        DateTime? nullableValue = value as DateTime?;
+                        if (nullableValue.HasValue)
+                        {
+                            e.Value = (colPropName == nameof(AuditTrailEntry.RequestDate))
+                                ? nullableValue.Value.ToString(DateFormat)
+                                : nullableValue.Value.ToString(DateTimeFormat);
+                            return;
+                        }
+
+                        // 3. If nullable and null, return empty string
+                        if (nullableValue.HasValue == false)
+                        {
+                            e.Value = string.Empty;
+                            return;
+                        }
+                    }
+
                     e.Value = typeof(AuditTrailEntry).GetProperty(colPropName)?.GetValue(entry);
                 }
             }
